@@ -1,0 +1,22 @@
+<?php
+
+if(!defined('EQDKP_INC'))
+{
+	header('HTTP/1.0 404 Not Found');
+	exit;
+}
+$up_updates = array(
+	'0.4.0'	=> array(
+		'file'	=> '030-040.php',
+		'old'	=> '0.3.0'
+	),
+	'0.4.0.1' => array(
+		'file'	=> '040-0401.php',
+		'old'	=> '0.4.0'
+	),
+	'0.4.2'	=> array(
+		'file'	=> '0401-042.php',
+		'old'	=> '0.4.0.1'
+	)
+);
+?>

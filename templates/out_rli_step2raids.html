@@ -1,0 +1,71 @@
+<form method="post" action="{F_PARSE_LOG}" name="post">
+    <table width="100%" border="0" cellspacing="1" cellpadding="2" id="raid">
+      <tr>
+        <th colspan="2">{L_RAIDS}</th>
+      </tr>
+      <!-- BEGIN raids -->
+      <tr>
+      	<th colspan="2"><input type="checkbox" name="raids[{raids.COUNT}][key]" value="{raids.COUNT}" checked="checked" /> {raids.COUNT}. {L_RAID}: </th>
+      </tr>
+      <tr class="row1">
+      	<td>{L_START}: <input type="text" name="raids[{raids.COUNT}][start_date]" id="raid_start_date" value="{raids.START_DATE}" class="maininput" size="9" />
+      			<script>
+                jQuery(function($){
+                          $('#raid_start_date').datepicker({showOn: 'button', buttonImage: './../../pluskernel/include/jquery/img/calendar.png', buttonImageOnly: true, dateFormat: 'dd.mm.yy'});
+                });
+                </script>
+                <input type="text" name="raids[{raids.COUNT}][start_time]" value="{raids.START_TIME}" class="maininput" size="9" />
+        </td>
+        <td>{L_EVENT}: {raids.EVENT} &nbsp;&nbsp;&nbsp; DKP/h: <input type="text" name="raids[{raids.COUNT}][timebonus]" value="{raids.TIMEBONUS}" class="maininput" size="5" /></td>
+      </tr>
+      <tr class="row2">
+        <td>{L_END}: <input type="text" name="raids[{raids.COUNT}][end_date]" id="raid_end_date" value="{raids.END_DATE}" class="maininput" size="9" />
+        		<script>
+                jQuery(function($){
+                          $('#raid_end_date').datepicker({showOn: 'button', buttonImage: './../../pluskernel/include/jquery/img/calendar.png', buttonImageOnly: true, dateFormat: 'dd.mm.yy'});
+                });
+                </script>
+                <input type="text" name="raids[{raids.COUNT}][end_time]" value="{raids.END_TIME}" class="maininput" size="9" />
+        </td>
+        <td>{L_VALUE}: <input type="text" name="raids[{raids.COUNT}][value]" value="{raids.VALUE}" class="maininput" /></td>
+      </tr>
+      <tr class="row1">
+        <td colspan="2">{L_NOTE}: <input type="text" name="raids[{raids.COUNT}][note]" value="{raids.NOTE}" class="maininput" size="90" /></td>
+      </tr>
+      <tr class="row2">
+		<td colspan="2">{L_BOSSKILLS}:</td>
+	  </tr>
+	  <tr class="row1">
+		<td colspan="2">{raids.BOSSKILLS}</td>
+	  </tr>
+	  <tr class="row2">
+	  	<td colspan="2">
+	  		<select name="raids[{raids.COUNT}][bosskill_add]">
+	  		  <option value="0">0..{L_BKS_ADD}</option>
+	  		  <option value="1">1..{L_BK_ADD}</option>
+	  		  <option value="2">2..{L_BKS_ADD}</option>
+	  		  <option value="3">3..{L_BKS_ADD}</option>
+	  		  <option value="4">4..{L_BKS_ADD}</option>
+	  		  <option value="5">5..{L_BKS_ADD}</option>
+	  		</select>
+	  	</td>
+	  </tr>
+	  <!-- END raids -->
+	  <tr class="row1">
+	  	<td><select name="raid_add">
+	  		  <option value="0">0..{L_RAIDS_ADD}</option>
+	  		  <option value="1">1..{L_RAID_ADD}</option>
+	  		  <option value="2">2..{L_RAIDS_ADD}</option>
+	  		  <option value="3">3..{L_RAIDS_ADD}</option>
+	  		  <option value="4">4..{L_RAIDS_ADD}</option>
+	  		  <option value="5">5..{L_RAIDS_ADD}</option>
+	  		</select>
+	  	</td>
+	  	<td class="row1">&nbsp;</td>
+	  </tr>
+	  <tr>
+	   	<th colspan="2"><input type="hidden" name="rest" value="{DATA}" />
+	   					<input type="submit" name="checkmem" value="{L_CHECKMEM}" class="mainoption" />
+            			<input type="submit" name="checkraid" value="{L_UPD}" class="mainoption" /></th>
+	</table>
+</form>
