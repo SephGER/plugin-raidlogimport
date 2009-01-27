@@ -246,16 +246,16 @@ function create_member($member, $rank)
 		}
 	}
 	//get member_id, race_id and rank_id
-	$sql = "SELECT race_id FROM ".RACE_TABLE." WHERE race_name = '".$member['race']."';";
+	$sql = "SELECT race_id FROM __races WHERE race_name = '".$member['race']."';";
 	$r_i = $db->query_first($sql);
-	$sql = "SELECT class_id FROM ".CLASS_TABLE." WHERE class_name = '".$member['class']."';";
+	$sql = "SELECT class_id FROM __classes WHERE class_name = '".$member['class']."';";
 	$c_i = $db->query_first($sql);
-	$sql = "SELECT rank_id FROM ".MEMBER_RANKS_TABLE." WHERE rank_name = '".$rank."';";
+	$sql = "SELECT rank_id FROM __member_ranks WHERE rank_name = '".$rank."';";
 	$rank = $db->query_first($sql);
 
 	//insert member into database, create log
 	$success = "";
-	$sql = "INSERT INTO ".MEMBERS_TABLE."
+	$sql = "INSERT INTO __members
 				(member_name, member_level, member_race_id, member_class_id, member_rank_id)
 		   VALUES
 		   		('".$member['name']."', '".$member['level']."', '".$r_i."', '".$c_i."', '".$rank."');";
@@ -287,7 +287,7 @@ function rli_get_config()
 {
 	global $db;
 	$data = array();
-	$sql = "SELECT * FROM ".RLI_CONFIG_TABLE.";";
+	$sql = "SELECT * FROM __raidlogimport_config;";
 	$result = $db->query($sql);
 	while ( $row = $db->fetch_record($result) )
 	{

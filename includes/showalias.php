@@ -7,18 +7,15 @@ $eqdkp_root_path = './../../';
 
 include_once($eqdkp_root_path . 'common.php');
 
-$raidlogimport = $pm->get_plugin('raidlogimport');
 
-if ( !$pm->check(PLUGIN_INSTALLED, 'raidlogimport') )
-{
-    message_die('The Importk plugin is not installed.');
-}
 class Show_Alias extends EQdkp_Admin
 {
 	function Show_Alias()
 	{
         global $db, $eqdkp, $user, $tpl, $pm;
         global $SID;
+
+        parent::eqdkp_admin();
 
         $this->assoc_buttons(array(
         	'form' => array(
@@ -46,7 +43,7 @@ class Show_Alias extends EQdkp_Admin
             }
     		// Member-Liste
 	        $sql1 = "SELECT member_id, member_name
-	        		FROM ".MEMBERS_TABLE."
+	        		FROM __members
 	        		ORDER BY member_name;";
 	        $result = $db->query($sql1);
 	        while ( $row1 = $db->fetch_record($result)) {
@@ -79,7 +76,7 @@ class Show_Alias extends EQdkp_Admin
         	);
         } elseif(isset($_POST['submit']) AND $_POST['submit'] == $user->lang['rli_del']) {
         	$success = "";
-        	$sql = "DELETE FROM ".$table_prefix."raidlogimport_aliases
+        	$sql = "DELETE FROM __raidlogimport_aliases
         			WHERE alias_id = '".$_POST['alias_id']."';";
         	$delete = $db->query($sql);
         	if(!$delete) {
@@ -116,7 +113,7 @@ class Show_Alias extends EQdkp_Admin
         	);
         } elseif(isset($_POST['submit']) AND $_POST['submit'] == $user->lang['rli_upd']) {
         	$success = "";
-        	$sql = "UPDATE ".$table_prefix."raidlogimport_aliases
+        	$sql = "UPDATE __raidlogimport_aliases
         			SET alias_name 		= '".$_POST['alias_name']."',
         				alias_member_id = '".$_POST['member_id']."'
         			WHERE alias_id = '".$_POST['alias_id']."';";
@@ -155,7 +152,7 @@ class Show_Alias extends EQdkp_Admin
         	);
         } else {
         	$sql = "SELECT `alias_id`, `alias_name`, `alias_member_id`
-	        		FROM ".$table_prefix."raidlogimport_aliases
+	        		FROM __raidlogimport_aliases
 	        		ORDER BY alias_name;";
 	        $aliase = $db->query($sql);
 	        $number = 1;
@@ -169,7 +166,7 @@ class Show_Alias extends EQdkp_Admin
 	        	$member_id = $row['alias_member_id'];
 	        	$alias_id = $row['alias_id'];
 	        	$memberqry = "SELECT `member_name`
-	        			      FROM ".MEMBERS_TABLE."
+	        			      FROM __members
 	        			      WHERE member_id = '".$member_id."';";
 	        	$member = $db->query($memberqry);
 	        	$member_name = "";

@@ -67,7 +67,7 @@ class raidlogimport extends EQdkp_Admin
             $_REQUEST = stripslashes_array($_REQUEST);
         }
 
-		$sql = "SELECT bz_id, bz_string, bz_note, bz_bonus, bz_type FROM ".RLI_BZ_TABLE.";";
+		$sql = "SELECT bz_id, bz_string, bz_note, bz_bonus, bz_type FROM __raidlogimport_bz;";
 		if($result = $db->query($sql))
 		{
 			while($row = $db->fetch_record($result))
@@ -381,7 +381,7 @@ class raidlogimport extends EQdkp_Admin
         }//post or string
 
         //get events
-        $eventqry = "SELECT event_name FROM ".EVENTS_TABLE." ORDER BY event_name ASC;";
+        $eventqry = "SELECT event_name FROM __events ORDER BY event_name ASC;";
         $eventres = $db->query($eventqry);
         while ($ev = $db->fetch_record($eventres))
         {
@@ -489,7 +489,7 @@ class raidlogimport extends EQdkp_Admin
 		foreach($data['members'] as $key => $member)
 		{
 			//load aliase
-			$sql = "SELECT m.member_name FROM ".RLI_ALIAS_TABLE." a, ".MEMBERS_TABLE." m WHERE a.alias_member_id = m.member_id AND a.alias_name = '".$member['name']."';";
+			$sql = "SELECT m.member_name FROM __raidlogimport_aliases a, __members m WHERE a.alias_member_id = m.member_id AND a.alias_name = '".$member['name']."';";
 			$result = $db->query($sql);
 			if($result)
 			{
@@ -683,7 +683,7 @@ class raidlogimport extends EQdkp_Admin
 		}
 
         //get events
-        $eventqry = "SELECT event_name FROM ".EVENTS_TABLE." ORDER BY event_name ASC;";
+        $eventqry = "SELECT event_name FROM __events ORDER BY event_name ASC;";
         $eventres = $db->query($eventqry);
         while ($ev = $db->fetch_record($eventres))
         {
@@ -692,7 +692,7 @@ class raidlogimport extends EQdkp_Admin
         $db->free_result();
 		if(isset($data['adjs']))
 		{
-			$sql = "SELECT member_name FROM ".MEMBERS_TABLE." ORDER BY member_name ASC;";
+			$sql = "SELECT member_name FROM __members ORDER BY member_name ASC;";
 			$res = $db->query($sql);
 			$members = array();
 			while ($row = $db->fetch_record($res))
@@ -749,7 +749,7 @@ class raidlogimport extends EQdkp_Admin
 		{
 		  $db->query("START TRANSACTION");
 		  $newraidid = 0;
-		  $newraidid = $db->query_first("SELECT MAX(`raid_id`) FROM ".RAIDS_TABLE.";");
+		  $newraidid = $db->query_first("SELECT MAX(`raid_id`) FROM __raids;");
 
 		  foreach($data['raids'] as $raid_key => $raid)
 		  {
@@ -757,7 +757,7 @@ class raidlogimport extends EQdkp_Admin
 		   {
 			$newraidid++;
 			$data['raids'][$raid_key]['id'] = $newraidid;
-			$sql = "INSERT INTO ".RAIDS_TABLE."
+			$sql = "INSERT INTO __raids
         		      (`raid_id`, `raid_name`, `raid_date`, `raid_note`, `raid_value`, `raid_added_by`)
         		    VALUES
         		      ('".$newraidid."', '".$raid['event']."', '".$raid['begin']."', '".mysql_real_escape_string($raid['note'])."', '".$raid['value']."', 'DKP-Import (by ".$user->data['username'].")');";
@@ -772,8 +772,8 @@ class raidlogimport extends EQdkp_Admin
 
 		  if ($isok)
 		  {
-	        $sql = 'SHOW COLUMNS
-	                        FROM '.ITEMS_TABLE."
+	        $sql = "SHOW COLUMNS
+	                        FROM __items
 	                        LIKE 'game_itemid';";
 	        $result = $db->query_first($sql);
 	        if ($db->num_rows($result) > 0) {
@@ -785,7 +785,7 @@ class raidlogimport extends EQdkp_Admin
 	          if($loot['name'] != '')
 	          {
 	        	$lootdkp[$loot['player']] = $lootdkp[$loot['player']] + $loot['dkp'];
-				$sql = "INSERT INTO ".ITEMS_TABLE."
+				$sql = "INSERT INTO __items
 	                        (`item_name`,
 	                         `item_buyer`,
 	                         `raid_id`,
@@ -826,7 +826,7 @@ class raidlogimport extends EQdkp_Admin
                 if($isok)
                 {
 					//memberexistscheck
-					$sql = "SELECT `member_id` FROM ".MEMBERS_TABLE." WHERE `member_name` = '".mysql_real_escape_string($member['name'])."' LIMIT 1;";
+					$sql = "SELECT `member_id` FROM __members WHERE `member_name` = '".mysql_real_escape_string($member['name'])."' LIMIT 1;";
 					$resul = $db->query($sql);
             		if($db->num_rows($resul) == 0 AND !isset($member['alias']))
             		{
@@ -843,7 +843,7 @@ class raidlogimport extends EQdkp_Admin
 					{
 						if(in_array($raid_key, $member['raids']) AND $isok)
 						{
-							$sql = "INSERT INTO ".RAID_ATTENDEES_TABLE."
+							$sql = "INSERT INTO __raid_attendees
 										(`raid_id`, `member_name`)
 								    VALUES
 								    	('".$raid['id']."', '".$member['name']."');";
@@ -867,7 +867,7 @@ class raidlogimport extends EQdkp_Admin
 						{
 							$dkp += $member['att_end'];
 						}
-						$sql = "UPDATE ".MEMBERS_TABLE." SET
+						$sql = "UPDATE __members SET
 									member_earned = member_earned + '".$dkp."',
 									member_spent = member_spent + '".$lootdkp[$member['name']]."'";
 						if(isset($member['raids']))
@@ -903,7 +903,7 @@ class raidlogimport extends EQdkp_Admin
 				if($adj['do'])
 				{
 					$group_key = $this->gen_group_key($this->time, stripslashes($adj['reason']), $adj['value'], $adj['event']);
-					$sql = "INSERT INTO ".ADJUSTMENTS_TABLE."
+					$sql = "INSERT INTO __adjustments
 								(`adjustment_value`, `adjustment_date`, `member_name`, `adjustment_reason`, `adjustment_added_by`, `adjustment_group_key`, `raid_name`)
 						    VALUES
 						    	('".$adj['value']."', '".$data['raids'][1]['begin']."', '".$adj['member']."', '".$adj['reason']."', 'DKP-Import (by ".$user->data['username'].")', '".$group_key."', '".$adj['event']."');";

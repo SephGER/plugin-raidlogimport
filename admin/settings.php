@@ -40,7 +40,7 @@ class RLI_Settings extends EQdkp_Admin
 		{
 			if(isset($_POST[$old_name]) AND $_POST[$old_name] != $old_value)  //update
 			{
-				$sql = "UPDATE ".RLI_CONFIG_TABLE."
+				$sql = "UPDATE __raidlogimport_config
 						SET config_value = '".$_POST[$old_name]."'
 						WHERE config_name = '".$old_name."';";
 				$result = $db->query($sql);

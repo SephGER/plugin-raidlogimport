@@ -15,12 +15,6 @@ if ( !defined('EQDKP_INC') )
  *
  */
 
-//tables needed
-global $table_prefix;
-if(!defined('RLI_ALIAS_TABLE')) 	{ define('RLI_ALIAS_TABLE', $table_prefix.'raidlogimport_aliases'); }
-if(!defined('RLI_BZ_TABLE')) 	{ define('RLI_BZ_TABLE',	 $table_prefix.'raidlogimport_bz'); }
-if(!defined('RLI_CONFIG_TABLE')) { define('RLI_CONFIG_TABLE', $table_prefix.'raidlogimport_config'); }
-
 class raidlogimport_Plugin_Class extends EQdkp_Plugin
 {
     function raidlogimport_plugin_class($pm)
@@ -99,13 +93,16 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 			{
 				case "WoW":
 					include_once('games/WoW/bz_sql.php');
-					foreach($bz_data as $bz)
+					if(is_array($bz_data))
 					{
-						$sql = "INSERT INTO ".RLI_BZ_TABLE."
-								(bz_type, bz_string, bz_note, bz_bonus, bz_tozone, bz_sort)
-								VALUES
-								('".$bz[0]."', '".mysql_escape_string($bz[1])."', '".mysql_escape_string($bz[2])."', '".$bz[3]."', '".$bz[4]."', '".$bz[5]."');";
-						$this->add_sql(SQL_INSTALL, $sql);
+						foreach($bz_data as $bz)
+						{
+							$sql = "INSERT INTO __raidlogimport_bz
+									(bz_type, bz_string, bz_note, bz_bonus, bz_tozone, bz_sort)
+									VALUES
+									('".$bz[0]."', '".mysql_escape_string($bz[1])."', '".mysql_escape_string($bz[2])."', '".$bz[3]."', '".$bz[4]."', '".$bz[5]."');";
+							$this->add_sql(SQL_INSTALL, $sql);
+						}
 					}
 					$config_data = array(
 						'hero'				=> '_25',
@@ -138,11 +135,11 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 		switch($step)
 		{
 			case "1a":
-                $sql = "DROP TABLE IF EXISTS ".RLI_ALIAS_TABLE.";";
+                $sql = "DROP TABLE IF EXISTS __raidlogimport_aliases;";
                 break;
 
 			case "1b":
-	    		$sql = "CREATE TABLE IF NOT EXISTS ".RLI_ALIAS_TABLE." (
+	    		$sql = "CREATE TABLE IF NOT EXISTS __raidlogimportk_aliases (
 					   	`alias_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 					   	`alias_member_id` INT NOT NULL ,
 					   	`alias_name` VARCHAR(50) NOT NULL
@@ -150,11 +147,11 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 				break;
 
 			case "2a":
-				$sql = "DROP TABLE IF EXISTS ".RLI_BZ_TABLE.";";
+				$sql = "DROP TABLE IF EXISTS __raidlogimport_bz;";
 				break;
 
 			case "2b":
-				$sql = "CREATE TABLE IF NOT EXISTS ".RLI_BZ_TABLE." (
+				$sql = "CREATE TABLE IF NOT EXISTS __raidlogimport_bz (
 						`bz_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 						`bz_string` VARCHAR(255) NOT NULL,
 						`bz_bonus` INT NOT NULL,
@@ -166,11 +163,11 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 				break;
 
 			case "3a":
-				$sql = "DROP TABLE IF EXISTS ".RLI_CONFIG_TABLE.";";
+				$sql = "DROP TABLE IF EXISTS __raidlogimport_config;";
 				break;
 
 			case "3b":
-				$sql = "CREATE TABLE IF NOT EXISTS ".RLI_CONFIG_TABLE." (
+				$sql = "CREATE TABLE IF NOT EXISTS __raidlogimport_config (
 						`config_name` VARCHAR(255) NOT NULL,
 						`config_value` VARCHAR(255) NOT NULL
 						);";
@@ -221,7 +218,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 		{
 			foreach ($perms as $perm)
 			{
-		    	$sql = "INSERT INTO `".$table_prefix."auth_users` VALUES('".$user->data['user_id']."', '".$perm."', '".$perm_value."');";
+		    	$sql = "INSERT INTO `__auth_users` VALUES('".$user->data['user_id']."', '".$perm."', '".$perm_value."');";
     			$this->add_sql(SQL_INSTALL, $sql);
     			$sql = "UPDATE `".$table_prefix."auth_users`
     					SET auth_setting='".$perm_value."'
@@ -236,7 +233,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 		global $db;
 		foreach($data as $config_name => $config_value)
 		{
-			$sql = "INSERT INTO ".RLI_CONFIG_TABLE."
+			$sql = "INSERT INTO __raidlogimport_config
 					 (config_name, config_value)
 				    VALUES
 				     ('".$config_name."', '".$config_value."');";

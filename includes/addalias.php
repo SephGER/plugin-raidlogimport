@@ -7,12 +7,6 @@ $eqdkp_root_path = './../../';
 
 include_once($eqdkp_root_path . 'common.php');
 
-$raidlogimport = $pm->get_plugin('raidlogimport');
-
-if ( !$pm->check(PLUGIN_INSTALLED, 'raidlogimport') )
-{
-    message_die('The Importk plugin is not installed.');
-}
 
 class Add_Alias extends EQdkp_Admin
 {
@@ -43,7 +37,7 @@ class Add_Alias extends EQdkp_Admin
         if(isset($_POST['submit']) AND $_POST['submit'] == $user->lang['rli_addalias']) {
         	if(isset($_POST['alias_name'])) {
         		$sql1 = "SELECT `alias_member_id`, `alias_name`
-        				 FROM ".$table_prefix."raidlogimport_aliases
+        				 FROM __raidlogimport_aliases
         				 WHERE alias_member_id = '".$_POST['member_id']."';";
         		$result = $db->query($sql1);
         		$names = array();
@@ -51,7 +45,7 @@ class Add_Alias extends EQdkp_Admin
         			$names[] = $row['alias_name'];
         		}
         		if(!in_array($_POST['alias_name'], $names)) {
-        			$sql = "INSERT INTO ".$table_prefix."raidlogimport_aliases (`alias_member_id`, `alias_name`)
+        			$sql = "INSERT INTO __raidlogimport_aliases (`alias_member_id`, `alias_name`)
         					VALUES ('".$_POST['member_id']."', '".$_POST['alias_name']."');";
         			$addalias = $db->query($sql);
         			$sql2 = "SELECT `member_name`
@@ -102,7 +96,7 @@ class Add_Alias extends EQdkp_Admin
         global $SID;
 
         $sql = "SELECT member_id, member_name
-        		FROM ".MEMBERS_TABLE."
+        		FROM __members
         		ORDER BY member_name;";
         $result = $db->query($sql);
 

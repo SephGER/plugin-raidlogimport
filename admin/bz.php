@@ -73,7 +73,7 @@ class Bz extends EQdkp_Admin
 				$old_data = array();
 				if(($selected = count($ids)-1)>=0)
 				{
-					$sql = "SELECT bz_id, bz_string, bz_note, bz_bonus, bz_type, bz_tozone, bz_sort FROM ".RLI_BZ_TABLE." WHERE ";
+					$sql = "SELECT bz_id, bz_string, bz_note, bz_bonus, bz_type, bz_tozone, bz_sort FROM __raidlogimport_bz WHERE ";
 					for($i=0; $i<$selected; $i++)
 					{
 						$sql .= "bz_id = '".$ids[$i]."' OR ";
@@ -102,7 +102,7 @@ class Bz extends EQdkp_Admin
 				{
                     if($id == "neu")
                     {
-                        $sql = "INSERT INTO ".RLI_BZ_TABLE."
+                        $sql = "INSERT INTO __raidlogimport_bz
                                     (bz_string, bz_note, bz_bonus, bz_type, bz_sort, bz_tozone)
                                 VALUES
                                     ('".$vs['string']."', '".$vs['note']."', '".$vs['bonus']."', '".$vs['type']."', '".$vs['sort']."'";
@@ -126,7 +126,7 @@ class Bz extends EQdkp_Admin
                     }
 					else
 					{
-						$sql = "UPDATE ".RLI_BZ_TABLE." SET
+						$sql = "UPDATE __raidlogimport_bz SET
 								bz_string = '".$vs['string']."',
 								bz_note = '".$vs['note']."',
 								bz_bonus = '".$vs['bonus']."',
@@ -169,8 +169,8 @@ class Bz extends EQdkp_Admin
 		}
 		elseif($_POST['save'] == $user->lang['bz_yes'] AND isset($_POST['del']))
 		{
-			$sel = "SELECT bz_id, bz_string, bz_note, bz_bonus, bz_type, bz_tozone FROM ".RLI_BZ_TABLE." WHERE ";
-			$sql = "DELETE FROM ".RLI_BZ_TABLE." WHERE ";
+			$sel = "SELECT bz_id, bz_string, bz_note, bz_bonus, bz_type, bz_tozone FROM __raidlogimport_bz WHERE ";
+			$sql = "DELETE FROM __raidlogimport_bz WHERE ";
             $selected = count($_POST['del'])-1;
 			for($i=0; $i<$selected; $i++)
 			{
@@ -262,7 +262,7 @@ class Bz extends EQdkp_Admin
 
 		if(isset($_POST['bz_id']))
 		{
-			$sql = "SELECT bz_id, bz_string FROM ".RLI_BZ_TABLE." WHERE ";
+			$sql = "SELECT bz_id, bz_string FROM __raidlogimport_bz WHERE ";
 			$selected = count($_POST['bz_id'])-1;
 			for($i=0; $i<$selected; $i++)
 			{
@@ -303,7 +303,7 @@ class Bz extends EQdkp_Admin
 	{
 		global $db, $eqdkp, $user, $tpl, $SID, $pm, $html;
 
-		$sql1 = "SELECT bz_id, bz_note FROM ".RLI_BZ_TABLE." WHERE bz_type = 'zone';";
+		$sql1 = "SELECT bz_id, bz_note FROM __raidlogimport_bz WHERE bz_type = 'zone';";
 		$result1 = $db->query($sql1);
 		$zones = array();
         $zones[NULL] = 'Keine Zone';
@@ -313,7 +313,7 @@ class Bz extends EQdkp_Admin
 		}
 		if(isset($_POST['bz_id']))
 		{
-			$sql = "SELECT bz_id, bz_string, bz_bonus, bz_note, bz_type, bz_tozone, bz_sort FROM ".RLI_BZ_TABLE." WHERE ";
+			$sql = "SELECT bz_id, bz_string, bz_bonus, bz_note, bz_type, bz_tozone, bz_sort FROM __raidlogimport_bz WHERE ";
 			$selected = count($_POST['bz_id'])-1;
 			for($i=0; $i<$selected; $i++)
 			{
@@ -386,7 +386,7 @@ class Bz extends EQdkp_Admin
 	{
 		global $tpl, $eqdkp, $pm, $db, $user, $SID;
 
-		$sql = "SELECT bz_id, bz_string, bz_bonus, bz_note, bz_type, bz_tozone FROM ".RLI_BZ_TABLE." ORDER BY bz_sort ASC;";
+		$sql = "SELECT bz_id, bz_string, bz_bonus, bz_note, bz_type, bz_tozone FROM __raidlogimport_bz ORDER BY bz_sort ASC;";
 		$result = $db->query($sql);
 
 		$data = array();

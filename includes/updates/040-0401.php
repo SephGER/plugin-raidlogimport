@@ -9,7 +9,8 @@ if(!defined('EQDKP_INC'))
 $new_version    = '0.4.0.1';
 $updateFunction = false;
 
-$updateDESC = "Added Config Value.";
+$updateDESC = array('', 'Added Config Value: Log-Parser');
+$reloadSETT = 'settings.php';
 
 $updateSQL = array(
 	"INSERT INTO ".$table_prefix."importk_config (config_name, config_value) VALUES ('parser', 'ctrt');"

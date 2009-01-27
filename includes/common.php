@@ -26,7 +26,7 @@ $rli_config = rli_get_config();
 $raidlogimport = $pm->get_plugin('raidlogimport');
 if (!$pm->check(PLUGIN_INSTALLED, 'raidlogimport') )
 {
-    message_die('The DKP-Import plugin is not installed.');
+    message_die('The Raid-Log-Import plugin is not installed.');
 }
 
 ?>

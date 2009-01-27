@@ -9,12 +9,18 @@ if(!defined('EQDKP_INC'))
 $new_version    = '0.4.0';
 $updateFunction = false;
 
-$updateDESC = "Added Config Values.";
+$updateDESC = array(
+	'', 
+	'Added Config Value: MultiDKP-Support',
+	'Added Config Value: Adjustment-Parse',
+	'Added Config Value: Boss/Zone-Parse'
+);
+$reloadSETT = 'settings.php';
 
 $updateSQL = array(
-	"INSERT INTO ".$table_prefix."importk_config (config_name, config_value) VALUES ('conf_adjustment', '".$conf_plus['pk_multidkp']."');",
-	"INSERT INTO ".$table_prefix."importk_config (config_name, config_value) VALUES ('adj_parse', ': ');",
-	"INSERT INTO ".$table_prefix."importk_config (config_name, config_value) VALUES ('bz_parse', ',');",
+	"INSERT INTO ".$table_prefix."raidlogimport_config (config_name, config_value) VALUES ('conf_adjustment', '".$conf_plus['pk_multidkp']."');",
+	"INSERT INTO ".$table_prefix."raidlogimport_config (config_name, config_value) VALUES ('adj_parse', ': ');",
+	"INSERT INTO ".$table_prefix."raidlogimport_config (config_name, config_value) VALUES ('bz_parse', ',');",
 );
 
 ?>
