@@ -79,7 +79,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 				'loottime'			=> '600', //time after bosskill to assign loot to boss (in seconds)
 				'attendence_begin' 	=> '0',
 				'attendence_end'	=> '0',
-				'attendence_raid'	=> '0', //create extra raid for attendence?
+				'attendence_raid'	=> $conf_plus['pk_multidkp'], //create extra raid for attendence?
 				'attendence_time'	=> '900', //time of inv (in seconds)
 				'event_boss'		=> '0',  //exists an event per boss?
 				'conf_adjustment'	=> $conf_plus['pk_multidkp'],  //the columns earned, spent and so on wont be filled, everything works by adjs and raid_value
@@ -139,7 +139,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
                 break;
 
 			case "1b":
-	    		$sql = "CREATE TABLE IF NOT EXISTS __raidlogimportk_aliases (
+	    		$sql = "CREATE TABLE IF NOT EXISTS __raidlogimport_aliases (
 					   	`alias_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 					   	`alias_member_id` INT NOT NULL ,
 					   	`alias_name` VARCHAR(50) NOT NULL

@@ -3,9 +3,7 @@
 define('EQDKP_INC', true);
 define('IN_ADMIN', true);
 
-$eqdkp_root_path = './../../';
-
-include_once($eqdkp_root_path . 'common.php');
+include_once('common.php');
 
 
 class Add_Alias extends EQdkp_Admin

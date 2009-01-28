@@ -306,7 +306,7 @@ function check_data($data)
 		{
 			if($raid['key'] != '')
 			{
-				if(!($raid['event'] AND $raid['value'] AND $raid['note'] AND $raid['start_date'] AND $raid['start_time'] AND $raid['end_date'] AND $raid['end_time']))
+				if(!($raid['event'] AND $raid['value'] AND $raid['note'] AND $raid['begin'] AND $raid['end']))
 				{
 					$bools['false']['raid'] = FALSE;
 				}
@@ -644,6 +644,7 @@ function parse_post($post)
       	$raids[$key]['begin'] = mktime($hour, $min, $sec, $month, $day, $year);
       	list($day, $month, $year) = explode('.', $raid['end_date'], 3);
       	list($hour, $min, $sec) = explode(':', $raid['end_time'], 3);
+      	$raids[$key]['key'] = $raid['key'];
       	$raids[$key]['end'] = mktime($hour, $min, $sec, $month, $day, $year);
       	$raids[$key]['note'] = $raid['note'];
       	$raids[$key]['value'] = $raid['value'];

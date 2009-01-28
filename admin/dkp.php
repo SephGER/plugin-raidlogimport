@@ -745,6 +745,7 @@ class raidlogimport extends EQdkp_Admin
 		$isok = true;
 
 		$bools = check_data($data);
+		var_dump($data['raids']);
 		if(!isset($bools['false']))
 		{
 		  $db->query("START TRANSACTION");
@@ -898,8 +899,10 @@ class raidlogimport extends EQdkp_Admin
 
 		  if($isok)
 		  {
-			foreach($data['adjs'] as $adj)
-			{
+		  	if(is_array($data['adjs']))
+		  	{
+			  foreach($data['adjs'] as $adj)
+			  {
 				if($adj['do'])
 				{
 					$group_key = $this->gen_group_key($this->time, stripslashes($adj['reason']), $adj['value'], $adj['event']);
@@ -914,7 +917,8 @@ class raidlogimport extends EQdkp_Admin
 						break;
 					}
 				}
-			}
+			  }
+		  	}
 		  }
 
 		  if ($isok)
@@ -979,8 +983,10 @@ class raidlogimport extends EQdkp_Admin
             }
 
             //adjs
-            foreach($data['adjs'] as $adj)
+            if(is_array($data['adjs']))
             {
+              foreach($data['adjs'] as $adj)
+              {
             	if($adj['do'])
             	{
             		$log_actions[] = array(
@@ -992,6 +998,7 @@ class raidlogimport extends EQdkp_Admin
             			'{L_ADDED_BY}'		=> 'DKP-Import (by '.$user->data['username'].')'
             		);
             	}
+              }
             }
             foreach($log_actions as $log_action)
             {
@@ -1059,7 +1066,7 @@ class raidlogimport extends EQdkp_Admin
     {
         global $db, $eqdkp, $user, $tpl, $pm;
         global $SID;
-	echo "test";
+
         $tpl->assign_vars(array(
             'F_PARSE_LOG'    => 'dkp.php' . $SID,
             'L_INSERT'		 => $user->lang['rli_dkp_insert'],
