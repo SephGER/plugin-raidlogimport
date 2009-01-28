@@ -68,13 +68,8 @@
       </tr>
       <!-- BEGIN loots -->
       <tr class="{loots.CLASS}">
-      	<!-- IF loots.INPUT_ITEMNAME -->
-      	<td width="20px">&nbsp;</td>
-      	<td><input type="text" name="loots[{loots.KEY}][name]" class="maininput" value="{loots.LOOTNAME}" /></td>
-      	<!-- ELSE -->
-      	<td width="20px"><input type="checkbox" name="loots[{loots.KEY}][name]" class="maininput" checked="checked" value="{loots.LOOTNAME}" /></td>
-      	<td>{loots.LOOTNAME}</td>
-      	<!-- ENDIF -->
+      	<td width="20px"><input type="checkbox" name="loots[{loots.KEY}][key]" class="maininput" checked="checked" value="{loots.KEY}" /></td>
+      	<td><input type="text" name="loots[{loots.KEY}][name]" class="maininput" value="{loots.LOOTNAME}" size="40" /></td>
       	<td>{loots.LOOTER}</td>
       	<td>{loots.RAID}</td>
       	<td><input type="text" name="loots[{loots.KEY}][dkp]" value="{loots.LOOTDKP}" class="maininput" size="7" /></td>
@@ -97,6 +92,8 @@
       					<input type="hidden" name="add_item_data" value='{ADD_ITEM_DATA}' />
       					<input type="submit" name="checkraid" value="{L_BACK2RAID}" class="mainoption" />
       					<input type="submit" name="checkmem" value="{L_BACK2MEM}" class="mainoption" />
-      					<input type="submit" name="checkadj" value="{L_CHECKADJS}" class="mainoption" /></th>
+      					<input type="submit" name="checkadj" value="{L_CHECKADJS}" class="mainoption" />
+      	</th>
+      </tr>
     </table>
 </form>

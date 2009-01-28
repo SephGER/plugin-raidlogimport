@@ -97,25 +97,21 @@ class raidlogimport extends EQdkp_Admin
 		global $db, $eqdkp, $user, $tpl, $pm;
 		global $myHtml, $rli_config;
 
-        if(isset($_POST['log']))
+        if(isset($_POST['rest']))
         {
-            $_POST['log'] = trim(str_replace("&", "and", html_entity_decode($_POST['log'])));
-            $dkpstring   = utf8_encode($_POST['log']);
-            $raidxml     = simplexml_load_string($dkpstring);
+        	$data = unserialize($_POST['rest']);
+        	$raids = $data['raids'];
         }
-
         if(isset($_POST['raids']))
         {
             $data['raids'] = parse_post($_POST['raids']);
             $raids = $data['raids'];
         }
-        elseif(isset($_POST['rest']))
+        if(isset($_POST['log']))
         {
-        	$data = unserialize($_POST['rest']);
-        	$raids = $data['raids'];
-        }
-        else
-        {
+          $_POST['log'] = trim(str_replace("&", "and", html_entity_decode($_POST['log'])));
+          $dkpstring   = utf8_encode($_POST['log']);
+          $raidxml     = simplexml_load_string($dkpstring);
 		  if (!$raidxml)
 		  {
 			  message_die($user->lang['xml_error']);
@@ -745,7 +741,6 @@ class raidlogimport extends EQdkp_Admin
 		$isok = true;
 
 		$bools = check_data($data);
-		var_dump($data['raids']);
 		if(!isset($bools['false']))
 		{
 		  $db->query("START TRANSACTION");
@@ -781,9 +776,11 @@ class raidlogimport extends EQdkp_Admin
 	            $item_gameidExists = TRUE;
 	        }
        		$lootdkp = array();
-	        foreach($data['loots'] as $key => $loot)
-	        {
-	          if($loot['name'] != '')
+       		if(is_array($data['loots']))
+       		{
+	         foreach($data['loots'] as $key => $loot)
+	         {
+	          if($loot['key'] != '')
 	          {
 	        	$lootdkp[$loot['player']] = $lootdkp[$loot['player']] + $loot['dkp'];
 				$sql = "INSERT INTO __items
@@ -815,6 +812,7 @@ class raidlogimport extends EQdkp_Admin
 					break;
 				}
 			  }
+	         }
 	        }
           }
 
@@ -970,16 +968,22 @@ class raidlogimport extends EQdkp_Admin
 			}
 
             //items
-            foreach ($data['loots'] as $loot)
+            if(is_array($data['loots']))
             {
-            	$log_actions[] = array(
-            		'header' 		=> '{L_ACTION_ITEM_ADDED}',
-            		'{L_NAME}'		=> $loot['name'],
-            		'{L_BUYERS}'	=> $loot['player'],
-            		'{L_RAID_ID}'	=> $newraidid,
-            		'{L_VALUE}'		=> $loot['dkp'],
-            		'{L_ADDED_BY}'	=> 'Import-DKP (by '.$user->data['username'].')'
-            	);
+              foreach ($data['loots'] as $loot)
+              {
+              	if($loot['key'] != '')
+              	{
+	            	$log_actions[] = array(
+    	        		'header' 		=> '{L_ACTION_ITEM_ADDED}',
+    	        		'{L_NAME}'		=> $loot['name'],
+            			'{L_BUYERS}'	=> $loot['player'],
+            			'{L_RAID_ID}'	=> $newraidid,
+            			'{L_VALUE}'		=> $loot['dkp'],
+	            		'{L_ADDED_BY}'	=> 'Import-DKP (by '.$user->data['username'].')'
+    	        	);
+    	        }
+              }
             }
 
             //adjs

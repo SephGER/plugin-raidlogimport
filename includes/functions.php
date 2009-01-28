@@ -325,9 +325,9 @@ function check_data($data)
 	{
 		foreach($data['loots'] as $loot)
 		{
-			if($loot['name'] != '')
+			if($loot['key'] != '')
 			{
-				if(!($loot['player'] AND $loot['raid'] AND $loot['dkp'] != ''))
+				if(!($loot['name'] AND $loot['player'] AND $loot['raid'] AND $loot['dkp'] != ''))
 				{
 					$bools['false']['item'] = FALSE;
 				}
@@ -721,8 +721,6 @@ function parse_items($post, $data)
 {
 	foreach($post as $k => $loot)
 	{
-	  if(isset($loot['name']))
-	  {
     	foreach($data as $key => $item)
     	{
 			if($item['name'] == $loot['name'] AND $item['player'] == $loot['player'])
@@ -732,7 +730,6 @@ function parse_items($post, $data)
 				$tdata[$key]['id'] = $item['id'];
 			}
 		}
-	  }
 	}
 	return $tdata;
 }
