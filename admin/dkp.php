@@ -54,7 +54,6 @@ class raidlogimport extends EQdkp_Admin
                 )
         );
 
-        $rli_config = rli_get_config();
         if (get_magic_quotes_gpc()) {
             function stripslashes_array($array) {
                 return is_array($array) ? array_map('stripslashes_array', $array) : stripslashes($array);
@@ -372,6 +371,16 @@ class raidlogimport extends EQdkp_Admin
 					$raids[$key]['value'] = $rli_config['attendence_end'];
 				}
 			}
+			else
+			{
+			  foreach($raids as $k => $r)
+			  {
+				if($rli_config['attendence_begin'] > 0 OR $rli_config['attendence_end'] > 0)
+				{
+					$raids[$k]['value'] = $r['value'] + $rli_config['attendence_begin'] + $rli_config['attendence_end'];
+				}
+			  }
+			}
 			ksort($raids);
 		  }
         }//post or string
@@ -522,7 +531,9 @@ class raidlogimport extends EQdkp_Admin
 		            $member['time'] = calculate_time($member, $ra['end'], $ra['begin']);
 		            $member['timedkp'] += calculate_timedkp($ra['timebonus'], $member['time']);
 		            $member['bossdkp'] += calculate_bossdkp($ra['bosskills'], $member);
+		            $end = $ra['end'];
 		        }
+		        $begin = $data['raids'][1]['begin'];
 	            $att_dkp = calculate_attendence($member, $rli_config['attendence_begin'], $rli_config['attendence_end'], $rli_config['attendence_time'], $begin, $end);
 	            $member['att_begin'] = $att_dkp['begin'];
 	            $member['att_end'] = $att_dkp['end'];
@@ -627,8 +638,8 @@ class raidlogimport extends EQdkp_Admin
 
 		$tpl->assign_vars(array(
 			'DATA'			=> htmlspecialchars(serialize($data), ENT_QUOTES),
-			'S_ATT_BEGIN'	=> ($rli_config['att_begin'] > 0) ? TRUE : FALSE,
-			'S_ATT_END'		=> ($rli_config['att_end'] > 0) ? TRUE : FALSE,
+			'S_ATT_BEGIN'	=> ($rli_config['attendence_begin'] > 0) ? TRUE : FALSE,
+			'S_ATT_END'		=> ($rli_config['attendence_end'] > 0) ? TRUE : FALSE,
 			'S_CONF_ADJ'	=> ($rli_config['conf_adjustment']) ? FALSE : TRUE)
 		);
 
@@ -716,8 +727,8 @@ class raidlogimport extends EQdkp_Admin
 
 		$tpl->assign_vars(array(
 			'DATA'			=> htmlspecialchars(serialize($data), ENT_QUOTES),
-			'S_ATT_BEGIN'	=> ($rli_config['att_begin'] > 0) ? TRUE : FALSE,
-			'S_ATT_END'		=> ($rli_config['att_end'] > 0) ? TRUE : FALSE,
+			'S_ATT_BEGIN'	=> ($rli_config['attendence_begin'] > 0) ? TRUE : FALSE,
+			'S_ATT_END'		=> ($rli_config['attendence_end'] > 0) ? TRUE : FALSE,
 			'S_CONF_ADJ'	=> ($rli_config['conf_adjustment']) ? FALSE : TRUE)
 		);
 
@@ -756,7 +767,7 @@ class raidlogimport extends EQdkp_Admin
 			$sql = "INSERT INTO __raids
         		      (`raid_id`, `raid_name`, `raid_date`, `raid_note`, `raid_value`, `raid_added_by`)
         		    VALUES
-        		      ('".$newraidid."', '".$raid['event']."', '".$raid['begin']."', '".mysql_real_escape_string($raid['note'])."', '".$raid['value']."', 'DKP-Import (by ".$user->data['username'].")');";
+        		      ('".$newraidid."', '".$raid['event']."', '".$raid['begin']."', '".mysql_real_escape_string($raid['note'])."', '".$raid['value']."', 'Raid-Log-Import (by ".$user->data['username'].")');";
         	if(!$db->query($sql))
         	{
         		echo "raids_table: <br />".$sql."<br />";
@@ -858,13 +869,13 @@ class raidlogimport extends EQdkp_Admin
 					if(!$rli_config['conf_adjustment']) //else: we have added adjustments!
 					{
 		                $dkp = $member['timedkp'] + $member['bossdkp'];
-						if($rli_config['attendence_begin'] > 0 AND isset($member['att_begin']))
+						if($rli_config['attendence_begin'] > 0 AND isset($member['att_dkp_begin']))
 						{
-							$dkp += $member['att_begin'];
+							$dkp += $member['att_dkp_begin'];
 						}
-						if($rli_config['attendence_end'] > 0 AND isset($member['att_end']))
+						if($rli_config['attendence_end'] > 0 AND isset($member['att_dkp_end']))
 						{
-							$dkp += $member['att_end'];
+							$dkp += $member['att_dkp_end'];
 						}
 						$sql = "UPDATE __members SET
 									member_earned = member_earned + '".$dkp."',
@@ -907,7 +918,7 @@ class raidlogimport extends EQdkp_Admin
 					$sql = "INSERT INTO __adjustments
 								(`adjustment_value`, `adjustment_date`, `member_name`, `adjustment_reason`, `adjustment_added_by`, `adjustment_group_key`, `raid_name`)
 						    VALUES
-						    	('".$adj['value']."', '".$data['raids'][1]['begin']."', '".$adj['member']."', '".$adj['reason']."', 'DKP-Import (by ".$user->data['username'].")', '".$group_key."', '".$adj['event']."');";
+						    	('".$adj['value']."', '".$data['raids'][1]['begin']."', '".$adj['member']."', '".$adj['reason']."', 'Raid-Log-Import (by ".$user->data['username'].")', '".$group_key."', '".$adj['event']."');";
 					if(!$db->query($sql))
 					{
 						echo "adjustment_table: <br />".$sql."<br />";
@@ -944,7 +955,7 @@ class raidlogimport extends EQdkp_Admin
 					'{L_ATTENDEES}' => $member_str,
 					'{L_NOTE}'		=> $raid['note'],
 					'{L_VALUE}'		=> $raid['value'],
-					'{L_ADDED_BY}'	=> 'Import-DKP (by '.$user->data['username'].')'
+					'{L_ADDED_BY}'	=> 'Raid-Log-Import (by '.$user->data['username'].')'
 				);
                 $log_actions['btdkp']['Raid('.$key.')'] = sprintf($user->lang['rli_raid_to'], $raid['event'], date($user->style['date_notime_short'], $raid['begin']));
                 $log_actions['btdkp']['raid_id('.$key.')'] = $raid['id'];
@@ -961,7 +972,7 @@ class raidlogimport extends EQdkp_Admin
 	                    $alias = "(".$member['alias'].")";
 	                }
 	                $att_dkp = 0;
-	                $att_dkp = $member['att_begin'] + $member['att_end'];
+	                $att_dkp = $member['att_dkp_begin'] + $member['att_dkp_end'];
 	                $log_actions['btdkp'][$member['name'].$alias] = $user->lang['rli_t_dkp'].": ".$member['timedkp'].", ".$user->lang['rli_b_dkp'];
 	                $log_actions['btdkp'][$member['name'].$alias] .= ": ".$member['bossdkp'].", ".$user->lang['rli_att']." :".$att_dkp;
 	            }
@@ -980,7 +991,7 @@ class raidlogimport extends EQdkp_Admin
             			'{L_BUYERS}'	=> $loot['player'],
             			'{L_RAID_ID}'	=> $newraidid,
             			'{L_VALUE}'		=> $loot['dkp'],
-	            		'{L_ADDED_BY}'	=> 'Import-DKP (by '.$user->data['username'].')'
+	            		'{L_ADDED_BY}'	=> 'Raid-Log-Import (by '.$user->data['username'].')'
     	        	);
     	        }
               }
@@ -999,7 +1010,7 @@ class raidlogimport extends EQdkp_Admin
             			'{L_REASON}'		=> $adj['reason'],
             			'{L_MEMBER}'		=> $adj['member'],
             			'{L_EVENT}'			=> $adj['event'],
-            			'{L_ADDED_BY}'		=> 'DKP-Import (by '.$user->data['username'].')'
+            			'{L_ADDED_BY}'		=> 'Raid-Log-Import (by '.$user->data['username'].')'
             		);
             	}
               }

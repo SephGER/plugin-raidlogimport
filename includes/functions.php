@@ -517,13 +517,13 @@ function member_in_raid($member, $raid)
 	return $retur;
 }
 
-function calculate_attendence($member, $begin, $end, $time, $raid)
+function calculate_attendence($member, $begin, $end, $time, $beg, $en)
 {
 	$dkp['begin'] = 0;
 	$dkp['end'] = 0;
 	foreach($member['join'] as $jt)
 	{
-		if(($raid['begin'] + $time) > $jt)
+		if(($beg + $time) > $jt)
 		{
 			$dkp['begin'] = $begin;
 			break;
@@ -531,7 +531,7 @@ function calculate_attendence($member, $begin, $end, $time, $raid)
 	}
 	foreach($member['leave'] as $lt)
 	{
-		if(($raid['end'] - $time) < $lt)
+		if(($en - $time) < $lt)
 		{
 			$dkp['end'] = $end;
 			break;
@@ -674,6 +674,8 @@ function parse_members($post, $data)
 				$data['members'][$key]['raid_list'] = $mem['raid_list'];
 				$data['members'][$key]['timedkp'] = $mem['timedkp'];
 				$data['members'][$key]['bossdkp'] = $mem['bossdkp'];
+				$data['members'][$key]['att_dkp_begin'] = $mem['att_begin'];
+				$data['members'][$key]['att_dkp_end'] = $mem['att_end'];
 				if($rli_config['conf_adjustment'])
 				{
 					if($mem['raid_list'] != '')
@@ -686,6 +688,7 @@ function parse_members($post, $data)
 								$raid = $data['raids'][$raid_id];
 								$time = calculate_time($member, $raid['end'], $raid['begin']);
 								$dkp = calculate_timedkp($raid['timebonus'], $time) + calculate_bossdkp($raid['bosskills'], $member);
+								$dkp = $dkp + $mem['att_begin'] + $mem['att_end'];
 								if($dkp <  $raid['value'])
 								{	//add an adjustment
 									$dkp -= $raid['value'];
