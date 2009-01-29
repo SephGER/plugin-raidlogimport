@@ -81,15 +81,19 @@ function calculate_timedkp($dkpperhour, $timearray) {
 
 function calculate_bossdkp($kills, $player) {
 	$bossdkp = 0;
+	echo $player['name'].': ';
 	foreach($kills as $kill)
 	{
 		$count = count($player['join']);
 		for($i = 1;$i <= $count;$i++) {
 			$join  = $player['join'][$i];
 			$leave = $player['leave'][$i];
+			echo date('d H:i:s', $join).' < '.date('d H:i:s', $kill['time']).' <  '.date('d H:i:s', $leave).': ';
 			if ($join < $kill['time'] and $leave > $kill['time']) {
+				echo "true";
 				$bossdkp = $bossdkp + $kill['bonus'];
 			}
+			echo "                     ";
 		}
 	}
 	return $bossdkp;
@@ -654,6 +658,7 @@ function parse_post($post)
       	foreach($raid['bosskills'] as $u => $bk)
       	{
       		list($hour, $min, $sec) = explode(':', $bk['time']);
+      		list($day, $month, $year) = explode('.', $bk['date']);
       		$raids[$key]['bosskills'][$u]['time'] = mktime($hour, $min, $sec, $month, $day, $year);
       	}
       	$raids[$key]['timebonus'] = $raid['timebonus'];

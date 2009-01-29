@@ -9,7 +9,7 @@ class RLI_Settings extends EQdkp_Admin
 {
 	function rli_settings()
 	{
-		global $db, $pm, $tpl, $user, $eqdkp, $SID;
+		global $db, $pm, $tpl, $user, $eqdkp, $SID, $pC;
 		parent::eqdkp_admin();
 
 		$this->assoc_buttons(array(
@@ -27,6 +27,7 @@ class RLI_Settings extends EQdkp_Admin
 				'check'		=> 'a_raidlogimport_config')
 			)
 		);
+		$pC->InitAdmin();
 		$this->plug_upd = new PluginUpdater('raidlogimport', 'rli_', 'raidlogimport_config', 'includes');
 		$tpl->assign_var('UPD_IK', $this->plug_upd->OutputHTML());
 	}
@@ -68,8 +69,8 @@ class RLI_Settings extends EQdkp_Admin
 		foreach($messages as $name => $message)
 		{
 			$tpl->assign_block_vars('sucs', array(
-				'NAME'	=> $name,
-				'MESS'	=> $message,
+				'PART1'	=> $name.': ',
+				'PART2'	=> $message,
 				'CLASS' => $eqdkp->switch_row_class())
 			);
 		}

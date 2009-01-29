@@ -428,6 +428,7 @@ class raidlogimport extends EQdkp_Admin
 				}
 				$bk_string .= $myHtml->DropDown('raids['.$ky.'][bosskills]['.$xy.'][name]', $list, $sel);
 				$bk_string .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$user->lang['time'].': <input type="text" name="raids['.$ky.'][bosskills]['.$xy.'][time]" value="'.date('H:i:s', $bk['time']).'" size="9" />';
+				$bk_string .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$user->lang['date'].': <input type="text" name="raids['.$ky.'][bosskills]['.$xy.'][date]" value="'.date('d.m.y', $bk['time']).'" size="9" />';
 				$bk_string .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$user->lang['value'].': <input type="text" name="raids['.$ky.'][bosskills]['.$xy.'][bonus]" value="'.$bk['bonus'].'" size="5" /><br />';
 			}
 			if($eqdkp->config['default_game'] == 'WoW')
@@ -531,6 +532,7 @@ class raidlogimport extends EQdkp_Admin
 		            $member['time'] = calculate_time($member, $ra['end'], $ra['begin']);
 		            $member['timedkp'] += calculate_timedkp($ra['timebonus'], $member['time']);
 		            $member['bossdkp'] += calculate_bossdkp($ra['bosskills'], $member);
+		            echo "<br />";
 		            $end = $ra['end'];
 		        }
 		        $begin = $data['raids'][1]['begin'];
