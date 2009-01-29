@@ -532,7 +532,6 @@ class raidlogimport extends EQdkp_Admin
 		            $member['time'] = calculate_time($member, $ra['end'], $ra['begin']);
 		            $member['timedkp'] += calculate_timedkp($ra['timebonus'], $member['time']);
 		            $member['bossdkp'] += calculate_bossdkp($ra['bosskills'], $member);
-		            echo "<br />";
 		            $end = $ra['end'];
 		        }
 		        $begin = $data['raids'][1]['begin'];
