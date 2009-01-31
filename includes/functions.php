@@ -350,6 +350,11 @@ function check_data($data)
 	return $bools;
 }
 
+function check_ctrt_format($xml)
+{
+	return true;
+}
+
 function parse_ctrt_string($xml)
 {
 	global $rli_config;
@@ -453,7 +458,14 @@ function parse_string($xml)
 
 	if(function_exists('parse_'.$rli_config['parser'].'_string'))
 	{
-		$raid = call_user_func('parse_'.$rli_config['parser'].'_string', $xml);
+		if(call_user_func('check_'.$rli_config['parser'].'_format', $xml))
+		{
+			$raid = call_user_func('parse_'.$rli_config['parser'].'_string', $xml);
+		}
+		else
+		{
+			message_die($user->lang['wrong_format'].' '.$user->lang['ctrt_format']);
+		}
 	}
 	else
 	{
@@ -474,7 +486,7 @@ function member_in_raid($member, $raid)
 	}
 	foreach($member['leave'] as $tl)
 	{
-		if(array_key_exists($tl, $time)){$tl++;}
+		if(array_key_exists($tl, $time)){$tl--;}
 		$time[$tl] = 'leave';
 	}
 	ksort($time);
@@ -609,7 +621,11 @@ function raids2tpl($key, $raid)
 
 function mems2tpl($key, $member)
 {
-	global $eqdkp;
+    global $eqdkp;
+	if(isset($member['alias']))
+	{
+		$member['alias'] = '('.$member['alias'].')';
+	}
 	return array(
        	'MITGLIED' => $member['name'],
         'ALIAS'    => $member['alias'],
@@ -665,18 +681,22 @@ function parse_post($post)
 function parse_members($post, $data)
 {
 	global $rli_config, $user;
-	foreach($post as $mem)
+	foreach($post as $k => $mem)
 	{
         $i = count($data['adjs'])+1;
 		foreach($data['members'] as $key => $member)
 		{
-			if($mem['name'] == $member['name'])
+			if($k == $key)
 			{
 				$data['members'][$key]['raid_list'] = $mem['raid_list'];
 				$data['members'][$key]['timedkp'] = $mem['timedkp'];
 				$data['members'][$key]['bossdkp'] = $mem['bossdkp'];
 				$data['members'][$key]['att_dkp_begin'] = $mem['att_begin'];
 				$data['members'][$key]['att_dkp_end'] = $mem['att_end'];
+				if(isset($mem['alias']))
+				{
+	                $data['members'][$key]['alias'] = $mem['alias'];
+	            }
 				if($rli_config['conf_adjustment'])
 				{
 					if($mem['raid_list'] != '')
@@ -727,7 +747,7 @@ function parse_items($post, $data)
 	{
     	foreach($data as $key => $item)
     	{
-			if($item['name'] == $loot['name'] AND $item['player'] == $loot['player'])
+			if($k == $key)
 			{
 				$tdata[$key] = $loot;
 				$tdata[$key]['time'] = $item['time'];

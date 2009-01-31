@@ -536,8 +536,8 @@ class raidlogimport extends EQdkp_Admin
 		        }
 		        $begin = $data['raids'][1]['begin'];
 	            $att_dkp = calculate_attendence($member, $rli_config['attendence_begin'], $rli_config['attendence_end'], $rli_config['attendence_time'], $begin, $end);
-	            $member['att_begin'] = $att_dkp['begin'];
-	            $member['att_end'] = $att_dkp['end'];
+	            $member['att_dkp_begin'] = $att_dkp['begin'];
+	            $member['att_dkp_end'] = $att_dkp['end'];
 	        }
 
            	$tpl->assign_block_vars('player', array(
@@ -546,8 +546,8 @@ class raidlogimport extends EQdkp_Admin
                 'RAID_LIST'=> $member['raid_list'],
                 'ZEITDKP'  => $member['timedkp'],
                 'BOSSDKP'  => $member['bossdkp'],
-                'ATT_BEGIN'=> $member['att_begin'],
-                'ATT_END'  => $member['att_end'],
+                'ATT_BEGIN'=> $member['att_dkp_begin'],
+                'ATT_END'  => $member['att_dkp_end'],
                 'ZAHL'     => $eqdkp->switch_row_class(),
                 'KEY'	   => $key)
            	);

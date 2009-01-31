@@ -48,7 +48,8 @@ class Alias extends EQdkp_Admin
             'U_ADD_ALIAS'    => 'alias.php' . $SID . '&amp;mode=addalias',
             'U_ADD_ALIAS_L'  => $user->lang['rli_addalias'],
             'U_LIST_ALIAS' 	 => 'alias.php' . $SID . '&amp;mode=showalias',
-            'U_LIST_ALIAS_L' => $user->lang['rli_showalias'])
+            'U_LIST_ALIAS_L' => $user->lang['rli_showalias'],
+            'L_SUCCESS'		 => $user->lang['rli_suc'])
         );
 
         $eqdkp->set_vars(array(
