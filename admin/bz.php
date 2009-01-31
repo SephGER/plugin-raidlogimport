@@ -240,12 +240,12 @@ class Bz extends EQdkp_Admin
 		}
 		$tpl->assign_block_vars('links', array(
 			'SUC_LINK' 	=> 'bz.php',
-			'SUC_PAGE' 	=> $user->lang['raidlogimport_bz'])
+			'SUC_PAGE' 	=> $user->lang['raidlogimport_bz'],
+            'CLASS'     => $eqdkp->switch_row_class())
 		);
 		$tpl->assign_vars(array(
 			'L_SUCCESS'	=> $user->lang['bz_suc'],
-			'L_LINKS'	=> $user->lang['links'],
-			'CLASS'		=> $eqdkp->switch_row_class())
+			'L_LINKS'	=> $user->lang['links'])
 		);
 		$eqdkp->set_vars(array(
             'page_title'        => sprintf($user->lang['admin_title_prefix'], $eqdkp->config['guildtag'], $eqdkp->config['dkp_name']).': '.$user->lang['rli_bz_bz'],

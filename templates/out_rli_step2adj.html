@@ -80,11 +80,11 @@
 	  	<th colspan="5">{L_ADJS}</th>
 	  </tr>
 	  <tr>
-	  	<th width="20px">&nbsp;</th><th>{L_MEMBER}</th><th>{L_EVENT}</th><th>{L_NOTE}</th><th>{L_VALUE}</th>
+	  	<th width="40px">&nbsp;</th><th>{L_MEMBER}</th><th>{L_EVENT}</th><th>{L_NOTE}</th><th>{L_VALUE}</th>
 	  </tr>
 	  <!-- BEGIN adjs -->
 	  <tr class="{adjs.CLASS}">
-	  	<td><input type="checkbox" name="adjs[{adjs.KEY}][do]" value="TRUE" class="maininput" checked="checked" /></td>
+	  	<td align="right"><img src="./../../../images/global/delete.png" alt="{L_DELETE}"><input type="checkbox" name="adjs[{adjs.KEY}][delete]" value="true" title="{L_DELETE}" /></td>
 	  	<td>{adjs.MEMBER}</td>
 	  	<td>{adjs.EVENT}</td>
 	  	<td><input type="text" name="adjs[{adjs.KEY}][reason]" value="{adjs.NOTE}" class="maininput" /></td>
@@ -93,6 +93,7 @@
 	  <!-- END adjs -->
 	  <tr class="row2">
 	  	<td colspan="2"><select name="adjs_add">
+	  		  <option value="0">0..{L_ADJS_ADD}</option>
 	  		  <option value="1">1..{L_ADJ_ADD}</option>
 	  		  <option value="2">2..{L_ADJS_ADD}</option>
 	  		  <option value="3">3..{L_ADJS_ADD}</option>

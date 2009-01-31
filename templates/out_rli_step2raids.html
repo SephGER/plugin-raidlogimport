@@ -5,13 +5,16 @@
       </tr>
       <!-- BEGIN raids -->
       <tr>
-      	<th colspan="2"><input type="checkbox" name="raids[{raids.COUNT}][key]" value="{raids.COUNT}" checked="checked" /> {raids.COUNT}. {L_RAID}: </th>
+      	<th colspan="2">
+      		<input type="checkbox" name="raids[{raids.COUNT}][key]" value="{raids.COUNT}" checked="checked" /> {raids.COUNT}. {L_RAID}:&nbsp;&nbsp;&nbsp;
+      		<img src="./../../../images/global/delete.png" alt="{L_DELETE}"><input type="checkbox" name="raids[{raids.COUNT}][delete]" value="true" title="{L_DELETE}" />
+      	</th>
       </tr>
       <tr class="row1">
       	<td>{L_START}: <input type="text" name="raids[{raids.COUNT}][start_date]" id="raid_start_date" value="{raids.START_DATE}" class="maininput" size="9" />
       			<script>
                 jQuery(function($){
-                          $('#raid_start_date').datepicker({showOn: 'button', buttonImage: './../../pluskernel/include/jquery/img/calendar.png', buttonImageOnly: true, dateFormat: 'dd.mm.yy'});
+                          $('#raid_start_date').datepicker({showOn: 'button', buttonImage: './../../../libraries/jquery/images/calendar.png', buttonImageOnly: true, dateFormat: 'dd.mm.yy'});
                 });
                 </script>
                 <input type="text" name="raids[{raids.COUNT}][start_time]" value="{raids.START_TIME}" class="maininput" size="9" />
@@ -22,7 +25,7 @@
         <td>{L_END}: <input type="text" name="raids[{raids.COUNT}][end_date]" id="raid_end_date" value="{raids.END_DATE}" class="maininput" size="9" />
         		<script>
                 jQuery(function($){
-                          $('#raid_end_date').datepicker({showOn: 'button', buttonImage: './../../pluskernel/include/jquery/img/calendar.png', buttonImageOnly: true, dateFormat: 'dd.mm.yy'});
+                          $('#raid_end_date').datepicker({showOn: 'button', buttonImage: './../../../libraries/jquery/images/calendar.png', buttonImageOnly: true, dateFormat: 'dd.mm.yy'});
                 });
                 </script>
                 <input type="text" name="raids[{raids.COUNT}][end_time]" value="{raids.END_TIME}" class="maininput" size="9" />

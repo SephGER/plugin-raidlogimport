@@ -94,7 +94,7 @@ class raidlogimport extends EQdkp_Admin
 	function process_raids()
 	{
 		global $db, $eqdkp, $user, $tpl, $pm;
-		global $myHtml, $rli_config;
+		global $myHtml, $rli_config, $eqdkp_root_path;
 
         if(isset($_POST['rest']))
         {
@@ -453,7 +453,9 @@ class raidlogimport extends EQdkp_Admin
 				$bk_string .= $myHtml->DropDown('raids['.$ky.'][bosskills]['.$xy.'][name]', $list, $sel);
 				$bk_string .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$user->lang['time'].': <input type="text" name="raids['.$ky.'][bosskills]['.$xy.'][time]" value="'.date('H:i:s', $bk['time']).'" size="9" />';
 				$bk_string .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$user->lang['date'].': <input type="text" name="raids['.$ky.'][bosskills]['.$xy.'][date]" value="'.date('d.m.y', $bk['time']).'" size="9" />';
-				$bk_string .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$user->lang['value'].': <input type="text" name="raids['.$ky.'][bosskills]['.$xy.'][bonus]" value="'.$bk['bonus'].'" size="5" /><br />';
+				$bk_string .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$user->lang['value'].': <input type="text" name="raids['.$ky.'][bosskills]['.$xy.'][bonus]" value="'.$bk['bonus'].'" size="5" />';
+				$bk_string .= '&nbsp;&nbsp;&nbsp;&nbsp;<img src="'.$eqdkp_root_path.'images/global/delete.png" alt="'.$user->lang['delete'].'"><input type="checkbox" name="raids['.$ky;
+				$bk_string .= '][bosskills]['.$xy.'][delete]" value="true" title="'.$user->lang['delete'].'" /><br />';
 			}
 			if($eqdkp->config['default_game'] == 'WoW')
 			{
@@ -698,7 +700,7 @@ class raidlogimport extends EQdkp_Admin
 		}
 		elseif(isset($_POST['adjs']))
 		{
-			$data['adjs'] = $_POST['adjs'];
+			$data['adjs'] = parse_adjs($_POST['adjs']);
 		}
 		if(isset($_POST['adjs_add']))
 		{
@@ -781,7 +783,7 @@ class raidlogimport extends EQdkp_Admin
 		global $SID, $rli_config;
 
 		$data = unserialize($_POST['rest']);
-		$data['adjs'] = $_POST['adjs'];
+		$data['adjs'] = parse_adjs($_POST['adjs']);
 		$isok = true;
 
 		$bools = check_data($data);

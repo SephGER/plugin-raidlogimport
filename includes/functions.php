@@ -612,6 +612,7 @@ function lang2tpl()
         'L_CHECKITEMS'  => $user->lang['rli_checkitem'],
         'L_CHECKMEM'    => $user->lang['rli_checkmem'],
         'L_COST'		=> $user->lang['rli_cost'],
+        'L_DELETE'		=> $user->lang['delete'],
         'L_END'         => $user->lang['rli_end'],
         'L_EVENT'       => $user->lang['event'],
         'L_INSERT'		=> $user->lang['rli_insert'],
@@ -696,6 +697,8 @@ function parse_post($post)
 {
 	foreach($post as $key => $raid)
 	{
+	  if(!isset($raid['delete']))
+	  {
       	list($day, $month, $year) = explode('.', $raid['start_date'], 3);
       	list($hour, $min, $sec) = explode(':', $raid['start_time'], 3);
       	$raids[$key]['begin'] = mktime($hour, $min, $sec, $month, $day, $year);
@@ -706,15 +709,22 @@ function parse_post($post)
       	$raids[$key]['note'] = $raid['note'];
       	$raids[$key]['value'] = $raid['value'];
       	$raids[$key]['event'] = $raid['event'];
-      	$raids[$key]['bosskills'] = $raid['bosskills'];
       	$raids[$key]['bosskill_add'] = $raid['bosskill_add'];
+      	$bosskills = array();
       	foreach($raid['bosskills'] as $u => $bk)
       	{
-      		list($hour, $min, $sec) = explode(':', $bk['time']);
-      		list($day, $month, $year) = explode('.', $bk['date']);
-      		$raids[$key]['bosskills'][$u]['time'] = mktime($hour, $min, $sec, $month, $day, $year);
+      		if(!$bk['delete'])
+      		{
+    	  		list($hour, $min, $sec) = explode(':', $bk['time']);
+	      		list($day, $month, $year) = explode('.', $bk['date']);
+      			$bosskills[$u]['time'] = mktime($hour, $min, $sec, $month, $day, $year);
+      			$bosskills[$u]['bonus'] = $bk['bonus'];
+      			$bosskills[$u]['name'] = $bk['name'];
+      		}
       	}
+      	$raids[$key]['bosskills'] = $bosskills;
       	$raids[$key]['timebonus'] = $raid['timebonus'];
+      }
 	}
 	return $raids;
 }
@@ -722,6 +732,7 @@ function parse_post($post)
 function parse_members($post, $data)
 {
 	global $rli_config, $user;
+    $members = array();
 	foreach($post as $k => $mem)
 	{
         $i = count($data['adjs'])+1;
@@ -729,14 +740,17 @@ function parse_members($post, $data)
 		{
 			if($k == $key)
 			{
-				$data['members'][$key]['raid_list'] = $mem['raid_list'];
-				$data['members'][$key]['timedkp'] = $mem['timedkp'];
-				$data['members'][$key]['bossdkp'] = $mem['bossdkp'];
-				$data['members'][$key]['att_dkp_begin'] = $mem['att_begin'];
-				$data['members'][$key]['att_dkp_end'] = $mem['att_end'];
+			  if(!$mem['delete'])
+			  {
+			  	$members[$key] = $member;
+				$members[$key]['raid_list'] = $mem['raid_list'];
+				$members[$key]['timedkp'] = $mem['timedkp'];
+				$members[$key]['bossdkp'] = $mem['bossdkp'];
+				$members[$key]['att_dkp_begin'] = $mem['att_begin'];
+				$members[$key]['att_dkp_end'] = $mem['att_end'];
 				if(isset($mem['alias']))
 				{
-	                $data['members'][$key]['alias'] = $mem['alias'];
+	                $members[$key]['alias'] = $mem['alias'];
 	            }
 				if($rli_config['conf_adjustment'])
 				{
@@ -776,9 +790,11 @@ function parse_members($post, $data)
 						}
 					}
 				}
+			  } //delete
 			}
 		}
 	}
+	$data['members'] = $members;
 	return $data;
 }
 
@@ -790,12 +806,28 @@ function parse_items($post, $data)
     	{
 			if($k == $key)
 			{
+			  if(!$loot['delete'])
+			  {
 				$tdata[$key] = $loot;
 				$tdata[$key]['time'] = $item['time'];
 				$tdata[$key]['id'] = $item['id'];
+			  }
 			}
 		}
 	}
 	return $tdata;
+}
+
+function parse_adjs($post)
+{
+	$adjs = array();
+	foreach($post as $f => $adj)
+	{
+		if(!$adj['delete'])
+		{
+			$adjs[$f] = adj;
+		}
+	}
+	return $adjs;
 }
 ?>
