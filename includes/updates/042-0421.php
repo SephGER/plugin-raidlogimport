@@ -6,7 +6,7 @@ if(!defined('EQDKP_INC'))
 	exit;
 }
 
-$new_version    = '0.4.2';
+$new_version    = '0.4.2.1';
 $updateFunction = false;
 
 $updateDESC = array();
@@ -17,13 +17,11 @@ if($eqdkp->config['default_game'] == 'WoW')
 {
 	$updateDESC = array(
 		'',
-		'Added Config Value: Hero',
-		'Added Config Value: Non-Hero'
+		'Added Config Value: dep_match',
 	);
 	$reloadSETT = 'settings.php';
 	$updateSQL = array(
-		"INSERT INTO __raidlogimport_config (config_name, config_value) VALUES ('hero', '_25');",
-		"INSERT INTO __raidlogimport_config (config_name, config_value) VALUES ('non_hero', '_10');"
+		"INSERT INTO __raidlogimport_config (config_name, config_value) VALUES ('dep_match', '0');"
 	);
 }
 

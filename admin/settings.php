@@ -101,31 +101,34 @@ class RLI_Settings extends EQdkp_Admin
 	function display_form()
 	{
 		global $db, $user, $tpl, $eqdkp, $pm, $SID, $rli_config;
+		$k = 1;
+		$endvalues = array();
 		foreach($rli_config as $name => $value)
 		{
-			$endvalue = '';
 			if($name == 'raidcount')
 			{
-                $endvalue = "<select name='".$name."'>";
+                $endvalues[$k]['value'] = "<select name='".$name."'>";
 				for($i=0; $i<=3; $i++)
 				{
 					$select = ($i == $value) ? "selected='selected'" : "";
-					$endvalue .= "<option value='".$i."' ".$select.">".$user->lang['raidcount_'.$i]."</option>";
+					$endvalues[$k]['value'] .= "<option value='".$i."' ".$select.">".$user->lang['raidcount_'.$i]."</option>";
 				}
-				$endvalue .= "</select>";
+				$endvalues[$k]['value'] .= "</select>";
+				$endvalues[$k]['name'] = $name;
 			}
 			elseif($name == 'parser')
 			{
 				$parsers = array('ctrt' => 'CT-Raidtracker');
-				$endvalue = "<select name='".$name."'>";
+				$endvalues[$k]['value'] = "<select name='".$name."'>";
 				foreach($parsers as $parser => $display)
 				{
 					$select = ($parser == $value) ? "selected='selected'" : "";
-					$endvalue .= "<option value='".$parser."' ".$select.">".$display."</option>";
+					$endvalues[$k]['value'] .= "<option value='".$parser."' ".$select.">".$display."</option>";
 				}
-				$endvalue .= "</select>";
+				$endvalues[$k]['value'] .= "</select>";
+				$endvalues[$k]['name'] = $name;
 			}
-			elseif($name == 'event_boss' OR $name == 'attendence_raid' OR $name == 'conf_adjustment')
+			elseif($name == 'event_boss' OR $name == 'attendence_raid' OR $name == 'conf_adjustment' OR $name == 'dep_match')
 			{
 				$check_1 = '';
 				$check_0 = '';
@@ -137,20 +140,28 @@ class RLI_Settings extends EQdkp_Admin
 				{
 					$check_0 = "checked='checked'";
 				}
-				$endvalue = "<input type='radio' name='".$name."' value='1' ".$check_1." />".$user->lang['yes']."&nbsp;&nbsp;&nbsp;";
-				$endvalue .= "&nbsp;&nbsp;&nbsp;<input type='radio' name='".$name."' value='0' ".$check_0." />".$user->lang['no'];
+				$endvalues[$k]['value'] = "<input type='radio' name='".$name."' value='1' ".$check_1." />".$user->lang['yes']."&nbsp;&nbsp;&nbsp;";
+				$endvalues[$k]['value'] .= "&nbsp;&nbsp;&nbsp;<input type='radio' name='".$name."' value='0' ".$check_0." />".$user->lang['no'];
+				$endvalues[$k]['name'] = $name;
 			}
 			elseif($name == 'rli_inst_version')
 			{
-				$endvalue = $value. "&nbsp;<input type='submit' name='man_db_up' value='".$user->lang['rli_man_db_up']."' class='mainoption' />";
+				$endvalues[0]['value'] = $value. "&nbsp;<input type='submit' name='man_db_up' value='".$user->lang['rli_man_db_up']."' class='mainoption' />";
+				$endvalues[0]['name'] = $name;
 			}
 			else
 			{
-				$endvalue = "<input type='text' name='".$name."' value='".$value."' class='maininput' />";
+				$endvalues[$k]['value'] = "<input type='text' name='".$name."' value='".$value."' class='maininput' />";
+				$endvalues[$k]['name'] = $name;
 			}
+			$k++;
+        }
+        ksort($endvalues);
+        foreach($endvalues as $endvalue)
+        {
 			$tpl->assign_block_vars('config', array(
-				'NAME'	=> $user->lang[$name],
-				'VALUE' => $endvalue,
+				'NAME'	=> $user->lang[$endvalue['name']],
+				'VALUE' => $endvalue['value'],
 				'CLASS' => $eqdkp->switch_row_class())
 			);
 		}

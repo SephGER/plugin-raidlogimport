@@ -37,7 +37,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
             'path'          => 'raidlogimport',
             'contact'       => 'bloodyhoof@gmx.net',
             'template_path' => 'plugins/raidlogimport/templates/',
-            'version'       => '0.4.2')
+            'version'       => '0.4.2.1')
         );
 
     	$this->additional_data = array(
@@ -105,8 +105,9 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 						}
 					}
 					$config_data = array(
-						'hero'				=> '_25',
-						'non_hero'			=> '_10'
+						'hero'				=> '_25',	//suffix for hero
+						'non_hero'			=> '_10',	//suffix for non-hero
+						'dep_match'			=> '0'		//also append suffix to boss-note?
 					);
 					$this->insert_data($config_data);
 					break;

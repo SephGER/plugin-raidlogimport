@@ -13,7 +13,7 @@ $updateDESC = array('', 'Added Config Value: Log-Parser');
 $reloadSETT = 'settings.php';
 
 $updateSQL = array(
-	"INSERT INTO ".$table_prefix."importk_config (config_name, config_value) VALUES ('parser', 'ctrt');"
+	"INSERT INTO __raidlogimport_config (config_name, config_value) VALUES ('parser', 'ctrt');"
 );
 
 ?>
