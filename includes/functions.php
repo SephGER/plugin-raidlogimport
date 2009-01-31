@@ -825,7 +825,7 @@ function parse_adjs($post)
 	{
 		if(!$adj['delete'])
 		{
-			$adjs[$f] = adj;
+			$adjs[$f] = $adj;
 		}
 	}
 	return $adjs;

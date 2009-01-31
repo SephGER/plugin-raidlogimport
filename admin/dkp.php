@@ -780,7 +780,7 @@ class raidlogimport extends EQdkp_Admin
 	function insert_log()
 	{
 		global $db, $eqdkp, $user, $tpl, $pm;
-		global $SID, $rli_config;
+		global $SID, $rli_config, $conf_plus;
 
 		$data = unserialize($_POST['rest']);
 		$data['adjs'] = parse_adjs($_POST['adjs']);
@@ -824,9 +824,7 @@ class raidlogimport extends EQdkp_Admin
        		$lootdkp = array();
        		if(is_array($data['loots']))
        		{
-	         foreach($data['loots'] as $key => $loot)
-	         {
-	          if($loot['key'] != '')
+	          foreach($data['loots'] as $key => $loot)
 	          {
 	        	$lootdkp[$loot['player']] = $lootdkp[$loot['player']] + $loot['dkp'];
 				$sql = "INSERT INTO __items
@@ -858,9 +856,31 @@ class raidlogimport extends EQdkp_Admin
 					break;
 				}
 			  }
-	         }
 	        }
           }
+		  
+		  $adj_dkp = array();
+		  if($isok)
+		  {
+		  	if(is_array($data['adjs']))
+		  	{
+			  	foreach($data['adjs'] as $adj)
+			  	{
+					$group_key = $this->gen_group_key($this->time, stripslashes($adj['reason']), $adj['value'], $adj['event']);
+					$sql = "INSERT INTO __adjustments
+								(`adjustment_value`, `adjustment_date`, `member_name`, `adjustment_reason`, `adjustment_added_by`, `adjustment_group_key`, `raid_name`)
+						    VALUES
+						    	('".$adj['value']."', '".$data['raids'][1]['begin']."', '".$adj['member']."', '".$adj['reason']."', 'Raid-Log-Import (by ".$user->data['username'].")', '".$group_key."', '".$adj['event']."');";
+					$adj_dkp[$adj['member']] += $adj['value'];
+					if(!$db->query($sql))
+					{
+						echo "adjustment_table: <br />".$sql."<br />";
+						$isok = false;
+						break;
+					}
+				}
+		  	}
+		  }
 
 		  if($isok)
 		  {
@@ -901,26 +921,40 @@ class raidlogimport extends EQdkp_Admin
 						}
 					}
 					//dkp
-					if(!$rli_config['conf_adjustment']) //else: we have added adjustments!
+					if(!$conf_plus['pk_multidkp'])
 					{
-		                $dkp = $member['timedkp'] + $member['bossdkp'];
-						if($rli_config['attendence_begin'] > 0 AND isset($member['att_dkp_begin']))
+						$dkp = 0;
+						if($rli_config['conf_adjustment'])
 						{
-							$dkp += $member['att_dkp_begin'];
+							foreach($data['raids'] as $raid)
+							{
+								$dkp = $dkp + $raid['value'];
+							}
 						}
-						if($rli_config['attendence_end'] > 0 AND isset($member['att_dkp_end']))
+						else
 						{
-							$dkp += $member['att_dkp_end'];
+			                $dkp = $member['timedkp'] + $member['bossdkp'];
+							if($rli_config['attendence_begin'] > 0 AND isset($member['att_dkp_begin']))
+							{
+								$dkp += $member['att_dkp_begin'];
+							}
+							if($rli_config['attendence_end'] > 0 AND isset($member['att_dkp_end']))
+							{
+								$dkp += $member['att_dkp_end'];
+							}
 						}
 						$sql = "UPDATE __members SET
 									member_earned = member_earned + '".$dkp."',
-									member_spent = member_spent + '".$lootdkp[$member['name']]."'";
+									member_spent = member_spent + '".$lootdkp[$member['name']]."',
+									member_adjustment = member_adjustment + '".$adj_dkp[$member['name']]."'";
+						$keys = array_keys($member['raids']);
+						krsort($keys);
 						if(isset($member['raids']))
 						{
-							$sql .= ", member_lastraid = '".$data['raids'][$member['raids'][0]]['begin']."'";
+							$sql .= ", member_lastraid = '".$data['raids'][$member['raids'][$keys[0]]]['begin']."'";
 							if($a = $db->query_first("SELECT member_firstraid FROM ".MEMBERS_TABLE." WHERE member_name = '".$member['name']."';") == 0)
 							{
-								$sql .= ", member_firstraid = '".$data['raids'][$member['raids'][0]]['begin']."'";
+								$sql .= ", member_firstraid = '".$data['raids'][$member['raids'][$keys[0]]]['begin']."'";
 							}
 						}
 						$sql .= " WHERE
@@ -939,30 +973,6 @@ class raidlogimport extends EQdkp_Admin
 				}
 			  }
 			}
-		  }
-
-		  if($isok)
-		  {
-		  	if(is_array($data['adjs']))
-		  	{
-			  foreach($data['adjs'] as $adj)
-			  {
-				if($adj['do'])
-				{
-					$group_key = $this->gen_group_key($this->time, stripslashes($adj['reason']), $adj['value'], $adj['event']);
-					$sql = "INSERT INTO __adjustments
-								(`adjustment_value`, `adjustment_date`, `member_name`, `adjustment_reason`, `adjustment_added_by`, `adjustment_group_key`, `raid_name`)
-						    VALUES
-						    	('".$adj['value']."', '".$data['raids'][1]['begin']."', '".$adj['member']."', '".$adj['reason']."', 'Raid-Log-Import (by ".$user->data['username'].")', '".$group_key."', '".$adj['event']."');";
-					if(!$db->query($sql))
-					{
-						echo "adjustment_table: <br />".$sql."<br />";
-						$isok = false;
-						break;
-					}
-				}
-			  }
-		  	}
 		  }
 
 		  if ($isok)
@@ -1016,9 +1026,7 @@ class raidlogimport extends EQdkp_Admin
             //items
             if(is_array($data['loots']))
             {
-              foreach ($data['loots'] as $loot)
-              {
-              	if($loot['key'] != '')
+              	foreach ($data['loots'] as $loot)
               	{
 	            	$log_actions[] = array(
     	        		'header' 		=> '{L_ACTION_ITEM_ADDED}',
@@ -1028,18 +1036,15 @@ class raidlogimport extends EQdkp_Admin
             			'{L_VALUE}'		=> $loot['dkp'],
 	            		'{L_ADDED_BY}'	=> 'Raid-Log-Import (by '.$user->data['username'].')'
     	        	);
-    	        }
-              }
+              	}
             }
 
             //adjs
             if(is_array($data['adjs']))
             {
-              foreach($data['adjs'] as $adj)
-              {
-            	if($adj['do'])
-            	{
-            		$log_actions[] = array(
+              	foreach($data['adjs'] as $adj)
+              	{
+              		$log_actions[] = array(
             			'header'			=> '{L_ACTION_INDIVADJ_ADDED}',
             			'{L_ADJUSTMENT}'	=> $adj['value'],
             			'{L_REASON}'		=> $adj['reason'],
@@ -1047,8 +1052,7 @@ class raidlogimport extends EQdkp_Admin
             			'{L_EVENT}'			=> $adj['event'],
             			'{L_ADDED_BY}'		=> 'Raid-Log-Import (by '.$user->data['username'].')'
             		);
-            	}
-              }
+              	}
             }
             foreach($log_actions as $log_action)
             {
