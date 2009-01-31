@@ -150,10 +150,16 @@ class raidlogimport extends EQdkp_Admin
 							if (in_array($bosskill['name'], $boss['string'])) {
 								if ($i == 1) {
 									$raids[1]['note'] = trim($boss['note']);
-									$raids[$key]['note'] .= ($raid['difficulty'] == '2') ? $rli_config['hero'] : $rli_config['non_hero'];
+									if($rli_config['dep_match'])
+									{
+										$raids[$key]['note'] .= ($raid['difficulty'] == '2') ? $rli_config['hero'] : $rli_config['non_hero'];
+									}
 								} else {
 									$raids[1]['note'] .= ", ".trim($boss['note']);
-									$raids[$key]['note'] .= ($raid['difficulty'] == '2') ? $rli_config['hero'] : $rli_config['non_hero'];
+									if($rli_config['dep_match'])
+									{
+										$raids[$key]['note'] .= ($raid['difficulty'] == '2') ? $rli_config['hero'] : $rli_config['non_hero'];
+									}
 								}
 								$raids[1]['bosskills'][$b]['name'] = $bosskill['name'];
 								$raids[1]['bosskills'][$b]['bonus'] = $boss['bonus'];
@@ -199,11 +205,17 @@ class raidlogimport extends EQdkp_Admin
 								if (in_array($bosskill['name'], $boss['string']) AND $bosskill['time'] >= $i AND $bosskill['time'] < $i+3600) {
 									if ($a == 1) {
 										$raids[$key]['note'] = trim($boss['note']);
-										$raids[$key]['note'] .= ($raid['difficulty'] == '2') ? $rli_config['hero'] : $rli_config['non_hero'];
+										if($rli_config['dep_match'])
+										{
+											$raids[$key]['note'] .= ($raid['difficulty'] == '2') ? $rli_config['hero'] : $rli_config['non_hero'];
+										}
                             			$a++;
 									} else {
 										$raids[$key]['note'] .= ", ".trim($boss['note']);
-										$raids[$key]['note'] .= ($raid['difficulty'] == '2') ? $rli_config['hero'] : $rli_config['non_hero'];
+										if($rli_config['dep_match'])
+										{
+											$raids[$key]['note'] .= ($raid['difficulty'] == '2') ? $rli_config['hero'] : $rli_config['non_hero'];
+										}
 									}
 									$raids[1]['bosskills'][$b]['name'] = $bossname;
 									$raids[1]['bosskills'][$b]['bonus'] = $boss['bonus'];
@@ -621,6 +633,10 @@ class raidlogimport extends EQdkp_Admin
 		{
 			$tpl->assign_block_vars('player', mems2tpl($key, $member));
             $members['name'][$member['name']] = $member['name'];
+            if(isset($member['alias']))
+            {
+            	$aliase[$member['alias']] = $member['name'];
+            }
 		}
 
 		//add disenchanted and bank
@@ -628,6 +644,10 @@ class raidlogimport extends EQdkp_Admin
         $members['name']['bank'] = 'bank';
         foreach ($data['loots'] as $key => $loot)
         {
+        	if(isset($aliase[$loot['player']]))
+        	{
+        		$loot['player'] = $aliase[$loot['player']];
+        	}
         	$loot_select = "<select size='1' name='loots[".$key."][raid]'>";
           	foreach($data['raids'] as $i => $ra)
            	{

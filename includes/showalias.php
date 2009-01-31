@@ -99,7 +99,7 @@ class Show_Alias extends EQdkp_Admin
 	        	);
 	        }
 	        $tpl->assign_vars(array(
-	        	'L_SUCCESS'	=> $user->lang['alias_suc'],
+	        	'L_SUCCESS'	=> $user->lang['rli_suc'],
 	        	'L_LINKS'	=> $user->lang['links'])
 	        );
         	$eqdkp->set_vars(array(

@@ -352,7 +352,48 @@ function check_data($data)
 
 function check_ctrt_format($xml)
 {
-	return true;
+	if(isset($xml->start, $xml->end, $xml->zone, $xml->BossKills, $xml->Loot, $xml->difficulty, $xml->PlayerInfos, $xml->Join, $xml->Leave))
+	{
+		foreach($xml->BossKills->children() as $bosskill)
+		{
+			if(!isset($bosskill->name, $bosskill->time))
+			{
+				return false;
+			}
+		}
+		foreach($xml->Loot->children() as $loot)
+		{
+			if(!isset($loot->ItemName, $loot->Player, $loot->Time))
+			{
+				return false;
+			}
+		}
+		foreach($xml->PlayerInfos->children() as $mem)
+		{
+			if(!isset($mem->name))
+			{
+				return false;
+			}
+		}
+		foreach($xml->Join->children() as $join)
+		{
+			if(!isset($join->player, $join->time))
+			{
+				return false;
+			}
+		}
+		foreach($xml->Leave->children() as $leave)
+		{
+			if(!isset($leave->player, $leave->time))
+			{
+				return false;
+			}
+		}
+	}
+	else
+	{
+		return false;
+	}
 }
 
 function parse_ctrt_string($xml)
@@ -458,14 +499,14 @@ function parse_string($xml)
 
 	if(function_exists('parse_'.$rli_config['parser'].'_string'))
 	{
-		if(call_user_func('check_'.$rli_config['parser'].'_format', $xml))
-		{
+		#if(call_user_func('check_'.$rli_config['parser'].'_format', $xml))
+		#{
 			$raid = call_user_func('parse_'.$rli_config['parser'].'_string', $xml);
-		}
-		else
-		{
-			message_die($user->lang['wrong_format'].' '.$user->lang['ctrt_format']);
-		}
+		#}
+		#else
+		#{
+			#message_die($user->lang['wrong_format'].' '.$user->lang[$rli_config['parser'].'_format']);
+		#}
 	}
 	else
 	{
