@@ -17,6 +17,10 @@ if ( !defined('EQDKP_INC') )
 
 class raidlogimport_Plugin_Class extends EQdkp_Plugin
 {
+	var $vstatus = 'Stable';
+	var $version = '0.4.3';
+	var $build = 3718;
+	
     function raidlogimport_plugin_class($pm)
     {
         global $eqdkp_root_path, $user, $SID, $conf_plus, $eqdkp;
@@ -37,7 +41,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
             'path'          => 'raidlogimport',
             'contact'       => 'bloodyhoof@gmx.net',
             'template_path' => 'plugins/raidlogimport/templates/',
-            'version'       => '0.4.3')
+            'version'       => $this->version)
         );
 
     	$this->additional_data = array(

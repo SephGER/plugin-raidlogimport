@@ -9,7 +9,7 @@ class RLI_Settings extends EQdkp_Admin
 {
 	function rli_settings()
 	{
-		global $db, $pm, $tpl, $user, $eqdkp, $SID, $pC;
+		global $db, $pm, $tpl, $user, $eqdkp, $SID, $pC, $rli_config;
 		parent::eqdkp_admin();
 
 		$this->assoc_buttons(array(
@@ -34,8 +34,9 @@ class RLI_Settings extends EQdkp_Admin
 		$pluginfo = array(
 			'name'		=> 'raidlogimport',
 			'version'	=> $pm->get_data('raidlogimport', 'version'),
-			'enabled'	=> (isset($rli_config['rli_upd_check'])) ? $rli_config['rli_upd_check'] : 1,
-			'vstatus'	=> 'beta'
+			'enabled'	=> $rli_config['rli_upd_check'],
+			'vstatus'	=> $pm->plugin['raidlogimport']->vstatus,
+			'build'		=> $pm->plugin['raidlogimport']->build
 		);
 		$cachedb = array(
 			'table'			=> 'raidlogimport_config',
@@ -175,7 +176,7 @@ class RLI_Settings extends EQdkp_Admin
 				$endvalues[0]['value'] = $value. "&nbsp;<input type='submit' name='man_db_up' value='".$user->lang['rli_man_db_up']."' class='mainoption' />";
 				$endvalues[0]['name'] = $name;
 			}
-			elseif($name == 'rlic_data' or $name == 'rlic_lastcheck')
+			elseif($name == 'rlic_data' or $name == 'rlic_lastcheck' or $name == 'rli_inst_build')
 			{
 				//do nothing
 			}
