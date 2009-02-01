@@ -37,7 +37,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
             'path'          => 'raidlogimport',
             'contact'       => 'bloodyhoof@gmx.net',
             'template_path' => 'plugins/raidlogimport/templates/',
-            'version'       => '0.4.2.1')
+            'version'       => '0.4.3')
         );
 
     	$this->additional_data = array(
@@ -86,6 +86,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 				'adj_parse'			=> ': ', //string, which separates the reason and the value for a adjustment in the note of a member
 				'bz_parse'			=> ',',  //separator, which is used for separating the different strings of a boss or zone
 				'parser'			=> 'ctrt',  //which format has the xml-string?
+				'rli_upd_check'		=> '1'		//enable update check?
 			);
 			$this->insert_data($config_data);
 			//add default bz_data

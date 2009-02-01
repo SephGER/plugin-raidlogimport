@@ -29,7 +29,27 @@ class RLI_Settings extends EQdkp_Admin
 		);
 		$pC->InitAdmin();
 		$this->plug_upd = new PluginUpdater('raidlogimport', 'rli_', 'raidlogimport_config', 'includes');
-		$tpl->assign_var('UPD_IK', $this->plug_upd->OutputHTML());
+		
+		//initialise upd_check
+		$pluginfo = array(
+			'name'		=> 'raidlogimport',
+			'version'	=> $pm->get_data('raidlogimport', 'version'),
+			'enabled'	=> (isset($rli_config['rli_upd_check'])) ? $rli_config['rli_upd_check'] : 1,
+			'vstatus'	=> 'beta'
+		);
+		$cachedb = array(
+			'table'			=> 'raidlogimport_config',
+			'data'			=> $rli_config['rlic_data'],
+			'f_data'		=> 'rlic_data',
+			'lastcheck' 	=> $rli_config['rlic_lastcheck'],
+			'f_lastcheck'	=> 'rlic_lastcheck'
+		);
+		$this->upd_check = new PluginUpdCheck($pluginfo, $cachedb);
+		$this->upd_check->PerformUpdateCheck();
+        $tpl->assign_vars(array(
+        	'UPD_IK'	=> $this->plug_upd->OutputHTML(),
+        	'UPD_CHECK'	=> $this->upd_check->OutputHTML())
+        );
 	}
 
 	function save_config()
@@ -101,7 +121,7 @@ class RLI_Settings extends EQdkp_Admin
 	function display_form()
 	{
 		global $db, $user, $tpl, $eqdkp, $pm, $SID, $rli_config;
-		$k = 1;
+		$k = 2;
 		$endvalues = array();
 		foreach($rli_config as $name => $value)
 		{
@@ -128,8 +148,13 @@ class RLI_Settings extends EQdkp_Admin
 				$endvalues[$k]['value'] .= "</select>";
 				$endvalues[$k]['name'] = $name;
 			}
-			elseif($name == 'event_boss' OR $name == 'attendence_raid' OR $name == 'conf_adjustment' OR $name == 'dep_match')
+			elseif($name == 'event_boss' OR $name == 'attendence_raid' OR $name == 'conf_adjustment' OR $name == 'dep_match' OR $name == 'rli_upd_check')
 			{
+                $a = $k;
+				if($name == 'rli_upd_check')
+				{
+					$k = 1;
+				}
 				$check_1 = '';
 				$check_0 = '';
 				if($value)
@@ -143,11 +168,16 @@ class RLI_Settings extends EQdkp_Admin
 				$endvalues[$k]['value'] = "<input type='radio' name='".$name."' value='1' ".$check_1." />".$user->lang['yes']."&nbsp;&nbsp;&nbsp;";
 				$endvalues[$k]['value'] .= "&nbsp;&nbsp;&nbsp;<input type='radio' name='".$name."' value='0' ".$check_0." />".$user->lang['no'];
 				$endvalues[$k]['name'] = $name;
+				$k = $a;
 			}
 			elseif($name == 'rli_inst_version')
 			{
 				$endvalues[0]['value'] = $value. "&nbsp;<input type='submit' name='man_db_up' value='".$user->lang['rli_man_db_up']."' class='mainoption' />";
 				$endvalues[0]['name'] = $name;
+			}
+			elseif($name == 'rlic_data' or $name == 'rlic_lastcheck')
+			{
+				//do nothing
 			}
 			else
 			{

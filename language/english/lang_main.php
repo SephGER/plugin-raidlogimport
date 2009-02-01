@@ -132,4 +132,5 @@
 	$lang['bz_parse'] = 'Delimiter between the Strings, which belong to one "event".';
 	$lang['parser'] = 'In which XML-Format is the string?';
 	$lang['rli_man_db_up'] = 'Force DB-Update';
+	$lang['rli_upd_check'] = 'Enable Update Check?';
 ?>

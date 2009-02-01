@@ -132,4 +132,5 @@
 	$lang['bz_parse'] = 'Trennzeichen zwischen den Strings die zu einem "Event" gehören';
 	$lang['parser'] = 'Welches XML-Format hat der String?';
 	$lang['rli_man_db_up'] = 'DB-Update erzwingen';
+	$lang['rli_upd_check'] = 'Update-Check aktivieren?';
 ?>
