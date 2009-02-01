@@ -744,10 +744,18 @@ class raidlogimport extends EQdkp_Admin
 			foreach($data['members'] as $member)
 			{
 				$members_r[$member['name']] = $member['name'];
+				if(isset($member['alias']))
+				{
+					$adj_alias[$member['alias']] = $member['name'];
+				}
 			}
 			$members = array_merge($members_r, $members);
 			foreach($data['adjs'] as $a => $adj)
 			{
+				if(isset($adj_alias[$adj['member']]))
+				{
+					$adj['member'] = $adj_alias[$adj['member']];
+				}
 				$ev_sel = (isset($adj['event'])) ? $adj['event'] : '';
 				$tpl->assign_block_vars('adjs', array(
 					'MEMBER'	=> $myHtml->DropDown('adjs['.$a.'][member]', $members, $adj['member'], '', '', true),
@@ -858,7 +866,7 @@ class raidlogimport extends EQdkp_Admin
 			  }
 	        }
           }
-		  
+
 		  $adj_dkp = array();
 		  if($isok)
 		  {
