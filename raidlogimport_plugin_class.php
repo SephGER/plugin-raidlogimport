@@ -19,7 +19,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 {
 	var $vstatus = 'Stable';
 	var $version = '0.4.3.1';
-	var $build = 3733;
+	var $build = 3734;
 
     function raidlogimport_plugin_class($pm)
     {

@@ -110,6 +110,8 @@
 	$lang['rli_members_needed'] = 'No members given.';
 	$lang['rli_raids_needed'] = 'No raids given.';
 	$lang['rli_missing_values'] = 'There are missing some values. Please: ';
+	$lang['wrong_format'] = 'The parser you haven chosen and the raid-log you have posted, do not match.';
+	$lang['ctrt_format'] = 'Please set the output Format of your CT-Raidtracker to "MLdkp 1.1 / EQdkp Plugin" (move the slider to the left).';
 
 	//config
 	$lang['multidkp_need'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                    Activate for functionality with MultiDKP!                  </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='help'></a>";

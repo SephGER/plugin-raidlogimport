@@ -110,6 +110,8 @@
 	$lang['rli_members_needed'] = 'Keine Mitglieder gefunden.';
 	$lang['rli_raids_needed'] = 'Keine Raids gefunden.';
 	$lang['rli_missing_values'] = 'Es fehlen einige Werte. Bitte überprüfe: ';
+	$lang['wrong_format'] = 'Der Parser und das Raid-Log stimmen nicht überein.';
+	$lang['ctrt_format'] = 'Bitte stell das Ausgabe-Format vom CT-Raidtracker auf "MLdkp 1.1 / EQdkp Plugin" (ganz linke Option).';
 
 	//config
 	$lang['multidkp_need'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                    Für Multi-DKP Funktionalität aktivieren!                  </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='help'></a>";

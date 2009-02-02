@@ -389,6 +389,7 @@ function check_ctrt_format($xml)
 				return false;
 			}
 		}
+		return true;
 	}
 	else
 	{
@@ -495,18 +496,18 @@ function parse_ctrt_string($xml)
 
 function parse_string($xml)
 {
-	global $rli_config;
+	global $rli_config, $user;
 
 	if(function_exists('parse_'.$rli_config['parser'].'_string'))
 	{
-		#if(call_user_func('check_'.$rli_config['parser'].'_format', $xml))
-		#{
+		if(call_user_func('check_'.$rli_config['parser'].'_format', $xml))
+		{
 			$raid = call_user_func('parse_'.$rli_config['parser'].'_string', $xml);
-		#}
-		#else
-		#{
-			#message_die($user->lang['wrong_format'].' '.$user->lang[$rli_config['parser'].'_format']);
-		#}
+		}
+		else
+		{
+			message_die($user->lang['wrong_format'].' '.$user->lang[$rli_config['parser'].'_format']);
+		}
 	}
 	else
 	{
