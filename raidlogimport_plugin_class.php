@@ -18,9 +18,9 @@ if ( !defined('EQDKP_INC') )
 class raidlogimport_Plugin_Class extends EQdkp_Plugin
 {
 	var $vstatus = 'Stable';
-	var $version = '0.4.3';
-	var $build = 3718;
-	
+	var $version = '0.4.3.1';
+	var $build = 3733;
+
     function raidlogimport_plugin_class($pm)
     {
         global $eqdkp_root_path, $user, $SID, $conf_plus, $eqdkp;
@@ -86,7 +86,6 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 				'attendence_raid'	=> $conf_plus['pk_multidkp'], //create extra raid for attendence?
 				'attendence_time'	=> '900', //time of inv (in seconds)
 				'event_boss'		=> '0',  //exists an event per boss?
-				'conf_adjustment'	=> $conf_plus['pk_multidkp'],  //the columns earned, spent and so on wont be filled, everything works by adjs and raid_value
 				'adj_parse'			=> ': ', //string, which separates the reason and the value for a adjustment in the note of a member
 				'bz_parse'			=> ',',  //separator, which is used for separating the different strings of a boss or zone
 				'parser'			=> 'ctrt',  //which format has the xml-string?

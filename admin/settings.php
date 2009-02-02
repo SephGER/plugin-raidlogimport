@@ -29,7 +29,7 @@ class RLI_Settings extends EQdkp_Admin
 		);
 		$pC->InitAdmin();
 		$this->plug_upd = new PluginUpdater('raidlogimport', 'rli_', 'raidlogimport_config', 'includes');
-		
+
 		//initialise upd_check
 		$pluginfo = array(
 			'name'		=> 'raidlogimport',
@@ -149,7 +149,7 @@ class RLI_Settings extends EQdkp_Admin
 				$endvalues[$k]['value'] .= "</select>";
 				$endvalues[$k]['name'] = $name;
 			}
-			elseif($name == 'event_boss' OR $name == 'attendence_raid' OR $name == 'conf_adjustment' OR $name == 'dep_match' OR $name == 'rli_upd_check')
+			elseif($name == 'event_boss' OR $name == 'attendence_raid' OR $name == 'dep_match' OR $name == 'rli_upd_check')
 			{
                 $a = $k;
 				if($name == 'rli_upd_check')

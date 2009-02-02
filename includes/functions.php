@@ -672,8 +672,6 @@ function mems2tpl($key, $member)
        	'MITGLIED' => $member['name'],
         'ALIAS'    => $member['alias'],
         'RAID_LIST'=> $member['raid_list'],
-        'ZEITDKP'  => $member['timedkp'],
-        'BOSSDKP'  => $member['bossdkp'],
         'ATT_BEGIN'=> $member['att_dkp_begin'],
         'ATT_END'  => $member['att_dkp_end'],
         'ZAHL'     => $eqdkp->switch_row_class(),
@@ -752,48 +750,46 @@ function parse_members($post, $data)
 				{
 	                $members[$key]['alias'] = $mem['alias'];
 	            }
-				if($rli_config['conf_adjustment'])
+				if($mem['raid_list'] != '')
 				{
-					if($mem['raid_list'] != '')
+					$raids = explode(',', $mem['raid_list']);
+					foreach($raids as $raid_id)
 					{
-						$raids = explode(',', $mem['raid_list']);
-						foreach($raids as $raid_id)
+						if($raid_id)
 						{
-							if($raid_id)
-							{
-								$raid = $data['raids'][$raid_id];
-								$time = calculate_time($member, $raid['end'], $raid['begin']);
-								$dkp = calculate_timedkp($raid['timebonus'], $time) + calculate_bossdkp($raid['bosskills'], $member);
-								$dkp = $dkp + $mem['att_begin'] + $mem['att_end'];
-								if($dkp <  $raid['value'])
-								{	//add an adjustment
-									$dkp -= $raid['value'];
-									$data['adjs'][$i]['member'] = $member['name'];
-									$data['adjs'][$i]['reason'] = $user->lang['rli_partial_raid']." ".date('d.m.y H:i:s', $raid['begin']);
-									$data['adjs'][$i]['value'] = $dkp;
-									$data['adjs'][$i]['event'] = $raid['event'];
-									$i++;
-								}
+							$raid = $data['raids'][$raid_id];
+							$time = calculate_time($member, $raid['end'], $raid['begin']);
+							$dkp = calculate_timedkp($raid['timebonus'], $time) + calculate_bossdkp($raid['bosskills'], $member);
+							$dkp = $dkp + $mem['att_begin'] + $mem['att_end'];
+							if($dkp <  $raid['value'])
+							{	//add an adjustment
+								$dkp -= $raid['value'];
+								$data['adjs'][$i]['member'] = $member['name'];
+								$data['adjs'][$i]['reason'] = $user->lang['rli_partial_raid']." ".date('d.m.y H:i:s', $raid['begin']);
+								$data['adjs'][$i]['value'] = $dkp;
+								$data['adjs'][$i]['event'] = $raid['event'];
+								$i++;
 							}
 						}
 					}
-					else
+				}
+				else
+				{
+					$dkp = $mem['timedkp'] + $mem['bossdkp'];
+					if($dkp > 0)
 					{
-						$dkp = $mem['timedkp'] + $mem['bossdkp'];
-						if($dkp > 0)
-						{
-							$data['adjs'][$i]['member'] = $member['name'];
-							$data['adjs'][$i]['reason'] = $user->lang['rli_partial_raid']." ".date('d.m.y H:i:s', $data['raids'][1]['begin']);
-							$data['adjs'][$i]['value'] = $dkp;
-							$data['adjs'][$i]['event'] = $data['raids'][1]['event'];
-							$i++;
-						}
+						$data['adjs'][$i]['member'] = $member['name'];
+						$data['adjs'][$i]['reason'] = $user->lang['rli_partial_raid']." ".date('d.m.y H:i:s', $data['raids'][1]['begin']);
+						$data['adjs'][$i]['value'] = $dkp;
+						$data['adjs'][$i]['event'] = $data['raids'][1]['event'];
+						$i++;
 					}
 				}
-			  } //delete
-			}
+			} //delete
+		  }
 		}
 	}
+
 	$data['members'] = $members;
 	return $data;
 }

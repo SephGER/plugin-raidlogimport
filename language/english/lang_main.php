@@ -123,10 +123,9 @@
 	$lang['attendence_end'] = 'Bonus for attendence during raidend';
 	$lang['config_success'] = 'Configuration Success';
 	$lang['event_boss'] = 'Exists an event for each boss?';
-	$lang['attendence_raid'] = 'Should an extra raid be created for attendency?'.$lang['multidkp_need'];
+	$lang['attendence_raid'] = 'Should an extra raid be created for attendency?';
 	$lang['loottime'] = 'Time in seconds, the loot belongs to the boss before.';
 	$lang['attendence_time'] = 'Time in seconds, the invite / end of raid lasts.';
-	$lang['conf_adjustment'] = "Adds partially missing in raid as an adjustment.".$lang['multidkp_need'];
 	$lang['rli_inst_version'] = 'Installed version';
 	$lang['adj_parse'] = 'Delimiter between reason and value of an adjustment';
 	$lang['bz_parse'] = 'Delimiter between the Strings, which belong to one "event".';

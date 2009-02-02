@@ -123,10 +123,9 @@
 	$lang['attendence_end'] = 'Bonus für Anwesenheit am Raidende';
 	$lang['config_success'] = 'Konfigurations Erfolg';
 	$lang['event_boss'] = 'Existiert für jeden Boss ein Event?';
-	$lang['attendence_raid'] = 'Soll für die Anwesenheit ein extra Raid angelegt werden?'.$lang['multidkp_need'];
+	$lang['attendence_raid'] = 'Soll für die Anwesenheit ein extra Raid angelegt werden?';
 	$lang['loottime'] = 'Zeit in Sekunden, die der Loot noch zum Boss davor gehört';
 	$lang['attendence_time'] = 'Zeit in Sekunden, die der Invite dauert, bzw. das Raid-Ende dauert';
-	$lang['conf_adjustment'] = "Fügt teilweises Fehlen am Raid als Korrektur ein.".$lang['multidkp_need'];
 	$lang['rli_inst_version'] = 'Installierte Version';
 	$lang['adj_parse'] = 'Trennzeichen zwischen Grund und Wert einer Korrektur';
 	$lang['bz_parse'] = 'Trennzeichen zwischen den Strings die zu einem "Event" gehören';

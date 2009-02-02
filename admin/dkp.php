@@ -554,11 +554,6 @@ class raidlogimport extends EQdkp_Admin
 	           		{
 	           			$member['raid_list'] .= $u.',';
 	           		}
-		           	//calc dkp
-		            $member['time'] = calculate_time($member, $ra['end'], $ra['begin']);
-		            $member['timedkp'] += calculate_timedkp($ra['timebonus'], $member['time']);
-		            $member['bossdkp'] += calculate_bossdkp($ra['bosskills'], $member);
-		            $end = $ra['end'];
 		        }
 		        $begin = $data['raids'][1]['begin'];
 	            $att_dkp = calculate_attendence($member, $rli_config['attendence_begin'], $rli_config['attendence_end'], $rli_config['attendence_time'], $begin, $end);
@@ -570,8 +565,6 @@ class raidlogimport extends EQdkp_Admin
                	'MITGLIED' => $member['name'],
                 'ALIAS'    => $alias,
                 'RAID_LIST'=> $member['raid_list'],
-                'ZEITDKP'  => $member['timedkp'],
-                'BOSSDKP'  => $member['bossdkp'],
                 'ATT_BEGIN'=> $member['att_dkp_begin'],
                 'ATT_END'  => $member['att_dkp_end'],
                 'ZAHL'     => $eqdkp->switch_row_class(),
@@ -588,8 +581,7 @@ class raidlogimport extends EQdkp_Admin
 		$tpl->assign_vars(array(
 			'DATA'			=> htmlspecialchars(serialize($data), ENT_QUOTES),
 			'S_ATT_BEGIN'	=> ($rli_config['attendence_begin'] > 0) ? TRUE : FALSE,
-			'S_ATT_END'		=> ($rli_config['attendence_end'] > 0) ? TRUE : FALSE,
-			'S_CONF_ADJ'	=> ($rli_config['conf_adjustment']) ? FALSE : TRUE)
+			'S_ATT_END'		=> ($rli_config['attendence_end'] > 0) ? TRUE : FALSE)
 		);
 
 		//language
@@ -674,8 +666,7 @@ class raidlogimport extends EQdkp_Admin
 		$tpl->assign_vars(array(
 			'DATA'			=> htmlspecialchars(serialize($data), ENT_QUOTES),
 			'S_ATT_BEGIN'	=> ($rli_config['attendence_begin'] > 0) ? TRUE : FALSE,
-			'S_ATT_END'		=> ($rli_config['attendence_end'] > 0) ? TRUE : FALSE,
-			'S_CONF_ADJ'	=> ($rli_config['conf_adjustment']) ? FALSE : TRUE)
+			'S_ATT_END'		=> ($rli_config['attendence_end'] > 0) ? TRUE : FALSE)
 		);
 
 		//language
@@ -771,8 +762,7 @@ class raidlogimport extends EQdkp_Admin
 		$tpl->assign_vars(array(
 			'DATA'			=> htmlspecialchars(serialize($data), ENT_QUOTES),
 			'S_ATT_BEGIN'	=> ($rli_config['attendence_begin'] > 0) ? TRUE : FALSE,
-			'S_ATT_END'		=> ($rli_config['attendence_end'] > 0) ? TRUE : FALSE,
-			'S_CONF_ADJ'	=> ($rli_config['conf_adjustment']) ? FALSE : TRUE)
+			'S_ATT_END'		=> ($rli_config['attendence_end'] > 0) ? TRUE : FALSE)
 		);
 
 		//language
@@ -932,24 +922,13 @@ class raidlogimport extends EQdkp_Admin
 					if(!$conf_plus['pk_multidkp'])
 					{
 						$dkp = 0;
-						if($rli_config['conf_adjustment'])
+						foreach($data['raids'] as $raid)
 						{
-							foreach($data['raids'] as $raid)
-							{
-								$dkp = $dkp + $raid['value'];
-							}
+							$dkp = $dkp + $raid['value'];
 						}
-						else
+						if(!$rli_config['attendence_raid'])
 						{
-			                $dkp = $member['timedkp'] + $member['bossdkp'];
-							if($rli_config['attendence_begin'] > 0 AND isset($member['att_dkp_begin']))
-							{
-								$dkp += $member['att_dkp_begin'];
-							}
-							if($rli_config['attendence_end'] > 0 AND isset($member['att_dkp_end']))
-							{
-								$dkp += $member['att_dkp_end'];
-							}
+							$dkp = $dkp + $mem['att_dkp_begin'] + $mem['att_dkp_end'];
 						}
 						$sql = "UPDATE __members SET
 									member_earned = member_earned + '".$dkp."',
@@ -990,9 +969,6 @@ class raidlogimport extends EQdkp_Admin
 
 			//logging
 			//raids
-            $log_actions['btdkp'] = array(
-                'header'  => '{L_ACTION_RAIDLOGIMPORT_DKP}'
-            );
             $num = count($data['members'])-1;
             $member_str = $data['members'][0]['name'];
             for ( $i=1; $i<=$num; $i++ )
@@ -1010,25 +986,6 @@ class raidlogimport extends EQdkp_Admin
 					'{L_VALUE}'		=> $raid['value'],
 					'{L_ADDED_BY}'	=> 'Raid-Log-Import (by '.$user->data['username'].')'
 				);
-                $log_actions['btdkp']['Raid('.$key.')'] = sprintf($user->lang['rli_raid_to'], $raid['event'], date($user->style['date_notime_short'], $raid['begin']));
-                $log_actions['btdkp']['raid_id('.$key.')'] = $raid['id'];
-			}
-
-            //boss and time dkp
-            if(!$rli_config['conf_adjustment'])
-            {
-	            foreach ($data['members'] as $member)
-	            {
-	                //Ursprungsname hinter das Mitglied schreiben
-	                $alias = "";
-	                if(isset($member['alias'])) {
-	                    $alias = "(".$member['alias'].")";
-	                }
-	                $att_dkp = 0;
-	                $att_dkp = $member['att_dkp_begin'] + $member['att_dkp_end'];
-	                $log_actions['btdkp'][$member['name'].$alias] = $user->lang['rli_t_dkp'].": ".$member['timedkp'].", ".$user->lang['rli_b_dkp'];
-	                $log_actions['btdkp'][$member['name'].$alias] .= ": ".$member['bossdkp'].", ".$user->lang['rli_att']." :".$att_dkp;
-	            }
 			}
 
             //items
