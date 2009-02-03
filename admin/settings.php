@@ -35,8 +35,8 @@ class RLI_Settings extends EQdkp_Admin
 			'name'		=> 'raidlogimport',
 			'version'	=> $pm->get_data('raidlogimport', 'version'),
 			'enabled'	=> $rli_config['rli_upd_check'],
-			'vstatus'	=> $pm->plugin['raidlogimport']->vstatus,
-			'build'		=> $pm->plugin['raidlogimport']->build
+			'vstatus'	=> $pm->plugins['raidlogimport']->vstatus,
+			'build'		=> $pm->plugins['raidlogimport']->build
 		);
 		$cachedb = array(
 			'table'			=> 'raidlogimport_config',
