@@ -619,6 +619,7 @@ function lang2tpl()
         'L_INSERT'		=> $user->lang['rli_insert'],
         'L_ITEM'		=> $user->lang['item'],
         'L_ITEM_ADD'	=> $user->lang['rli_add_item'],
+        'L_ITEM_ID'		=> $user->lang['rli_item_id'],
         'L_ITEMS_ADD'	=> $user->lang['rli_add_items'],
         'L_LOOTER'		=> $user->lang['rli_looter'],
         'L_MEM_ADD'     => $user->lang['rli_add_mem'],
@@ -688,6 +689,7 @@ function items2tpl($item)
 		'LOOTER'	=> $item['player'],
 		'RAID'		=> $item['raid'],
 		'LOOTDKP'	=> $item['dkp'],
+		'ITEMID'	=> $item['id'],
 		'CLASS'		=> $eqdkp->switch_row_class()
 	);
 }
@@ -743,8 +745,6 @@ function parse_members($post, $data)
 			  {
 			  	$members[$key] = $member;
 				$members[$key]['raid_list'] = $mem['raid_list'];
-				$members[$key]['timedkp'] = $mem['timedkp'];
-				$members[$key]['bossdkp'] = $mem['bossdkp'];
 				$members[$key]['att_dkp_begin'] = $mem['att_begin'];
 				$members[$key]['att_dkp_end'] = $mem['att_end'];
 				if(isset($mem['alias']))
@@ -754,40 +754,39 @@ function parse_members($post, $data)
 				if($mem['raid_list'] != '')
 				{
 					$raids = explode(',', $mem['raid_list']);
+					$dkp = 0;
 					foreach($raids as $raid_id)
 					{
 						if($raid_id)
 						{
 							$raid = $data['raids'][$raid_id];
-							$time = calculate_time($member, $raid['end'], $raid['begin']);
-							$dkp = calculate_timedkp($raid['timebonus'], $time) + calculate_bossdkp($raid['bosskills'], $member);
-							$dkp = $dkp + $mem['att_begin'] + $mem['att_end'];
-							if($dkp <  $raid['value'])
-							{	//add an adjustment
-								$dkp -= $raid['value'];
-								$data['adjs'][$i]['member'] = $member['name'];
-								$data['adjs'][$i]['reason'] = $user->lang['rli_partial_raid']." ".date('d.m.y H:i:s', $raid['begin']);
-								$data['adjs'][$i]['value'] = $dkp;
-								$data['adjs'][$i]['event'] = $raid['event'];
-								$i++;
+							if($rli_config['use_timedkp'])
+							{
+								$time = calculate_time($member, $raid['end'], $raid['begin']);
+								$dkp = calculate_timedkp($raid['timebonus'], $time);
+							}
+							if($rli_config['use_bossdkp'])
+							{
+								$dkp = $dkp + calculate_bossdkp($raid['bosskills'], $member);
+							}
+							if($rli_config['use_bossdkp'] or $rli_config['use_timedkp'])
+							{
+								$dkp = $dkp + $mem['att_begin'] + $mem['att_end'];
+								if($dkp <  $raid['value'])
+								{	//add an adjustment
+									$dkp -= $raid['value'];
+									$data['adjs'][$i]['member'] = $member['name'];
+									$data['adjs'][$i]['reason'] = $user->lang['rli_partial_raid']." ".date('d.m.y H:i:s', $raid['begin']);
+									$data['adjs'][$i]['value'] = $dkp;
+									$data['adjs'][$i]['event'] = $raid['event'];
+									$i++;
+								}
 							}
 						}
 					}
 				}
-				else
-				{
-					$dkp = $mem['timedkp'] + $mem['bossdkp'];
-					if($dkp > 0)
-					{
-						$data['adjs'][$i]['member'] = $member['name'];
-						$data['adjs'][$i]['reason'] = $user->lang['rli_partial_raid']." ".date('d.m.y H:i:s', $data['raids'][1]['begin']);
-						$data['adjs'][$i]['value'] = $dkp;
-						$data['adjs'][$i]['event'] = $data['raids'][1]['event'];
-						$i++;
-					}
-				}
-			} //delete
-		  }
+			  } //delete
+			}
 		}
 	}
 
@@ -807,7 +806,6 @@ function parse_items($post, $data)
 			  {
 				$tdata[$key] = $loot;
 				$tdata[$key]['time'] = $item['time'];
-				$tdata[$key]['id'] = $item['id'];
 			  }
 			}
 		}

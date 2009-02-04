@@ -27,7 +27,7 @@
       {raids.BOSSKILLS}
 	  <!-- END raids -->
 	</table>
-	<table width="100%" border="0" cellspacing="1" cellpadding="1">
+	<table width="100%" border="0" cellspacing="1" cellpadding="2">
 	  <tr>
 	  	<th colspan="7">{L_MEMBERS}</th>
 	  </tr>
@@ -59,9 +59,10 @@
 	  </tr>
       <!-- END player -->
     </table>
-	<table width="100%" border="0" cellspacing="1" cellpadding="1" id="item">
+	<table width="100%" border="0" cellspacing="1" cellpadding="2" id="item">
       <tr>
       	<th colspan="2">{L_ITEM}</th>
+      	<th>{L_ITEM_ID}</th>
       	<th>{L_LOOTER}</th>
         <th>{L_RAID}</th>
       	<th>{L_COST}</th>
@@ -70,6 +71,7 @@
       <tr class="{loots.CLASS}">
         <td width="40px"><img src="./../../../images/global/delete.png" alt="{L_DELETE}"><input type="checkbox" name="loots[{loots.KEY}][delete]" value="true" title="{L_DELETE}" /></td>
       	<td><input type="text" name="loots[{loots.KEY}][name]" class="maininput" value="{loots.LOOTNAME}" size="40" /></td>
+      	<td><input type="text" name="loots[{loots.KEY}][id]" class="maininput" value="{loots.ITEMID}" /></td>
       	<td>{loots.LOOTER}</td>
       	<td>{loots.RAID}</td>
       	<td><input type="text" name="loots[{loots.KEY}][dkp]" value="{loots.LOOTDKP}" class="maininput" size="7" /></td>

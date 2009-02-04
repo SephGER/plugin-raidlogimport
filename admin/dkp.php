@@ -171,10 +171,16 @@ class raidlogimport extends EQdkp_Admin
 					}
 
 					//Value
-					$max['join'][1] = $raids[1]['begin']+1;
-					$max['leave'][1] = $raids[1]['end']-1;
-					$max['timedkp'] = calculate_timedkp($raids[1]['timebonus'], calculate_time($max, $raids[1]['end'], $raids[1]['begin']));
-					$max['bossdkp'] = calculate_bossdkp($raids[1]['bosskills'], $max);
+					if($rli_config['use_timedkp'])
+					{
+						$max['join'][1] = $raids[1]['begin']+1;
+						$max['leave'][1] = $raids[1]['end']-1;
+						$max['timedkp'] = calculate_timedkp($raids[1]['timebonus'], calculate_time($max, $raids[1]['end'], $raids[1]['begin']));
+					}
+					if($rli_config['use_bossdkp'])
+					{
+						$max['bossdkp'] = calculate_bossdkp($raids[1]['bosskills'], $max);
+					}
 					$raids[1]['value'] = $max['timedkp'] + $max['bossdkp'];
 					unset($max);
 					$key++;
@@ -182,6 +188,8 @@ class raidlogimport extends EQdkp_Admin
 				}
 				case "1": //one raid per hour
 				{
+				  if($rli_config['use_timedkp'])
+				  {
 					//time
 					$key = 1;
 					for($i = $raid['begin']; $i<=($raid['end']); $i+=3600)
@@ -229,15 +237,26 @@ class raidlogimport extends EQdkp_Admin
 						$max['leave'][1] = $i+3600;
 						$max['time'] = calculate_time($max, $raid[$key]['end'], $raid[$key]['begin']);
 						$max['timedkp'] = calculate_timedkp($raids[$key]['timebonus'], $max['time']);
-						$max['bossdkp'] = calculate_bossdkp($raids[$key]['bosskills'], $max);
+						if($rli_config['use_bossdkp'])
+						{
+							$max['bossdkp'] = calculate_bossdkp($raids[$key]['bosskills'], $max);
+						}
 						$raids[$key]['value'] = $max['timedkp'] + $max['bossdkp'];
 						unset($max);
 						$key++;
 					}
 					break;
+
+				  }
+				  else
+				  {
+				  	message_die($user->lang['wrong_settings_1']);
+				  }
 				}
 				case "2": //one raid per bosskill
 				{
+				  if($rli_config['use_bossdkp'])
+				  {
 					$key = 1;
 					foreach($raid['bosskills'] as $b => $bosskill)
 					{
@@ -287,18 +306,28 @@ class raidlogimport extends EQdkp_Admin
 							}
 						}
 						//value
-						$max['join'][1] = $raids[$key]['begin'];
-						$max['leave'][1] = $raids[$key]['end'];
-						$max['timedkp'] = calculate_timedkp($raid['timebonus'], calculate_time($max, $raid['end'], $raid['begin']));
+						if($rli_config['use_timedkp'])
+						{
+							$max['join'][1] = $raids[$key]['begin'];
+							$max['leave'][1] = $raids[$key]['end'];
+							$max['timedkp'] = calculate_timedkp($raid['timebonus'], calculate_time($max, $raid['end'], $raid['begin']));
+						}
 						$max['bossdkp'] = calculate_bossdkp($raid['bosskills'], $max);
 						$raids[$key]['value'] = $max['timedkp'] + $max['bossdkp'];
 						unset($max);
 						$key++;
 					}
 					break;
+				  }
+				  else
+				  {
+				  	message_die($user->lang['wrong_settings_2']);
+				  }
 				}
 				case "3": //one raid per hour and one per boss
 				{
+				  if($rli_config['use_timedkp'] AND $rli_config['use_bossdkp'])
+				  {
 					//time
 					$key = 1;
 					for($i = $raid['begin']; $i<=($raid['end']); $i+=3600)
@@ -374,6 +403,12 @@ class raidlogimport extends EQdkp_Admin
 						$key++;
 					}
 					break;
+
+				  }
+				  else
+				  {
+				  	message_die($user->lang['wrong_settings_3']);
+				  }
 				}
 			}//switch
 			if($rli_config['attendence_raid'])
@@ -410,11 +445,12 @@ class raidlogimport extends EQdkp_Admin
         }//post or string
 
         //get events
-        $eventqry = "SELECT event_name FROM __events ORDER BY event_name ASC;";
+        $eventqry = "SELECT event_name, event_value FROM __events ORDER BY event_name ASC;";
         $eventres = $db->query($eventqry);
         while ($ev = $db->fetch_record($eventres))
         {
           $events[$ev['event_name']] = $ev['event_name'];
+          $event_values[$ev['event_name']] = $ev['event_value'];
         }
         $db->free_result();
 
@@ -468,6 +504,17 @@ class raidlogimport extends EQdkp_Admin
 					$rai['event'] .= $rli_config['non_hero'];
 				}
 			}
+			if(!($rli_config['use_bossdkp'] or $rli_config['use_timedkp']))
+			{
+			  foreach($events as $name => $values)
+			  {
+				if($name == $rai['event'])
+				{
+					$raids[$ky]['value'] = $event_values[$name];
+					$rai['value'] = $event_values[$name];
+				}
+			  }
+			}
 			$tpl->assign_block_vars('raids', array(
                 'COUNT'     => $ky,
                 'START_DATE'=> date('d.m.y', $rai['begin']),
@@ -483,7 +530,8 @@ class raidlogimport extends EQdkp_Admin
 			);
 		}
 		$tpl->assign_vars(array(
-			'DATA' => htmlspecialchars(serialize($data), ENT_QUOTES))
+			'DATA' => htmlspecialchars(serialize($data), ENT_QUOTES),
+			'USE_TIMEDKP' => $rli_config['use_timedkp'])
 		);
 		//language
 		$tpl->assign_vars(lang2tpl());
@@ -654,12 +702,12 @@ class raidlogimport extends EQdkp_Admin
            	}
 			$tpl->assign_block_vars('loots', array(
 				'LOOTNAME'  => $loot['name'],
+				'ITEMID'	=> $loot['id'],
 				'LOOTER'	=> $myHtml->DropDown("loots[".$key."][player]", $members['name'], $loot['player'], '', '', true),
 				'RAID'		=> $loot_select."</select>",
 				'LOOTDKP'	=> $loot['dkp'],
 				'KEY'		=> $key,
-				'CLASS'		=> $eqdkp->switch_row_class(),
-				'INPUT_ITEMNAME' => ($loot['input']) ? TRUE : FALSE)
+				'CLASS'		=> $eqdkp->switch_row_class())
 			);
 		}
 

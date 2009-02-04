@@ -1,7 +1,7 @@
 <?php
 	/*
 	 * @original version by kokson
-	 * @copyright 2007
+	 * @copyright 2007 - 2009
 	 * @further development by hoofy (since version 0.2)
 	 *
 	 */
@@ -18,8 +18,8 @@ if ( !defined('EQDKP_INC') )
 class raidlogimport_Plugin_Class extends EQdkp_Plugin
 {
 	var $vstatus = 'Stable';
-	var $version = '0.4.3.1';
-	var $build = 3734;
+	var $version = '0.4.4';
+	var $build = 3743;
 
     function raidlogimport_plugin_class($pm)
     {
@@ -89,7 +89,9 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 				'adj_parse'			=> ': ', //string, which separates the reason and the value for a adjustment in the note of a member
 				'bz_parse'			=> ',',  //separator, which is used for separating the different strings of a boss or zone
 				'parser'			=> 'ctrt',  //which format has the xml-string?
-				'rli_upd_check'		=> '1'		//enable update check?
+				'rli_upd_check'		=> '1',		//enable update check?
+				'use_bossdkp'		=> '1',
+				'use_timedkp'		=> '1'
 			);
 			$this->insert_data($config_data);
 			//add default bz_data

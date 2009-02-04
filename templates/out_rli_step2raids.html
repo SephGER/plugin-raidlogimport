@@ -19,7 +19,9 @@
                 </script>
                 <input type="text" name="raids[{raids.COUNT}][start_time]" value="{raids.START_TIME}" class="maininput" size="9" />
         </td>
+        <!-- IF USE_TIMEDKP -->
         <td>{L_EVENT}: {raids.EVENT} &nbsp;&nbsp;&nbsp; DKP/h: <input type="text" name="raids[{raids.COUNT}][timebonus]" value="{raids.TIMEBONUS}" class="maininput" size="5" /></td>
+        <!-- ENDIF -->
       </tr>
       <tr class="row2">
         <td>{L_END}: <input type="text" name="raids[{raids.COUNT}][end_date]" id="raid_end_date" value="{raids.END_DATE}" class="maininput" size="9" />

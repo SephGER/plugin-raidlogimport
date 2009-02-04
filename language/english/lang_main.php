@@ -101,6 +101,7 @@
 	$lang['rli_add_mems'] = 'Add members';
 	$lang['rli_add_item'] = 'Add item';
 	$lang['rli_add_items'] = 'Add items';
+	$lang['rli_item_id'] = 'Item-ID';
 	$lang['rli_add_adj'] = 'Add adjustment';
 	$lang['rli_add_adjs'] = 'Add adjustments';
 	$lang['rli_add_bk'] = 'Add bosskill';
@@ -112,6 +113,10 @@
 	$lang['rli_missing_values'] = 'There are missing some values. Please: ';
 	$lang['wrong_format'] = 'The parser you haven chosen and the raid-log you have posted, do not match.';
 	$lang['ctrt_format'] = 'Please set the output Format of your CT-Raidtracker to "MLdkp 1.1 / EQdkp Plugin" (move the slider to the left).';
+	$lang['wrong_settings'] = '<img src="$eqdkp_root_path'.'images/error.png" alt="error"> Wrong Settings!';
+	$lang['wrong_settings_1'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_1'].' with no Time-DKP.';
+	$lang['wrong_settings_2'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_2'].' with no Boss-DKP.';
+	$lang['wrong_settings_3'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_3'].' with no Boss- and/or Time-DKP.';
 
 	//config
 	$lang['multidkp_need'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                    Activate for functionality with MultiDKP!                  </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='help'></a>";
@@ -134,4 +139,6 @@
 	$lang['parser'] = 'In which XML-Format is the string?';
 	$lang['rli_man_db_up'] = 'Force DB-Update';
 	$lang['rli_upd_check'] = 'Enable Update Check?';
+	$lang['use_bossdkp'] = 'Use Boss-DKP?';
+	$lang['use_timedkp'] = 'Use Time-DKP?';
 ?>
