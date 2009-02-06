@@ -15,9 +15,7 @@ require('functions.php');
 
 //include library
 require('libloader.inc.php');
-$needed_plugins = array('raidlogimport' => array('table' => 'raidlogimport_config', 'fieldprefix' => 'rli_', 'inclfolder' => 'includes'));
 $pC->pluginCore();
-$tpl->assign_var('UPGRDWARN', $pC->InitUpgradeWarn($needed_plugins, 'raidlogimport_config', 'rli_'));
 
 //get config-values
 $rli_config = rli_get_config();
