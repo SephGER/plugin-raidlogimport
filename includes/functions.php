@@ -521,12 +521,12 @@ function member_in_raid($member, $raid)
 	$time = array();
 	foreach($member['join'] as $tj)
 	{
-		if(array_key_exists($tj, $time)){$tj++;}
+		if(array_key_exists($tj, $time)){$tj--;}
 		$time[$tj] = 'join';
 	}
 	foreach($member['leave'] as $tl)
 	{
-		if(array_key_exists($tl, $time)){$tl--;}
+		if(array_key_exists($tl, $time)){$tl++;}
 		$time[$tl] = 'leave';
 	}
 	ksort($time);

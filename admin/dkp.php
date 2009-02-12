@@ -515,8 +515,8 @@ class raidlogimport extends EQdkp_Admin
 					$rai['value'] = $event_values[$name];
 				}
 			  }
-			}			
-			
+			}
+
 			$tpl->assign_block_vars('raids', array(
                 'COUNT'     => $ky,
                 'START_DATE'=> date('d.m.y', $rai['begin']),
@@ -643,7 +643,7 @@ class raidlogimport extends EQdkp_Admin
 	{
 		global $db, $eqdkp, $user, $tpl, $pm;
 		global $myHtml, $rli_config;
-		
+
 		include_once($eqdkp_root_path.'itemstats/includes/urlreader.php');
 		$data = unserialize($_POST['rest']);
 		$data = parse_post($_POST, $data);
@@ -676,15 +676,15 @@ class raidlogimport extends EQdkp_Admin
         $members['name']['disenchanted'] = 'disenchanted';
         $members['name']['bank'] = 'bank';
         $maxkey = 0;
-        
+
         //create rename_table
 		$sql = "CREATE TABLE IF NOT EXISTS item_rename (
-				`id` INT NOT NULL PRIMARY KEY, 
-				`item_name` VARCHAR(255) NOT NULL, 
-				`item_id` INT NOT NULL, 
+				`id` INT NOT NULL PRIMARY KEY,
+				`item_name` VARCHAR(255) NOT NULL,
+				`item_id` INT NOT NULL,
 				`item_name_trans` VARCHAR(255) NOT NULL);";
 		$db->query($sql);
-		
+
         foreach ($data['loots'] as $key => $loot)
         {
         	$sql = "SELECT * FROM item_rename WHERE id = '".$key."';";
@@ -758,7 +758,7 @@ class raidlogimport extends EQdkp_Admin
 	{
 		global $db, $eqdkp, $tpl, $user, $pm;
 		global $myHtml, $rli_config;
-		
+
 		$db->query("DROP TABLE IF EXISTS item_rename;");
 
 		$data = unserialize($_POST['rest']);
@@ -845,16 +845,16 @@ class raidlogimport extends EQdkp_Admin
             'display'           => true)
         );
 	}
-	
+
 	function process_null_sum()
 	{
 		global $db, $eqdkp, $user, $tpl, $pm, $SID, $rli_config, $conf_plus, $myHtml;
-		
+
 		$db->query("DROP TABLE IF EXISTS item_rename");
-		
+
 		$data = unserialize($_POST['rest']);
 		$data = parse_post($_POST, $data);
-		
+
 		//show members & items
 		foreach($data['members'] as $key => $member)
 		{
@@ -864,9 +864,9 @@ class raidlogimport extends EQdkp_Admin
 		{
 			$tpl->assign_block_vars('loots', items2tpl($loot));
 		}
-		
+
        	if($rli_config['null_sum'] == 1)
-        {		
+        {
 			foreach($data['raids'] as $raid_key => $raid)
 			{
 				$raid['value'] = 0;
@@ -894,7 +894,7 @@ class raidlogimport extends EQdkp_Admin
             	$tpl->assign_block_vars('raids', raids2tpl($raid_key, $raid));
 			}
 		}
-		
+
 		if($rli_config['null_sum'] == 2)
 		{
 			$data['adjs'] = array();
@@ -971,7 +971,7 @@ class raidlogimport extends EQdkp_Admin
 				);
 			}
 		}
-		
+
 		$tpl->assign_vars(array(
 			'DATA'			=> htmlspecialchars(serialize($data), ENT_QUOTES),
 			'S_ATT_BEGIN'	=> ($rli_config['attendence_begin'] > 0) ? TRUE : FALSE,
@@ -980,7 +980,7 @@ class raidlogimport extends EQdkp_Admin
 		);
 
 		//language
-		$tpl->assign_vars(lang2tpl());		
+		$tpl->assign_vars(lang2tpl());
 		$eqdkp->set_vars(array(
         	'page_title'        => sprintf($user->lang['admin_title_prefix'], $eqdkp->config['guildtag'], $eqdkp->config['dkp_name']).': Daten prüfen',
             'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
@@ -1029,7 +1029,7 @@ class raidlogimport extends EQdkp_Admin
 	        $sql = "SHOW COLUMNS
 	                        FROM __items
 	                        LIKE 'game_itemid';";
-	        $result = $db->query_first($sql);
+	        $result = $db->query($sql);
 	        if ($db->num_rows($result) > 0) {
 	            $item_gameidExists = TRUE;
 	        }
@@ -1048,7 +1048,7 @@ class raidlogimport extends EQdkp_Admin
 	                         `item_added_by`,
 	                         `item_group_key`";
 	            if ($item_gameidExists) {
-	                $sql .= ",`item_gameid`";
+	                $sql .= ",`game_itemid`";
 	            }
 	            $sql .= ") VALUES
 	                     ('".mysql_real_escape_string($loot['name'])."',
@@ -1181,8 +1181,6 @@ class raidlogimport extends EQdkp_Admin
 
 		  if ($isok)
 		  {
-			$db->query("COMMIT;");
-			$message = $user->lang['bz_save_suc'];
 
 			//logging
 			//raids
@@ -1243,6 +1241,8 @@ class raidlogimport extends EQdkp_Admin
             		'log_action' => $log_action)
             	);
             }
+			$db->query("COMMIT;");
+			$message = $user->lang['bz_save_suc'];
 		  }
 		  else
 		  {
