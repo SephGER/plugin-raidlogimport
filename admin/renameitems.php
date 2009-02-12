@@ -10,16 +10,18 @@ $user->check_auth('a_raidlogimport_dkp');
 My_ob_start();
 function get_itemID($itemname, $lang)
 {
+	$url_lang = ($lang == 'en') ? 'www' : $lang;
 	$encoded_name = urlencode(utf8_encode($itemname));
 	$encoded_name = str_replace('+' , '%20' , $encoded_name);
     $encoded_name = str_replace(' ' , '%20' , $encoded_name);
-	$item_xml = simplexml_load_string(itemstats_read_url('http://'.$lang.'.wowhead.com/?item='.$encoded_name.'&xml', $lang));
+	$item_xml = simplexml_load_string(itemstats_read_url('http://'.$url_lang.'.wowhead.com/?item='.$encoded_name.'&xml', $lang));
 	return trim($item_xml->item['id']);
 }
 
 function get_itemname($itemID, $lang)
 {
-	$item_xml = simplexml_load_string(itemstats_read_url('http://'.$lang.'.wowhead.com/?item='.$itemID.'&xml', $lang));
+	$url_lang = ($lang == 'en') ? 'www' : $lang;
+	$item_xml = simplexml_load_string(itemstats_read_url('http://'.$url_lang.'.wowhead.com/?item='.$itemID.'&xml', $lang));
 	return utf8_decode(trim($item_xml->item->name));
 }
 
