@@ -100,6 +100,8 @@ class raidlogimport extends EQdkp_Admin
 		global $db, $eqdkp, $user, $tpl, $pm;
 		global $myHtml, $rli_config, $eqdkp_root_path;
 
+		$db->query("DROP TABLE IF EXISTS item_rename;");
+
         if(isset($_POST['rest']))
         {
         	$data = unserialize($_POST['rest']);

@@ -856,7 +856,7 @@ function parse_post($post, $data)
 {
 	if(isset($post['adjs']))
 	{
-		return parse_adjs($post, $data);
+		return parse_adjs($post['adjs'], $data);
 	}
 	if(isset($post['loots']))
 	{
