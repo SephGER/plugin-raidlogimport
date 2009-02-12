@@ -50,7 +50,11 @@ class raidlogimport extends EQdkp_Admin
             'insert' => array(
                 'name'    => 'insert',
                 'process' => 'insert_log',
-                'check'   => 'a_raidlogimport_dkp')
+                'check'   => 'a_raidlogimport_dkp'),
+            'null_sum' => array(
+            	'name'	  => 'nullsum',
+            	'process' => 'process_null_sum',
+            	'check'	  => 'a_raidlogimport_dkp')
                 )
         );
 
@@ -99,12 +103,8 @@ class raidlogimport extends EQdkp_Admin
         if(isset($_POST['rest']))
         {
         	$data = unserialize($_POST['rest']);
+			$data = parse_post($_POST, $data);
         	$raids = $data['raids'];
-        }
-        if(isset($_POST['raids']))
-        {
-            $data['raids'] = parse_post($_POST['raids']);
-            $raids = $data['raids'];
         }
         if(isset($_POST['log']))
         {
@@ -121,6 +121,7 @@ class raidlogimport extends EQdkp_Admin
 		  	$data['members'] = $raid['members'];
 		  	$data['loots'] = $raid['loots'];
 		  	$data['adjs'] = $raid['adjs'];
+		  	$data['log_lang'] = $_POST['log_lang'];
             $raids = array();
 		  	// Raids
 			switch($rli_config['raidcount'])
@@ -514,7 +515,8 @@ class raidlogimport extends EQdkp_Admin
 					$rai['value'] = $event_values[$name];
 				}
 			  }
-			}
+			}			
+			
 			$tpl->assign_block_vars('raids', array(
                 'COUNT'     => $ky,
                 'START_DATE'=> date('d.m.y', $rai['begin']),
@@ -531,7 +533,9 @@ class raidlogimport extends EQdkp_Admin
 		}
 		$tpl->assign_vars(array(
 			'DATA' => htmlspecialchars(serialize($data), ENT_QUOTES),
-			'USE_TIMEDKP' => $rli_config['use_timedkp'])
+			'USE_TIMEDKP' => $rli_config['use_timedkp'],
+			'S_NULL_SUM'  => $rli_config['null_sum'],
+			'L_RV_NS'	  => $user->lang['raidval_nullsum_later'])
 		);
 		//language
 		$tpl->assign_vars(lang2tpl());
@@ -550,14 +554,7 @@ class raidlogimport extends EQdkp_Admin
 		global $myHtml, $rli_config;
 
 		$data = unserialize($_POST['rest']);
-		if(isset($_POST['raids']))
-		{
-			$data['raids'] = parse_post($_POST['raids']);
-		}
-		elseif(isset($_POST['members']))
-		{
-			$data = parse_members($_POST['members'], $data);
-		}
+		$data = parse_post($_POST, $data);
 		if(isset($_POST['members_add']))
 		{
 			for($i=1; $i<=$_POST['members_add']; $i++)
@@ -646,16 +643,10 @@ class raidlogimport extends EQdkp_Admin
 	{
 		global $db, $eqdkp, $user, $tpl, $pm;
 		global $myHtml, $rli_config;
-
+		
+		include_once($eqdkp_root_path.'itemstats/includes/urlreader.php');
 		$data = unserialize($_POST['rest']);
-		if(isset($_POST['members']))
-		{
-			$data = parse_members($_POST['members'], $data);
-		}
-		elseif(isset($_POST['loots']))
-		{
-			$data['loots'] = parse_items($_POST['loots'], $data['loots']);
-		}
+		$data = parse_post($_POST, $data);
 		if(isset($_POST['items_add']))
 		{
 			for($i=1; $i<=$_POST['items_add']; $i++)
@@ -684,8 +675,39 @@ class raidlogimport extends EQdkp_Admin
 		//add disenchanted and bank
         $members['name']['disenchanted'] = 'disenchanted';
         $members['name']['bank'] = 'bank';
+        $maxkey = 0;
+        
+        //create rename_table
+		$sql = "CREATE TABLE IF NOT EXISTS item_rename (
+				`id` INT NOT NULL PRIMARY KEY, 
+				`item_name` VARCHAR(255) NOT NULL, 
+				`item_id` INT NOT NULL, 
+				`item_name_trans` VARCHAR(255) NOT NULL);";
+		$db->query($sql);
+		
         foreach ($data['loots'] as $key => $loot)
         {
+        	$sql = "SELECT * FROM item_rename WHERE id = '".$key."';";
+        	$result = $db->query($sql);
+        	$bla = false;
+        	while ($row = $db->fetch_record($result))
+        	{
+        		if($row['item_name_trans'])
+        		{
+        			$loot['name'] = $row['item_name_trans'];
+        			$loot['id'] = $row['item_id'];
+        			$bla = true;
+        		}
+        		if($row['item_name'])
+        		{
+        			$bla = true;
+        		}
+        	}
+        	if(!$bla)
+        	{
+        		$sql = "INSERT INTO item_rename (id, item_name, item_id) VALUES ('".$key."', '".mysql_real_escape_string($loot['name'])."', '".$loot['id']."');";
+        		$db->query($sql);
+        	}
         	if(isset($aliase[$loot['player']]))
         	{
         		$loot['player'] = $aliase[$loot['player']];
@@ -709,12 +731,17 @@ class raidlogimport extends EQdkp_Admin
 				'KEY'		=> $key,
 				'CLASS'		=> $eqdkp->switch_row_class())
 			);
+			$maxkey = ($maxkey < $key) ? $key : $maxkey;
 		}
 
 		$tpl->assign_vars(array(
 			'DATA'			=> htmlspecialchars(serialize($data), ENT_QUOTES),
 			'S_ATT_BEGIN'	=> ($rli_config['attendence_begin'] > 0) ? TRUE : FALSE,
-			'S_ATT_END'		=> ($rli_config['attendence_end'] > 0) ? TRUE : FALSE)
+			'S_ATT_END'		=> ($rli_config['attendence_end'] > 0) ? TRUE : FALSE,
+			'S_NULL_SUM'	=> $rli_config['null_sum'],
+			'MAXCOUNT'		=> $maxkey,
+			'LANGFROM'		=> $data['log_lang'],
+			'LANGTO'		=> $rli_config['item_save_lang'])
 		);
 
 		//language
@@ -731,16 +758,12 @@ class raidlogimport extends EQdkp_Admin
 	{
 		global $db, $eqdkp, $tpl, $user, $pm;
 		global $myHtml, $rli_config;
+		
+		$db->query("DROP TABLE IF EXISTS item_rename;");
 
 		$data = unserialize($_POST['rest']);
-		if(isset($_POST['loots']))
-		{
-			$data['loots'] = parse_items($_POST['loots'], $data['loots']);
-		}
-		elseif(isset($_POST['adjs']))
-		{
-			$data['adjs'] = parse_adjs($_POST['adjs']);
-		}
+		$data = parse_post($_POST, $data);
+
 		if(isset($_POST['adjs_add']))
 		{
 			for($i=1; $i<=$_POST['adjs_add']; $i++)
@@ -822,6 +845,149 @@ class raidlogimport extends EQdkp_Admin
             'display'           => true)
         );
 	}
+	
+	function process_null_sum()
+	{
+		global $db, $eqdkp, $user, $tpl, $pm, $SID, $rli_config, $conf_plus, $myHtml;
+		
+		$db->query("DROP TABLE IF EXISTS item_rename");
+		
+		$data = unserialize($_POST['rest']);
+		$data = parse_post($_POST, $data);
+		
+		//show members & items
+		foreach($data['members'] as $key => $member)
+		{
+			$tpl->assign_block_vars('player', mems2tpl($key, $member));
+		}
+		foreach($data['loots'] as $loot)
+		{
+			$tpl->assign_block_vars('loots', items2tpl($loot));
+		}
+		
+       	if($rli_config['null_sum'] == 1)
+        {		
+			foreach($data['raids'] as $raid_key => $raid)
+			{
+				$raid['value'] = 0;
+				foreach($data['loots'] as $loot)
+				{
+					if($loot['raid'] == $raid_key)
+					{
+						$raid['value'] += $loot['dkp'];
+					}
+				}
+				$count = 0;
+				foreach($data['members'] as $member)
+				{
+					$member['raids'] = explode(',', $member['raid_list']);
+					if(in_array($raid_key, $member['raids']))
+					{
+						$count++;
+					}
+				}
+            	$raid['value'] = $raid['value']/$count;
+            	if($conf_plus['pk_round_activate'])
+            	{
+            		$raid['value'] = round($raid['value'], $conf_plus['pk_round_precision']);
+            	}
+            	$tpl->assign_block_vars('raids', raids2tpl($raid_key, $raid));
+			}
+		}
+		
+		if($rli_config['null_sum'] == 2)
+		{
+			$data['adjs'] = array();
+			$maxkey = 0;
+			foreach($data['members'] as $key => $member)
+			{
+				$members[$member['name']] = $member['name'];
+				$maxkey = ($maxkey < $key) ? $key : $maxkey;
+			}
+			$sql = "SELECT member_name FROM __members";
+			$res = $db->query($sql);
+			while ($row = $db->fetch_record($res))
+			{
+				if(!in_array($row['member_name'], $members))
+				{
+					$maxkey++;
+					$members[$row['member_name']] = $row['member_name'];
+					$data['members'][$maxkey]['name'] = $row['member_name'];
+					$data['members'][$maxkey]['raid_list'] = '';
+				}
+			}
+        	//get events
+        	$eventqry = "SELECT event_name FROM __events ORDER BY event_name ASC;";
+        	$eventres = $db->query($eventqry);
+        	while ($ev = $db->fetch_record($eventres))
+        	{
+        	  $events[$ev['event_name']] = $ev['event_name'];
+        	}
+			$count = count($members);
+			foreach($data['raids'] as $raid_key => $raid)
+			{
+				$raid['value'] = 0;
+				foreach($data['loots'] as $loot)
+				{
+					if($loot['raid'] == $raid_key)
+					{
+						$raid['value'] += $loot['dkp'];
+					}
+				}
+				$raid['value'] = $raid['value']/$count;
+                if($conf_plus['pk_round_activate'])
+                {
+                    $raid['value'] = round($raid['value'], $conf_plus['pk_round_precision']);
+                }
+                $u = 0;
+				foreach($data['members'] as $key => $member)
+				{
+					$member['raids'] = explode(',', $member['raid_list']);
+					if(!in_array($raid_key, $member['raids']))
+					{
+						$data['adjs'][$u]['member'] = $member['name'];
+						$data['adjs'][$u]['value'] = $raid['value'];
+						$data['adjs'][$u]['event'] = $raid['event'];
+						$data['adjs'][$u]['reason'] = 'Raid '.date('d.m.y', $raid['begin']);
+						$u++;
+					}
+				}
+            	$tpl->assign_block_vars('raids', raids2tpl($raid_key, $raid));
+			}
+			foreach($data['adjs'] as $a => $adj)
+			{
+				if(isset($adj_alias[$adj['member']]))
+				{
+					$adj['member'] = $adj_alias[$adj['member']];
+				}
+				$ev_sel = (isset($adj['event'])) ? $adj['event'] : '';
+				$tpl->assign_block_vars('adjs', array(
+					'MEMBER'	=> $myHtml->DropDown('adjs['.$a.'][member]', $members, $adj['member'], '', '', true),
+					'EVENT'		=> $myHtml->DropDown('adjs['.$a.'][event]', $events, $ev_sel, '', '', true),
+					'NOTE'		=> $adj['reason'],
+					'VALUE'		=> $adj['value'],
+					'CLASS'		=> $eqdkp->switch_row_class(),
+					'KEY'		=> $a)
+				);
+			}
+		}
+		
+		$tpl->assign_vars(array(
+			'DATA'			=> htmlspecialchars(serialize($data), ENT_QUOTES),
+			'S_ATT_BEGIN'	=> ($rli_config['attendence_begin'] > 0) ? TRUE : FALSE,
+			'S_ATT_END'		=> ($rli_config['attendence_end'] > 0) ? TRUE : FALSE,
+			'S_NULL_SUM_2'	=> ($rli_config['null_sum'] == 2) ? TRUE : FALSE)
+		);
+
+		//language
+		$tpl->assign_vars(lang2tpl());		
+		$eqdkp->set_vars(array(
+        	'page_title'        => sprintf($user->lang['admin_title_prefix'], $eqdkp->config['guildtag'], $eqdkp->config['dkp_name']).': Daten prüfen',
+            'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
+            'template_file'     => 'rli_step2ns.html',
+            'display'           => true)
+        );
+	}
 
 	function insert_log()
 	{
@@ -829,7 +995,7 @@ class raidlogimport extends EQdkp_Admin
 		global $SID, $rli_config, $conf_plus;
 
 		$data = unserialize($_POST['rest']);
-		$data['adjs'] = parse_adjs($_POST['adjs']);
+		$data = parse_post($_POST, $data);
 		$isok = true;
 
 		$bools = check_data($data);
@@ -908,6 +1074,8 @@ class raidlogimport extends EQdkp_Admin
 		  $adj_dkp = array();
 		  if($isok)
 		  {
+		   if(!$rli_config['null_sum'])
+		   {
 		  	if(is_array($data['adjs']))
 		  	{
 			  	foreach($data['adjs'] as $adj)
@@ -926,6 +1094,7 @@ class raidlogimport extends EQdkp_Admin
 					}
 				}
 		  	}
+		   }
 		  }
 
 		  if($isok)
@@ -1138,7 +1307,8 @@ class raidlogimport extends EQdkp_Admin
             'F_PARSE_LOG'    => 'dkp.php' . $SID,
             'L_INSERT'		 => $user->lang['rli_dkp_insert'],
             'L_SEND'		 => $user->lang['rli_send'],
-            'S_STEP1'        => true)
+            'S_STEP1'        => true,
+            'WHICH_LANG'	 => $user->lang['rli_log_lang'])
         );
 
         $eqdkp->set_vars(array(

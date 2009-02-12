@@ -1,3 +1,11 @@
+<script language="JavaScript" type="text/javascript">
+
+function closeWindow(){jBox.close2('UCCacheWindow');}
+
+function RenameItems(langto, langfrom, count){
+  var boxUCCacheWindow = jBox.open('UCCacheWindow','iframe','renameitems.php?actual=0&langto='+langto+'&langfrom='+langfrom+'&count='+count,'Rename Items','width=440,height=330,center=true,minimizable=true,resize=true,draggable=true,model=false,scrolling=true');
+}
+</script>
 <form method="post" action="{F_PARSE}" name="post">
 	<table width="100%" border="0" cellspacing="1" cellpadding="2">
 		<tr>
@@ -77,7 +85,13 @@
       	<td><input type="text" name="loots[{loots.KEY}][dkp]" value="{loots.LOOTDKP}" class="maininput" size="7" /></td>
       </tr>
       <!-- END loots -->
-	  <tr class="row2">
+      <tr class="row2">
+      	<td colspan="6">
+      		&nbsp;<input type="button" size="20" name="rename" value="{L_TRANSLATE_ITEMS}" class="mainoption" onclick="javascript:RenameItems('{LANGTO}', '{LANGFROM}', '{MAXCOUNT}')" />&nbsp;
+      		{L_TRANSLATE_ITEMS_TIP}
+      	</td>
+      </tr>
+	  <tr class="row1">
 	  	<td colspan="2"><select name="items_add">
 	  		  <option value="0">0..{L_ITEMS_ADD}</option>
 	  		  <option value="1">1..{L_ITEM_ADD}</option>
@@ -88,14 +102,18 @@
 	  		</select>
 	  		<input type="submit" name="checkitem" value="{L_UPD}" class="mainoption" />
 	  	</td>
-	  	<td colspan="3">&nbsp;</td>
+	  	<td colspan="5">&nbsp;</td>
 	  </tr>
       <tr>
-      	<th colspan="5"><input type="hidden" name="rest" value="{DATA}" />
+      	<th colspan="6"><input type="hidden" name="rest" value="{DATA}" />
       					<input type="hidden" name="add_item_data" value='{ADD_ITEM_DATA}' />
       					<input type="submit" name="checkraid" value="{L_BACK2RAID}" class="mainoption" />
       					<input type="submit" name="checkmem" value="{L_BACK2MEM}" class="mainoption" />
+      					<!-- IF S_NULL_SUM -->
+      					<input type="submit" name="nullsum" value="{L_CHECK_RAIDVAL}" class="mainoption" />
+      					<!-- ELSE -->
       					<input type="submit" name="checkadj" value="{L_CHECKADJS}" class="mainoption" />
+      					<!-- ENDIF -->
       	</th>
       </tr>
     </table>

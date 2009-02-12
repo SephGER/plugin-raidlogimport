@@ -13,7 +13,7 @@
       </tr>
       <tr class="row2">
         <td colspan="2">{L_EVENT}: {raids.EVENT}</td>
-        <td colspan="2">{L_VALUE}: {raids.VALUE}</td>
+        <td colspan="2">{L_VALUE}: <input type="text" name="raids[{raids.COUNT}][value]" value="{raids.VALUE}" class="maininput" /></td>
       </tr>
       <tr class="row1">
         <td colspan="4">{L_NOTE}: {raids.NOTE}</td>
@@ -76,6 +76,7 @@
       <!-- END loots -->
     </table>
 	<table width="100%" cellspacing="1" cellpadding="1" border="0" id="adj">
+	<!-- IF S_NULL_SUM_2 -->
 	  <tr>
 	  	<th colspan="5">{L_ADJS}</th>
 	  </tr>
@@ -91,23 +92,8 @@
 	  	<td><input type="text" name="adjs[{adjs.KEY}][value]" value="{adjs.VALUE}" class="maininput" /></td>
 	  </tr>
 	  <!-- END adjs -->
-	  <tr class="row2">
-	  	<td colspan="2"><select name="adjs_add">
-	  		  <option value="0">0..{L_ADJS_ADD}</option>
-	  		  <option value="1">1..{L_ADJ_ADD}</option>
-	  		  <option value="2">2..{L_ADJS_ADD}</option>
-	  		  <option value="3">3..{L_ADJS_ADD}</option>
-	  		  <option value="4">4..{L_ADJS_ADD}</option>
-	  		  <option value="5">5..{L_ADJS_ADD}</option>
-	  		</select>
-	  		<input type="submit" name="checkadj" value="{L_UPD}" class="mainoption" />
-	  	</td>
-	  	<td colspan="3">&nbsp;</td>
-	  </tr>
+	<!-- ENDIF -->
 	  <tr><th colspan="5"><input type="hidden" name="rest" value="{DATA}" />
-      		  <input type="submit" name="checkraid" value="{L_BACK2RAID}" class="mainoption" />
-      		  <input type="submit" name="checkmem" value="{L_BACK2MEM}" class="mainoption" />
-              <input type="submit" name="checkitem" value="{L_BACK2ITEM}" class="mainoption" />
       		  <input type="submit" name="insert" value="{L_INSERT}" class="mainoption" />
           </th>
       </tr>

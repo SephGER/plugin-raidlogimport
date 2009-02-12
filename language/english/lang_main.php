@@ -117,6 +117,12 @@
 	$lang['wrong_settings_1'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_1'].' with no Time-DKP.';
 	$lang['wrong_settings_2'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_2'].' with no Boss-DKP.';
 	$lang['wrong_settings_3'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_3'].' with no Boss- and/or Time-DKP.';
+	$lang['rli_process'] = 'Process';
+	$lang['translate_items' = 'Translate items';
+	$lang['translate_items_tip'] = 'After translation please press "Update" to fill the new names into the form.';
+	$lang['raidval_nullsum_later'] = 'With null-sum-system the raid-value wil be entered later.';
+	$lang['check_raidval'] = 'Check Raid-Values';
+	$lang['rli_log_lang'] = 'In which Language are the items?';
 
 	//config
 	$lang['multidkp_need'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                    Activate for functionality with MultiDKP!                  </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='help'></a>";
@@ -141,4 +147,9 @@
 	$lang['rli_upd_check'] = 'Enable Update Check?';
 	$lang['use_bossdkp'] = 'Use Boss-DKP?';
 	$lang['use_timedkp'] = 'Use Time-DKP?';
+	$lang['null_sum'] = 'Use Null-Sum-System?';
+	$lang['null_sum_0'] = 'No';
+	$lang['null_sum_1'] = 'Every member in the raid gets the DKP';
+	$lang['null_sum_2'] = 'Every member in the system gehts the DKP';
+	$lang['item_save_lang'] = 'In which language should the items be saved in the DB?';
 ?>

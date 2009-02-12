@@ -250,8 +250,6 @@ function create_member($member, $rank)
 	$r_i = $db->query_first($sql);
 	$sql = "SELECT class_id FROM __classes WHERE class_name = '".$member['class']."';";
 	$c_i = $db->query_first($sql);
-	$sql = "SELECT rank_id FROM __member_ranks WHERE rank_name = '".$rank."';";
-	$rank = $db->query_first($sql);
 
 	//insert member into database, create log
 	$success = "";
@@ -417,7 +415,7 @@ function parse_ctrt_string($xml)
 	foreach($xml->Loot->children() as $loot)
 	{
 		$raid['loots'][$i]['name'] 	 = utf8_decode(trim($loot->ItemName));
-		$raid['loots'][$i]['id']     = trim($loot->ItemID);
+		$raid['loots'][$i]['id']     = substr(trim($loot->ItemID), 0, 5);
 		$raid['loots'][$i]['player'] = utf8_decode(trim($loot->Player));
 		$raid['loots'][$i]['boss']    = trim($loot->Boss);
 		$raid['loots'][$i]['time']    = strtotime($loot->Time);
@@ -612,6 +610,7 @@ function lang2tpl()
         'L_CHECKADJS'	=> $user->lang['rli_checkadj'],
         'L_CHECKITEMS'  => $user->lang['rli_checkitem'],
         'L_CHECKMEM'    => $user->lang['rli_checkmem'],
+        'L_CHECK_RAIDVAL' => $user->lang['check_raidval'],
         'L_COST'		=> $user->lang['rli_cost'],
         'L_DELETE'		=> $user->lang['delete'],
         'L_END'         => $user->lang['rli_end'],
@@ -628,6 +627,7 @@ function lang2tpl()
         'L_MEMBERS'     => $user->lang['members'],
         'L_NAME'		=> $user->lang['name'],
         'L_NOTE'        => $user->lang['note'],
+        'L_PROCESS'		=> $user->lang['rli_process'],
         'L_RAID'        => $user->lang['raid'],
         'L_RAID_ADD'    => $user->lang['rli_add_raid'],
         'L_RAIDS_ADD'	=> $user->lang['rli_add_raids'],
@@ -635,6 +635,8 @@ function lang2tpl()
 		'L_START'		=> $user->lang['rli_start'],
 		'L_T_DKP'		=> $user->lang['rli_t_dkp'],
 		'L_TIME'		=> $user->lang['time'],
+		'L_TRANSLATE_ITEMS' => $user->lang['translate_items'],
+		'L_TRANSLATE_ITEMS_TIP' => $user->lang['translate_items_tip'],
 		'L_UPD'			=> $user->lang['update'],
         'L_VALUE'       => $user->lang['value']
 	);
@@ -694,7 +696,7 @@ function items2tpl($item)
 	);
 }
 
-function parse_post($post)
+function parse_raids($post, $data)
 {
 	foreach($post as $key => $raid)
 	{
@@ -727,7 +729,8 @@ function parse_post($post)
       	$raids[$key]['timebonus'] = $raid['timebonus'];
       }
 	}
-	return $raids;
+	$data['raids'] = $raids;
+	return $data;
 }
 
 function parse_members($post, $data)
@@ -796,9 +799,10 @@ function parse_members($post, $data)
 
 function parse_items($post, $data)
 {
+	$loot_sum = 0;
 	foreach($post as $k => $loot)
 	{
-    	foreach($data as $key => $item)
+    	foreach($data['loots'] as $key => $item)
     	{
 			if($k == $key)
 			{
@@ -806,14 +810,23 @@ function parse_items($post, $data)
 			  {
 				$tdata[$key] = $loot;
 				$tdata[$key]['time'] = $item['time'];
+				$loot_sum[$loot['raid']] += $loot['dkp'];
 			  }
 			}
 		}
 	}
-	return $tdata;
+	if($rli_config['null_sum'])
+	{
+		foreach($loot_sum as $raid_key => $value)
+		{
+		}
+	}
+	$data['loots'] = "";
+	$data['loots'] = $tdata;
+	return $data;
 }
 
-function parse_adjs($post)
+function parse_adjs($post, $data)
 {
 	$adjs = array();
 	foreach($post as $f => $adj)
@@ -823,6 +836,29 @@ function parse_adjs($post)
 			$adjs[$f] = $adj;
 		}
 	}
-	return $adjs;
+	$data['adjs'] = $adjs;
+	return $data;
 }
+
+function parse_post($post, $data)
+{
+	if(isset($post['adjs']))
+	{
+		return parse_adjs($post, $data);
+	}
+	if(isset($post['loots']))
+	{
+		return parse_items($post['loots'], $data);
+	}
+	if(isset($post['members']))
+	{
+		return parse_members($post['members'], $data);
+	}
+	if(isset($post['raids']))
+	{
+		return parse_raids($post['raids'], $data);
+	}
+	return $data;
+}
+
 ?>

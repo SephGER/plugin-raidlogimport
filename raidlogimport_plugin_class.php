@@ -18,7 +18,7 @@ if ( !defined('EQDKP_INC') )
 class raidlogimport_Plugin_Class extends EQdkp_Plugin
 {
 	var $vstatus = 'Stable';
-	var $version = '0.4.4';
+	var $version = '0.4.5';
 	var $build = 3755;
 
     function raidlogimport_plugin_class($pm)
@@ -78,7 +78,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 			//insert config-data
 			$config_data = array(
 				'rli_inst_version'	=> $this->get_data('version'),
-				'new_member_rank' 	=> 'Guest',
+				'new_member_rank' 	=> '1',
 				'raidcount'			=> '0', //0 = one raid, 1 = raid per hour, 2 = raid per boss, 3 = raid per hour and per boss
 				'loottime'			=> '600', //time after bosskill to assign loot to boss (in seconds)
 				'attendence_begin' 	=> '0',
@@ -91,7 +91,9 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 				'parser'			=> 'ctrt',  //which format has the xml-string?
 				'rli_upd_check'		=> '1',		//enable update check?
 				'use_bossdkp'		=> '1',
-				'use_timedkp'		=> '1'
+				'use_timedkp'		=> '1',
+				'null_sum'			=> '0', 	//use null-sum-system?
+				'item_save_lang'	=> 'de'
 			);
 			$this->insert_data($config_data);
 			//add default bz_data

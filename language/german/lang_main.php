@@ -117,6 +117,12 @@
 	$lang['wrong_settings_1'] = $lang['wrong_settings'].' '.$lang['raidcount_1'].' kann nicht mit keinen Zeit-DKP kombiniert werden.';
 	$lang['wrong_settings_2'] = $lang['wrong_settings'].' '.$lang['raidcount_2'].' kann nicht mit keinen Boss-DKP kombiniert werden.';
 	$lang['wrong_settings_3'] = $lang['wrong_settings'].' '.$lang['raidcount_3'].' kann nicht mit keine Boss- und/oder Zeit-DKP kombiniert werden.';
+	$lang['rli_process'] = 'Ausführen';
+	$lang['translate_items'] = 'Items übersetzen';
+	$lang['translate_items_tip'] = 'Nach dem Übersetzen einmal auf "Aktualisieren" drücken, damit die neuen Item-Namen übernommen werden.';
+	$lang['raidval_nullsum_later'] = 'Beim Null-Summen-System wird der Raid-Wert später eingegeben.';
+	$lang['check_raidval'] = 'Raid-Werte überprüfen';
+	$lang['rli_log_lang'] = 'In welcher Sprache sind die Items?';
 
 	//config
 	$lang['multidkp_need'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                    Für Multi-DKP Funktionalität aktivieren!                  </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='help'></a>";
@@ -141,4 +147,9 @@
 	$lang['rli_upd_check'] = 'Update-Check aktivieren?';
 	$lang['use_bossdkp'] = 'Boss-DKP verwenden?';
 	$lang['use_timedkp'] = 'Zeit-DKP verwenden?';
+	$lang['null_sum'] = 'Null-Summen-Systen verwenden?';
+	$lang['null_sum_0'] = 'Nein';
+	$lang['null_sum_1'] = 'Jedes Mitglied im Raid bekommt die DKP';
+	$lang['null_sum_2'] = 'Jedes Mitglied im System bekommt die DKP';
+	$lang['item_save_lang'] = 'In welcher Sprache sollen die Items in der DB gespeichert werden?';
 ?>

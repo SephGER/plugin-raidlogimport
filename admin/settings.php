@@ -121,9 +121,19 @@ class RLI_Settings extends EQdkp_Admin
 
 	function display_form()
 	{
-		global $db, $user, $tpl, $eqdkp, $pm, $SID, $rli_config;
+		global $db, $user, $tpl, $eqdkp, $pm, $SID, $rli_config, $myHtml;
 		$k = 2;
 		$endvalues = array();
+		//select ranks
+		$sql = "SELECT rank_name, rank_id FROM __member_ranks ORDER BY rank_name DESC;";
+		$result = $db->query($sql);
+		while ($row = $db->fetch_record($result))
+		{
+		  if($row['rank_id'])
+		  {
+			$ranks[$row['rank_id']] = $row['rank_name'];
+		  }
+		}
 		foreach($rli_config as $name => $value)
 		{
 			if($name == 'raidcount')
@@ -140,13 +150,12 @@ class RLI_Settings extends EQdkp_Admin
 			elseif($name == 'parser')
 			{
 				$parsers = array('ctrt' => 'CT-Raidtracker');
-				$endvalues[$k]['value'] = "<select name='".$name."'>";
-				foreach($parsers as $parser => $display)
-				{
-					$select = ($parser == $value) ? "selected='selected'" : "";
-					$endvalues[$k]['value'] .= "<option value='".$parser."' ".$select.">".$display."</option>";
-				}
-				$endvalues[$k]['value'] .= "</select>";
+				$endvalues[$k]['value'] = $myHtml->DropDown($name, $parsers, $value);
+				$endvalues[$k]['name'] = $name;
+			}
+			elseif($name == 'new_member_rank')
+			{
+				$endvalues[$k]['value'] = $myHtml->DropDown($name, $ranks, $value);
 				$endvalues[$k]['name'] = $name;
 			}
 			elseif($name == 'event_boss' OR $name == 'attendence_raid' OR $name == 'dep_match' OR $name == 'rli_upd_check' OR $name == 'use_bossdkp' OR $name == 'use_timedkp')
@@ -179,6 +188,29 @@ class RLI_Settings extends EQdkp_Admin
 			elseif($name == 'rlic_data' or $name == 'rlic_lastcheck' or $name == 'rli_inst_build')
 			{
 				//do nothing
+			}
+			elseif($name == 'null_sum')
+			{
+				$endvalues[$k]['value'] = "<select name='".$name."'>";
+				for($i=0; $i<=2; $i++)
+				{
+					$select = ($i == $value) ? "selected='selected'" : "";
+					$endvalues[$k]['value'] .= "<option value='".$i."' ".$select.">".$user->lang['null_sum_'.$i]."</option>";
+				}
+				$endvalues[$k]['value'] .= "</select>";
+				$endvalues[$k]['name'] = $name;
+			}
+			elseif($name == 'item_save_lang')
+			{
+				$options = array('en' => 'en', 'de' => 'de', 'fr' => 'fr', 'es' => 'es', 'ru' => 'ru');
+				$endvalues[$k]['value'] = '<select name="'.$name.'">';
+				foreach($options as $ey => $val)
+				{
+					$sel = ($ey == $value) ? 'selected="selected"' : '';
+					$endvalues[$k]['value'] .= '<option value="'.$ey.'" '.$sel.'>'.$val.'</option>';
+				}
+				$endvalues[$k]['value'] .= '</select>';
+				$endvalues[$k]['name'] = $name;
 			}
 			else
 			{
