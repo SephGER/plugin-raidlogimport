@@ -174,10 +174,10 @@ class raidlogimport extends EQdkp_Admin
 					}
 
 					//Value
+                    $max['join'][1] = $raids[1]['begin']+1;
+                    $max['leave'][1] = $raids[1]['end']-1;
 					if($rli_config['use_timedkp'])
 					{
-						$max['join'][1] = $raids[1]['begin']+1;
-						$max['leave'][1] = $raids[1]['end']-1;
 						$max['timedkp'] = calculate_timedkp($raids[1]['timebonus'], calculate_time($max, $raids[1]['end'], $raids[1]['begin']));
 					}
 					if($rli_config['use_bossdkp'])
@@ -309,10 +309,10 @@ class raidlogimport extends EQdkp_Admin
 							}
 						}
 						//value
+                        $max['join'][1] = $raids[$key]['begin'];
+                        $max['leave'][1] = $raids[$key]['end'];
 						if($rli_config['use_timedkp'])
 						{
-							$max['join'][1] = $raids[$key]['begin'];
-							$max['leave'][1] = $raids[$key]['end'];
 							$max['timedkp'] = calculate_timedkp($raid['timebonus'], calculate_time($max, $raid['end'], $raid['begin']));
 						}
 						$max['bossdkp'] = calculate_bossdkp($raid['bosskills'], $max);
