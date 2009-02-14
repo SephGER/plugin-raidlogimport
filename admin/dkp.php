@@ -104,7 +104,6 @@ class raidlogimport extends EQdkp_Admin
 
         if(isset($_POST['rest']))
         {
-        	$data = unserialize($_POST['rest']);
 			$data = parse_post($_POST, $data);
         	$raids = $data['raids'];
         }
@@ -174,10 +173,10 @@ class raidlogimport extends EQdkp_Admin
 					}
 
 					//Value
-                    $max['join'][1] = $raids[1]['begin']+1;
-                    $max['leave'][1] = $raids[1]['end']-1;
 					if($rli_config['use_timedkp'])
 					{
+						$max['join'][1] = $raids[1]['begin']+1;
+						$max['leave'][1] = $raids[1]['end']-1;
 						$max['timedkp'] = calculate_timedkp($raids[1]['timebonus'], calculate_time($max, $raids[1]['end'], $raids[1]['begin']));
 					}
 					if($rli_config['use_bossdkp'])
@@ -309,10 +308,10 @@ class raidlogimport extends EQdkp_Admin
 							}
 						}
 						//value
-                        $max['join'][1] = $raids[$key]['begin'];
-                        $max['leave'][1] = $raids[$key]['end'];
 						if($rli_config['use_timedkp'])
 						{
+							$max['join'][1] = $raids[$key]['begin'];
+							$max['leave'][1] = $raids[$key]['end'];
 							$max['timedkp'] = calculate_timedkp($raid['timebonus'], calculate_time($max, $raid['end'], $raid['begin']));
 						}
 						$max['bossdkp'] = calculate_bossdkp($raid['bosskills'], $max);
@@ -554,8 +553,7 @@ class raidlogimport extends EQdkp_Admin
 	{
 		global $db, $eqdkp, $user, $tpl, $pm;
 		global $myHtml, $rli_config;
-
-		$data = unserialize($_POST['rest']);
+		
 		$data = parse_post($_POST, $data);
 		if(isset($_POST['members_add']))
 		{
@@ -646,8 +644,6 @@ class raidlogimport extends EQdkp_Admin
 		global $db, $eqdkp, $user, $tpl, $pm;
 		global $myHtml, $rli_config;
 
-		include_once($eqdkp_root_path.'itemstats/includes/urlreader.php');
-		$data = unserialize($_POST['rest']);
 		$data = parse_post($_POST, $data);
 		if(isset($_POST['items_add']))
 		{
@@ -763,7 +759,6 @@ class raidlogimport extends EQdkp_Admin
 
 		$db->query("DROP TABLE IF EXISTS item_rename;");
 
-		$data = unserialize($_POST['rest']);
 		$data = parse_post($_POST, $data);
 
 		if(isset($_POST['adjs_add']))
@@ -854,7 +849,6 @@ class raidlogimport extends EQdkp_Admin
 
 		$db->query("DROP TABLE IF EXISTS item_rename");
 
-		$data = unserialize($_POST['rest']);
 		$data = parse_post($_POST, $data);
 
 		//show members & items

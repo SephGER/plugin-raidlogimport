@@ -854,6 +854,11 @@ function parse_adjs($post, $data)
 
 function parse_post($post, $data)
 {
+	if(preg_match('#\"#', $_POST['rest']))
+	{
+		$_POST['rest'] = stripslashes($_POST['rest']);
+	}
+	$data = unserialize($_POST['rest']);
 	if(isset($post['adjs']))
 	{
 		return parse_adjs($post['adjs'], $data);
