@@ -13,7 +13,10 @@ if(!defined('EQDKP_INC'))
 	header('HTTP/1.0 Not Found');
 	exit;
 }
-
+function stripslashes_array($array) {
+    return is_array($array) ? array_map('stripslashes_array', $array) : stripslashes($array);
+}
+            
 function calculate_time($player, $endraid, $raidstart) {
 	$time=0;
 	asort($player['join']);
@@ -854,10 +857,6 @@ function parse_adjs($post, $data)
 
 function parse_post($post, $data)
 {
-	if(preg_match('#\"#', $_POST['rest']))
-	{
-		$_POST['rest'] = stripslashes($_POST['rest']);
-	}
 	$data = unserialize($_POST['rest']);
 	if(isset($post['adjs']))
 	{

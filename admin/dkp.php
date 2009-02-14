@@ -58,18 +58,6 @@ class raidlogimport extends EQdkp_Admin
                 )
         );
 
-        if (get_magic_quotes_gpc()) {
-            function stripslashes_array($array) {
-                return is_array($array) ? array_map('stripslashes_array', $array) : stripslashes($array);
-            }
-
-            $_COOKIE = stripslashes_array($_COOKIE);
-            $_FILES = stripslashes_array($_FILES);
-            $_GET = stripslashes_array($_GET);
-            $_POST = stripslashes_array($_POST);
-            $_REQUEST = stripslashes_array($_REQUEST);
-        }
-
 		$sql = "SELECT bz_id, bz_string, bz_note, bz_bonus, bz_type FROM __raidlogimport_bz;";
 		if($result = $db->query($sql))
 		{
@@ -553,7 +541,7 @@ class raidlogimport extends EQdkp_Admin
 	{
 		global $db, $eqdkp, $user, $tpl, $pm;
 		global $myHtml, $rli_config;
-		
+
 		$data = parse_post($_POST, $data);
 		if(isset($_POST['members_add']))
 		{

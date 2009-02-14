@@ -118,7 +118,7 @@
 	$lang['wrong_settings_2'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_2'].' with no Boss-DKP.';
 	$lang['wrong_settings_3'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_3'].' with no Boss- and/or Time-DKP.';
 	$lang['rli_process'] = 'Process';
-	$lang['translate_items' = 'Translate items';
+	$lang['translate_items'] = 'Translate items';
 	$lang['translate_items_tip'] = 'After translation please press "Update" to fill the new names into the form.';
 	$lang['raidval_nullsum_later'] = 'With null-sum-system the raid-value wil be entered later.';
 	$lang['check_raidval'] = 'Check Raid-Values';
