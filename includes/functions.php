@@ -16,7 +16,7 @@ if(!defined('EQDKP_INC'))
 function stripslashes_array($array) {
     return is_array($array) ? array_map('stripslashes_array', $array) : stripslashes($array);
 }
-            
+
 function calculate_time($player, $endraid, $raidstart) {
 	$time=0;
 	asort($player['join']);
@@ -353,21 +353,29 @@ function check_data($data)
 
 function check_ctrt_format($xml)
 {
-	if(isset($xml->start, $xml->end, $xml->zone, $xml->BossKills, $xml->Loot, $xml->difficulty, $xml->PlayerInfos, $xml->Join, $xml->Leave))
+	if(isset($xml->start, $xml->end, $xml->zone, $xml->BossKills, $xml->Loot, $xml->PlayerInfos, $xml->Join, $xml->Leave))
 	{
 		foreach($xml->BossKills->children() as $bosskill)
 		{
+		  if($bosskill)
+		  {
 			if(!isset($bosskill->name, $bosskill->time))
 			{
+				var_dump($bosskill);
 				return false;
 			}
+		  }
 		}
 		foreach($xml->Loot->children() as $loot)
 		{
+		  if($loot)
+		  {
 			if(!isset($loot->ItemName, $loot->Player, $loot->Time))
 			{
+				var_dump($loot);
 				return false;
 			}
+		  }
 		}
 		foreach($xml->PlayerInfos->children() as $mem)
 		{
@@ -787,18 +795,15 @@ function parse_members($post, $data)
 							{
 								$dkp = $dkp + calculate_bossdkp($raid['bosskills'], $member);
 							}
-							if($rli_config['use_bossdkp'] or $rli_config['use_timedkp'])
-							{
-								$dkp = $dkp + $mem['att_begin'] + $mem['att_end'];
-								if($dkp <  $raid['value'])
-								{	//add an adjustment
-									$dkp -= $raid['value'];
-									$data['adjs'][$i]['member'] = $member['name'];
-									$data['adjs'][$i]['reason'] = $user->lang['rli_partial_raid']." ".date('d.m.y H:i:s', $raid['begin']);
-									$data['adjs'][$i]['value'] = $dkp;
-									$data['adjs'][$i]['event'] = $raid['event'];
-									$i++;
-								}
+                            $dkp = $dkp + $mem['att_begin'] + $mem['att_end'];
+							if($dkp <  $raid['value'])
+							{	//add an adjustment
+								$dkp -= $raid['value'];
+								$data['adjs'][$i]['member'] = $member['name'];
+								$data['adjs'][$i]['reason'] = $user->lang['rli_partial_raid']." ".date('d.m.y H:i:s', $raid['begin']);
+								$data['adjs'][$i]['value'] = $dkp;
+								$data['adjs'][$i]['event'] = $raid['event'];
+								$i++;
 							}
 						}
 					}

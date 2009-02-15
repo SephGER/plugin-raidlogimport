@@ -105,7 +105,7 @@ class Bz extends EQdkp_Admin
                         $sql = "INSERT INTO __raidlogimport_bz
                                     (bz_string, bz_note, bz_bonus, bz_type, bz_sort, bz_tozone)
                                 VALUES
-                                    ('".$vs['string']."', '".$vs['note']."', '".$vs['bonus']."', '".$vs['type']."', '".$vs['sort']."'";
+                                    ('".mysql_real_escape_string($vs['string'])."', '".mysql_real_escape_string($vs['note'])."', '".$vs['bonus']."', '".$vs['type']."', '".$vs['sort']."'";
                         if($vs['type'] == "boss")
                         {
                             $sql .= ", '".$vs['tozone']."');";
@@ -194,10 +194,10 @@ class Bz extends EQdkp_Admin
 					$data[$row['bz_id']]['sort'] = $row['bz_sort'];
 				}
 				$result = $db->query($sql);
-				foreach($_POST['del'] as $id)
-				{
-                	if($result)
-	                {
+                if($result)
+	            {
+                    foreach($_POST['del'] as $id)
+                    {
                     	$message[] = $data[$id]['note'].": ".$user->lang['bz_del_suc'];
 						//logging
 						$log_action = array(
@@ -214,20 +214,20 @@ class Bz extends EQdkp_Admin
 							'log_action' => $log_action)
 						);
 					}
-                	else
-	                {
-	                    $message[] = $data[$id]['note'].": ".$user->lang['bz_no_del']."<br />SQL-Error: Query: ".$sql;
-	                }
 				}
+                else
+            	{
+                    $message[] = $user->lang['bz_no_del']."<br />SQL-Error: Query: ".$sql;
+                }
 			}
 			else
 			{
-				$message = $user->lang['bz_no_del']."<br />SQL-Error: Query: ".$sql;
+				$message[] = $user->lang['bz_no_del']."<br />SQL-Error: Query: ".$sql;
 			}
 		}
 		else
 		{
-			redirect('bz.php');
+			redirect('plugins/raidlogimport/admin/bz.php');
 		}
 
 		foreach($message as $mes)

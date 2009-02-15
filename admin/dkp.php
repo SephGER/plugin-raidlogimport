@@ -161,10 +161,10 @@ class raidlogimport extends EQdkp_Admin
 					}
 
 					//Value
+                    $max['join'][1] = $raids[1]['begin']+1;
+                    $max['leave'][1] = $raids[1]['end']-1;
 					if($rli_config['use_timedkp'])
 					{
-						$max['join'][1] = $raids[1]['begin']+1;
-						$max['leave'][1] = $raids[1]['end']-1;
 						$max['timedkp'] = calculate_timedkp($raids[1]['timebonus'], calculate_time($max, $raids[1]['end'], $raids[1]['begin']));
 					}
 					if($rli_config['use_bossdkp'])
@@ -296,10 +296,10 @@ class raidlogimport extends EQdkp_Admin
 							}
 						}
 						//value
+                        $max['join'][1] = $raids[$key]['begin'];
+                        $max['leave'][1] = $raids[$key]['end'];
 						if($rli_config['use_timedkp'])
 						{
-							$max['join'][1] = $raids[$key]['begin'];
-							$max['leave'][1] = $raids[$key]['end'];
 							$max['timedkp'] = calculate_timedkp($raid['timebonus'], calculate_time($max, $raid['end'], $raid['begin']));
 						}
 						$max['bossdkp'] = calculate_bossdkp($raid['bosskills'], $max);
@@ -464,7 +464,11 @@ class raidlogimport extends EQdkp_Admin
 			$list = array();
 			foreach($this->bonus['boss'] as $boss)
 			{
-				$list[htmlspecialchars($boss['string'][0], ENT_QUOTES)] = htmlentities($boss['note'], ENT_QUOTES).' ('.$boss['bonus'].')';
+				$list[htmlspecialchars($boss['string'][0], ENT_QUOTES)] = htmlentities($boss['note'], ENT_QUOTES);
+				if($rli_config['use_bossdkp'])
+				{
+					$list[htmlspecialchars($boss['string'][0], ENT_QUOTES)] .= ' ('.$boss['bonus'].')';
+				}
 			}
 			foreach($rai['bosskills'] as $xy => $bk)
 			{
@@ -479,7 +483,10 @@ class raidlogimport extends EQdkp_Admin
 				$bk_string .= $myHtml->DropDown('raids['.$ky.'][bosskills]['.$xy.'][name]', $list, $sel);
 				$bk_string .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$user->lang['time'].': <input type="text" name="raids['.$ky.'][bosskills]['.$xy.'][time]" value="'.date('H:i:s', $bk['time']).'" size="9" />';
 				$bk_string .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$user->lang['date'].': <input type="text" name="raids['.$ky.'][bosskills]['.$xy.'][date]" value="'.date('d.m.y', $bk['time']).'" size="9" />';
-				$bk_string .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$user->lang['value'].': <input type="text" name="raids['.$ky.'][bosskills]['.$xy.'][bonus]" value="'.$bk['bonus'].'" size="5" />';
+				if($rli_config['use_bossdkp'])
+				{
+					$bk_string .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$user->lang['value'].': <input type="text" name="raids['.$ky.'][bosskills]['.$xy.'][bonus]" value="'.$bk['bonus'].'" size="5" />';
+				}
 				$bk_string .= '&nbsp;&nbsp;&nbsp;&nbsp;<img src="'.$eqdkp_root_path.'images/global/delete.png" alt="'.$user->lang['delete'].'"><input type="checkbox" name="raids['.$ky;
 				$bk_string .= '][bosskills]['.$xy.'][delete]" value="true" title="'.$user->lang['delete'].'" /><br />';
 			}
@@ -977,8 +984,7 @@ class raidlogimport extends EQdkp_Admin
 	{
 		global $db, $eqdkp, $user, $tpl, $pm;
 		global $SID, $rli_config, $conf_plus;
-
-		$data = unserialize($_POST['rest']);
+		
 		$data = parse_post($_POST, $data);
 		$isok = true;
 
@@ -998,7 +1004,7 @@ class raidlogimport extends EQdkp_Admin
 			$sql = "INSERT INTO __raids
         		      (`raid_id`, `raid_name`, `raid_date`, `raid_note`, `raid_value`, `raid_added_by`)
         		    VALUES
-        		      ('".$newraidid."', '".$raid['event']."', '".$raid['begin']."', '".mysql_real_escape_string($raid['note'])."', '".$raid['value']."', 'Raid-Log-Import (by ".$user->data['username'].")');";
+        		      ('".$newraidid."', '".mysql_real_escape_string($raid['event'])."', '".$raid['begin']."', '".mysql_real_escape_string($raid['note'])."', '".$raid['value']."', 'Raid-Log-Import (by ".$user->data['username'].")');";
         	if(!$db->query($sql))
         	{
         		echo "raids_table: <br />".$sql."<br />";
@@ -1035,7 +1041,7 @@ class raidlogimport extends EQdkp_Admin
 	                $sql .= ",`game_itemid`";
 	            }
 	            $sql .= ") VALUES
-	                     ('".mysql_real_escape_string($loot['name'])."',
+	                     ('".mysql_real_escape_string(mysql_real_escape_string($loot['name']))."',
 	                      '".mysql_real_escape_string($loot['player'])."',
 	                      '".mysql_real_escape_string($data['raids'][$loot['raid']]['id'])."',
 	                      '".mysql_real_escape_string($loot['dkp'])."',
@@ -1064,11 +1070,11 @@ class raidlogimport extends EQdkp_Admin
 		  	{
 			  	foreach($data['adjs'] as $adj)
 			  	{
-					$group_key = $this->gen_group_key($this->time, stripslashes($adj['reason']), $adj['value'], $adj['event']);
+					$group_key = $this->gen_group_key($this->time, stripslashes($adj['reason']), $adj['value'], mysql_real_escape_string($adj['event']));
 					$sql = "INSERT INTO __adjustments
 								(`adjustment_value`, `adjustment_date`, `member_name`, `adjustment_reason`, `adjustment_added_by`, `adjustment_group_key`, `raid_name`)
 						    VALUES
-						    	('".$adj['value']."', '".$data['raids'][1]['begin']."', '".$adj['member']."', '".$adj['reason']."', 'Raid-Log-Import (by ".$user->data['username'].")', '".$group_key."', '".$adj['event']."');";
+						    	('".$adj['value']."', '".$data['raids'][1]['begin']."', '".$adj['member']."', '".mysql_real_escape_string($adj['reason'])."', 'Raid-Log-Import (by ".$user->data['username'].")', '".$group_key."', '".mysql_real_escape_string($adj['event'])."');";
 					$adj_dkp[$adj['member']] += $adj['value'];
 					if(!$db->query($sql))
 					{
