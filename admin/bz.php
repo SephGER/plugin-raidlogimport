@@ -127,8 +127,8 @@ class Bz extends EQdkp_Admin
 					else
 					{
 						$sql = "UPDATE __raidlogimport_bz SET
-								bz_string = '".$vs['string']."',
-								bz_note = '".$vs['note']."',
+								bz_string = '".mysql_real_escape_string($vs['string'])."',
+								bz_note = '".mysql_real_escape_string($vs['note'])."',
 								bz_bonus = '".$vs['bonus']."',
 								bz_type = '".$vs['type']."',
 								bz_sort = '".$vs['sort']."'";
