@@ -830,15 +830,8 @@ function parse_items($post, $data)
 			  {
 				$tdata[$key] = $loot;
 				$tdata[$key]['time'] = $item['time'];
-				$loot_sum[$loot['raid']] += $loot['dkp'];
 			  }
 			}
-		}
-	}
-	if($rli_config['null_sum'])
-	{
-		foreach($loot_sum as $raid_key => $value)
-		{
 		}
 	}
 	$data['loots'] = "";
