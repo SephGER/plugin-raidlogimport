@@ -11,7 +11,7 @@ if(!defined('EQDKP_INC'))
 }
 global $eqdkp_root_path;
 include_once($eqdkp_root_path.'common.php');
-require('functions.php');
+require($eqdkp_root_path.'plugins/raidlogimport/includes/functions.php');
 
 $_COOKIE = stripslashes_array($_COOKIE);
 $_FILES = stripslashes_array($_FILES);
@@ -20,7 +20,7 @@ $_POST = stripslashes_array($_POST);
 $_REQUEST = stripslashes_array($_REQUEST);
 
 //include library
-require('libloader.inc.php');
+require($eqdkp_root_path.'plugins/raidlogimport/includes/libloader.inc.php');
 $pC->pluginCore();
 
 //get config-values
