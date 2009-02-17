@@ -134,8 +134,11 @@ class raidlogimport extends EQdkp_Admin
 
 					//Note
 					$i = 1;
-					foreach($raid['bosskills'] as $b => $bosskill)
+					
+					if(is_array($raid['bosskills']))
 					{
+					  foreach($raid['bosskills'] as $b => $bosskill)
+					  {
 						foreach($this->bonus['boss'] as $boss) {
 							if (in_array($bosskill['name'], $boss['string'])) {
 								if ($i == 1) {
@@ -158,6 +161,7 @@ class raidlogimport extends EQdkp_Admin
 							}
 						}
 						$i++;
+					  }
 					}
 
 					//Value
@@ -169,7 +173,7 @@ class raidlogimport extends EQdkp_Admin
 					}
 					if($rli_config['use_bossdkp'])
 					{
-						$max['bossdkp'] = calculate_bossdkp($raids[1]['bosskills'], $max);
+						$max['bossdkp'] = (is_array($raid['bosskills'])) ? calculate_bossdkp($raid['bosskills'], $max) : '0';
 					}
 					$raids[1]['value'] = $max['timedkp'] + $max['bossdkp'];
 					unset($max);
@@ -197,8 +201,10 @@ class raidlogimport extends EQdkp_Admin
 	                    }
 	                    //note
 						$a = 1;
-						foreach($raid['bosskills'] as $b => $bosskill)
+						if(is_array($raid['bosskills']))
 						{
+						  foreach($raid['bosskills'] as $b => $bosskill)
+						  {
 							foreach($this->bonus['boss'] as $boss) {
 								if (in_array($bosskill['name'], $boss['string']) AND $bosskill['time'] >= $i AND $bosskill['time'] < $i+3600) {
 									if ($a == 1) {
@@ -221,6 +227,7 @@ class raidlogimport extends EQdkp_Admin
 									break;
 								}
 							}
+						  }
 						}
 						//value
 						$max['join'][1] = $i;
@@ -229,7 +236,7 @@ class raidlogimport extends EQdkp_Admin
 						$max['timedkp'] = calculate_timedkp($raids[$key]['timebonus'], $max['time']);
 						if($rli_config['use_bossdkp'])
 						{
-							$max['bossdkp'] = calculate_bossdkp($raids[$key]['bosskills'], $max);
+							$max['bossdkp'] = (is_array($raid['bosskills'])) ? calculate_bossdkp($raid['bosskills'], $max) : '0';
 						}
 						$raids[$key]['value'] = $max['timedkp'] + $max['bossdkp'];
 						unset($max);
@@ -248,8 +255,10 @@ class raidlogimport extends EQdkp_Admin
 				  if($rli_config['use_bossdkp'])
 				  {
 					$key = 1;
-					foreach($raid['bosskills'] as $b => $bosskill)
+					if(is_array($raid['bosskills']))
 					{
+					  foreach($raid['bosskills'] as $b => $bosskill)
+					  {
 						//time
 						$raids[$key]['begin'] = (isset($raid['bosskills'][$b-1]['time'])) ? $raid['bosskills'][$b-1]['time']+$rli_config['loottime'] +1 : $raid['begin'];
 						$raids[$key]['end'] = $bosskill['time']+$rli_config['loottime'];
@@ -302,10 +311,11 @@ class raidlogimport extends EQdkp_Admin
 						{
 							$max['timedkp'] = calculate_timedkp($raid['timebonus'], calculate_time($max, $raid['end'], $raid['begin']));
 						}
-						$max['bossdkp'] = calculate_bossdkp($raid['bosskills'], $max);
+						$max['bossdkp'] = (is_array($raid['bosskills'])) ? calculate_bossdkp($raid['bosskills'], $max) : '0';
 						$raids[$key]['value'] = $max['timedkp'] + $max['bossdkp'];
 						unset($max);
 						$key++;
+					  }
 					}
 					break;
 				  }
@@ -342,8 +352,10 @@ class raidlogimport extends EQdkp_Admin
 						unset($max);
 						$key++;
 					}
-					foreach($raid['bosskills'] as $b => $bosskill)
+					if(is_array($raid['bosskills']))
 					{
+					  foreach($raid['bosskills'] as $b => $bosskill)
+					  {
 						//time
 						$raids[$key]['begin'] = (isset($raid['bosskills'][$b-1]['time'])) ? $raid['bosskills'][$b-1]['time']+$rli_config['loottime'] +1 :$raid['begin'];
 						$raids[$key]['end'] = $bosskill['time']+$rli_config['loottime'];
@@ -391,6 +403,7 @@ class raidlogimport extends EQdkp_Admin
 						//value
 						$raids[$key]['value'] = $raid['bosskills'][$b]['bonus'];
 						$key++;
+					  }
 					}
 					break;
 
@@ -470,8 +483,10 @@ class raidlogimport extends EQdkp_Admin
 					$list[htmlspecialchars($boss['string'][0], ENT_QUOTES)] .= ' ('.$boss['bonus'].')';
 				}
 			}
-			foreach($rai['bosskills'] as $xy => $bk)
+			if(is_array($rai['bosskills']))
 			{
+			  foreach($rai['bosskills'] as $xy => $bk)
+			  {
 				$sel = '';
 				foreach($this->bonus['boss'] as $boss)
 				{
@@ -489,6 +504,7 @@ class raidlogimport extends EQdkp_Admin
 				}
 				$bk_string .= '&nbsp;&nbsp;&nbsp;&nbsp;<img src="'.$eqdkp_root_path.'images/global/delete.png" alt="'.$user->lang['delete'].'"><input type="checkbox" name="raids['.$ky;
 				$bk_string .= '][bosskills]['.$xy.'][delete]" value="true" title="'.$user->lang['delete'].'" /><br />';
+			  }
 			}
 			if($eqdkp->config['default_game'] == 'WoW')
 			{
@@ -678,8 +694,10 @@ class raidlogimport extends EQdkp_Admin
 				`item_name_trans` VARCHAR(255) NOT NULL);";
 		$db->query($sql);
 
-        foreach ($data['loots'] as $key => $loot)
-        {
+		if(is_array($data['loots']))
+		{
+          foreach ($data['loots'] as $key => $loot)
+          {
         	$sql = "SELECT * FROM item_rename WHERE id = '".$key."';";
         	$result = $db->query($sql);
         	$bla = false;
@@ -725,6 +743,7 @@ class raidlogimport extends EQdkp_Admin
 				'CLASS'		=> $eqdkp->switch_row_class())
 			);
 			$maxkey = ($maxkey < $key) ? $key : $maxkey;
+		  }
 		}
 
 		$tpl->assign_vars(array(
@@ -773,9 +792,12 @@ class raidlogimport extends EQdkp_Admin
 		{
 			$tpl->assign_block_vars('player', mems2tpl($key, $member));
 		}
-		foreach($data['loots'] as $loot)
+		if(is_array($data['loots']))
 		{
+		  foreach($data['loots'] as $loot)
+		  {
 			$tpl->assign_block_vars('loots', items2tpl($loot));
+		  }
 		}
 
         //get events
@@ -984,7 +1006,7 @@ class raidlogimport extends EQdkp_Admin
 	{
 		global $db, $eqdkp, $user, $tpl, $pm;
 		global $SID, $rli_config, $conf_plus;
-		
+
 		$data = parse_post($_POST, $data);
 		$isok = true;
 

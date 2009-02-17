@@ -5,7 +5,7 @@
  * @copyright 2007
  *
  * @further development by hoofy
- * @copyright 2008
+ * @copyright 2008-2009
  */
 
 if(!defined('EQDKP_INC'))
@@ -353,7 +353,7 @@ function check_data($data)
 
 function check_ctrt_format($xml)
 {
-	if(isset($xml->start, $xml->end, $xml->zone, $xml->BossKills, $xml->Loot, $xml->PlayerInfos, $xml->Join, $xml->Leave))
+	if(isset($xml->start, $xml->end, $xml->BossKills, $xml->Loot, $xml->PlayerInfos, $xml->Join, $xml->Leave))
 	{
 		foreach($xml->BossKills->children() as $bosskill)
 		{
@@ -361,7 +361,6 @@ function check_ctrt_format($xml)
 		  {
 			if(!isset($bosskill->name, $bosskill->time))
 			{
-				var_dump($bosskill);
 				return false;
 			}
 		  }
@@ -372,7 +371,6 @@ function check_ctrt_format($xml)
 		  {
 			if(!isset($loot->ItemName, $loot->Player, $loot->Time))
 			{
-				var_dump($loot);
 				return false;
 			}
 		  }
@@ -737,8 +735,10 @@ function parse_raids($post, $data)
       	$raids[$key]['event'] = $raid['event'];
       	$raids[$key]['bosskill_add'] = $raid['bosskill_add'];
       	$bosskills = array();
-      	foreach($raid['bosskills'] as $u => $bk)
+      	if(is_array($raid['bosskills']))
       	{
+      	  foreach($raid['bosskills'] as $u => $bk)
+      	  {
       		if(!$bk['delete'])
       		{
     	  		list($hour, $min, $sec) = explode(':', $bk['time']);
@@ -747,6 +747,7 @@ function parse_raids($post, $data)
       			$bosskills[$u]['bonus'] = $bk['bonus'];
       			$bosskills[$u]['name'] = $bk['name'];
       		}
+      	  }
       	}
       	$raids[$key]['bosskills'] = $bosskills;
       	$raids[$key]['timebonus'] = $raid['timebonus'];
@@ -822,8 +823,10 @@ function parse_items($post, $data)
 	$loot_sum = 0;
 	foreach($post as $k => $loot)
 	{
-    	foreach($data['loots'] as $key => $item)
-    	{
+		if(is_array($data['loots']))
+		{
+    	  foreach($data['loots'] as $key => $item)
+    	  {
 			if($k == $key)
 			{
 			  if(!$loot['delete'])
@@ -832,6 +835,7 @@ function parse_items($post, $data)
 				$tdata[$key]['time'] = $item['time'];
 			  }
 			}
+		  }
 		}
 	}
 	$data['loots'] = "";
