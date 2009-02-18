@@ -771,6 +771,7 @@ function parse_members($post, $data)
 			  if(!$mem['delete'])
 			  {
 			  	$members[$key] = $member;
+			  	$members[$key]['name'] = $mem['name'];
 				$members[$key]['raid_list'] = $mem['raid_list'];
 				$members[$key]['att_dkp_begin'] = $mem['att_begin'];
 				$members[$key]['att_dkp_end'] = $mem['att_end'];

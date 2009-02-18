@@ -154,7 +154,7 @@ class raidlogimport extends EQdkp_Admin
 										$raids[$key]['note'] .= ($raid['difficulty'] == '2') ? $rli_config['hero'] : $rli_config['non_hero'];
 									}
 								}
-								$raids[1]['bosskills'][$b]['name'] = $bosskill['name'].'test';
+								$raids[1]['bosskills'][$b]['name'] = $bosskill['name'];
 								$raids[1]['bosskills'][$b]['bonus'] = $boss['bonus'];
 								$raids[1]['bosskills'][$b]['time'] = $bosskill['time'];
 								break;
@@ -568,9 +568,14 @@ class raidlogimport extends EQdkp_Admin
 		$data = parse_post($_POST, $data);
 		if(isset($_POST['members_add']))
 		{
+        	$ks = array_keys($data['members']);
+            $h = max($ks);
 			for($i=1; $i<=$_POST['members_add']; $i++)
 			{
-				$data['members'][] = '';
+				$h++;
+				$data['members'][$h]['join'] = array();
+				$data['members'][$h]['leave'] = array();
+				$data['members'][$h]['name'] = '';
 			}
 		}
 
