@@ -134,7 +134,7 @@ class raidlogimport extends EQdkp_Admin
 
 					//Note
 					$i = 1;
-					
+
 					if(is_array($raid['bosskills']))
 					{
 					  foreach($raid['bosskills'] as $b => $bosskill)
@@ -154,7 +154,7 @@ class raidlogimport extends EQdkp_Admin
 										$raids[$key]['note'] .= ($raid['difficulty'] == '2') ? $rli_config['hero'] : $rli_config['non_hero'];
 									}
 								}
-								$raids[1]['bosskills'][$b]['name'] = $bosskill['name'];
+								$raids[1]['bosskills'][$b]['name'] = $bosskill['name'].'test';
 								$raids[1]['bosskills'][$b]['bonus'] = $boss['bonus'];
 								$raids[1]['bosskills'][$b]['time'] = $bosskill['time'];
 								break;
@@ -173,7 +173,7 @@ class raidlogimport extends EQdkp_Admin
 					}
 					if($rli_config['use_bossdkp'])
 					{
-						$max['bossdkp'] = (is_array($raid['bosskills'])) ? calculate_bossdkp($raid['bosskills'], $max) : '0';
+						$max['bossdkp'] = (is_array($raids[1]['bosskills'])) ? calculate_bossdkp($raids[1]['bosskills'], $max) : '0';
 					}
 					$raids[1]['value'] = $max['timedkp'] + $max['bossdkp'];
 					unset($max);
@@ -236,7 +236,7 @@ class raidlogimport extends EQdkp_Admin
 						$max['timedkp'] = calculate_timedkp($raids[$key]['timebonus'], $max['time']);
 						if($rli_config['use_bossdkp'])
 						{
-							$max['bossdkp'] = (is_array($raid['bosskills'])) ? calculate_bossdkp($raid['bosskills'], $max) : '0';
+							$max['bossdkp'] = (is_array($raids[$key]['bosskills'])) ? calculate_bossdkp($raids[$key]['bosskills'], $max) : '0';
 						}
 						$raids[$key]['value'] = $max['timedkp'] + $max['bossdkp'];
 						unset($max);
@@ -311,7 +311,7 @@ class raidlogimport extends EQdkp_Admin
 						{
 							$max['timedkp'] = calculate_timedkp($raid['timebonus'], calculate_time($max, $raid['end'], $raid['begin']));
 						}
-						$max['bossdkp'] = (is_array($raid['bosskills'])) ? calculate_bossdkp($raid['bosskills'], $max) : '0';
+						$max['bossdkp'] = (is_array($raid['bosskills'])) ? calculate_bossdkp($raids[$key]['bosskills'], $max) : '0';
 						$raids[$key]['value'] = $max['timedkp'] + $max['bossdkp'];
 						unset($max);
 						$key++;
@@ -401,7 +401,7 @@ class raidlogimport extends EQdkp_Admin
 							}
 						}
 						//value
-						$raids[$key]['value'] = $raid['bosskills'][$b]['bonus'];
+						$raids[$key]['value'] = $raids[$key]['bosskills'][$b]['bonus'];
 						$key++;
 					  }
 					}
