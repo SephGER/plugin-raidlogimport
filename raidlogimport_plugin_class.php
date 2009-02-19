@@ -18,8 +18,8 @@ if ( !defined('EQDKP_INC') )
 class raidlogimport_Plugin_Class extends EQdkp_Plugin
 {
 	var $vstatus = 'Stable';
-	var $version = '0.4.5';
-	var $build = 3864;
+	var $version = '0.4.5.1';
+	var $build = 3874;
 
     function raidlogimport_plugin_class($pm)
     {
@@ -93,7 +93,8 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 				'use_bossdkp'		=> '1',
 				'use_timedkp'		=> '1',
 				'null_sum'			=> '0', 	//use null-sum-system?
-				'item_save_lang'	=> 'de'
+				'item_save_lang'	=> 'de',
+				'deactivate_adj'	=> '0'
 			);
 			$this->insert_data($config_data);
 			//add default bz_data

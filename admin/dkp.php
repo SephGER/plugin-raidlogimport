@@ -758,7 +758,8 @@ class raidlogimport extends EQdkp_Admin
 			'S_NULL_SUM'	=> $rli_config['null_sum'],
 			'MAXCOUNT'		=> $maxkey,
 			'LANGFROM'		=> $data['log_lang'],
-			'LANGTO'		=> $rli_config['item_save_lang'])
+			'LANGTO'		=> $rli_config['item_save_lang'],
+			'INS_DKP'		=> $rli_config['deactivate_adj'])
 		);
 
 		//language
@@ -1091,7 +1092,7 @@ class raidlogimport extends EQdkp_Admin
 		  $adj_dkp = array();
 		  if($isok)
 		  {
-		   if(!$rli_config['null_sum'])
+		   if(!($rli_config['null_sum'] AND $rli_config['deactivate_adj']))
 		   {
 		  	if(is_array($data['adjs']))
 		  	{
@@ -1237,8 +1238,10 @@ class raidlogimport extends EQdkp_Admin
             }
 
             //adjs
-            if(is_array($data['adjs']))
+            if(!$rli_config['deactivate_adj'])
             {
+              if(is_array($data['adjs']))
+              {
               	foreach($data['adjs'] as $adj)
               	{
               		$log_actions[] = array(
@@ -1250,6 +1253,7 @@ class raidlogimport extends EQdkp_Admin
             			'{L_ADDED_BY}'		=> 'Raid-Log-Import (by '.$user->data['username'].')'
             		);
               	}
+              }
             }
             foreach($log_actions as $log_action)
             {

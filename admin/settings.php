@@ -158,7 +158,7 @@ class RLI_Settings extends EQdkp_Admin
 				$endvalues[$k]['value'] = $myHtml->DropDown($name, $ranks, $value);
 				$endvalues[$k]['name'] = $name;
 			}
-			elseif($name == 'event_boss' OR $name == 'attendence_raid' OR $name == 'dep_match' OR $name == 'rli_upd_check' OR $name == 'use_bossdkp' OR $name == 'use_timedkp')
+			elseif($name == 'event_boss' OR $name == 'attendence_raid' OR $name == 'dep_match' OR $name == 'rli_upd_check' OR $name == 'use_bossdkp' OR $name == 'use_timedkp' OR $name == 'deactivate_adj')
 			{
                 $a = $k;
 				if($name == 'rli_upd_check')

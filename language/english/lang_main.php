@@ -122,7 +122,7 @@
 	$lang['translate_items_tip'] = 'After translation please press "Update" to fill the new names into the form.';
 	$lang['raidval_nullsum_later'] = 'With null-sum-system the raid-value wil be entered later.';
 	$lang['check_raidval'] = 'Check Raid-Values';
-	$lang['rli_log_lang'] = 'In which Language are the items?';
+	$lang['rli_log_lang'] = 'In which Language are the items in the log?';
 
 	//config
 	$lang['multidkp_need'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                    Activate for functionality with MultiDKP!                  </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='help'></a>";
@@ -152,4 +152,5 @@
 	$lang['null_sum_1'] = 'Every member in the raid gets the DKP';
 	$lang['null_sum_2'] = 'Every member in the system gehts the DKP';
 	$lang['item_save_lang'] = 'In which language should the items be saved in the DB?';
+	$lang['deactivate_adj'] = "Deactivate Adjustments? <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                   This removes partially gain of DKP per member! Everyone gets all or nothing!                 </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/error.png' alt='warn'></a>";
 ?>

@@ -122,7 +122,7 @@
 	$lang['translate_items_tip'] = 'Nach dem Übersetzen einmal auf "Aktualisieren" drücken, damit die neuen Item-Namen übernommen werden.';
 	$lang['raidval_nullsum_later'] = 'Beim Null-Summen-System wird der Raid-Wert später eingegeben.';
 	$lang['check_raidval'] = 'Raid-Werte überprüfen';
-	$lang['rli_log_lang'] = 'In welcher Sprache sind die Items?';
+	$lang['rli_log_lang'] = 'In welcher Sprache sind die Items im Log?';
 
 	//config
 	$lang['multidkp_need'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                    Für Multi-DKP Funktionalität aktivieren!                  </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='help'></a>";
@@ -152,4 +152,5 @@
 	$lang['null_sum_1'] = 'Jedes Mitglied im Raid bekommt die DKP';
 	$lang['null_sum_2'] = 'Jedes Mitglied im System bekommt die DKP';
 	$lang['item_save_lang'] = 'In welcher Sprache sollen die Items in der DB gespeichert werden?';
+	$lang['deactivate_adj'] = "Korrekturen deaktivieren? <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                   Durch setzen dieser Option bekommen die Member immer alle DKP vom Raid!                </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/error.gif' alt='warn'></a>";
 ?>
