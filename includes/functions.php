@@ -307,7 +307,7 @@ function check_data($data)
 		{
 			if($raid['key'] != '')
 			{
-				if(!($raid['event'] AND $raid['value'] AND $raid['note'] AND $raid['begin'] AND $raid['end']))
+				if(!($raid['event'] AND $raid['note'] AND $raid['begin'] AND $raid['end']) AND $raid['value'] == '')
 				{
 					$bools['false']['raid'] = FALSE;
 				}
