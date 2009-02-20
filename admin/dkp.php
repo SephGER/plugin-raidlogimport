@@ -1129,11 +1129,14 @@ class raidlogimport extends EQdkp_Admin
             		if($db->num_rows($resul) == 0 AND !isset($member['alias']))
             		{
             			$answer = create_member($member, $rli_config['new_member_rank']);
-		            		$this->log_insert(array(
-		            		'log_type'	 => $answer[1]['header'],
-		            		'log_action' => $answer[1])
-		            	);
-		            	$success[] = $answer[2];
+            			if($answer[1])
+            			{
+			            	$this->log_insert(array(
+			            		'log_type'	 => $answer[1]['header'],
+			            		'log_action' => $answer[1])
+			            	);
+			            }
+		            	$success[$answer[2]][] = $member['name'];
 					}
 					//raid_attendence
 					$member['raids'] = explode(',', $member['raid_list']);
@@ -1271,7 +1274,8 @@ class raidlogimport extends EQdkp_Admin
 			$message = $user->lang['rli_error'];
 		  }
 
-		  $success[] = $message;
+		  $success['rli_insert'] = $message;
+		  $this->display_form($success);
 		  foreach($success as $answer)
 		  {
 			$tpl->assign_block_vars('sucs', array(
@@ -1319,11 +1323,27 @@ class raidlogimport extends EQdkp_Admin
     	}
 	}
 
-	function display_form()
+	function display_form($messages=array())
     {
         global $db, $eqdkp, $user, $tpl, $pm;
         global $SID;
 
+		if($messages)
+		{
+			foreach($messages as $title => $message)
+			{
+            	$type = 'green';
+				if($title == 'rli_error' or $title == 'rli_no_mem_create')
+				{
+					$type = 'red';
+				}
+				if(is_array($message))
+				{
+					$message = implode(',<br />', $message);
+				}
+				System_Message($message, $user->lang[$title].':', $type);
+			}
+		}
         $tpl->assign_vars(array(
             'F_PARSE_LOG'    => 'dkp.php' . $SID,
             'L_INSERT'		 => $user->lang['rli_dkp_insert'],

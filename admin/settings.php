@@ -68,11 +68,11 @@ class RLI_Settings extends EQdkp_Admin
 				$result = $db->query($sql);
 				if(!$result)
 				{
-					$messages[$old_name] = "Error! Query: ".$sql;
+					message_die("Error! Query: ".$sql);
 				}
 				else
 				{
-					$messages[$old_name] = $user->lang['bz_save_suc'];
+					$messages[] = $old_name;
 					$log_action = array(
 						'header' 		 => '{L_ACTION_RAIDLOGIMPORT_CONFIG}',
 						'{L_CONFIGNAME}' => $old_name,
@@ -87,41 +87,20 @@ class RLI_Settings extends EQdkp_Admin
 			}
 		}
 
-		foreach($messages as $name => $message)
-		{
-			$tpl->assign_block_vars('sucs', array(
-				'PART1'	=> $name.': ',
-				'PART2'	=> $message,
-				'CLASS' => $eqdkp->switch_row_class())
-			);
-		}
-
-		$tpl->assign_vars(array(
-			'L_SUCCESS'		=> $user->lang['config_success'],
-			'L_RLI_CONFIG' 	=> $user->lang['raidlogimport'].' '.$user->lang['settings'],
-			'L_PLUG_UPD'	=> $user->lang['plug_upd'],
-			'L_LINKS'		=> $user->lang['links'])
-		);
-
-		$eqdkp->set_vars(array(
-			'page_title' 		=> sprintf($user->lang['admin_title_prefix'], $eqdkp->config['guildtag'], $eqdkp->config['dkp_name']).': '.$user->lang['configuration'],
-            'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
-            'template_file'     => 'success.html',
-            'display'           => true,
-            )
-        );
+		$this->display_form($messages);
 	}
-
-	function manual_db_update()
-	{
-		global $db, $user, $tpl, $eqdkp, $pm, $SID;
-		$this->plug_upd->DeleteVersionString();
-		redirect('plugins/'.$pm->get_data('raidlogimport', 'path').'/admin/settings.php');
-	}
-
-	function display_form()
+	
+	function display_form($messages=array())
 	{
 		global $db, $user, $tpl, $eqdkp, $pm, $SID, $rli_config, $myHtml;
+		if($messages)
+		{
+			$rli_config = rli_get_config();
+			foreach($messages as $name)
+			{
+				System_Message($name, $user->lang['bz_save_suc'], 'green');
+			}
+		}
 		$k = 2;
 		$endvalues = array();
 		//select ranks
@@ -182,7 +161,7 @@ class RLI_Settings extends EQdkp_Admin
 			}
 			elseif($name == 'rli_inst_version')
 			{
-				$endvalues[0]['value'] = $value. "&nbsp;<input type='submit' name='man_db_up' value='".$user->lang['rli_man_db_up']."' class='mainoption' />";
+				$endvalues[0]['value'] = $value;
 				$endvalues[0]['name'] = $name;
 			}
 			elseif($name == 'rlic_data' or $name == 'rlic_lastcheck' or $name == 'rli_inst_build')

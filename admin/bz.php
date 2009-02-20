@@ -51,10 +51,6 @@ class Bz extends EQdkp_Admin
             	$ids = array();
 				foreach($_POST['bz_type'] as $id => $type)
 				{
-                    if($type == 'boss' AND !isset($_POST['bz_tozone'][$id]))
-                    {
-                        //message_die($user->lang['bz_missing_values']);
-                    }
                     if($id != 'neu')
                     {
                     	$ids[] = $id;
@@ -150,7 +146,7 @@ class Bz extends EQdkp_Admin
 					$send = $db->query($sql);
 					if($send)
 					{
-						$message[] = $vs['note'].": ".$user->lang['bz_save_suc'];
+						$message['bz_save_suc'][] = $vs['note'];
 						$this->log_insert(array(
 							'log_type'	 => $log_action['header'],
 							'log_action' => $log_action)
@@ -158,7 +154,7 @@ class Bz extends EQdkp_Admin
 					}
 					else
 					{
-						$message[] = $vs['note'].": ".$user->lang['bz_no_save']."<br />SQL-Error! Query: ".$sql;
+						$message['bz_no_save'][] = $vs['note'].": SQL-Error! Query: <br />".$sql;
 					}
 				}
 			}
@@ -198,7 +194,7 @@ class Bz extends EQdkp_Admin
 	            {
                     foreach($_POST['del'] as $id)
                     {
-                    	$message[] = $data[$id]['note'].": ".$user->lang['bz_del_suc'];
+                    	$message['bz_del_suc'][] = $data[$id]['note'];
 						//logging
 						$log_action = array(
 							'header'		=> '{L_ACTION_RAIDLOGIMPORT_BZ_DEL}',
@@ -217,43 +213,19 @@ class Bz extends EQdkp_Admin
 				}
                 else
             	{
-                    $message[] = $user->lang['bz_no_del']."<br />SQL-Error: Query: ".$sql;
+                    $message['bz_no_del'][] = "SQL-Error! Query: <br />".$sql;
                 }
 			}
 			else
 			{
-				$message[] = $user->lang['bz_no_del']."<br />SQL-Error: Query: ".$sql;
+				$message['bz_no_del'][] = "SQL-Error! Query: <br />".$sql;
 			}
 		}
 		else
 		{
 			redirect('plugins/raidlogimport/admin/bz.php');
 		}
-
-		foreach($message as $mes)
-		{
-			$tpl->assign_block_vars('sucs', array(
-				'PART1' => $mes,
-				'PART2'	=> '',
-				'CLASS'	=> $eqdkp->switch_row_class())
-			);
-		}
-		$tpl->assign_block_vars('links', array(
-			'SUC_LINK' 	=> 'bz.php',
-			'SUC_PAGE' 	=> $user->lang['raidlogimport_bz'],
-            'CLASS'     => $eqdkp->switch_row_class())
-		);
-		$tpl->assign_vars(array(
-			'L_SUCCESS'	=> $user->lang['bz_suc'],
-			'L_LINKS'	=> $user->lang['links'])
-		);
-		$eqdkp->set_vars(array(
-            'page_title'        => sprintf($user->lang['admin_title_prefix'], $eqdkp->config['guildtag'], $eqdkp->config['dkp_name']).': '.$user->lang['rli_bz_bz'],
-            'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
-            'template_file'     => 'success.html',
-            'display'           => true,
-           	)
-       	);
+		$this->display_form($message);
 	}
 
 	function bz_del()
@@ -382,9 +354,25 @@ class Bz extends EQdkp_Admin
        	);
 	}
 
-	function display_form()
+	function display_form($messages=array())
 	{
 		global $tpl, $eqdkp, $pm, $db, $user, $SID;
+		
+		if($messages)
+		{
+			$type = 'green';
+			foreach($messages as $title => $mess)
+			{
+				if(preg_match('#_no_#', $title))
+				{
+					$type = 'red';
+				}
+				foreach($mess as $message)
+				{
+					System_Message($message, $user->lang[$title], $type);
+				}
+			}
+		}
 
 		$sql = "SELECT bz_id, bz_string, bz_bonus, bz_note, bz_type, bz_tozone FROM __raidlogimport_bz ORDER BY bz_sort ASC;";
 		$result = $db->query($sql);

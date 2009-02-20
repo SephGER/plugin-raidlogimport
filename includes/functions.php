@@ -263,11 +263,12 @@ function create_member($member, $rank)
 	$result = $db->query($sql);
 	if(!$result)
 	{
-		$success = $user->lang['member']." ".$member['name']." ".$user->lang['rli_no_mem_create'];
+		$retu[2] = 'rli_no_mem_create';
+		$retu[1] = FALSE;
 	}
 	else
 	{
-		$success = $user->lang['member']." ".$member['name']." ".$user->lang['rli_mem_auto'];
+		$retu[2] = 'rli_mem_auto';
 		$log_action = array(
             'header'         => '{L_ACTION_MEMBER_ADDED}',
             '{L_NAME}'       => $member['name'],
@@ -278,9 +279,8 @@ function create_member($member, $rank)
             '{L_RACE}'       => $member['race'],
             '{L_CLASS}'      => $member['class']
         );
+    	$retu[1] = $log_action;
 	}
-	$retu[1] = $log_action;
-	$retu[2] = $success;
 	return $retu;
 }
 

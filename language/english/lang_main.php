@@ -61,7 +61,7 @@
 	$lang['bz_del_suc'] = 'Data successfully deleted.';
 	$lang['bz_tozone'] = 'In zone';
 	$lang['bz_no_save'] = 'Data not savedt!';
-	$lang['bz_save_suc'] = 'Data successfully deleted.';
+	$lang['bz_save_suc'] = 'Data successfully saved.';
 	$lang['bz_suc'] = 'Bosses / Zones Success';
 	$lang['bz_missing_values'] = 'All fields have to be filled in.';
 	$lang['bz_sort'] = 'Order';
@@ -76,8 +76,8 @@
 	$lang['rli_cost'] = 'Cost';
 	$lang['rli_success'] = 'Success';
 	$lang['rli_error'] = 'Data not saved because of an error!';
-	$lang['rli_no_mem_create'] = 'could not be created. Please add him manually!';
-	$lang['rli_mem_auto'] = 'was automatically created.';
+	$lang['rli_no_mem_create'] = 'Following '.$user->lang['members'].' could not be created. Please add him manually!';
+	$lang['rli_mem_auto'] = 'Following '.$user->lang['members'].' was automatically created.';
 	$lang['rli_raid_to'] = 'Raid to %1$s on %2$s';
 	$lang['rli_t_dkp'] = 'Time-DKP';
 	$lang['rli_b_dkp'] = 'Boss-DKP';
