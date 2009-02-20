@@ -508,14 +508,14 @@ class raidlogimport extends EQdkp_Admin
 			}
 			if($eqdkp->config['default_game'] == 'WoW')
 			{
-				if($raid['difficulty'] == '2')
-				{
-					$rai['event'] .= $rli_config['hero'];
-				}
-				else
-				{
-					$rai['event'] .= $rli_config['non_hero'];
-				}
+              if($raid['difficulty'] == '2')
+              {
+			  	$rai['event'] .= $rli_config['hero'];
+			  }
+			  elseif($raid['difficulty'] == '1')
+			  {
+			  	$rai['event'] .= $rli_config['non_hero'];
+			  }
 			}
 			if(!($rli_config['use_bossdkp'] or $rli_config['use_timedkp']))
 			{
@@ -528,7 +528,6 @@ class raidlogimport extends EQdkp_Admin
 				}
 			  }
 			}
-
 			$tpl->assign_block_vars('raids', array(
                 'COUNT'     => $ky,
                 'START_DATE'=> date('d.m.y', $rai['begin']),
@@ -1092,7 +1091,7 @@ class raidlogimport extends EQdkp_Admin
 		  $adj_dkp = array();
 		  if($isok)
 		  {
-		   if(!($rli_config['null_sum'] AND $rli_config['deactivate_adj']))
+		   if(!($rli_config['null_sum'] OR $rli_config['deactivate_adj']))
 		   {
 		  	if(is_array($data['adjs']))
 		  	{
