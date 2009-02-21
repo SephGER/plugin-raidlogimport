@@ -155,8 +155,24 @@ function fktMultiArraySearch($arrInArray,$varSearchValue){
 
 /**
  * @author hoofy
- * @copyright 2008
+ * @copyright 2008-2009
  */
+
+function deep_in_array($search, $array)
+{
+	foreach($array as $value)
+	{
+		if(!is_array($value))
+		{
+			if($search == $value) return true;
+		}
+		else
+		{
+			if(deep_in_array($search, $value)) return true;
+		}
+	}
+	return false;
+}
 
 function create_member($member, $rank)
 {
@@ -255,7 +271,6 @@ function create_member($member, $rank)
 	$c_i = $db->query_first($sql);
 
 	//insert member into database, create log
-	$success = "";
 	$sql = "INSERT INTO __members
 				(member_name, member_level, member_race_id, member_class_id, member_rank_id)
 		   VALUES
@@ -263,12 +278,12 @@ function create_member($member, $rank)
 	$result = $db->query($sql);
 	if(!$result)
 	{
-		$retu[2] = 'rli_no_mem_create';
+		$retu[2] = $user->lang['member'].' '.$member['name'].' '.$user->lang['rli_no_mem_create'];
 		$retu[1] = FALSE;
 	}
 	else
 	{
-		$retu[2] = 'rli_mem_auto';
+		$retu[2] = $user->lang['member'].' '.$member['name'].' '.$user->lang['rli_mem_auto'];
 		$log_action = array(
             'header'         => '{L_ACTION_MEMBER_ADDED}',
             '{L_NAME}'       => $member['name'],

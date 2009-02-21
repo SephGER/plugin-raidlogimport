@@ -1018,6 +1018,16 @@ class raidlogimport extends EQdkp_Admin
 		$bools = check_data($data);
 		if(!isset($bools['false']))
 		{
+		  $sql = "SELECT member_id, member_name, member_firstraid, member_status, member_lastraid FROM __members";
+		  $result = $db->query($sql);
+		  $members = array();
+		  while ( $row = $db->fetch_record($result) )
+		  {
+		  	$members[$row['member_id']]['name'] = $row['member_name'];
+		  	$members[$row['member_id']]['firstraid'] = $row['member_firstraid'];
+			$members[$row['member_id']]['status'] = $row['member_status'];
+			$members[$row['member_id']]['lastraid'] = $row['member_lastraid'];
+		  }
 		  $db->query("START TRANSACTION");
 		  $newraidid = 0;
 		  $newraidid = $db->query_first("SELECT MAX(`raid_id`) FROM __raids;");
@@ -1115,17 +1125,34 @@ class raidlogimport extends EQdkp_Admin
 		  }
 
 		  if($isok)
-		  {
-			foreach ($data['members'] as $key => $member)
+		  {   
+          	foreach($data['members'] as $dmem)
+            {
+		  		foreach($members as $id => $mem)
+		  		{
+		  			if($mem['name'] == $dmem['name'])
+		  			{
+		  				$members[$id] = array();
+		  				$members[$id] = $dmem;
+		  				$members[$id]['status'] = $mem['status'];
+		  				$members[$id]['firstraid'] = $mem['firstraid'];
+		  				$members[$id]['lastraid'] = $mem['lastraid'];
+		  			}
+		  		}
+		  		if(!deep_in_array($dmem['name'], $members))
+		  		{
+		  			$members[] = $dmem;
+		  		}
+		  	}
+			foreach ($members as $key => $member)
 			{
 			  if($member['name'] != '')
 			  {
                 if($isok)
-                {
-					//memberexistscheck
-					$sql = "SELECT `member_id` FROM __members WHERE `member_name` = '".mysql_real_escape_string($member['name'])."' LIMIT 1;";
-					$resul = $db->query($sql);
-            		if($db->num_rows($resul) == 0 AND !isset($member['alias']))
+                {	
+                	$sql = array();
+                    $sql[0] = "UPDATE __members SET ";
+            		if(!isset($member['status']) AND !isset($member['alias']))
             		{
             			$answer = create_member($member, $rli_config['new_member_rank']);
             			if($answer[1])
@@ -1135,60 +1162,80 @@ class raidlogimport extends EQdkp_Admin
 			            		'log_action' => $answer[1])
 			            	);
 			            }
-		            	$success[$answer[2]][] = $member['name'];
+		            	$message[] = $answer[2];
 					}
 					//raid_attendence
-					$member['raids'] = explode(',', $member['raid_list']);
-					foreach($data['raids'] as $raid_key => $raid)
+					if(isset($member['raid_list']))
 					{
+					  if(!$member['status'])
+					  {
+					  	$sql[] = "member_status = 1, ";
+					  }
+					  $dkp = 0;
+					  $member['raids'] = explode(',', $member['raid_list']);
+                      $keys = array_keys($member['raids']);
+                      if(!$member['firstraid'])
+                      {
+                      	$sql[] = "member_firstraid = '".$data['raids'][$member['raids'][$keys[0]]]['begin']."', ";
+                      }
+                      krsort($keys);
+                      $sql[] = "member_lastraid = '".$data['raids'][$member['raids'][$keys[0]]]['end']."', ";
+					  foreach($data['raids'] as $raid_key => $raid)
+					  {
 						if(in_array($raid_key, $member['raids']) AND $isok)
 						{
-							$sql = "INSERT INTO __raid_attendees
+							$rsql = "INSERT INTO __raid_attendees
 										(`raid_id`, `member_name`)
 								    VALUES
 								    	('".$raid['id']."', '".$member['name']."');";
-							if(!$db->query($sql))
+							if(!$db->query($rsql))
 							{
-								echo "raid_attendees_table: <br />".$sql."<br />";
+								echo "raid_attendees_table: <br />".$rsql."<br />";
 								$isok = false;
 								break;
 							}
 						}
+						$dkp = $dkp + $raid['value'];
+					  }
 					}
-					//dkp
+                    //inactive
+                    if($member['status'] AND !isset($member['raids']))
+                    {
+                        $now = time();
+                        if(($now - $eqdkp->config['inactive_period']*24*3600) > $member['lastraid'])
+                        { //move member to inactive
+                        	$sql[] = "member_status = 0, ";
+                        }
+                    }
+                    
+                    //dkp
 					if(!$conf_plus['pk_multidkp'])
-					{
-						$dkp = 0;
-						foreach($data['raids'] as $raid)
-						{
-							$dkp = $dkp + $raid['value'];
-						}
+					{						
 						if(!$rli_config['attendence_raid'])
 						{
 							$dkp = $dkp + $mem['att_dkp_begin'] + $mem['att_dkp_end'];
 						}
-						$sql = "UPDATE __members SET
-									member_earned = member_earned + '".$dkp."',
-									member_spent = member_spent + '".$lootdkp[$member['name']]."',
-									member_adjustment = member_adjustment + '".$adj_dkp[$member['name']]."'";
-						$keys = array_keys($member['raids']);
-						krsort($keys);
-						if(isset($member['raids']))
-						{
-							$sql .= ", member_lastraid = '".$data['raids'][$member['raids'][$keys[0]]]['begin']."'";
-							if($a = $db->query_first("SELECT member_firstraid FROM ".MEMBERS_TABLE." WHERE member_name = '".$member['name']."';") == 0)
-							{
-								$sql .= ", member_firstraid = '".$data['raids'][$member['raids'][$keys[0]]]['begin']."'";
-							}
-						}
-						$sql .= " WHERE
-						   			member_name = '".$member['name']."' LIMIT 1;";
-						if(!$db->query($sql))
-						{
-							echo "members_table: <br />".$sql."<br />";
-							$isok = false;
-							break;
-						}
+						$sql[] = "member_earned = member_earned + '".$dkp."',
+								 member_spent = member_spent + '".$lootdkp[$member['name']]."',
+								 member_adjustment = member_adjustment + '".$adj_dkp[$member['name']]."', ";
+					}
+					
+					$esql = '';
+					foreach($sql as $ssql)
+					{
+						$esql .= $ssql;
+					}
+					if(substr($esql, -2) == ', ')
+					{
+						$esql = substr_replace($esql, '', -2, 1);
+					}
+					$esql .= "WHERE
+					   			member_name = '".$member['name']."' LIMIT 1;";
+					if(!$db->query($esql))
+					{
+						echo "members_table: <br />".$esql."<br />";
+						$isok = false;
+						break;
 					}
 				}
 				else
@@ -1265,17 +1312,17 @@ class raidlogimport extends EQdkp_Admin
             	);
             }
 			$db->query("COMMIT;");
-			$message = $user->lang['bz_save_suc'];
+			$message[] = $user->lang['bz_save_suc'];
 		  }
 		  else
 		  {
 			$db->query("ROLLBACK;");
-			$message = $user->lang['rli_error'];
+			$message[] = $user->lang['rli_error'];
 		  }
 
-		  $success['rli_insert'] = $message;
-		  $this->display_form($success);
-		  foreach($success as $answer)
+		  #$success['rli_insert'] = $message;
+		  #$this->display_form($success);
+		  foreach($message as $answer)
 		  {
 			$tpl->assign_block_vars('sucs', array(
 				'PART1'	=> $answer,

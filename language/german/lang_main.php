@@ -76,8 +76,8 @@
 	$lang['rli_cost'] = 'Kosten';
 	$lang['rli_success'] = 'Erfolg';
 	$lang['rli_error'] = 'Daten nicht gespeichert, da ein Fehler aufgetreten ist!';
-	$lang['rli_no_mem_create'] = "Folgende ".$user->lang['members']." konnten nicht erzeugt werden. Bitte manuell erstellen";
-	$lang['rli_mem_auto'] = "Folgende ".$user->lang['members']." wurden automatische erzeugt";
+	$lang['rli_no_mem_create'] = " konnte nicht erzeugt werden. Bitte manuell erstellen";
+	$lang['rli_mem_auto'] = " wurde automatische erzeugt";
 	$lang['rli_raid_to'] = 'Raid auf %1$s am %2$s';
 	$lang['rli_t_dkp'] = 'Zeit-DKP';
 	$lang['rli_b_dkp'] = 'Boss-DKP';
