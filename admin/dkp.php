@@ -1125,7 +1125,7 @@ class raidlogimport extends EQdkp_Admin
 		  }
 
 		  if($isok)
-		  {   
+		  {
           	foreach($data['members'] as $dmem)
             {
 		  		foreach($members as $id => $mem)
@@ -1149,7 +1149,7 @@ class raidlogimport extends EQdkp_Admin
 			  if($member['name'] != '')
 			  {
                 if($isok)
-                {	
+                {
                 	$sql = array();
                     $sql[0] = "UPDATE __members SET ";
             		if(!isset($member['status']) AND !isset($member['alias']))
@@ -1168,7 +1168,7 @@ class raidlogimport extends EQdkp_Admin
 					if(isset($member['raid_list']))
 					{
 					  if(!$member['status'])
-					  {
+					  { //active
 					  	$sql[] = "member_status = 1, ";
 					  }
 					  $dkp = 0;
@@ -1202,40 +1202,52 @@ class raidlogimport extends EQdkp_Admin
                     if($member['status'] AND !isset($member['raids']))
                     {
                         $now = time();
-                        if(($now - $eqdkp->config['inactive_period']*24*3600) > $member['lastraid'])
+                        if(($now - $eqdkp->config['inactive_period']*24*3600) > $member['lastraid'] AND $member['lastraid'])
                         { //move member to inactive
                         	$sql[] = "member_status = 0, ";
                         }
                     }
-                    
+
                     //dkp
 					if(!$conf_plus['pk_multidkp'])
-					{						
+					{
 						if(!$rli_config['attendence_raid'])
 						{
 							$dkp = $dkp + $mem['att_dkp_begin'] + $mem['att_dkp_end'];
 						}
-						$sql[] = "member_earned = member_earned + '".$dkp."',
-								 member_spent = member_spent + '".$lootdkp[$member['name']]."',
-								 member_adjustment = member_adjustment + '".$adj_dkp[$member['name']]."', ";
+						if($dkp)
+						{
+							$sql[] = "member_earned = member_earned + '".$dkp."', ";
+						}
+						if($lootdkp[$member['name']])
+						{
+							$sql[] = "member_spent = member_spent + '".$lootdkp[$member['name']]."', ";
+						}
+						if($adj_dkp[$member['name']])
+						{
+							$sql[] = "member_adjustment = member_adjustment + '".$adj_dkp[$member['name']]."', ";
+						}
 					}
 					
-					$esql = '';
-					foreach($sql as $ssql)
+					if($sql[1])
 					{
-						$esql .= $ssql;
-					}
-					if(substr($esql, -2) == ', ')
-					{
-						$esql = substr_replace($esql, '', -2, 1);
-					}
-					$esql .= "WHERE
-					   			member_name = '".$member['name']."' LIMIT 1;";
-					if(!$db->query($esql))
-					{
-						echo "members_table: <br />".$esql."<br />";
-						$isok = false;
-						break;
+						$esql = '';
+						foreach($sql as $ssql)
+						{
+							$esql .= $ssql;
+						}
+						if(substr($esql, -2) == ', ')
+						{
+							$esql = substr_replace($esql, '', -2, 1);
+						}
+						$esql .= "WHERE
+						   			member_name = '".$member['name']."' LIMIT 1;";
+						if(!$db->query($esql))
+						{
+							echo "members_table: <br />".$esql."<br />";
+							$isok = false;
+							break;
+						}
 					}
 				}
 				else
