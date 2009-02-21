@@ -196,6 +196,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
              $url_prefix = ( EQDKP_VERSION < '1.3.2' ) ? $eqdkp_root_path : '';
 		     $admin_menu = array(
 		    		'raidlogimport' => array(
+		    		99 => './../../plugins/raidlogimport/images/rli_logo.png',
 		            0 => 'DKP-Import',
 		            1 => array(
 		            	'link' => $url_prefix . 'plugins/' . $this->get_data('path') . '/admin/settings.php',
