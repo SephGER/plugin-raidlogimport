@@ -82,7 +82,8 @@
 	$lang['rli_t_dkp'] = 'Time-DKP';
 	$lang['rli_b_dkp'] = 'Boss-DKP';
 	$lang['rli_looter'] = 'Looter';
-	$lang['xml_error'] = 'XML-Error. Please check the DKP-String!';
+	$lang['xml_error'] = 'XML-Error. Please check the log!';
+	$lang['parse_error'] = 'Parsing-Error!';
 	$lang['rli_clock'] = 'clock';
 	$lang['rli_att'] = 'Attendence';
 	$lang['rli_checkmem'] = 'Check member-data';
@@ -112,7 +113,7 @@
 	$lang['rli_raids_needed'] = 'No raids given.';
 	$lang['rli_missing_values'] = 'There are missing some values. Please: ';
 	$lang['wrong_format'] = 'The parser you haven chosen and the raid-log you have posted, do not match.';
-	$lang['ctrt_format'] = 'Please set the output Format of your CT-Raidtracker to "MLdkp 1.1 / EQdkp Plugin" (move the slider to the left).';
+	$lang['ctrt_format'] = 'Please set the options of your CT-Raidtracker to ';
 	$lang['wrong_settings'] = '<img src="$eqdkp_root_path'.'images/error.png" alt="error"> Wrong Settings!';
 	$lang['wrong_settings_1'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_1'].' with no Time-DKP.';
 	$lang['wrong_settings_2'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_2'].' with no Boss-DKP.';

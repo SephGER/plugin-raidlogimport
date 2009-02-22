@@ -528,7 +528,7 @@ function parse_string($xml)
 		}
 		else
 		{
-			message_die($user->lang['wrong_format'].' '.$user->lang[$rli_config['parser'].'_format']);
+		  message_die($user->lang['wrong_format'].' '.$user->lang[$rli_config['parser'].'_format'].' <img src="'.$eqdkp_root_path.'plugins/raidlogimport/images/'.$rli_config['parser'].'_options.png">');
 		}
 	}
 	else
@@ -540,7 +540,7 @@ function parse_string($xml)
 
 function member_in_raid($member, $raid)
 {
-	global $user;
+	global $user, $rli_config, $eqdkp_root_path;
 	$raid['time'] = $raid['end'] - $raid['begin'];
 	$time = array();
 	foreach($member['join'] as $tj)
@@ -576,7 +576,7 @@ function member_in_raid($member, $raid)
     	$k = $i+1;
     	if(key($times[$i]) == key($times[$k]))
     	{
-    		message_die($user->lang['xml_error']);
+    		message_die($user->lang['parse_error'].' '.$user->lang[$rli_config['parser'].'_format'].' <img src="'.$eqdkp_root_path.'plugins/raidlogimport/images/'.$rli_config['parser'].'_options.png">');
     	}
     	else
     	{
