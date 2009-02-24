@@ -124,6 +124,9 @@
 	$lang['raidval_nullsum_later'] = 'Beim Null-Summen-System wird der Raid-Wert später eingegeben.';
 	$lang['check_raidval'] = 'Raid-Werte überprüfen';
 	$lang['rli_log_lang'] = 'In welcher Sprache sind die Items im Log?';
+	$lang['form_null_sum'] = 'Formel: Item-Kosten / Anzahl der Mitglieder ';
+	$lang['form_null_sum_1'] = $lang['form_null_sum'].'im Raid';
+	$lang['form_null_sum_2'] = $lang['form_null_sum'].'im System';
 
 	//config
 	$lang['multidkp_need'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                    Für Multi-DKP Funktionalität aktivieren!                  </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='help'></a>";

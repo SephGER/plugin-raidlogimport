@@ -628,7 +628,8 @@ class raidlogimport extends EQdkp_Admin
                 'ATT_BEGIN'=> $member['att_dkp_begin'],
                 'ATT_END'  => $member['att_dkp_end'],
                 'ZAHL'     => $eqdkp->switch_row_class(),
-                'KEY'	   => $key)
+                'KEY'	   => $key,
+                'NR'	   => $key +1)
            	);
         }//foreach members
 
@@ -867,7 +868,7 @@ class raidlogimport extends EQdkp_Admin
 
 	function process_null_sum()
 	{
-		global $db, $eqdkp, $user, $tpl, $pm, $SID, $rli_config, $conf_plus, $myHtml;
+		global $db, $eqdkp, $user, $tpl, $pm, $SID, $rli_config, $myHtml;
 
 		$db->query("DROP TABLE IF EXISTS item_rename");
 
@@ -885,6 +886,7 @@ class raidlogimport extends EQdkp_Admin
 
        	if($rli_config['null_sum'] == 1)
         {
+        	$formel = $user->lang['form_null_sum_1'];
 			foreach($data['raids'] as $raid_key => $raid)
 			{
 				$raid['value'] = 0;
@@ -904,17 +906,16 @@ class raidlogimport extends EQdkp_Admin
 						$count++;
 					}
 				}
+                $formul[$raid_key] = $raid['value'].'/'.$count;
             	$raid['value'] = $raid['value']/$count;
-            	if($conf_plus['pk_round_activate'])
-            	{
-            		$raid['value'] = round($raid['value'], $conf_plus['pk_round_precision']);
-            	}
-            	$tpl->assign_block_vars('raids', raids2tpl($raid_key, $raid));
+            	$raid['value'] = runden($raid['value']);
+            	$tpl->assign_block_vars('raids', raids2tpl($raid_key, $raid, $formul));
 			}
 		}
 
 		if($rli_config['null_sum'] == 2)
 		{
+			$formel = $user->lang['form_null_sum_2'];
 			$data['adjs'] = array();
 			$maxkey = 0;
 			foreach($data['members'] as $key => $member)
@@ -952,11 +953,9 @@ class raidlogimport extends EQdkp_Admin
 						$raid['value'] += $loot['dkp'];
 					}
 				}
+                $formul[$raid_key] = $raid['value'].'/'.$count;
 				$raid['value'] = $raid['value']/$count;
-                if($conf_plus['pk_round_activate'])
-                {
-                    $raid['value'] = round($raid['value'], $conf_plus['pk_round_precision']);
-                }
+                $raid['value'] = runden($raid['value']);
                 $u = 0;
 				foreach($data['members'] as $key => $member)
 				{
@@ -970,7 +969,7 @@ class raidlogimport extends EQdkp_Admin
 						$u++;
 					}
 				}
-            	$tpl->assign_block_vars('raids', raids2tpl($raid_key, $raid));
+            	$tpl->assign_block_vars('raids', raids2tpl($raid_key, $raid, $formul));
 			}
 			foreach($data['adjs'] as $a => $adj)
 			{
@@ -994,7 +993,8 @@ class raidlogimport extends EQdkp_Admin
 			'DATA'			=> htmlspecialchars(serialize($data), ENT_QUOTES),
 			'S_ATT_BEGIN'	=> ($rli_config['attendence_begin'] > 0) ? TRUE : FALSE,
 			'S_ATT_END'		=> ($rli_config['attendence_end'] > 0) ? TRUE : FALSE,
-			'S_NULL_SUM_2'	=> ($rli_config['null_sum'] == 2) ? TRUE : FALSE)
+			'S_NULL_SUM_2'	=> ($rli_config['null_sum'] == 2) ? TRUE : FALSE,
+			'FORMEL'		=> $formel)
 		);
 
 		//language
@@ -1228,7 +1228,7 @@ class raidlogimport extends EQdkp_Admin
 							$sql[] = "member_adjustment = member_adjustment + '".$adj_dkp[$member['name']]."', ";
 						}
 					}
-					
+
 					if($sql[1])
 					{
 						$esql = '';
@@ -1323,7 +1323,7 @@ class raidlogimport extends EQdkp_Admin
             		'log_action' => $log_action)
             	);
             }
-			$db->query("COMMIT;");
+			$db->query("ROLLBACK;");
 			$message[] = $user->lang['bz_save_suc'];
 		  }
 		  else

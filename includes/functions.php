@@ -322,7 +322,7 @@ function check_data($data)
 		{
 			if($raid['key'] != '')
 			{
-				if(!($raid['event'] AND $raid['note'] AND $raid['begin'] AND $raid['end']) AND $raid['value'] == '')
+				if(!($raid['event'] AND $raid['note'] AND $raid['begin'] AND $raid['end']) AND $raid['value'] != '')
 				{
 					$bools['false']['raid'] = FALSE;
 				}
@@ -370,6 +370,10 @@ function check_ctrt_format($xml)
 {
 	if(isset($xml->start, $xml->end, $xml->BossKills, $xml->Loot, $xml->PlayerInfos, $xml->Join, $xml->Leave))
 	{
+		if(!(stristr($xml->end, ':') or stristr($xml->start, ':')))
+		{
+			return false;
+		}
 		foreach($xml->BossKills->children() as $bosskill)
 		{
 		  if($bosskill)
@@ -679,7 +683,7 @@ function lang2tpl()
 	return $la_ar;
 }
 
-function raids2tpl($key, $raid)
+function raids2tpl($key, $raid, $formul = false)
 {
 	$bosskills = '';
 	$l = 2;
@@ -697,7 +701,8 @@ function raids2tpl($key, $raid)
 		'BOSSKILLS'		=> $bosskills,
 		'EVENT'			=> $raid['event'],
 		'VALUE'			=> $raid['value'],
-		'NOTE'			=> $raid['note']
+		'NOTE'			=> $raid['note'],
+		'FORMUL'		=> $formul[$key]
 	);
 }
 
@@ -709,7 +714,7 @@ function mems2tpl($key, $member)
 		$member['alias'] = '('.$member['alias'].')';
 	}
 	return array(
-       	'MITGLIED' => $member['name'],
+       	'MITGLIED' => (($key < 9) ? '&nbsp;&nbsp;' : '').($key+1).'&nbsp;'.$member['name'],
         'ALIAS'    => $member['alias'],
         'RAID_LIST'=> $member['raid_list'],
         'ATT_BEGIN'=> $member['att_dkp_begin'],
