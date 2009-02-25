@@ -454,19 +454,7 @@ function parse_ctrt_string($xml)
 		}
 		else
 		{
-			$note = $loot->Note;
-			$dpos = strpos($note,' DKP');
-			if (!$dpos)
-			{
-				$raid['loots'][$i]['dkp'] = 0;
-			}
-			else
-			{
-				$sub  = substr($note,0,$dpos);
-				$spos = strrpos($sub," ");
-				$dkp  = substr($sub,$spos+1);
-				$raid['loots'][$i]['dkp'] = $dkp;
-			}
+			$raid['loots'][$i]['dkp'] = (int)$loot->Note;
 		}
 		$i++;
 	}
