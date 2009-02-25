@@ -214,7 +214,20 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 		            	'link' => $url_prefix . 'plugins/' . $this->get_data('path') . '/admin/alias.php',
 		            	'text' => $user->lang['raidlogimport_alias'],
 		            	'check' => 'a_raidlogimport_alias')
-		        )
+		        ),
+		           'raids' => array(
+                                    0 => $user->lang['raids'],
+                                    1 => array('link' => 'admin/addraid.php' . $SID,
+                                               'text' => $user->lang['add'],
+                                               'check' => 'a_raid_add'),
+                                    2 =>  array(
+								            	'link' => $url_prefix . 'plugins/' . $this->get_data('path') . '/admin/dkp.php',
+								            	'text' => $user->lang['raidlogimport_dkp'],
+								            	'check' => 'a_raidlogimport_dkp'),
+                                    3 => array('link' => 'admin/listraids.php' . $SID,
+                                               'text' => $user->lang['list'],
+                                               'check' => 'a_raid_')
+                )
 		     );
 
             return $admin_menu;
