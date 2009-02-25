@@ -1323,7 +1323,7 @@ class raidlogimport extends EQdkp_Admin
             		'log_action' => $log_action)
             	);
             }
-			$db->query("ROLLBACK;");
+			$db->query("COMMIT;");
 			$message[] = $user->lang['bz_save_suc'];
 		  }
 		  else

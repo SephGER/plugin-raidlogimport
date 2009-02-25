@@ -871,19 +871,35 @@ function parse_post($post, $data)
 	$data = unserialize($_POST['rest']);
 	if(isset($post['adjs']))
 	{
-		return parse_adjs($post['adjs'], $data);
+		$data = parse_adjs($post['adjs'], $data);
 	}
 	if(isset($post['loots']))
 	{
-		return parse_items($post['loots'], $data);
+		$data = parse_items($post['loots'], $data);
 	}
 	if(isset($post['members']))
 	{
-		return parse_members($post['members'], $data);
+		$data = parse_members($post['members'], $data);
 	}
 	if(isset($post['raids']))
 	{
-		return parse_raids($post['raids'], $data);
+		if(!isset($post['ns']))
+		{
+			$data = parse_raids($post['raids'], $data);
+		}
+		else
+		{
+			foreach($data['raids'] as $key => $raid)
+			{
+				foreach($post['raids'] as $k => $r)
+				{
+					if($k == $key)
+					{
+						$data['raids'][$k]['value'] = $r['value'];
+					}
+				}
+			}
+		}
 	}
 	return $data;
 }
