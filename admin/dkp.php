@@ -1101,7 +1101,7 @@ class raidlogimport extends EQdkp_Admin
 		  $adj_dkp = array();
 		  if($isok)
 		  {
-		   if(!($rli_config['null_sum'] OR $rli_config['deactivate_adj']))
+		   if(!($rli_config['null_sum'] == 1 OR $rli_config['deactivate_adj']))
 		   {
 		  	if(is_array($data['adjs']))
 		  	{
