@@ -112,6 +112,7 @@
 	$lang['rli_members_needed'] = 'No members given.';
 	$lang['rli_raids_needed'] = 'No raids given.';
 	$lang['rli_missing_values'] = 'There are missing some values. Please: ';
+	$lang['rli_miss'] = 'The following nodes are missing: ';
 	$lang['wrong_format'] = 'The parser you haven chosen and the raid-log you have posted, do not match.';
 	$lang['ctrt_format'] = 'Please set the options of your CT-Raidtracker to ';
 	$lang['wrong_settings'] = '<img src="$eqdkp_root_path'.'images/error.png" alt="error"> Wrong Settings!';

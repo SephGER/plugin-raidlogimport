@@ -112,6 +112,7 @@
 	$lang['rli_members_needed'] = 'Keine Mitglieder gefunden.';
 	$lang['rli_raids_needed'] = 'Keine Raids gefunden.';
 	$lang['rli_missing_values'] = 'Es fehlen einige Werte. Bitte überprüfe: ';
+	$lang['rli_miss'] = 'Folgende Nodes fehlen: ';
 	$lang['wrong_format'] = 'Der Parser und das Raid-Log stimmen nicht überein.';
 	$lang['ctrt_format'] = 'Bitte stell die Optionen vom CT-Raidtracker auf ';
 	$lang['wrong_settings'] = '<img src="$eqdkp_root_path'.'images/error.png" alt="error"> Verkehrte Einstellungen!';

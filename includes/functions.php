@@ -368,59 +368,145 @@ function check_data($data)
 
 function check_ctrt_format($xml)
 {
-	if(isset($xml->start, $xml->end, $xml->BossKills, $xml->Loot, $xml->PlayerInfos, $xml->Join, $xml->Leave))
+	$back[1] = true;
+	if(!isset($xml->start))
 	{
-		if(!(stristr($xml->end, ':') or stristr($xml->start, ':')))
+		$back[1] = false;
+		$back[2][] = 'start';
+	}
+	else
+	{
+		if(!(stristr($xml->start, ':')))
 		{
-			return false;
+			$back[1] = false;
+			$back[2][] = 'start in format: MM/DD/YY HH:MM:SS';
 		}
+	}
+	if(!isset($xml->end))
+	{
+	 	$back[1] = false;
+	 	$back[2][] = 'end';
+	}
+	else
+	{
+		if(!(stristr($xml->start, ':')))
+		{
+			$back[1] = false;
+			$back[2][] = 'end in format: MM/DD/YY HH:MM:SS';
+		}
+	}
+	if(!isset($xml->BossKills))
+	{
+	  	$back[1] = false;
+	  	$back[2][] = 'BossKills';
+	}
+	else
+	{		
 		foreach($xml->BossKills->children() as $bosskill)
 		{
 		  if($bosskill)
 		  {
-			if(!isset($bosskill->name, $bosskill->time))
+			if(!isset($bosskill->name))
 			{
-				return false;
+				$back[1] = false;
+				$back[2][] = 'BossKills->name';
+			}
+			if(!isset($bosskill->time))
+			{
+				$back[1] = false;
+				$back[2][] = 'BossKills->time';
 			}
 		  }
 		}
+	}
+	if(!isset($xml->Loot))
+	{
+	   	$back[1] = false;
+	   	$back[2][] = 'Loot';
+	}
+	else
+	{
 		foreach($xml->Loot->children() as $loot)
 		{
 		  if($loot)
 		  {
-			if(!isset($loot->ItemName, $loot->Player, $loot->Time))
+			if(!isset($loot->ItemName))
 			{
-				return false;
+				$back[1] = false;
+				$back[2][] = 'Loot->ItemName';
+			}
+			if(!isset($loot->Player))
+			{
+				$back[1] = false;
+				$back[2][] = 'Loot->Player';
+			}
+			if(!isset($loot->Time))
+			{
+				$back[1] = false;
+				$back[2] = 'Loot->Time';
 			}
 		  }
 		}
+	}
+	if(!isset($xml->PlayerInfos))
+	{
+		$back[1] = false;
+		$back[2][] = 'PlayerInfos';
+	}
+	else
+	{
 		foreach($xml->PlayerInfos->children() as $mem)
 		{
 			if(!isset($mem->name))
 			{
-				return false;
+				$back[1] = false;
+				$back[2][] = 'PlayerInfos->name';
 			}
 		}
-		foreach($xml->Join->children() as $join)
-		{
-			if(!isset($join->player, $join->time))
-			{
-				return false;
-			}
-		}
-		foreach($xml->Leave->children() as $leave)
-		{
-			if(!isset($leave->player, $leave->time))
-			{
-				return false;
-			}
-		}
-		return true;
+	}
+	if(!isset($xml->Join))
+	{
+		$back[1] = false;
+		$back[2][] = 'Join';
 	}
 	else
 	{
-		return false;
+		foreach($xml->Join->children() as $join)
+		{
+			if(!isset($join->player))
+			{
+				$back[1] = false;
+				$back[2][] = 'Join->player';
+			}
+			if(!isset($join->time))
+			{
+				$back[1] = false;
+				$back[2][] = 'Join->time';
+			}
+		}
 	}
+	if(!isset($xml->Leave))
+	{
+		$back[1] = false;
+		$back[2][] = 'Leave';
+	}
+	else
+	{
+		foreach($xml->Leave->children() as $leave)
+		{
+			if(!isset($leave->player))
+			{
+				$back[1] = false;
+				$back[2][] = 'Leave->player';
+			}
+			if(!isset($leave->time))
+			{
+				$back[1] = false;
+				$back[2][] = 'Leave->time';
+			}
+		}
+	}
+	return $back;
 }
 
 function parse_ctrt_string($xml)
@@ -510,17 +596,18 @@ function parse_ctrt_string($xml)
 
 function parse_string($xml)
 {
-	global $rli_config, $user;
+	global $rli_config, $user, $eqdkp_root_path;
 
 	if(function_exists('parse_'.$rli_config['parser'].'_string'))
 	{
-		if(call_user_func('check_'.$rli_config['parser'].'_format', $xml))
+		$back = call_user_func('check_'.$rli_config['parser'].'_format', $xml);
+		if($back[1])
 		{
 			$raid = call_user_func('parse_'.$rli_config['parser'].'_string', $xml);
 		}
 		else
 		{
-		  message_die($user->lang['wrong_format'].' '.$user->lang[$rli_config['parser'].'_format'].' <img src="'.$eqdkp_root_path.'plugins/raidlogimport/images/'.$rli_config['parser'].'_options.png">');
+		  message_die($user->lang['wrong_format'].' '.$user->lang[$rli_config['parser'].'_format'].' <img src="'.$eqdkp_root_path.'plugins/raidlogimport/images/'.$rli_config['parser'].'_options.png"><br />'.$user->lang['rli_miss'].implode(', ', $back[2]));
 		}
 	}
 	else
