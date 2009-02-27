@@ -663,7 +663,7 @@ function member_in_raid($member, $raid)
     	$k = $i+1;
     	if(key($times[$i]) == key($times[$k]))
     	{
-    		message_die($user->lang['parse_error'].' '.$user->lang[$rli_config['parser'].'_format'].' <img src="'.$eqdkp_root_path.'plugins/raidlogimport/images/'.$rli_config['parser'].'_options.png">');
+    		message_die($user->lang['parse_error'].' '.$user->lang[$rli_config['parser'].'_format'].' <img src="'.$eqdkp_root_path.'plugins/raidlogimport/images/'.$rli_config['parser'].'_options.png"><br />'.$lang['rli_lgaobk']);
     	}
     	else
     	{

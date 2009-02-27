@@ -267,7 +267,7 @@ class raidlogimport extends EQdkp_Admin
 								$raids[$key]['begin'] = $raid['bosskills'][$b]['time'] -1;
 							}
 							else
-							{	
+							{
 								$raids[$key]['begin'] = $raid['bosskills'][$b-1]['time'] + $rli_config['loottime'];
 							}
 						}
@@ -393,7 +393,7 @@ class raidlogimport extends EQdkp_Admin
 								$raids[$key]['begin'] = $raid['bosskills'][$b]['time'] -1;
 							}
 							else
-							{	
+							{
 								$raids[$key]['begin'] = $raid['bosskills'][$b-1]['time'] + $rli_config['loottime'];
 							}
 						}
@@ -440,7 +440,7 @@ class raidlogimport extends EQdkp_Admin
 								break;
 							}
 						}
-						
+
 						//value
 						$raids[$key]['value'] = $raids[$key]['bosskills'][$b]['bonus'];
 						$key++;
@@ -578,12 +578,12 @@ class raidlogimport extends EQdkp_Admin
 				'BOSSKILLS'	=> $bk_string,
 				'EVENT'		=> $myHtml->DropDown('raids['.$ky.'][event]', $events, $rai['event']),
 				'TIMEBONUS'	=> $rai['timebonus'],
-				'VALUE'		=> $rai['value'],
+				'VALUE'		=> runden($rai['value']),
 				'NOTE'		=> $rai['note']
 				)
 			);
 		}
-		
+
 		$tpl->assign_vars(array(
 			'DATA' =>htmlspecialchars(serialize($data), ENT_QUOTES),
 			'USE_TIMEDKP' => $rli_config['use_timedkp'],
@@ -885,7 +885,7 @@ class raidlogimport extends EQdkp_Admin
 					'MEMBER'	=> $myHtml->DropDown('adjs['.$a.'][member]', $members, $adj['member'], '', '', true),
 					'EVENT'		=> $myHtml->DropDown('adjs['.$a.'][event]', $events, $ev_sel, '', '', true),
 					'NOTE'		=> $adj['reason'],
-					'VALUE'		=> $adj['value'],
+					'VALUE'		=> runden($adj['value']),
 					'CLASS'		=> $eqdkp->switch_row_class(),
 					'KEY'		=> $a)
 				);
