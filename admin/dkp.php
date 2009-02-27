@@ -58,7 +58,7 @@ class raidlogimport extends EQdkp_Admin
                 )
         );
 
-		$sql = "SELECT bz_id, bz_string, bz_note, bz_bonus, bz_type FROM __raidlogimport_bz;";
+		$sql = "SELECT bz_id, bz_string, bz_note, bz_bonus, bz_type, bz_tozone FROM __raidlogimport_bz;";
 		if($result = $db->query($sql))
 		{
 			while($row = $db->fetch_record($result))
@@ -68,6 +68,7 @@ class raidlogimport extends EQdkp_Admin
 					$this->bonus['boss'][$row['bz_id']]['string'] = explode($rli_config['bz_parse'], $row['bz_string']);
 					$this->bonus['boss'][$row['bz_id']]['note'] = $row['bz_note'];
 					$this->bonus['boss'][$row['bz_id']]['bonus'] = $row['bz_bonus'];
+					$this->bonus['boss'][$row['bz_id']]['tozone'] = $row['bz_tozone'];
 				}
 				else
 				{
@@ -230,8 +231,8 @@ class raidlogimport extends EQdkp_Admin
 						  }
 						}
 						//value
-						$max['join'][1] = $i-1;
-						$max['leave'][1] = $i+3601;
+						$max['join'][1] = $i;
+						$max['leave'][1] = $i+3600;
 						$max['timedkp'] = calculate_timedkp($raids[$key]['timebonus'], calculate_time($max, $raids[$key]['end'], $raids[$key]['begin']));
 						if($rli_config['use_bossdkp'])
 						{
@@ -259,8 +260,36 @@ class raidlogimport extends EQdkp_Admin
 					  foreach($raid['bosskills'] as $b => $bosskill)
 					  {
 						//time
-						$raids[$key]['begin'] = (isset($raid['bosskills'][$b-1]['time'])) ? $raid['bosskills'][$b-1]['time']+$rli_config['loottime'] +1 : $raid['begin'];
-						$raids[$key]['end'] = $bosskill['time']+$rli_config['loottime'];
+						if(isset($raid['bosskills'][$b-1]['time']))
+						{
+							if(($raid['bosskills'][$b-1]['time'] + $rli_config['loottime']) > $raid['bosskills'][$b]['time'])
+							{
+								$raids[$key]['begin'] = $raid['bosskills'][$b]['time'] -1;
+							}
+							else
+							{	
+								$raids[$key]['begin'] = $raid['bosskills'][$b-1]['time'] + $rli_config['loottime'];
+							}
+						}
+						else
+						{
+							$raids[$key]['begin'] = $raid['begin'];
+						}
+						if(isset($raid['bosskills'][$b+1]['time']))
+						{
+							if(($raid['bosskills'][$b]['time'] + $rli_config['loottime']) > $raid['bosskills'][$b+1]['time'])
+							{
+								$raids[$key]['end'] = $raid['bosskills'][$b+1]['time'] -1;
+							}
+							else
+							{
+								$raids[$key]['end'] = $raid['bosskills'][$b]['time'] + $rli_config['loottime'];
+							}
+						}
+						else
+						{
+							$raids[$key]['end'] = $raid['end'];
+						}
 						//event+note
 						if($rli_config['event_boss'] == 1)
 						{
@@ -272,10 +301,11 @@ class raidlogimport extends EQdkp_Admin
 									$raids[$key]['bosskills'][$b]['name'] = $bosskill['name'];
 									$raids[$key]['bosskills'][$b]['bonus'] = $boss['bonus'];
 									$raids[$key]['bosskills'][$b]['time'] = $bosskill['time'];
+									$raids[$key]['timebonus'] = $this->bonus['zone'][$boss['tozone']]['bonus'];
 									break;
 								}
 							}
-							$raids[$key]['note'] = time('h:i:s', $raids[$key]['begin']).' - '.time('h:i:s', $raids[$key]['end']);
+							$raids[$key]['note'] = date('H:i:s', $raids[$key]['begin']).' - '.date('H:i:s', $raids[$key]['end']);
 						}
 						else
 						{
@@ -356,49 +386,61 @@ class raidlogimport extends EQdkp_Admin
 					  foreach($raid['bosskills'] as $b => $bosskill)
 					  {
 						//time
-						$raids[$key]['begin'] = (isset($raid['bosskills'][$b-1]['time'])) ? $raid['bosskills'][$b-1]['time']+$rli_config['loottime'] +1 :$raid['begin'];
-						$raids[$key]['end'] = $bosskill['time']+$rli_config['loottime'];
-						//event+note
-						if($rli_config['event_boss'] == 1)
+						if(isset($raid['bosskills'][$b-1]['time']))
 						{
-							foreach($this->bonus['boss'] as $boss)
+							if(($raid['bosskills'][$b-1]['time'] + $rli_config['loottime']) > $raid['bosskills'][$b]['time'])
 							{
-								if (in_array($bosskill['name'], $boss['string']))
-								{
-									$raids[$key]['event'] = trim($boss['note']);
-									$raids[$key]['bosskills'][$b]['name'] = $bosskill['name'];
-									$raids[$key]['bosskills'][$b]['bonus'] = $boss['bonus'];
-									$raids[$key]['bosskills'][$b]['time'] = $bosskill['time'];
-									break;
-								}
+								$raids[$key]['begin'] = $raid['bosskills'][$b]['time'] -1;
 							}
-							$raids[$key]['note'] = time('H:i:s', $raids[$key]['begin']).' - '.time('H:i:s', $raids[$key]['end']);
+							else
+							{	
+								$raids[$key]['begin'] = $raid['bosskills'][$b-1]['time'] + $rli_config['loottime'];
+							}
 						}
 						else
 						{
-	                    	foreach ($this->bonus['zone'] as $zone)
-	                    	{
-	                        	if (in_array(trim($raid['zone']), $zone['string'])) {
-	                            	$raids[$key]['event'] = trim($zone['note']);
-	                            	break;
-	                        	}
-	                    	}
-							foreach($this->bonus['boss'] as $boss)
+							$raids[$key]['begin'] = $raid['begin'];
+						}
+						if(isset($raid['bosskills'][$b+1]['time']))
+						{
+							if(($raid['bosskills'][$b]['time'] + $rli_config['loottime']) > $raid['bosskills'][$b+1]['time'])
 							{
-								if (in_array($bosskill['name'], $boss['string']))
-								{
-									$raids[$key]['note'] = trim($boss['note']);
-									if($rli_config['dep_match'])
-									{
-										$raids[$key]['note'] .= ($raid['difficulty'] == '2') ? $rli_config['hero'] : $rli_config['non_hero'];
-									}
-									$raids[$key]['bosskills'][$b]['name'] = $bosskill['name'];
-									$raids[$key]['bosskills'][$b]['bonus'] = $boss['bonus'];
-									$raids[$key]['bosskills'][$b]['time'] = $bosskill['time'];
-									break;
-								}
+								$raids[$key]['end'] = $raid['bosskills'][$b+1]['time'] -1;
+							}
+							else
+							{
+								$raids[$key]['end'] = $raid['bosskills'][$b]['time'] + $rli_config['loottime'];
 							}
 						}
+						else
+						{
+							$raids[$key]['end'] = $raid['end'];
+						}
+						//event+note
+						foreach($this->bonus['boss'] as $boss)
+						{
+							if (in_array($bosskill['name'], $boss['string']))
+							{
+								if($rli_config['event_boss'] == 1)
+								{
+									$raids[$key]['event'] = trim($boss['note']);
+								}
+								else
+								{
+									$raids[$key]['event'] = $this->bonus['zone'][$boss['tozone']]['note'];
+								}
+								$raids[$key]['note'] = trim($boss['note']);
+								if($rli_config['dep_match'])
+								{
+									$raids[$key]['note'] .= ($raid['difficulty'] == '2') ? $rli_config['hero'] : $rli_config['non_hero'];
+								}
+								$raids[$key]['bosskills'][$b]['name'] = $bosskill['name'];
+								$raids[$key]['bosskills'][$b]['bonus'] = $boss['bonus'];
+								$raids[$key]['bosskills'][$b]['time'] = $bosskill['time'];
+								break;
+							}
+						}
+						
 						//value
 						$raids[$key]['value'] = $raids[$key]['bosskills'][$b]['bonus'];
 						$key++;
@@ -541,8 +583,9 @@ class raidlogimport extends EQdkp_Admin
 				)
 			);
 		}
+		
 		$tpl->assign_vars(array(
-			'DATA' => htmlspecialchars(serialize($data), ENT_QUOTES),
+			'DATA' =>htmlspecialchars(serialize($data), ENT_QUOTES),
 			'USE_TIMEDKP' => $rli_config['use_timedkp'],
 			'S_NULL_SUM'  => $rli_config['null_sum'],
 			'L_RV_NS'	  => $user->lang['raidval_nullsum_later'])

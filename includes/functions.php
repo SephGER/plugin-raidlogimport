@@ -69,12 +69,12 @@ function calculate_timedkp($dkpperhour, $timearray) {
 	$timedkp = 0;
 	$hours   = $timearray['hours'];
 	$minutes = $timearray['minutes'];
-	
+
 	$timedkp = $hours * $dkpperhour;
 	if($minutes < 20 AND $minutes > 10)
     {
         $timedkp = $timedkp + ($dkpperhour/4);
-    }	
+    }
     elseif($minutes >= 20 AND $minutes < 40)
 	{
     	$timedkp = $timedkp + ($dkpperhour/2);
