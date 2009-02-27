@@ -69,13 +69,21 @@ function calculate_timedkp($dkpperhour, $timearray) {
 	$timedkp = 0;
 	$hours   = $timearray['hours'];
 	$minutes = $timearray['minutes'];
-
+	
 	$timedkp = $hours * $dkpperhour;
-	if($minutes > 15 AND $minutes < 45)
+	if($minutes < 20 AND $minutes > 10)
+    {
+        $timedkp = $timedkp + ($dkpperhour/4);
+    }	
+    elseif($minutes >= 20 AND $minutes < 40)
 	{
     	$timedkp = $timedkp + ($dkpperhour/2);
 	}
-	elseif($minutes >= 45)
+	elseif($minutes >= 40 AND $minutes < 50)
+	{
+		$timedkp = $timedkp + ($dkpperhour*0.75);
+	}
+	elseif($minutes >= 50)
 	{
 		$timedkp = $timedkp + $dkpperhour;
 	}
@@ -401,7 +409,7 @@ function check_ctrt_format($xml)
 	  	$back[2][] = 'BossKills';
 	}
 	else
-	{		
+	{
 		foreach($xml->BossKills->children() as $bosskill)
 		{
 		  if($bosskill)

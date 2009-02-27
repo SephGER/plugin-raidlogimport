@@ -221,19 +221,18 @@ class raidlogimport extends EQdkp_Admin
 											$raids[$key]['note'] .= ($raid['difficulty'] == '2') ? $rli_config['hero'] : $rli_config['non_hero'];
 										}
 									}
-									$raids[1]['bosskills'][$b]['name'] = $bossname;
-									$raids[1]['bosskills'][$b]['bonus'] = $boss['bonus'];
-									$raids[1]['bosskills'][$b]['time'] = $bosskill['time'];
+									$raids[$key]['bosskills'][$b]['name'] = $bosskill['name'];
+									$raids[$key]['bosskills'][$b]['bonus'] = $boss['bonus'];
+									$raids[$key]['bosskills'][$b]['time'] = $bosskill['time'];
 									break;
 								}
 							}
 						  }
 						}
 						//value
-						$max['join'][1] = $i;
-						$max['leave'][1] = $i+3600;
-						$max['time'] = calculate_time($max, $raid[$key]['end'], $raid[$key]['begin']);
-						$max['timedkp'] = calculate_timedkp($raids[$key]['timebonus'], $max['time']);
+						$max['join'][1] = $i-1;
+						$max['leave'][1] = $i+3601;
+						$max['timedkp'] = calculate_timedkp($raids[$key]['timebonus'], calculate_time($max, $raids[$key]['end'], $raids[$key]['begin']));
 						if($rli_config['use_bossdkp'])
 						{
 							$max['bossdkp'] = (is_array($raids[$key]['bosskills'])) ? calculate_bossdkp($raids[$key]['bosskills'], $max) : '0';
@@ -270,7 +269,7 @@ class raidlogimport extends EQdkp_Admin
 								if (in_array($bosskill['name'], $boss['string']))
 								{
 									$raids[$key]['event'] = trim($boss['note']);
-									$raids[$key]['bosskills'][$b]['name'] = $bossname;
+									$raids[$key]['bosskills'][$b]['name'] = $bosskill['name'];
 									$raids[$key]['bosskills'][$b]['bonus'] = $boss['bonus'];
 									$raids[$key]['bosskills'][$b]['time'] = $bosskill['time'];
 									break;
@@ -280,7 +279,7 @@ class raidlogimport extends EQdkp_Admin
 						}
 						else
 						{
-	                    	foreach ($this->bonus['zone'] as $zone)
+                        	foreach ($this->bonus['zone'] as $zone)
 	                    	{
 	                        	if (in_array(trim($raid['zone']), $zone['string'])) {
 	                            	$raids[$key]['event'] = trim($zone['note']);
@@ -297,9 +296,9 @@ class raidlogimport extends EQdkp_Admin
 									{
 										$raids[$key]['note'] .= ($raid['difficulty'] == '2') ? $rli_config['hero'] : $rli_config['non_hero'];
 									}
-									$raids[$key]['bosskills'][$b]['name'] = $bossname;
+									$raids[$key]['bosskills'][$b]['name'] = $bosskill['name'];
 									$raids[$key]['bosskills'][$b]['bonus'] = $boss['bonus'];
-									$raids[$key]['bosskills'][$b]['times'] = $bosskill['time'];
+									$raids[$key]['bosskills'][$b]['time'] = $bosskill['time'];
 									break;
 								}
 							}
@@ -309,7 +308,7 @@ class raidlogimport extends EQdkp_Admin
                         $max['leave'][1] = $raids[$key]['end'];
 						if($rli_config['use_timedkp'])
 						{
-							$max['timedkp'] = calculate_timedkp($raid['timebonus'], calculate_time($max, $raid['end'], $raid['begin']));
+							$max['timedkp'] = calculate_timedkp($raids[$key]['timebonus'],calculate_time($max, $raid['end'], $raid['begin']));
 						}
 						$max['bossdkp'] = (is_array($raid['bosskills'])) ? calculate_bossdkp($raids[$key]['bosskills'], $max) : '0';
 						$raids[$key]['value'] = $max['timedkp'] + $max['bossdkp'];
@@ -348,7 +347,7 @@ class raidlogimport extends EQdkp_Admin
 						//value
 						$max['join'][1] = $i;
 						$max['leave'][1] = $i+3600;
-						$raids[$key]['value'] = calculate_timedkp($raid['timebonus'], calculate_time($max, $raid['end'], $raid['begin']));
+						$raids[$key]['value'] = calculate_timedkp($raids[$key]['timebonus'], calculate_time($max, $raid['end'], $raid['begin']));
 						unset($max);
 						$key++;
 					}
@@ -367,7 +366,7 @@ class raidlogimport extends EQdkp_Admin
 								if (in_array($bosskill['name'], $boss['string']))
 								{
 									$raids[$key]['event'] = trim($boss['note']);
-									$raids[$key]['bosskills'][$b]['name'] = $bossname;
+									$raids[$key]['bosskills'][$b]['name'] = $bosskill['name'];
 									$raids[$key]['bosskills'][$b]['bonus'] = $boss['bonus'];
 									$raids[$key]['bosskills'][$b]['time'] = $bosskill['time'];
 									break;
@@ -393,7 +392,7 @@ class raidlogimport extends EQdkp_Admin
 									{
 										$raids[$key]['note'] .= ($raid['difficulty'] == '2') ? $rli_config['hero'] : $rli_config['non_hero'];
 									}
-									$raids[$key]['bosskills'][$b]['name'] = $bossname;
+									$raids[$key]['bosskills'][$b]['name'] = $bosskill['name'];
 									$raids[$key]['bosskills'][$b]['bonus'] = $boss['bonus'];
 									$raids[$key]['bosskills'][$b]['time'] = $bosskill['time'];
 									break;
