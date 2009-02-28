@@ -159,4 +159,18 @@
 	$lang['null_sum_2'] = 'Every member in the system gehts the DKP';
 	$lang['item_save_lang'] = 'In which language should the items be saved in the DB?';
 	$lang['deactivate_adj'] = "Deactivate Adjustments? <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                   This removes partially gain of DKP per member! Everyone gets all or nothing!                 </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/error.png' alt='warn'></a>";
+	$lang['addinfo_am'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                   This setting allows automatic minus-DKP if the member has not joined the given number of Raids. If you use a null-sum-system the DKP will be draw off by an item.                </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/error.png' alt='warn'></a>";
+	$lang['auto_minus'] = 'Activate automatic minus?'.$lang['addinfo_am'];
+	$lang['am_raidnum'] = 'Number of raids for automatic minus';
+	$lang['am_value'] = 'Amount of DKP drawn off';
+	$lang['am_name'] = 'lack of participation';
+	$lang['title_am'] = 'Automatic Minus';
+	$lang['title_adj'] = 'Adjustments';
+	$lang['title_att'] = 'Attendence';
+	$lang['title_general'] = 'General';
+	$lang['title_loot'] = 'Loot / Items';
+	$lang['title_parse'] = 'Parse';
+	$lang['title_hnh_suffix'] = 'Heroic / Non-Heroic';
+	$lang['rli_round'] = 'Rounding';
+	$lang['rli_round_plus'] = 'To use round activate it in the Plus-Settings.';
 ?>

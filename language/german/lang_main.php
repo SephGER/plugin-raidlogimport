@@ -159,4 +159,18 @@
 	$lang['null_sum_2'] = 'Jedes Mitglied im System bekommt die DKP';
 	$lang['item_save_lang'] = 'In welcher Sprache sollen die Items in der DB gespeichert werden?';
 	$lang['deactivate_adj'] = "Korrekturen deaktivieren? <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                   Durch setzen dieser Option bekommen die Member immer alle DKP vom Raid!                </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/error.gif' alt='warn'></a>";
+	$lang['addinfo_am'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                   Diese Einstellung bewirkt, dass Spieler, die die eingestellte Anzahl an Raids nicht dabeigewesen sind, Minus-DKP bekommen. Wenn Null-Summen aktiviert sind, wird das ganze über ein Item gemacht.                </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='warn'></a>";
+	$lang['auto_minus'] = 'Automatischer DKP-Abzug?'.$lang['addinfo_am'];
+	$lang['am_raidnum'] = 'Anzahl der Raids';
+	$lang['am_value'] = 'Wert der abgezogenen DKP';
+	$lang['am_name'] = 'Mangelnde Teilnahme';
+	$lang['title_am'] = 'Automatischer DKP-Abzug';
+	$lang['title_adj'] = 'Korrekturen';
+	$lang['title_att'] = 'Anwesenheit';
+	$lang['title_general'] = 'Allgemein';
+	$lang['title_loot'] = 'Loot / Items';
+	$lang['title_parse'] = 'Parse-Einstellungen';
+	$lang['title_hnh_suffix'] = 'Heroic / Non-Heroic';
+	$lang['rli_round'] = 'Runden';
+	$lang['rli_round_plus'] = 'Um Runden zu verwenden, musst du es in den Plus-Einstellungen aktivieren.';
 ?>

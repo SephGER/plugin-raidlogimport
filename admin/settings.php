@@ -89,10 +89,10 @@ class RLI_Settings extends EQdkp_Admin
 
 		$this->display_form($messages);
 	}
-	
+
 	function display_form($messages=array())
 	{
-		global $db, $user, $tpl, $eqdkp, $pm, $SID, $rli_config, $myHtml;
+		global $db, $user, $tpl, $eqdkp, $pm, $SID, $rli_config, $myHtml, $jquery;
 		if($messages)
 		{
 			$rli_config = rli_get_config();
@@ -113,32 +113,54 @@ class RLI_Settings extends EQdkp_Admin
 			$ranks[$row['rank_id']] = $row['rank_name'];
 		  }
 		}
+		$holder = array();
 		foreach($rli_config as $name => $value)
 		{
 			if($name == 'raidcount')
 			{
-                $endvalues[$k]['value'] = "<select name='".$name."'>";
+                $holder['general'][$k]['value'] = "<select name='".$name."'>";
 				for($i=0; $i<=3; $i++)
 				{
 					$select = ($i == $value) ? "selected='selected'" : "";
-					$endvalues[$k]['value'] .= "<option value='".$i."' ".$select.">".$user->lang['raidcount_'.$i]."</option>";
+					$holder['general'][$k]['value'] .= "<option value='".$i."' ".$select.">".$user->lang['raidcount_'.$i]."</option>";
 				}
-				$endvalues[$k]['value'] .= "</select>";
-				$endvalues[$k]['name'] = $name;
+				$holder['general'][$k]['value'] .= "</select>";
+				$holder['general'][$k]['name'] = $name;
 			}
 			elseif($name == 'parser')
 			{
 				$parsers = array('ctrt' => 'CT-Raidtracker');
-				$endvalues[$k]['value'] = $myHtml->DropDown($name, $parsers, $value);
-				$endvalues[$k]['name'] = $name;
+				$holder['parse'][$k]['value'] = $myHtml->DropDown($name, $parsers, $value);
+				$holder['parse'][$k]['name'] = $name;
 			}
 			elseif($name == 'new_member_rank')
 			{
-				$endvalues[$k]['value'] = $myHtml->DropDown($name, $ranks, $value);
-				$endvalues[$k]['name'] = $name;
+				$holder['general'][$k]['value'] = $myHtml->DropDown($name, $ranks, $value);
+				$holder['general'][$k]['name'] = $name;
 			}
-			elseif($name == 'event_boss' OR $name == 'attendence_raid' OR $name == 'dep_match' OR $name == 'rli_upd_check' OR $name == 'use_bossdkp' OR $name == 'use_timedkp' OR $name == 'deactivate_adj')
+			elseif($name == 'event_boss' OR $name == 'attendence_raid' OR $name == 'dep_match' OR $name == 'rli_upd_check' OR $name == 'use_bossdkp' OR $name == 'use_timedkp' OR $name == 'deactivate_adj' or $name == 'auto_minus')
 			{
+				$hold = 'general';
+				if($name == 'dep_match')
+				{
+					$hold = 'hnh_suffix';
+				}
+				elseif($name == 'attendence_raid')
+				{
+					$hold = 'att';
+				}
+				elseif($name == 'deactivate_adj')
+				{
+					$hold = 'adj';
+				}
+				elseif($name == 'event_boss')
+				{
+					$hold = 'parse';
+				}
+				elseif($name == 'auto_minus')
+				{
+					$hold = 'am';
+				}
                 $a = $k;
 				if($name == 'rli_upd_check')
 				{
@@ -154,15 +176,15 @@ class RLI_Settings extends EQdkp_Admin
 				{
 					$check_0 = "checked='checked'";
 				}
-				$endvalues[$k]['value'] = "<input type='radio' name='".$name."' value='1' ".$check_1." />".$user->lang['yes']."&nbsp;&nbsp;&nbsp;";
-				$endvalues[$k]['value'] .= "&nbsp;&nbsp;&nbsp;<input type='radio' name='".$name."' value='0' ".$check_0." />".$user->lang['no'];
-				$endvalues[$k]['name'] = $name;
+				$holder[$hold][$k]['value'] = "<input type='radio' name='".$name."' value='1' ".$check_1." />".$user->lang['yes']."&nbsp;&nbsp;&nbsp;";
+				$holder[$hold][$k]['value'] .= "&nbsp;&nbsp;&nbsp;<input type='radio' name='".$name."' value='0' ".$check_0." />".$user->lang['no'];
+				$holder[$hold][$k]['name'] = $name;
 				$k = $a;
 			}
 			elseif($name == 'rli_inst_version')
 			{
-				$endvalues[0]['value'] = $value;
-				$endvalues[0]['name'] = $name;
+				$holder['general'][0]['value'] = $value;
+				$holder['general'][0]['name'] = $name;
 			}
 			elseif($name == 'rlic_data' or $name == 'rlic_lastcheck' or $name == 'rli_inst_build')
 			{
@@ -170,42 +192,77 @@ class RLI_Settings extends EQdkp_Admin
 			}
 			elseif($name == 'null_sum')
 			{
-				$endvalues[$k]['value'] = "<select name='".$name."'>";
+				$holder['general'][$k]['value'] = "<select name='".$name."'>";
 				for($i=0; $i<=2; $i++)
 				{
 					$select = ($i == $value) ? "selected='selected'" : "";
-					$endvalues[$k]['value'] .= "<option value='".$i."' ".$select.">".$user->lang['null_sum_'.$i]."</option>";
+					$holder['general'][$k]['value'] .= "<option value='".$i."' ".$select.">".$user->lang['null_sum_'.$i]."</option>";
 				}
-				$endvalues[$k]['value'] .= "</select>";
-				$endvalues[$k]['name'] = $name;
+				$holder['general'][$k]['value'] .= "</select>";
+				$holder['general'][$k]['name'] = $name;
 			}
 			elseif($name == 'item_save_lang')
 			{
 				$options = array('en' => 'en', 'de' => 'de', 'fr' => 'fr', 'es' => 'es', 'ru' => 'ru');
-				$endvalues[$k]['value'] = '<select name="'.$name.'">';
+				$holder['loot'][$k]['value'] = '<select name="'.$name.'">';
 				foreach($options as $ey => $val)
 				{
 					$sel = ($ey == $value) ? 'selected="selected"' : '';
-					$endvalues[$k]['value'] .= '<option value="'.$ey.'" '.$sel.'>'.$val.'</option>';
+					$holder['loot'][$k]['value'] .= '<option value="'.$ey.'" '.$sel.'>'.$val.'</option>';
 				}
-				$endvalues[$k]['value'] .= '</select>';
-				$endvalues[$k]['name'] = $name;
+				$holder['loot'][$k]['value'] .= '</select>';
+				$holder['loot'][$k]['name'] = $name;
 			}
 			else
 			{
-				$endvalues[$k]['value'] = "<input type='text' name='".$name."' value='".$value."' class='maininput' />";
-				$endvalues[$k]['name'] = $name;
+				$hold = 'general';
+				if($name == 'am_raidnum' OR $name == 'am_value')
+				{
+					$hold = 'am';
+				}
+				elseif($name == 'attendence_begin' or $name == 'attendence_end' or $name == 'attendence_time')
+				{
+					$hold = 'att';
+				}
+				elseif($name == 'loottime')
+				{
+					$hold = 'loot';
+				}
+				elseif($name == 'adj_parse')
+				{
+					$hold = 'adj';
+				}
+				elseif($name == 'hero' or $name == 'non_hero')
+				{
+					$hold = 'hnh_suffix';
+				}
+				elseif($name == 'bz_parse')
+				{
+					$hold = 'parse';
+				}
+				$holder[$hold][$k]['value'] = "<input type='text' name='".$name."' value='".$value."' class='maininput' />";
+				$holder[$hold][$k]['name'] = $name;
 			}
 			$k++;
         }
-        ksort($endvalues);
-        foreach($endvalues as $endvalue)
+        $holder['general'][$k+1]['name'] = 'rli_round';
+        $holder['general'][$k+1]['value'] = $user->lang['rli_round_plus'];
+        foreach($holder as $type => $hold)
         {
-			$tpl->assign_block_vars('config', array(
-				'NAME'	=> $user->lang[$endvalue['name']],
-				'VALUE' => $endvalue['value'],
-				'CLASS' => $eqdkp->switch_row_class())
-			);
+        	ksort($hold);
+        	if($type == 'hnh_suffix' AND $eqdkp->config['default_game'] != 'WoW')
+        	{
+        		continue;
+        	}
+			$tpl->assign_block_vars('holder', array('TITLE'	=> $user->lang['title_'.$type]));
+			foreach($hold as $nava)
+			{
+				$tpl->assign_block_vars('holder.config', array(
+					'NAME'	=> $user->lang[$nava['name']],
+					'VALUE' => $nava['value'],
+					'CLASS'	=> $eqdkp->switch_row_class())
+				);
+			}
 		}
 		$tpl->assign_vars(array(
 			'L_CONFIG' => $user->lang['raidlogimport'].' '.$user->lang['settings'],

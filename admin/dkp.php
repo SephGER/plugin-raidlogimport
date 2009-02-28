@@ -101,7 +101,7 @@ class raidlogimport extends EQdkp_Admin
           $_POST['log'] = trim(str_replace("&", "and", html_entity_decode($_POST['log'])));
           $dkpstring   = utf8_encode($_POST['log']);
           $raidxml     = simplexml_load_string($dkpstring);
-		  if (!$raidxml)
+		  if ($raidxml === false)
 		  {
 			  message_die($user->lang['xml_error']);
 		  }
@@ -619,6 +619,22 @@ class raidlogimport extends EQdkp_Admin
 				$data['members'][$h]['name'] = '';
 			}
 		}
+		if(!$rli_config['auto_minus'])
+		{
+			$sql = "SELECT raid_id FROM __raids ORDER BY raid_date DESC LIMIT ".($rli_config['am_raidnum']-1).";";
+			$res = $db->query($sql);
+			while ($row = $db->fetch_record($res))
+			{
+				$raid_ids[] = $row['raid_id'];
+			}
+			$raidid = implode("' OR raid_id = '", $raid_ids);
+			$sql = "SELECT member_name FROM __raid_attendees WHERE raid_id = '".$raidid."';";
+			$res = $db->query($sql);
+			while ($row = $db->fetch_record($res))
+			{
+				$raid_attendees[$row['member_name']] = true;
+			}
+		}
 
 		foreach($data['members'] as $key => $member)
 		{
@@ -654,6 +670,7 @@ class raidlogimport extends EQdkp_Admin
 	           		//check events
 	           		if(member_in_raid($member, $ra))
 	           		{
+	           			$raid_attendees[$member['name']] = true;
 	           			$member['raid_list'] .= $u.',';
 	           		}
 		        }
@@ -674,6 +691,54 @@ class raidlogimport extends EQdkp_Admin
                 'NR'	   => $key +1)
            	);
         }//foreach members
+        
+        if($rli_config['auto_minus'])
+        {
+        	$maxkey = 0;
+    		if($rli_config['null_sum'])
+    		{
+    		  if(is_array($data['loots']))
+    		  {
+        		foreach($data['loots'] as $key => $loot)
+	        	{
+	            	$maxkey = ($maxkey < $key) ? $key : $maxkey;
+	            }
+	          }
+	        }
+	        else
+	        {
+	          if(is_array($data['adjs']))
+	          {
+	            foreach($data['adjs'] as $key => $adj)
+	            {
+	            	$maxkey = ($maxkey < $key) ? $key : $maxkey;
+	            }
+	          }
+	        }
+        	$sql = "SELECT member_name FROM __members WHERE member_status = '1';";
+        	$res = $db->query($sql);
+        	while ($row = $db->fetch_record($res))
+        	{ 
+        		if(!$raid_attendees[$row['member_name']])
+        		{
+                	$maxkey++;
+        			if($rli_config['null_sum'])
+        			{
+        				$data['loots'][$maxkey]['name'] = $user->lang['am_name'];
+        				$data['loots'][$maxkey]['time'] = $data['raids'][1]['begin'] +1;
+        				$data['loots'][$maxkey]['dkp'] = $rli_config['am_value'];
+        				$data['loots'][$maxkey]['player'] = $row['member_name'];
+        			}
+        			else
+        			{
+        				$data['adjs'][$maxkey]['reason'] = $user->lang['am_name'];
+        				$data['adjs'][$maxkey]['value'] = $rli_config['am_value'];
+        				$data['adjs'][$maxkey]['event'] = $data['raids'][1]['event'];
+        				$data['adjs'][$maxkey]['member'] = $row['member_name'];
+        			}
+        		}
+        	}
+        }
 
 		//show raids
 		foreach($data['raids'] as $key => $raid)
@@ -726,6 +791,15 @@ class raidlogimport extends EQdkp_Admin
             {
             	$aliase[$member['alias']] = $member['name'];
             }
+		}
+		if($rli_config['auto_minus'] AND $rli_config['null_sum'])
+		{
+			$sql = "SELECT member_name FROM __members WHERE member_status = '1';";
+			$res = $db->query($sql);
+			while ($row = $db->fetch_record($res))
+			{
+				$members['name'][$row['member_name']] = $row['member_name'];
+			}
 		}
 
 		//add disenchanted and bank

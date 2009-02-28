@@ -18,8 +18,8 @@ if ( !defined('EQDKP_INC') )
 class raidlogimport_Plugin_Class extends EQdkp_Plugin
 {
 	var $vstatus = 'Stable';
-	var $version = '0.4.5.1';
-	var $build = 4024;
+	var $version = '0.4.6';
+	var $build = 4025;
 
     function raidlogimport_plugin_class($pm)
     {
@@ -94,14 +94,17 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 				'use_timedkp'		=> '1',
 				'null_sum'			=> '0', 	//use null-sum-system?
 				'item_save_lang'	=> 'de',
-				'deactivate_adj'	=> '0'
+				'deactivate_adj'	=> '0',
+				'auto_minus'		=> '0',		//automatic minus
+				'am_raidnum'		=> '3',		//if not joined last 3 raids
+				'am_value'			=> '10'		//member looses 10dkp
 			);
 			$this->insert_data($config_data);
 			//add default bz_data
 			switch($eqdkp->config['default_game'])
 			{
 				case "WoW":
-					include_once('games/WoW/bz_sql.php');
+					include_once($eqdkp_root_path.'plugins/raidlogimport/games/WoW/bz_sql.php');
 					if(is_array($bz_data))
 					{
 						foreach($bz_data as $bz)

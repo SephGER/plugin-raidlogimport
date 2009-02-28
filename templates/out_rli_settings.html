@@ -4,11 +4,14 @@
 	<tr>
 		<th colspan="2">{L_CONFIG}</th>
 	</tr>
-	<!-- BEGIN config -->
-	<tr class="{config.CLASS}">
-		<td>{config.NAME}</td><td>{config.VALUE}</td>
-	</tr>
-	<!-- END config -->
+	<!-- BEGIN holder -->
+	<tr><th colspan="2">{holder.TITLE}</th></tr>
+		<!-- BEGIN config -->
+		<tr class="{holder.config.CLASS}">
+			<td>{holder.config.NAME}</td><td>{holder.config.VALUE}</td>
+		</tr>
+		<!-- END config -->
+	<!-- END holder -->
 	<tr>
 		<th colspan="2"><input type="submit" name="update" value="{L_SAVE}" class="mainoption" /></th>
 	</tr>
