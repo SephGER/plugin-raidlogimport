@@ -63,7 +63,7 @@ if(!class_exists('rli'))
 		}
 	}
 
-	function get_event($zone)
+	function get_event($zone, $bosskill=false)
 	{
 	  $retu = false;
 	  $this->get_bonus();
@@ -177,6 +177,15 @@ if(!class_exists('rli'))
 	      {
 			message_die($user->lang['parse_error'].' '.$user->lang[$this->config['parser'].'_format'].' <img src="'.$eqdkp_root_path.'plugins/raidlogimport/images/'.$this->config['parser'].'_options.png"><br />'.$user->lang['rli_lgaobk']);
 	      }
+	      else
+	      {
+	      	if(key($times[$i]) == 'leave' AND ($times[$k]['join'] - $this->config['member_miss_time']) < $times[$i]['leave'])
+	      	{
+	      		unset($times[$i]);
+	      		unset($times[$k]);
+	      		$i++;
+	      	}
+	      }
 	    }
 	    return $times;
 	}
@@ -184,13 +193,27 @@ if(!class_exists('rli'))
 	function get_member_secs_inraid($times, $begin, $end)
 	{
 		$tim = 0;
+		#var_dump($times);
 		foreach($times as $i => $time)
 		{
+		  if(key($time) == 'join')
+		  {
+			$nu = max(array_keys($times));
 			$k = $i+1;
-            if(key($time) == 'join' AND $times[$k]['leave'] > $begin AND $time['join'] < $end)
+			$j = '';
+			for($k; $k<=$nu; $k++)
+			{
+				if(isset($times[$k]) AND key($times[$k]) == 'leave')
+				{
+					$j = $k;
+					break;
+				}
+			}
+            if($times[$j]['leave'] > $begin AND $time['join'] < $end)
             {
-                $tim = $tim + ((($times[$k]['leave'] > $end) ? $end : $times[$k]['leave']) - (($time['join'] < $begin) ? $begin : $time['join']));
+                $tim = $tim + ((($times[$j]['leave'] > $end) ? $end : $times[$j]['leave']) - (($time['join'] < $begin) ? $begin : $time['join']));
             }
+          }
         }
         return $tim;
     }
@@ -217,9 +240,20 @@ if(!class_exists('rli'))
 		{
 		  foreach($times as $i => $time)
 		  {
+			$nu = max(array_keys($times));
+			$k = $i+1;
+			$j = '';
+			for($k; $k<=$nu; $k++)
+			{
+				if(isset($times[$k]) AND key($times[$k]) == 'leave')
+				{
+					$j = $k;
+					break;
+				}
+			}
 			if(key($time) == 'join')
 			{
-				if($time['join'] < $kill['time'] AND $times[$i+1]['leave'] > $kill['time'])
+				if($time['join'] < $kill['time'] AND $times[$j]['leave'] > $kill['time'])
 				{
 					$bossdkp = $bossdkp + $kill['bonus'];
 				}
@@ -279,7 +313,7 @@ if(!class_exists('rli'))
 	function create_raids($raidxml)
 	{
 		global $user;
-		
+
 		$raid = $this->parse_string($raidxml);
 		$this->diff = $raid['difficulty'];
 	  	$data['members'] = $raid['members'];
@@ -368,9 +402,10 @@ if(!class_exists('rli'))
 
 						//bosskills
 						$raids[$key]['bosskills'] = $this->get_bosskills($raid['bosskills'], $raids[$key]['begin'], $raids[$key]['end']);
-
+						
+						$temp = array();
 						//event+note
-						if($rli_config['event_boss'] == 1)
+						if($this->config['event_boss'] == 1)
 						{
 							$temp = $this->get_event($bosskill['name'], true);
 							$raids[$key]['note'] = date('H:i:s', $raids[$key]['begin']).' - '.date('H:i:s', $raids[$key]['end']).' '.$user->lang['rli_clock'];
@@ -431,20 +466,21 @@ if(!class_exists('rli'))
 
 						//bosskills
 						$raids[$key]['bosskills'] = $this->get_bosskills($raid['bosskills'], $raids[$key]['begin'], $raids[$key]['end']);
+						
+						//note
+						$raids[$key]['note'] = $this->get_note($raids[$key]['bosskills']);
 
-						//event+note
-						if($rli_config['event_boss'] == 1)
+						//event
+						if($this->config['event_boss'] == 1)
 						{
 							$temp = $this->get_event($bosskill['name'], true);
-							$raids[$key]['note'] = date('H:i:s', $raids[$key]['begin']).' - '.date('H:i:s', $raids[$key]['end']).' '.$user->lang['rli_clock'];
 						}
 						else
 						{
 							$temp = $this->get_event($raid['zone']);
-                        	$raids[$key]['note'] = $this->get_note($raids[$key]['bosskills']);
 						}
 						$raids[$key]['event'] = $temp['event'];
-						$raids[$key]['timebonus'] = $temp['timebonus'];
+						$raids[$key]['timebonus'] = 0;  //timedkp are calculated in raids per hour
 
 						//value
 						$raids[$key]['value'] = $raids[$key]['bosskills'][$b]['bonus'];
@@ -518,7 +554,7 @@ if(!class_exists('rli'))
 		}
 		return $myHtml->DropDown('raids['.$raid_key.'][bosskills]['.$key.'][name]', $this->bk_list, $sel);
 	}
-	
+
 	function calculate_attendence($member, $begin, $end)
 	{
 		$dkp['begin'] = 0;
@@ -541,7 +577,7 @@ if(!class_exists('rli'))
 		}
 		return $dkp;
 	}
-	
+
 	function raidlist($raids)
 	{
 		$list = array();
@@ -551,7 +587,7 @@ if(!class_exists('rli'))
 		}
 		return $list;
 	}
-	
+
 	function auto_minus_ra()
 	{
 		global $db;
@@ -573,7 +609,7 @@ if(!class_exists('rli'))
 			return $raid_attendees;
 		}
 	}
-	
+
 	function auto_minus($data, $raid_attendees)
 	{
 		global $db;
@@ -627,7 +663,7 @@ if(!class_exists('rli'))
         }
         return $data;
     }
-	
+
 	function parse_raids($post, $data)
 	{
 	 foreach($post as $key => $raid)
@@ -685,8 +721,8 @@ if(!class_exists('rli'))
 			  	$members[$key] = $member;
 			  	$members[$key]['name'] = $mem['name'];
 				$members[$key]['raid_list'] = $mem['raid_list'];
-				$members[$key]['att_dkp_begin'] = $mem['att_begin'];
-				$members[$key]['att_dkp_end'] = $mem['att_end'];
+				$members[$key]['att_dkp_begin'] = (isset($mem['att_begin'])) ? true : false;
+				$members[$key]['att_dkp_end'] = (isset($mem['att_end'])) ? true : false;
 				if(isset($mem['alias']))
 				{
 	                $members[$key]['alias'] = $mem['alias'];
@@ -707,7 +743,7 @@ if(!class_exists('rli'))
 						{
 							$dkp = $dkp + $this->calc_bossdkp($raid['bosskills'], $member);
 						}
-						$dkp = $dkp + $mem['att_begin'] + $mem['att_end'];
+						$dkp = $dkp + (($mem['att_begin']) ? $this->config['attendence_begin'] : 0) + (($mem['att_end']) ? $this->config['attendence_end'] : 0);
 						if($dkp <  $raid['value'])
 						{	//add an adjustment
 							$dkp -= $raid['value'];
@@ -723,7 +759,7 @@ if(!class_exists('rli'))
 			}
 		}
 	  }
-		
+
 	  $data = $this->auto_minus($data, $raid_attendees);
 	  $data['members'] = $members;
 	  return $data;
@@ -767,7 +803,7 @@ if(!class_exists('rli'))
 	  $data['adjs'] = $adjs;
 	  return $data;
 	}
-	
+
 	function parse_post($post, $data)
 	{
 		$data = unserialize($post['rest']);
@@ -805,7 +841,7 @@ if(!class_exists('rli'))
 		}
 		return $data;
 	}
-		
+
 	function member_in_raid($member, $raid)
 	{
 		$raid['time'] = $raid['end'] - $raid['begin'];
@@ -819,7 +855,7 @@ if(!class_exists('rli'))
 			return false;
 		}
 	}
-	
+
 	function check_data($data)
 	{
 		$bools = array();
@@ -872,7 +908,7 @@ if(!class_exists('rli'))
 		}
 		return $bools;
 	}
-	
+
 	function check_ctrt_format($xml)
 	{
 		$back[1] = true;
@@ -1047,7 +1083,7 @@ if(!class_exists('rli'))
 			{
 				$raid['loots'][$i]['dkp'] = (int)$loot->Note;
 			}
-			if($this->config['ignore_dissed'] AND ($raid['loots'][$i]['name'] == 'disenchanted' OR $raid['loots'][$i]['name'] == 'bank'))
+			if($this->config['ignore_dissed'] AND ($raid['loots'][$i]['player'] == 'disenchanted' OR $raid['loots'][$i]['player'] == 'bank'))
 			{
 				unset($raid['loots'][$i]);
 				$i--;
@@ -1107,7 +1143,7 @@ if(!class_exists('rli'))
 	function parse_string($xml)
 	{
 		global $user, $eqdkp_root_path;
-	
+
 		if(method_exists($this, 'parse_'.$this->config['parser'].'_string'))
 		{
 			$back = call_user_func(array($this, 'check_'.$this->config['parser'].'_format'), $xml);

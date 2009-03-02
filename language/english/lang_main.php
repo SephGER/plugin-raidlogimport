@@ -175,4 +175,5 @@
 	$lang['rli_round'] = 'Rounding';
 	$lang['rli_round_plus'] = 'To use round activate it in the Plus-Settings.';
 	$lang['ignore_dissed'] = 'Ignore disenchanted and bank loot?';
+	$lang['member_miss_time'] = 'Time in seconds a member can miss without it being tracked.';
 ?>

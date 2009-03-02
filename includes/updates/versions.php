@@ -49,6 +49,10 @@ $up_updates = array(
 	'0.5' => array(
 		'file'	=> '046-05.php',
 		'old'	=> '0.4.6'
+	),
+	'0.5.1' => array(
+		'file'	=> '05-051.php',
+		'old'	=> '0.5'
 	)
 );
 ?>

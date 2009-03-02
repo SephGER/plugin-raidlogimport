@@ -199,7 +199,7 @@ class raidlogimport extends EQdkp_Admin
 		foreach($data['members'] as $key => $member)
 		{
 			if(isset($aliases[$member['name']]))
-			{		
+			{
             	$data['members'][$key]['alias'] = $member['name'];
                 $member['alias'] = $member['name'];
                 $data['members'][$key]['name'] = $aliases[$member['name']];
@@ -233,8 +233,8 @@ class raidlogimport extends EQdkp_Admin
                	'MITGLIED' => $member['name'],
                 'ALIAS'    => $alias,
                 'RAID_LIST'=> $jquery->MultiSelect('members['.$key.'][raid_list]', $rli->raidlist($data['raids']), $member['raid_list'], '200', '200', false, 'members_'.$key.'_raidlist'),
-                'ATT_BEGIN'=> $member['att_dkp_begin'],
-                'ATT_END'  => $member['att_dkp_end'],
+                'ATT_BEGIN'=> ($member['att_dkp_begin']) ? 'checked="checked"' : '',
+                'ATT_END'  => ($member['att_dkp_end']) ? 'checked="checked"' : '',
                 'ZAHL'     => $eqdkp->switch_row_class(),
                 'KEY'	   => $key,
                 'NR'	   => $key +1)
