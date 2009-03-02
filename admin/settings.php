@@ -55,10 +55,10 @@ class RLI_Settings extends EQdkp_Admin
 
 	function save_config()
 	{
-		global $db, $user, $tpl, $eqdkp, $pm, $SID, $rli_config;
+		global $db, $user, $tpl, $eqdkp, $pm, $SID, $rli;
 
 		$messages = array();
-		foreach($rli_config as $old_name => $old_value)
+		foreach($rli->config as $old_name => $old_value)
 		{
 			if(isset($_POST[$old_name]) AND $_POST[$old_name] != $old_value)  //update
 			{
@@ -92,10 +92,10 @@ class RLI_Settings extends EQdkp_Admin
 
 	function display_form($messages=array())
 	{
-		global $db, $user, $tpl, $eqdkp, $pm, $SID, $rli_config, $myHtml, $jquery;
+		global $db, $user, $tpl, $eqdkp, $pm, $SID, $rli, $myHtml, $jquery;
 		if($messages)
 		{
-			$rli_config = rli_get_config();
+			$rli->rli();
 			foreach($messages as $name)
 			{
 				System_Message($name, $user->lang['bz_save_suc'], 'green');
@@ -114,7 +114,7 @@ class RLI_Settings extends EQdkp_Admin
 		  }
 		}
 		$holder = array();
-		foreach($rli_config as $name => $value)
+		foreach($rli->config as $name => $value)
 		{
 			if($name == 'raidcount')
 			{
@@ -138,7 +138,7 @@ class RLI_Settings extends EQdkp_Admin
 				$holder['general'][$k]['value'] = $myHtml->DropDown($name, $ranks, $value);
 				$holder['general'][$k]['name'] = $name;
 			}
-			elseif($name == 'event_boss' OR $name == 'attendence_raid' OR $name == 'dep_match' OR $name == 'rli_upd_check' OR $name == 'use_bossdkp' OR $name == 'use_timedkp' OR $name == 'deactivate_adj' or $name == 'auto_minus')
+			elseif($name == 'event_boss' OR $name == 'attendence_raid' OR $name == 'dep_match' OR $name == 'rli_upd_check' OR $name == 'use_bossdkp' OR $name == 'use_timedkp' OR $name == 'deactivate_adj' or $name == 'auto_minus' or $name == 'ignore_dissed')
 			{
 				$hold = 'general';
 				if($name == 'dep_match')
@@ -160,6 +160,10 @@ class RLI_Settings extends EQdkp_Admin
 				elseif($name == 'auto_minus')
 				{
 					$hold = 'am';
+				}
+				elseif($name == 'ignore_dissed')
+				{
+					$hold = 'loot';
 				}
                 $a = $k;
 				if($name == 'rli_upd_check')

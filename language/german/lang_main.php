@@ -93,6 +93,7 @@
 	$lang['rli_back2mem'] = 'Zurück zu Membern';
 	$lang['rli_back2item'] = 'Zurück zu Items';
 	$lang['rli_checkadj'] = 'Korrekturen überprüfen';
+    $lang['rli_calc_note_value'] = 'Raidwert und Raidnotiz neu berechnen';
 	$lang['rli_insert'] = 'DKP Einfügen';
 	$lang['rli_adjs'] = 'Korrekturen';
 	$lang['rli_partial_raid'] = 'Teilweise Raidteilnahme';
@@ -173,4 +174,5 @@
 	$lang['title_hnh_suffix'] = 'Heroic / Non-Heroic';
 	$lang['rli_round'] = 'Runden';
 	$lang['rli_round_plus'] = 'Um Runden zu verwenden, musst du es in den Plus-Einstellungen aktivieren.';
+	$lang['ignore_dissed'] = 'Disenchanted- und Bank-Loot ignorieren?';
 ?>

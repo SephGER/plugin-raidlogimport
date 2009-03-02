@@ -24,6 +24,6 @@ $bz_data  = array(
 	21 => array('boss', 'Sartharion 2D', 'Sartharion 2D', '6', '19', '2'),
 	22 => array('boss', 'Sartharion 3D', 'Sartharion 3D', '8', '19', '3'),
     23 => array('zone', 'Vault of Archavon', 'Archavon', '5', '0', '3'),
-    24 => array('boss', 'Archavon', 'Archavon', '2', '24', '0')
+    24 => array('boss', 'Archavon the Stone Watcher', 'Archavon', '2', '24', '0')
 );
 ?>

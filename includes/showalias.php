@@ -30,7 +30,7 @@ class Show_Alias extends EQdkp_Admin
 
         if(isset($_POST['submit']) AND $_POST['submit'] == $user->lang['rli_edit']) {
             $sql = "SELECT `alias_name`, `alias_member_id`
-                    FROM ".$table_prefix."raidlogimport_aliases
+                    FROM __raidlogimport_aliases
                     WHERE alias_id = '".$_POST['alias_id']."';";
             $aliasqry = $db->query($sql);
             $alias_member_id = 1;

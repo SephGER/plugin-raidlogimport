@@ -42,7 +42,18 @@
 		<td colspan="2">{L_BOSSKILLS}:</td>
 	  </tr>
 	  <tr class="row1">
-		<td colspan="2">{raids.BOSSKILLS}</td>
+		<td colspan="2">
+		<!-- BEGIN bosskills -->
+			{raids.bosskills.BK_SELECT}
+			&nbsp;&nbsp;&nbsp;&nbsp;{L_TIME}: <input type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][time]" value="{raids.bosskills.BK_TIME}" size="9" />
+			&nbsp;&nbsp;&nbsp;&nbsp;{L_DATE}: <input type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][date]" value="{raids.bosskills.BK_DATE}" size="9" />
+			<!-- IF USE_BOSSDKP -->
+				&nbsp;&nbsp;&nbsp;&nbsp;{L_VALUE}: <input type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][bonus]" value="{raids.bosskills.BK_VALUE}" size="5" />
+			<!-- ENDIF -->
+			&nbsp;&nbsp;&nbsp;&nbsp;<img src="./../../../images/global/delete.png" alt="{L_DELETE}">
+				<input type="checkbox" name="raids[{raids.COUNT}]][bosskills][{raids.bosskills.BK_KEY}][delete]" value="true" title="{L_DELETE}" /><br />
+		<!-- END bosskills -->
+		</td>
 	  </tr>
 	  <tr class="row2">
 	  	<td colspan="2">
@@ -72,6 +83,7 @@
 	  <tr>
 	   	<th colspan="2"><input type="hidden" name="rest" value="{DATA}" />
 	   					<input type="submit" name="checkmem" value="{L_CHECKMEM}" class="mainoption" />
-            			<input type="submit" name="checkraid" value="{L_UPD}" class="mainoption" /></th>
+            			<input type="submit" name="checkraid" value="{L_UPD}" class="mainoption" />
+            			<input type="submit" name="checkraid" value="{L_RECALC_RAID}" class="mainoption" /></th>
 	</table>
 </form>

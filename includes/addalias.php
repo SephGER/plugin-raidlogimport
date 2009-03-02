@@ -47,7 +47,7 @@ class Add_Alias extends EQdkp_Admin
         					VALUES ('".$_POST['member_id']."', '".$_POST['alias_name']."');";
         			$addalias = $db->query($sql);
         			$sql2 = "SELECT `member_name`
-        					 FROM ".MEMBERS_TABLE."
+        					 FROM __members
         					 WHERE member_id = '".$_POST['member_id']."';";
         			$result = $db->query($sql2);
         			$membername = "string";

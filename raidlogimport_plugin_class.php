@@ -18,7 +18,7 @@ if ( !defined('EQDKP_INC') )
 class raidlogimport_Plugin_Class extends EQdkp_Plugin
 {
 	var $vstatus = 'Stable';
-	var $version = '0.4.6';
+	var $version = '0.5';
 	var $build = 4025;
 
     function raidlogimport_plugin_class($pm)
@@ -97,7 +97,8 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 				'deactivate_adj'	=> '0',
 				'auto_minus'		=> '0',		//automatic minus
 				'am_raidnum'		=> '3',		//if not joined last 3 raids
-				'am_value'			=> '10'		//member looses 10dkp
+				'am_value'			=> '10',	//member looses 10dkp
+				'ignore_dissed'		=> '0'		//ignore disenchanted and bank loot?
 			);
 			$this->insert_data($config_data);
 			//add default bz_data

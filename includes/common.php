@@ -11,7 +11,13 @@ if(!defined('EQDKP_INC'))
 }
 global $eqdkp_root_path;
 include_once($eqdkp_root_path.'common.php');
-require($eqdkp_root_path.'plugins/raidlogimport/includes/functions.php');
+if (!$pm->check(PLUGIN_INSTALLED, 'raidlogimport') )
+{
+    message_die('The Raid-Log-Import plugin is not installed.');
+}
+require_once($eqdkp_root_path.'plugins/raidlogimport/includes/functions.php');
+require_once($eqdkp_root_path.'plugins/raidlogimport/includes/rli.class.php');
+$rli = new rli;
 
 $_COOKIE = stripslashes_array($_COOKIE);
 $_FILES = stripslashes_array($_FILES);
@@ -23,13 +29,5 @@ $_REQUEST = stripslashes_array($_REQUEST);
 require($eqdkp_root_path.'plugins/raidlogimport/includes/libloader.inc.php');
 $pC->pluginCore();
 
-//get config-values
-$rli_config = rli_get_config();
-
 $raidlogimport = $pm->get_plugin('raidlogimport');
-if (!$pm->check(PLUGIN_INSTALLED, 'raidlogimport') )
-{
-    message_die('The Raid-Log-Import plugin is not installed.');
-}
-
 ?>

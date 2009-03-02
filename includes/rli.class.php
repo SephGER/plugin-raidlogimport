@@ -1,0 +1,1131 @@
+<?php
+	/*
+	 * @author: hoofy
+	 * @copyright: 2009
+	 */
+
+if(!defined('EQDKP_INC'))
+{
+	header('HTTP/1.0 Not Found');
+	exit;
+}
+if(!class_exists('rli'))
+{
+  class rli
+  {
+  	var $bonus = array();
+  	var $config = array();
+  	var $diff = '';
+  	var $bk_list = array();
+
+  	function rli()
+  	{
+		global $db;
+	    $sql = "SELECT * FROM __raidlogimport_config;";
+		$result = $db->query($sql);
+		while ( $row = $db->fetch_record($result) )
+		{
+			$this->config[$row['config_name']] = $row['config_value'];
+		}
+		$db->free_result();
+  	}
+
+  	function get_bonus()
+  	{
+  		global $db;
+
+  		if(!$this->bonus)
+  		{
+  		  $sql = "SELECT bz_id, bz_string, bz_note, bz_bonus, bz_type, bz_tozone FROM __raidlogimport_bz;";
+		  if($result = $db->query($sql))
+		  {
+			while($row = $db->fetch_record($result))
+			{
+				if($row['bz_type'] == 'boss')
+				{
+					$this->bonus['boss'][$row['bz_id']]['string'] = explode($this->config['bz_parse'], $row['bz_string']);
+					$this->bonus['boss'][$row['bz_id']]['note'] = $row['bz_note'];
+					$this->bonus['boss'][$row['bz_id']]['bonus'] = $row['bz_bonus'];
+					$this->bonus['boss'][$row['bz_id']]['tozone'] = $row['bz_tozone'];
+				}
+				else
+				{
+					$this->bonus['zone'][$row['bz_id']]['string'] = explode($this->config['bz_parse'], $row['bz_string']);
+					$this->bonus['zone'][$row['bz_id']]['note'] = $row['bz_note'];
+					$this->bonus['zone'][$row['bz_id']]['bonus'] = $row['bz_bonus'];
+				}
+			}
+		  }
+		  else
+		  {
+			message_die('SQL-Error! Query:<br />'.$sql);
+		  }
+		}
+	}
+
+	function get_event($zone)
+	{
+	  $retu = false;
+	  $this->get_bonus();
+	  if(!$bosskill)
+	  {
+        foreach ($this->bonus['zone'] as $zo)
+        {
+            if (in_array(trim($zone), $zo['string']))
+            {
+                $retu['event'] = trim($zo['note']);
+                $retu['timebonus'] = $zo['bonus'];
+                break;
+            }
+        }
+      }
+      else
+      {
+      	foreach($this->bonus['boss'] as $bo)
+      	{
+      		if(in_array(trim($zone), $bo['string']))
+      		{
+      			$retu['event'] = trim($bo['note']);
+      			$retu['timebonus'] = $this->bonus['zone'][$bo['tozone']]['bonus'];
+      			break;
+      		}
+      	}
+      }
+      return $retu;
+    }
+
+	function get_bosskills($bosskills, $begin, $end)
+	{
+		$rbosskills = array();
+		$i = 0;
+		$this->get_bonus();
+		foreach($bosskills as $bosskill)
+		{
+			foreach($this->bonus['boss'] as $boss)
+			{
+				if(in_array($bosskill['name'], $boss['string']) AND $bosskill['time'] >= $begin AND $bosskill['time'] < $end)
+				{
+					$rbosskills[$i]['name'] = $bosskill['name'];
+					$rbosskills[$i]['bonus'] = $boss['bonus'];
+					$rbosskills[$i]['time'] = $bosskill['time'];
+					break;
+				}
+			}
+			$i++;
+		}
+		return $rbosskills;
+	}
+
+	function suffix($append)
+	{
+	  global $eqdkp;
+	  if($eqdkp->config['default_game'] == 'WoW' AND $append) {
+		return ($this->diff == 2) ? $this->config['hero'] : $this->config['non_hero'];
+	  } else {
+	  	return '';
+	  }
+	}
+
+	function get_note($bosskills)
+	{
+		$bosss = array();
+		foreach($bosskills as $bosskill)
+		{
+			$bosss[] = $bosskill['name'].$this->suffix($this->config['dep_match']);
+		}
+		return implode(', ', $bosss);
+	}
+
+	function get_member_times($member)
+	{
+		global $user;
+
+		$time = array();
+		foreach($member['join'] as $tj)
+		{
+			if(array_key_exists($tj, $time))
+			{
+				unset($time[$tj]);
+			}
+			else
+			{
+				$time[$tj] = 'join';
+			}
+		}
+		foreach($member['leave'] as $tl)
+		{
+			if(array_key_exists($tl, $time))
+			{
+				unset($time[$tl]);
+			}
+			else
+			{
+				$time[$tl] = 'leave';
+			}
+		}
+		ksort($time);
+		$times = array();
+		foreach($time as $ti => $ty)
+		{
+			$times[][$ty] = $ti;
+		}
+		$n = count($times)-1;
+	    for($i=0; $i<$n; $i++)
+	    {
+	      $k = $i+1;
+	      if(key($times[$i]) == key($times[$k]))
+	      {
+			message_die($user->lang['parse_error'].' '.$user->lang[$this->config['parser'].'_format'].' <img src="'.$eqdkp_root_path.'plugins/raidlogimport/images/'.$this->config['parser'].'_options.png"><br />'.$user->lang['rli_lgaobk']);
+	      }
+	    }
+	    return $times;
+	}
+
+	function get_member_secs_inraid($times, $begin, $end)
+	{
+		$tim = 0;
+		foreach($times as $i => $time)
+		{
+			$k = $i+1;
+            if(key($time) == 'join' AND $times[$k]['leave'] > $begin AND $time['join'] < $end)
+            {
+                $tim = $tim + ((($times[$k]['leave'] > $end) ? $end : $times[$k]['leave']) - (($time['join'] < $begin) ? $begin : $time['join']));
+            }
+        }
+        return $tim;
+    }
+
+	function calc_timedkp($begin, $end, $player, $timebonus)
+	{
+      $timedkp = 0;
+	  if($this->config['use_timedkp'])
+	  {
+		$times = format_duration($this->get_member_secs_inraid($this->get_member_times($player), $begin, $end));
+		$timedkp = $times['hours'] * $timebonus;
+		$timedkp = $timedkp + $timebonus * ($times['minutes']/60);
+	  }
+	  return $timedkp;
+	}
+
+	function calc_bossdkp($kills, $player)
+	{
+	  $bossdkp = 0;
+	  if($this->config['use_bossdkp'])
+	  {
+		$times = $this->get_member_times($player);
+		foreach($kills as $kill)
+		{
+		  foreach($times as $i => $time)
+		  {
+			if(key($time) == 'join')
+			{
+				if($time['join'] < $kill['time'] AND $times[$i+1]['leave'] > $kill['time'])
+				{
+					$bossdkp = $bossdkp + $kill['bonus'];
+				}
+			}
+		  }
+		}
+	  }
+	  return $bossdkp;
+	}
+
+	function get_raidvalue($begin, $end, $bosskills, $timebonus)
+	{
+		$dkp = 0;
+		$tempmem['join'][1] = $begin;
+		$tempmem['leave'][1] = $end;
+		$timedkp = $this->calc_timedkp($begin, $end, $tempmem, $timebonus);
+		$bossdkp = $this->calc_bossdkp($bosskills, $tempmem);
+		$dkp = $timedkp + $bossdkp;
+		return $dkp;
+	}
+
+	function get_bosskill_raidtime($begin, $end, $bosskill, $bosskill_before, $bosskill_after)
+	{
+		if(isset($bosskill_before))
+		{
+			if(($bosskill_before + $this->config['loottime']) > $bosskill)
+			{
+				$r['begin'] = $bosskill -1;
+			}
+			else
+			{
+				$r['begin'] = $bosskill_before + $this->config['loottime'];
+			}
+		}
+		else
+		{
+			$r['begin'] = $begin;
+		}
+		if(isset($bosskill_after))
+		{
+			if(($bosskill + $this->config['loottime']) > $bosskill_after)
+			{
+				$r['end'] = $bosskill_after -1;
+			}
+			else
+			{
+			$r['end'] = $bosskill + $this->config['loottime'];
+			}
+		}
+		else
+		{
+			$r['end'] = $end;
+		}
+		return $r;
+	}
+
+	function create_raids($raidxml)
+	{
+		global $user;
+		
+		$raid = $this->parse_string($raidxml);
+		$this->diff = $raid['difficulty'];
+	  	$data['members'] = $raid['members'];
+	  	$data['loots'] = $raid['loots'];
+	  	$data['adjs'] = $raid['adjs'];
+		$raids = array();
+
+		$key = 1;
+		switch($this->config['raidcount'])
+		{
+			case "0": //one raid for everything
+			{
+				//time
+				$raids[$key]['begin'] = $raid['begin'];
+				$raids[$key]['end'] = $raid['end'];
+
+				//event
+				$temp = $this->get_event($raid['zone']);
+				$raids[$key]['event'] = $temp['event'];
+				$raids[$key]['timebonus'] = $temp['timebonus'];
+
+				//bosskills
+				$raids[$key]['bosskills'] = array();
+				if(is_array($raid['bosskills']))
+				{
+					$raids[$key]['bosskills'] = $this->get_bosskills($raid['bosskills'], $raids[$key]['begin'], $raids[$key]['end']);
+				}
+
+                //note
+                $raids[$key]['note'] = $this->get_note($raids[$key]['bosskills']);
+
+				//value
+				$raids[$key]['value'] = $this->get_raidvalue($raids[$key]['begin'], $raids[$key]['end'], $raids[$key]['bosskills'], $raids[$key]['timebonus']);
+				$key++;
+				break;
+			}
+			case "1": //one raid per hour
+			{
+				if($this->config['use_timedkp'])
+				{
+					for($i = $raid['begin']; $i<=($raid['end']); $i+=3600)
+					{
+                    	//time
+						$raids[$key]['begin'] = $i;
+						$raids[$key]['end'] = $i+3600;
+
+                    	//event
+						$temp = $this->get_event($raid['zone']);
+						$raids[$key]['event'] = $temp['event'];
+						$raids[$key]['timebonus'] = $temp['timebonus'];
+
+						//bosskills
+						$raids[$key]['bosskills'] = array();
+						if(is_array($raid['bosskills']))
+						{
+							$raids[$key]['bosskills'] = $this->get_bosskills($raid['bosskills'], $raids[$key]['begin'], $raids[$key]['end']);
+						}
+
+	                    //note
+	                    $raids[$key]['note'] = $this->get_note($raids[$key]['bosskills']);
+
+						//value
+						$raids[$key]['value'] = $this->get_raidvalue($raids[$key]['begin'], $raids[$key]['end'], $raids[$key]['bosskills'], $raids[$key]['timebonus']);
+						$key++;
+					}
+					break;
+
+				}
+				else
+				{
+				  	message_die($user->lang['wrong_settings_1']);
+				}
+			}
+			case "2": //one raid per bosskill
+			{
+				if($this->config['use_bossdkp'])
+				{
+					if(is_array($raid['bosskills']))
+					{
+					  foreach($raid['bosskills'] as $b => $bosskill)
+					  {
+						//time
+						$temp = $this->get_bosskill_raidtime($raid['begin'], $raid['end'], $bosskill['time'], $raid['bosskills'][$b-1]['time'], $raid['bosskills'][$b+1]['time']);
+						$raids[$key]['begin'] = $temp['begin'];
+						$raids[$key]['end'] = $temp['end'];
+
+						//bosskills
+						$raids[$key]['bosskills'] = $this->get_bosskills($raid['bosskills'], $raids[$key]['begin'], $raids[$key]['end']);
+
+						//event+note
+						if($rli_config['event_boss'] == 1)
+						{
+							$temp = $this->get_event($bosskill['name'], true);
+							$raids[$key]['note'] = date('H:i:s', $raids[$key]['begin']).' - '.date('H:i:s', $raids[$key]['end']).' '.$user->lang['rli_clock'];
+						}
+						else
+						{
+							$temp = $this->get_event($raid['zone']);
+                        	$raids[$key]['note'] = $this->get_note($raids[$key]['bosskills']);
+						}
+						$raids[$key]['event'] = $temp['event'];
+						$raids[$key]['timebonus'] = $temp['timebonus'];
+
+						//value
+						$raids[$key]['value'] = $this->get_raidvalue($raids[$key]['begin'], $raids[$key]['end'], $raids[$key]['bosskills'], $raids[$key]['timebonus']);
+						$key++;
+					  }
+					}
+					break;
+				}
+				else
+				{
+				  	message_die($user->lang['wrong_settings_2']);
+				}
+			}
+			case "3": //one raid per hour and one per boss
+			{
+				if($this->config['use_timedkp'] AND $this->config['use_bossdkp'])
+				{
+					for($i = $raid['begin']; $i<=($raid['end']); $i+=3600)
+					{
+                    	//time
+						$raids[$key]['begin'] = $i;
+						$raids[$key]['end'] = (($i+3600) > $raid['end']) ? $raid['end'] : $i+3600;
+
+                    	//event
+                    	$temp = $this->get_event($raid['zone']);
+                    	$raids[$key]['event'] = $temp['event'];
+						$raids[$key]['timebonus'] = $temp['timebonus'];
+
+						//bosskills
+						$raids[$key]['bosskills'] = array();
+
+	                    //note
+						$raids[$key]['note'] = date('H:i:s', $i).' - '.date('H:i:s', $raids[$key]['end']).' '.$user->lang['rli_clock'];
+
+						//value
+						$raids[$key]['value'] = $this->get_raidvalue($raids[$key]['begin'], $raids[$key]['end'], $raids[$key]['bosskills'], $raids[$key]['timebonus']);
+						$key++;
+					}
+					if(is_array($raid['bosskills']))
+					{
+					  foreach($raid['bosskills'] as $b => $bosskill)
+					  {
+						//time
+						$temp = $this->get_bosskill_raidtime($raid['begin'], $raid['end'], $bosskill['time'], $raid['bosskills'][$b-1]['time'], $raid['bosskills'][$b+1]['time']);
+						$raids[$key]['begin'] = $temp['begin'];
+						$raids[$key]['end'] = $temp['end'];
+
+						//bosskills
+						$raids[$key]['bosskills'] = $this->get_bosskills($raid['bosskills'], $raids[$key]['begin'], $raids[$key]['end']);
+
+						//event+note
+						if($rli_config['event_boss'] == 1)
+						{
+							$temp = $this->get_event($bosskill['name'], true);
+							$raids[$key]['note'] = date('H:i:s', $raids[$key]['begin']).' - '.date('H:i:s', $raids[$key]['end']).' '.$user->lang['rli_clock'];
+						}
+						else
+						{
+							$temp = $this->get_event($raid['zone']);
+                        	$raids[$key]['note'] = $this->get_note($raids[$key]['bosskills']);
+						}
+						$raids[$key]['event'] = $temp['event'];
+						$raids[$key]['timebonus'] = $temp['timebonus'];
+
+						//value
+						$raids[$key]['value'] = $raids[$key]['bosskills'][$b]['bonus'];
+						$key++;
+					  }
+					}
+					break;
+
+				}
+				else
+				{
+				  	message_die($user->lang['wrong_settings_3']);
+				}
+			}
+		}//switch
+		if($this->config['attendence_raid'])
+		{
+			if($this->config['attendence_begin'] > 0)
+			{
+				$raids[0]['begin'] = $raids[1]['begin'];
+				$raids[0]['end'] = $raids[1]['begin'] + $this->config['attendence_time'];
+				$raids[0]['event'] = $raids[1]['event'];
+				$raids[0]['note'] = $user->lang['rli_att']." ".$user->lang['rli_start'];
+				$raids[0]['value'] = $this->config['attendence_begin'];
+			}
+			if($this->config['attendence_end'] > 0)
+			{
+				$raids[$key]['begin'] = $raids[$key-1]['end'] - $this->config['attendence_time'];
+				$raids[$key]['end'] = $raids[$key-1]['end'];
+				$raids[$key]['event'] = $raids[$key-1]['event'];
+				$raids[$key]['note'] = $user->lang['rli_att']." ".$user->lang['rli_end'];
+				$raids[$key]['value'] = $this->config['attendence_end'];
+			}
+		}
+		else
+		{
+		  foreach($raids as $k => $r)
+		  {
+			if($this->config['attendence_begin'] > 0 OR $this->config['attendence_end'] > 0)
+			{
+				$raids[$k]['value'] = $r['value'] + $this->config['attendence_begin'] + $this->config['attendence_end'];
+			}
+		  }
+		}
+		ksort($raids);
+		$data['raids'] = $raids;
+		return $data;
+	}
+
+	function boss_dropdown($bossname, $raid_key, $key)
+	{
+		global $myHtml;
+		$this->get_bonus();
+		if(!$this->bk_list)
+		{
+		  foreach($this->bonus['boss'] as $boss)
+		  {
+			$this->bk_list[htmlspecialchars($boss['string'][0], ENT_QUOTES)] = htmlentities($boss['note'], ENT_QUOTES);
+			if($this->config['use_bossdkp'])
+			{
+				$this->bk_list[htmlspecialchars($boss['string'][0], ENT_QUOTES)] .= ' ('.$boss['bonus'].')';
+			}
+		  }
+		}
+		foreach($this->bonus['boss'] as $boss)
+		{
+			if(in_array($bossname, $boss['string']))
+			{
+				$sel = htmlspecialchars($boss['string'][0], ENT_QUOTES);
+			}
+		}
+		return $myHtml->DropDown('raids['.$raid_key.'][bosskills]['.$key.'][name]', $this->bk_list, $sel);
+	}
+	
+	function calculate_attendence($member, $begin, $end)
+	{
+		$dkp['begin'] = 0;
+		$dkp['end'] = 0;
+		foreach($member['join'] as $jt)
+		{
+			if(($begin + $time) > $jt)
+			{
+				$dkp['begin'] = $this->config['attendence_begin'];
+				break;
+			}
+		}
+		foreach($member['leave'] as $lt)
+		{
+			if(($end - $time) < $lt)
+			{
+				$dkp['end'] = $this->config['attendence_end'];
+				break;
+			}
+		}
+		return $dkp;
+	}
+	
+	function raidlist($raids)
+	{
+		$list = array();
+		foreach($raids as $key => $raid)
+		{
+			$list[$key] = $raid['event'].': '.date('H:i:s', $raid['begin']).'-'.date('H:i:s', $raid['end']);
+		}
+		return $list;
+	}
+	
+	function auto_minus_ra()
+	{
+		global $db;
+		if($this->config['auto_minus'])
+		{
+			$sql = "SELECT raid_id FROM __raids ORDER BY raid_date DESC LIMIT ".($this->config['am_raidnum']-1).";";
+			$res = $db->query($sql);
+			while ($row = $db->fetch_record($res))
+			{
+				$raid_ids[] = $row['raid_id'];
+			}
+			$raidid = implode("' OR raid_id = '", $raid_ids);
+			$sql = "SELECT member_name FROM __raid_attendees WHERE raid_id = '".$raidid."';";
+			$res = $db->query($sql);
+			while ($row = $db->fetch_record($res))
+			{
+				$raid_attendees[$row['member_name']] = true;
+			}
+			return $raid_attendees;
+		}
+	}
+	
+	function auto_minus($data, $raid_attendees)
+	{
+		global $db;
+        if($this->config['auto_minus'])
+        {
+        	$maxkey = 0;
+    		if($this->config['null_sum'])
+    		{
+    		  if(is_array($data['loots']))
+    		  {
+        		foreach($data['loots'] as $key => $loot)
+	        	{
+	            	$maxkey = ($maxkey < $key) ? $key : $maxkey;
+	            }
+	          }
+	        }
+	        else
+	        {
+	          if(is_array($data['adjs']))
+	          {
+	            foreach($data['adjs'] as $key => $adj)
+	            {
+	            	$maxkey = ($maxkey < $key) ? $key : $maxkey;
+	            }
+	          }
+	        }
+        	$sql = "SELECT member_name FROM __members WHERE member_status = '1';";
+        	$res = $db->query($sql);
+        	while ($row = $db->fetch_record($res))
+        	{
+        		if(!$raid_attendees[$row['member_name']])
+        		{
+                	$maxkey++;
+        			if($this->config['null_sum'])
+        			{
+        				$data['loots'][$maxkey]['name'] = $user->lang['am_name'];
+        				$data['loots'][$maxkey]['time'] = $data['raids'][1]['begin'] +1;
+        				$data['loots'][$maxkey]['dkp'] = $this->config['am_value'];
+        				$data['loots'][$maxkey]['player'] = $row['member_name'];
+        			}
+        			else
+        			{
+        				$data['adjs'][$maxkey]['reason'] = $user->lang['am_name'];
+        				$data['adjs'][$maxkey]['value'] = '-'.$this->config['am_value'];
+        				$data['adjs'][$maxkey]['event'] = $data['raids'][1]['event'];
+        				$data['adjs'][$maxkey]['member'] = $row['member_name'];
+        			}
+        			unset($raid_attendees[$row['member_name']]);
+        		}
+        	}
+        }
+        return $data;
+    }
+	
+	function parse_raids($post, $data)
+	{
+	 foreach($post as $key => $raid)
+	 {
+	  if(!isset($raid['delete']))
+	  {
+      	list($day, $month, $year) = explode('.', $raid['start_date'], 3);
+      	list($hour, $min, $sec) = explode(':', $raid['start_time'], 3);
+      	$raids[$key]['begin'] = mktime($hour, $min, $sec, $month, $day, $year);
+      	list($day, $month, $year) = explode('.', $raid['end_date'], 3);
+      	list($hour, $min, $sec) = explode(':', $raid['end_time'], 3);
+      	$raids[$key]['key'] = $raid['key'];
+      	$raids[$key]['end'] = mktime($hour, $min, $sec, $month, $day, $year);
+      	$raids[$key]['note'] = $raid['note'];
+      	$raids[$key]['value'] = $raid['value'];
+      	$raids[$key]['event'] = $raid['event'];
+      	$raids[$key]['bosskill_add'] = $raid['bosskill_add'];
+      	$bosskills = array();
+      	if(is_array($raid['bosskills']))
+      	{
+      	  foreach($raid['bosskills'] as $u => $bk)
+      	  {
+      		if(!$bk['delete'])
+      		{
+    	  		list($hour, $min, $sec) = explode(':', $bk['time']);
+	      		list($day, $month, $year) = explode('.', $bk['date']);
+      			$bosskills[$u]['time'] = mktime($hour, $min, $sec, $month, $day, $year);
+      			$bosskills[$u]['bonus'] = $bk['bonus'];
+      			$bosskills[$u]['name'] = $bk['name'];
+      		}
+      	  }
+      	}
+      	$raids[$key]['bosskills'] = $bosskills;
+      	$raids[$key]['timebonus'] = $raid['timebonus'];
+      }
+	 }
+	 $data['raids'] = $raids;
+	 return $data;
+	}
+
+	function parse_members($post, $data)
+	{
+	  global $user;
+	  $raid_attendees = $this->auto_minus_ra();
+      $members = array();
+	  foreach($post as $k => $mem)
+	  {
+        $i = count($data['adjs'])+1;
+		foreach($data['members'] as $key => $member)
+		{
+			if($k == $key)
+			{
+			  if(!$mem['delete'])
+			  {
+			  	$members[$key] = $member;
+			  	$members[$key]['name'] = $mem['name'];
+				$members[$key]['raid_list'] = $mem['raid_list'];
+				$members[$key]['att_dkp_begin'] = $mem['att_begin'];
+				$members[$key]['att_dkp_end'] = $mem['att_end'];
+				if(isset($mem['alias']))
+				{
+	                $members[$key]['alias'] = $mem['alias'];
+	            }
+				if($mem['raid_list'])
+				{
+					$raids = $mem['raid_list'];
+					$dkp = 0;
+	           		$raid_attendees[$mem['name']] = true;
+					foreach($raids as $raid_id)
+					{
+						$raid = $data['raids'][$raid_id];
+						if($this->config['use_timedkp'])
+						{
+							$dkp = $dkp + runden($this->calc_timedkp($raid['begin'], $raid['end'], $member, $raid['timebonus']));
+						}
+						if($this->config['use_bossdkp'])
+						{
+							$dkp = $dkp + $this->calc_bossdkp($raid['bosskills'], $member);
+						}
+						$dkp = $dkp + $mem['att_begin'] + $mem['att_end'];
+						if($dkp <  $raid['value'])
+						{	//add an adjustment
+							$dkp -= $raid['value'];
+							$data['adjs'][$i]['member'] = $mem['name'];
+							$data['adjs'][$i]['reason'] = $user->lang['rli_partial_raid']." ".date('d.m.y H:i:s', $raid['begin']);
+							$data['adjs'][$i]['value'] = $dkp;
+							$data['adjs'][$i]['event'] = $raid['event'];
+							$i++;
+						}
+					}
+				}
+			  } //delete
+			}
+		}
+	  }
+		
+	  $data = $this->auto_minus($data, $raid_attendees);
+	  $data['members'] = $members;
+	  return $data;
+	}
+
+	function parse_items($post, $data)
+	{
+	  $loot_sum = 0;
+	  foreach($post as $k => $loot)
+	  {
+		if(is_array($data['loots']))
+		{
+    	  foreach($data['loots'] as $key => $item)
+    	  {
+			if($k == $key)
+			{
+			  if(!$loot['delete'])
+			  {
+				$tdata[$key] = $loot;
+				$tdata[$key]['time'] = $item['time'];
+			  }
+			}
+		  }
+		}
+	  }
+	  $data['loots'] = "";
+	  $data['loots'] = $tdata;
+	  return $data;
+	}
+
+	function parse_adjs($post, $data)
+	{
+	  $adjs = array();
+	  foreach($post as $f => $adj)
+	  {
+		if(!$adj['delete'])
+		{
+			$adjs[$f] = $adj;
+		}
+	  }
+	  $data['adjs'] = $adjs;
+	  return $data;
+	}
+	
+	function parse_post($post, $data)
+	{
+		$data = unserialize($post['rest']);
+		if(isset($post['adjs']))
+		{
+			$data = $this->parse_adjs($post['adjs'], $data);
+		}
+		if(isset($post['loots']))
+		{
+			$data = $this->parse_items($post['loots'], $data);
+		}
+		if(isset($post['members']))
+		{
+			$data = $this->parse_members($post['members'], $data);
+		}
+		if(isset($post['raids']))
+		{
+			if(!isset($post['ns']))
+			{
+				$data = $this->parse_raids($post['raids'], $data);
+			}
+			else
+			{
+				foreach($data['raids'] as $key => $raid)
+				{
+					foreach($post['raids'] as $k => $r)
+					{
+						if($k == $key)
+						{
+							$data['raids'][$k]['value'] = $r['value'];
+						}
+					}
+				}
+			}
+		}
+		return $data;
+	}
+		
+	function member_in_raid($member, $raid)
+	{
+		$raid['time'] = $raid['end'] - $raid['begin'];
+		$member_raidtime = $this->get_member_secs_inraid($this->get_member_times($member), $raid['begin'], $raid['end']);
+		if($member_raidtime > $raid['time']/2)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	function check_data($data)
+	{
+		$bools = array();
+		if($data['raids'])
+		{
+			foreach($data['raids'] as $raid)
+			{
+				if($raid['key'] != '')
+				{
+					if(!($raid['event'] AND $raid['note'] AND $raid['begin'] AND $raid['end']) AND $raid['value'] != '')
+					{
+						$bools['false']['raid'] = FALSE;
+					}
+				}
+			}
+		}
+		else
+		{
+			$bools['false']['raid'] = 'miss';
+		}
+		if(!isset($data['members']))
+		{
+			$bools['false']['mem'] = 'miss';
+		}
+		if(isset($data['loots']))
+		{
+			foreach($data['loots'] as $loot)
+			{
+				if($loot['key'] != '')
+				{
+					if(!($loot['name'] AND $loot['player'] AND $loot['raid'] AND $loot['dkp'] != ''))
+					{
+						$bools['false']['item'] = FALSE;
+					}
+				}
+			}
+		}
+		if(isset($data['adjs']))
+		{
+			foreach($data['adjs'] as $adj)
+			{
+				if(isset($adj['do']))
+				{
+					if(!($adj['member'] AND $adj['event'] AND $adj['reason'] AND $adj['value']))
+					{
+						$bools['false']['adj'] = FALSE;
+					}
+				}
+			}
+		}
+		return $bools;
+	}
+	
+	function check_ctrt_format($xml)
+	{
+		$back[1] = true;
+		if(!isset($xml->start))
+		{
+			$back[1] = false;
+			$back[2][] = 'start';
+		}
+		else
+		{
+			if(!(stristr($xml->start, ':')))
+			{
+				$back[1] = false;
+				$back[2][] = 'start in format: MM/DD/YY HH:MM:SS';
+			}
+		}
+		if(!isset($xml->end))
+		{
+		 	$back[1] = false;
+		 	$back[2][] = 'end';
+		}
+		else
+		{
+			if(!(stristr($xml->start, ':')))
+			{
+				$back[1] = false;
+				$back[2][] = 'end in format: MM/DD/YY HH:MM:SS';
+			}
+		}
+		if(!isset($xml->BossKills))
+		{
+		  	$back[1] = false;
+		  	$back[2][] = 'BossKills';
+		}
+		else
+		{
+			foreach($xml->BossKills->children() as $bosskill)
+			{
+			  if($bosskill)
+			  {
+				if(!isset($bosskill->name))
+				{
+					$back[1] = false;
+					$back[2][] = 'BossKills->name';
+				}
+				if(!isset($bosskill->time))
+				{
+					$back[1] = false;
+					$back[2][] = 'BossKills->time';
+				}
+			  }
+			}
+		}
+		if(!isset($xml->Loot))
+		{
+		   	$back[1] = false;
+		   	$back[2][] = 'Loot';
+		}
+		else
+		{
+			foreach($xml->Loot->children() as $loot)
+			{
+			  if($loot)
+			  {
+				if(!isset($loot->ItemName))
+				{
+					$back[1] = false;
+					$back[2][] = 'Loot->ItemName';
+				}
+				if(!isset($loot->Player))
+				{
+					$back[1] = false;
+					$back[2][] = 'Loot->Player';
+				}
+				if(!isset($loot->Time))
+				{
+					$back[1] = false;
+					$back[2] = 'Loot->Time';
+				}
+			  }
+			}
+		}
+		if(!isset($xml->PlayerInfos))
+		{
+			$back[1] = false;
+			$back[2][] = 'PlayerInfos';
+		}
+		else
+		{
+			foreach($xml->PlayerInfos->children() as $mem)
+			{
+				if(!isset($mem->name))
+				{
+					$back[1] = false;
+					$back[2][] = 'PlayerInfos->name';
+				}
+			}
+		}
+		if(!isset($xml->Join))
+		{
+			$back[1] = false;
+			$back[2][] = 'Join';
+		}
+		else
+		{
+			foreach($xml->Join->children() as $join)
+			{
+				if(!isset($join->player))
+				{
+					$back[1] = false;
+					$back[2][] = 'Join->player';
+				}
+				if(!isset($join->time))
+				{
+					$back[1] = false;
+					$back[2][] = 'Join->time';
+				}
+			}
+		}
+		if(!isset($xml->Leave))
+		{
+			$back[1] = false;
+			$back[2][] = 'Leave';
+		}
+		else
+		{
+			foreach($xml->Leave->children() as $leave)
+			{
+				if(!isset($leave->player))
+				{
+					$back[1] = false;
+					$back[2][] = 'Leave->player';
+				}
+				if(!isset($leave->time))
+				{
+					$back[1] = false;
+					$back[2][] = 'Leave->time';
+				}
+			}
+		}
+		return $back;
+	}
+
+	function parse_ctrt_string($xml)
+	{
+		$raid = array();
+		$raid['begin'] = strtotime($xml->start);
+		$raid['end']   = strtotime($xml->end);
+		$raid['zone']  = trim($xml->zone);
+		$raid['difficulty'] = trim($xml->difficulty);
+		$i = 0;
+		foreach ($xml->BossKills->children() as $bosskill)
+		{
+			$raid['bosskills'][$i]['name'] = trim($bosskill->name);
+			$raid['bosskills'][$i]['time'] = strtotime($bosskill->time);
+			$i++;
+		}
+		$i = 0;
+		foreach($xml->Loot->children() as $loot)
+		{
+			$raid['loots'][$i]['name'] 	 = utf8_decode(trim($loot->ItemName));
+			$raid['loots'][$i]['id']     = substr(trim($loot->ItemID), 0, 5);
+			$raid['loots'][$i]['player'] = utf8_decode(trim($loot->Player));
+			$raid['loots'][$i]['boss']    = trim($loot->Boss);
+			$raid['loots'][$i]['time']    = strtotime($loot->Time);
+			if (array_key_exists('Costs',$loot))
+			{
+				$raid['loots'][$i]['dkp'] = (int)$loot->Costs;
+				$raid['lootdkp'][$raid['loots'][$i]['player']] = $raid['lootdkp'][$raid['loots'][$i]['player']] + (int)$loot->Costs;
+			}
+			else
+			{
+				$raid['loots'][$i]['dkp'] = (int)$loot->Note;
+			}
+			if($this->config['ignore_dissed'] AND ($raid['loots'][$i]['name'] == 'disenchanted' OR $raid['loots'][$i]['name'] == 'bank'))
+			{
+				unset($raid['loots'][$i]);
+				$i--;
+			}
+			$i++;
+		}
+		$i = 0;
+		$a = 0;
+		foreach($xml->PlayerInfos->children() as $member)
+		{
+			$raid['members'][$i]['name']  = utf8_decode($member->name);
+			$raid['members'][$i]['race']  = utf8_decode($member->race);
+			$raid['members'][$i]['class'] = utf8_decode($member->class);
+			$raid['members'][$i]['level'] = utf8_decode($member->level);
+			if(isset($member->note))
+			{
+				$raid['adjs'][$a]['member'] = utf8_decode($member->name);
+				list($reason, $value) = explode($rli_config['adj_parse'], utf8_decode($member->note));
+				$raid['adjs'][$a]['reason'] = $reason;
+				$raid['adjs'][$a]['value'] = $value;
+				$a++;
+			}
+			$i++;
+		}
+		foreach ($xml->Join->children() as $joiner)
+		{
+			$search = utf8_decode(trim($joiner->player));
+			$key = fktMultiArraySearch($raid['members'],$search);
+		    if ($key)
+	    	{
+	    	if (array_key_exists('join', $raid['members'][$key[0]])){
+					$acount = count($raid['members'][$key[0]]['join']) + 1;
+					$raid['members'][$key[0]]['join'][$acount] = strtotime($joiner->time);
+				}
+				else {
+					$raid['members'][$key[0]]['join'][1] = strtotime($joiner->time);
+				}
+			}
+		}
+		foreach ($xml->Leave->children() as $leaver) {
+			$search = utf8_decode(trim($leaver->player));
+			$key = fktMultiArraySearch($raid['members'],$search);
+		    if ($key){
+		    	if (array_key_exists('leave', $raid['members'][$key[0]])){
+					$acount = count($raid['members'][$key[0]]['leave']) + 1;
+					$raid['members'][$key[0]]['leave'][$acount] = strtotime($leaver->time);
+				}
+				else
+				{
+					$raid['members'][$key[0]]['leave'][1] = strtotime($leaver->time);
+				}
+			}
+		}
+		return $raid;
+	}
+
+	function parse_string($xml)
+	{
+		global $user, $eqdkp_root_path;
+	
+		if(method_exists($this, 'parse_'.$this->config['parser'].'_string'))
+		{
+			$back = call_user_func(array($this, 'check_'.$this->config['parser'].'_format'), $xml);
+			if($back[1])
+			{
+				$raid = call_user_func(array($this, 'parse_'.$this->config['parser'].'_string'), $xml);
+			}
+			else
+			{
+			  message_die($user->lang['wrong_format'].' '.$user->lang[$this->config['parser'].'_format'].' <img src="'.$eqdkp_root_path.'plugins/raidlogimport/images/'.$this->config['parser'].'_options.png"><br />'.$user->lang['rli_miss'].implode(', ', $back[2]));
+			}
+		}
+		else
+		{
+			message_die($user->lang['no_parser']);
+		}
+		return $raid;
+	}
+  }//class
+}//class exist
+?>
