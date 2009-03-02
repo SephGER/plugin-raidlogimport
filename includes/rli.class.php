@@ -402,7 +402,7 @@ if(!class_exists('rli'))
 
 						//bosskills
 						$raids[$key]['bosskills'] = $this->get_bosskills($raid['bosskills'], $raids[$key]['begin'], $raids[$key]['end']);
-						
+
 						$temp = array();
 						//event+note
 						if($this->config['event_boss'] == 1)
@@ -466,7 +466,7 @@ if(!class_exists('rli'))
 
 						//bosskills
 						$raids[$key]['bosskills'] = $this->get_bosskills($raid['bosskills'], $raids[$key]['begin'], $raids[$key]['end']);
-						
+
 						//note
 						$raids[$key]['note'] = $this->get_note($raids[$key]['bosskills']);
 
@@ -561,7 +561,7 @@ if(!class_exists('rli'))
 		$dkp['end'] = 0;
 		foreach($member['join'] as $jt)
 		{
-			if(($begin + $time) > $jt)
+			if(($begin + $this->config['attendence_time']) > $jt)
 			{
 				$dkp['begin'] = $this->config['attendence_begin'];
 				break;
@@ -569,7 +569,7 @@ if(!class_exists('rli'))
 		}
 		foreach($member['leave'] as $lt)
 		{
-			if(($end - $time) < $lt)
+			if(($end - $this->config['attendence_time']) < $lt)
 			{
 				$dkp['end'] = $this->config['attendence_end'];
 				break;

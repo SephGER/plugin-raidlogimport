@@ -228,7 +228,7 @@ class raidlogimport extends EQdkp_Admin
 	            $member['att_dkp_begin'] = $att_dkp['begin'];
 	            $member['att_dkp_end'] = $att_dkp['end'];
 	        }
-	        
+			var_dump($att_dkp);
            	$tpl->assign_block_vars('player', array(
                	'MITGLIED' => $member['name'],
                 'ALIAS'    => $alias,
