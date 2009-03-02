@@ -45,7 +45,7 @@
 	$lang['bz_zone_s'] = 'Zone';
 	$lang['bz_string'] = 'String';
 	$lang['bz_bnote'] = 'Notiz';
-	$lang['bz_bonus'] = 'Bonus-DKP';
+	$lang['bz_bonus'] = 'Bonus-DKP / DKP/h';
 	$lang['bz_zevent'] = 'Event';
 	$lang['bz_update'] = 'Hinzufügen / Markierte bearbeiten';
 	$lang['bz_delete'] = 'Markierte löschen';
