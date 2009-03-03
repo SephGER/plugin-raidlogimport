@@ -287,11 +287,14 @@ function raids2tpl($key, $raid, $formul = false)
 
 function mems2tpl($key, $member, $data)
 {
-    global $eqdkp;
+    global $eqdkp, $user;
     $rali = array();
-    foreach($member['raid_list'] as $rakey)
+    if(is_array($member['raid_list']))
     {
+      foreach($member['raid_list'] as $rakey)
+      {
     	$rali[] = $data['raids'][$rakey]['event'].': '.date('H:i:s', $data['raids'][$rakey]['begin']).'-'.date('H:i:s', $data['raids'][$rakey]['end']);
+      }
     }
 	if(isset($member['alias']))
 	{
@@ -301,8 +304,8 @@ function mems2tpl($key, $member, $data)
        	'MITGLIED' => (($key < 9) ? '&nbsp;&nbsp;' : '').($key+1).'&nbsp;'.$member['name'],
         'ALIAS'    => $member['alias'],
         'RAID_LIST'=> implode(',&nbsp;&nbsp;', $rali),
-        'ATT_BEGIN'=> $member['att_dkp_begin'],
-        'ATT_END'  => $member['att_dkp_end'],
+        'ATT_BEGIN'=> (($member['att_dkp_begin']) ? $user->lang['yes'] : $user->lang['no']),
+        'ATT_END'  => (($member['att_dkp_end']) ? $user->lang['yes'] : $user->lang['no']),
         'ZAHL'     => $eqdkp->switch_row_class(),
         'KEY'	   => $key
    	);

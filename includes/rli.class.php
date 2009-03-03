@@ -193,7 +193,6 @@ if(!class_exists('rli'))
 	function get_member_secs_inraid($times, $begin, $end)
 	{
 		$tim = 0;
-		#var_dump($times);
 		foreach($times as $i => $time)
 		{
 		  if(key($time) == 'join')
@@ -675,7 +674,6 @@ if(!class_exists('rli'))
       	$raids[$key]['begin'] = mktime($hour, $min, $sec, $month, $day, $year);
       	list($day, $month, $year) = explode('.', $raid['end_date'], 3);
       	list($hour, $min, $sec) = explode(':', $raid['end_time'], 3);
-      	$raids[$key]['key'] = $raid['key'];
       	$raids[$key]['end'] = mktime($hour, $min, $sec, $month, $day, $year);
       	$raids[$key]['note'] = $raid['note'];
       	$raids[$key]['value'] = $raid['value'];
@@ -778,15 +776,17 @@ if(!class_exists('rli'))
 			{
 			  if(!$loot['delete'])
 			  {
-				$tdata[$key] = $loot;
-				$tdata[$key]['time'] = $item['time'];
+				$data['loots'][$key] = $loot;
+				$data['loots'][$key]['time'] = $item['time'];
+			  }
+			  else
+			  {
+			  	unset($data['loots'][$key]);
 			  }
 			}
 		  }
 		}
 	  }
-	  $data['loots'] = "";
-	  $data['loots'] = $tdata;
 	  return $data;
 	}
 
@@ -1101,7 +1101,7 @@ if(!class_exists('rli'))
 			if(isset($member->note))
 			{
 				$raid['adjs'][$a]['member'] = utf8_decode($member->name);
-				list($reason, $value) = explode($rli_config['adj_parse'], utf8_decode($member->note));
+				list($reason, $value) = explode($this->config['adj_parse'], utf8_decode($member->note));
 				$raid['adjs'][$a]['reason'] = $reason;
 				$raid['adjs'][$a]['value'] = $value;
 				$a++;
@@ -1161,6 +1161,57 @@ if(!class_exists('rli'))
 			message_die($user->lang['no_parser']);
 		}
 		return $raid;
+	}
+
+	function iteminput2tpl($data, $loot_cache, $start, $end, $members, $aliase)
+	{
+		global $db, $tpl, $myHtml, $eqdkp;
+
+		foreach ($data['loots'] as $key => $loot)
+        {
+          if($start <= $key AND $key < $end)
+          {
+        	$bla = false;
+        	if($loot_cache[$key]['trans'])
+        	{
+        		$loot['name'] = $row['item_name_trans'];
+        		$loot['id'] = $row['item_id'];
+        		$bla = true;
+        	}
+        	elseif($loot_cache[$key]['name'])
+        	{
+        		$bla = true;
+        	}
+        	if(!$bla)
+        	{
+        		$sql = "INSERT INTO item_rename (id, item_name, item_id) VALUES ('".$key."', '".mysql_real_escape_string($loot['name'])."', '".$loot['id']."');";
+        		$db->query($sql);
+        	}
+        	if(isset($aliase[$loot['player']]))
+        	{
+        		$loot['player'] = $aliase[$loot['player']];
+        	}
+        	$loot_select = "<select size='1' name='loots[".$key."][raid]'>";
+          	foreach($data['raids'] as $i => $ra)
+           	{
+           		$loot_select .= "<option value='".$i."'";
+           		if($ra['begin'] < $loot['time'] AND $ra['end'] > $loot['time'])
+           		{
+           			$loot_select .= ' selected="selected"';
+           		}
+           		$loot_select .= ">".$i."</option>";
+           	}
+			$tpl->assign_block_vars('loots', array(
+                'LOOTNAME'  => $loot['name'],
+                'ITEMID'    => $loot['id'],
+                'LOOTER'    => $myHtml->DropDown("loots[".$key."][player]", $members['name'], $loot['player'], '', '', true),
+                'RAID'      => $loot_select."</select>",
+                'LOOTDKP'   => $loot['dkp'],
+                'KEY'       => $key,
+                'CLASS'     => $eqdkp->switch_row_class())
+            );
+		  }
+		}
 	}
   }//class
 }//class exist

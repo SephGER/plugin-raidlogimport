@@ -90,6 +90,7 @@
 	$lang['rli_back2raid'] = 'Zurück zu Raids';
 	$lang['rli_checkraid'] = 'Raids überprüfen';
 	$lang['rli_checkitem'] = 'Items überprüfen';
+	$lang['rli_itempage'] = 'Itemseite ';
 	$lang['rli_back2mem'] = 'Zurück zu Membern';
 	$lang['rli_back2item'] = 'Zurück zu Items';
 	$lang['rli_checkadj'] = 'Korrekturen überprüfen';

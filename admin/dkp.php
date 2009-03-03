@@ -81,6 +81,7 @@ class raidlogimport extends EQdkp_Admin
 		  {
 		      $data = $rli->create_raids($raidxml);
 		  }
+		  $data['log_lang'] = $_POST['log_lang'];
         }//post or string
 
         //get events
@@ -141,8 +142,10 @@ class raidlogimport extends EQdkp_Admin
 				'NOTE'		=> $rai['note']
 				)
 			);
-            foreach($rai['bosskills'] as $xy => $bk)
-            {
+			if(is_array($rai['bosskills']))
+			{
+              foreach($rai['bosskills'] as $xy => $bk)
+              {
                 $tpl->assign_block_vars('raids.bosskills', array(
                     'BK_SELECT' => $rli->boss_dropdown($bk['name'], $ky, $xy),
                     'BK_TIME'   => date('H:i:s', $bk['time']),
@@ -150,6 +153,7 @@ class raidlogimport extends EQdkp_Admin
                     'BK_VALUE'  => $bk['bonus'],
                     'BK_KEY'    => $xy)
                 );
+              }
             }
 		}
 
@@ -228,7 +232,6 @@ class raidlogimport extends EQdkp_Admin
 	            $member['att_dkp_begin'] = $att_dkp['begin'];
 	            $member['att_dkp_end'] = $att_dkp['end'];
 	        }
-			var_dump($att_dkp);
            	$tpl->assign_block_vars('player', array(
                	'MITGLIED' => $member['name'],
                 'ALIAS'    => $alias,
@@ -269,9 +272,9 @@ class raidlogimport extends EQdkp_Admin
 		global $myHtml, $rli;
 
 		$data = $rli->parse_post($_POST, $data);
+        $p = max(array_keys($data['loots']));
 		if(isset($_POST['items_add']))
 		{
-			$p = max(array_keys($data['loots']));
 			for($i=1; $i<=$_POST['items_add']; $i++)
 			{
 				$p++;
@@ -295,15 +298,6 @@ class raidlogimport extends EQdkp_Admin
             	$aliase[$member['alias']] = $member['name'];
             }
 		}
-		if($rli->config['auto_minus'] AND $rli->config['null_sum'])
-		{
-			$sql = "SELECT member_name FROM __members WHERE member_status = '1';";
-			$res = $db->query($sql);
-			while ($row = $db->fetch_record($res))
-			{
-				$members['name'][$row['member_name']] = $row['member_name'];
-			}
-		}
 
 		//add disenchanted and bank
         $members['name']['disenchanted'] = 'disenchanted';
@@ -318,67 +312,72 @@ class raidlogimport extends EQdkp_Admin
 				`item_name_trans` VARCHAR(255) NOT NULL);";
 		$db->query($sql);
 
+        $sql = "SELECT * FROM item_rename;";
+        $result = $db->query($sql);
+        while($row = $db->fetch_record($result))
+        {
+        	$loot_cache[$row['id']]['name'] = $row['item_name'];
+        	$loot_cache[$row['id']]['trans'] = $row['item_name_trans'];
+        	$loot_cache[$row['id']]['itemid'] = $row['item_id'];
+        }
+
 		if(is_array($data['loots']))
 		{
-          foreach ($data['loots'] as $key => $loot)
-          {
-        	$sql = "SELECT * FROM item_rename WHERE id = '".$key."';";
-        	$result = $db->query($sql);
-        	$bla = false;
-        	while ($row = $db->fetch_record($result))
-        	{
-        		if($row['item_name_trans'])
-        		{
-        			$loot['name'] = $row['item_name_trans'];
-        			$loot['id'] = $row['item_id'];
-        			$bla = true;
-        		}
-        		if($row['item_name'])
-        		{
-        			$bla = true;
-        		}
-        	}
-        	if(!$bla)
-        	{
-        		$sql = "INSERT INTO item_rename (id, item_name, item_id) VALUES ('".$key."', '".mysql_real_escape_string($loot['name'])."', '".$loot['id']."');";
-        		$db->query($sql);
-        	}
-        	if(isset($aliase[$loot['player']]))
-        	{
-        		$loot['player'] = $aliase[$loot['player']];
-        	}
-        	$loot_select = "<select size='1' name='loots[".$key."][raid]'>";
-          	foreach($data['raids'] as $i => $ra)
-           	{
-           		$loot_select .= "<option value='".$i."'";
-           		if($ra['begin'] < $loot['time'] AND $ra['end'] > $loot['time'])
-           		{
-           			$loot_select .= ' selected="selected"';
-           		}
-           		$loot_select .= ">".$i."</option>";
-           	}
-			$tpl->assign_block_vars('loots', array(
-				'LOOTNAME'  => $loot['name'],
-				'ITEMID'	=> $loot['id'],
-				'LOOTER'	=> $myHtml->DropDown("loots[".$key."][player]", $members['name'], $loot['player'], '', '', true),
-				'RAID'		=> $loot_select."</select>",
-				'LOOTDKP'	=> $loot['dkp'],
-				'KEY'		=> $key,
-				'CLASS'		=> $eqdkp->switch_row_class())
-			);
-			$maxkey = ($maxkey < $key) ? $key : $maxkey;
+          $start = 1;
+		  if(ini_get('suhosin.post.max_vars'))
+		  {
+			$vars = ini_get('suhosin.post.max_vars') - 3;
+			$dic = (int) $vars/6;
+			if($_POST['checkitem'] != $user->lang['rli_checkitem'])
+			{
+				$page = str_replace($user->lang['rli_itempage'], '', $_POST['checkitem']);
+			}
+			if($page >= 1)
+			{
+				$start = ($page-1)*$dic+1;
+				$page++;
+			}
+			$end = $start+$dic;
 		  }
+		  else
+		  {
+		  	$end = $p+1;
+		  }
+		  $rli->iteminput2tpl($data, $loot_cache, $start, $end, $members, $aliase);
 		}
 
+		if($rli->config['null_sum'] == 1)
+		{
+			$next_button = '<input type="submit" name="nullsum" value="'.$user->lang['check_raidval'].'" class="mainoption" />';
+		}
+		else
+		{
+			if($rli->config['deactivate_adj'])
+			{
+				$next_button = '<input type="submit" name="insert" value="'.$user->lang['rli_insert'].'" class="mainoption" />';
+			}
+			else
+			{
+				$next_button = '<input type="submit" name="checkadj" value="'.$user->lang['rli_checkadj'].'" class="mainoption" />';
+			}
+		}
+
+		if($end <= $p)
+		{
+			$next_button = '<input type="submit" name="checkitem" value="'.$user->lang['rli_itempage'].(($page) ? $page : 2).'" class="mainoption" />';
+		}
+        elseif($end+$dic >= $p AND $dic)
+        {
+            $next_button .= '<input type="submit" name="checkitem" value="'.$user->lang['rli_itempage'].(($page) ? $page : 2).'" class="mainoption" />';
+        }
 		$tpl->assign_vars(array(
 			'DATA'			=> htmlspecialchars(serialize($data), ENT_QUOTES),
-			'S_ATT_BEGIN'	=> ($rli->config['attendence_begin'] > 0) ? TRUE : FALSE,
-			'S_ATT_END'		=> ($rli->config['attendence_end'] > 0) ? TRUE : FALSE,
-			'S_NULL_SUM'	=> $rli->config['null_sum'],
-			'MAXCOUNT'		=> $maxkey,
+			'S_ATT_BEGIN'	=> ($rli->config['attendence_begin'] > 0 AND !$rli->config['attendence_raid']) ? TRUE : FALSE,
+			'S_ATT_END'		=> ($rli->config['attendence_end'] > 0 AND !$rli->config['attendence_raid']) ? TRUE : FALSE,
+			'MAXCOUNT'		=> $p,
 			'LANGFROM'		=> $data['log_lang'],
 			'LANGTO'		=> $rli->config['item_save_lang'],
-			'INS_DKP'		=> $rli->config['deactivate_adj'])
+			'NEXT_BUTTON'	=> $next_button)
 		);
 
 		//language
@@ -653,8 +652,6 @@ class raidlogimport extends EQdkp_Admin
 
 		  foreach($data['raids'] as $raid_key => $raid)
 		  {
-		   if($raid['key'] != '')
-		   {
 			$newraidid++;
 			$data['raids'][$raid_key]['id'] = $newraidid;
 			$sql = "INSERT INTO __raids
@@ -667,7 +664,6 @@ class raidlogimport extends EQdkp_Admin
         		$isok = false;
         		break;
         	}
-           }
 		  }
 
 		  if ($isok)
@@ -791,17 +787,16 @@ class raidlogimport extends EQdkp_Admin
 					  	$sql[] = "member_status = 1, ";
 					  }
 					  $dkp = 0;
-					  $member['raids'] = explode(',', $member['raid_list']);
-                      $keys = array_keys($member['raids']);
+                      $keys = array_keys($member['raid_list']);
                       if(!$member['firstraid'])
                       {
-                      	$sql[] = "member_firstraid = '".$data['raids'][$member['raids'][$keys[0]]]['begin']."', ";
+                      	$sql[] = "member_firstraid = '".$data['raids'][$member['raid_list'][$keys[0]]]['begin']."', ";
                       }
                       krsort($keys);
-                      $sql[] = "member_lastraid = '".$data['raids'][$member['raids'][$keys[0]]]['end']."', ";
+                      $sql[] = "member_lastraid = '".$data['raids'][$member['raid_list'][$keys[0]]]['end']."', ";
 					  foreach($data['raids'] as $raid_key => $raid)
 					  {
-						if(in_array($raid_key, $member['raids']) AND $isok)
+						if(in_array($raid_key, $member['raid_list']) AND $isok)
 						{
 							$rsql = "INSERT INTO __raid_attendees
 										(`raid_id`, `member_name`)
