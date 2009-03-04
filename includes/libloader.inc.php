@@ -44,6 +44,7 @@
     // Load the needed Plugin Core Library & check ifs needed Version..
     $pC = new pluginCore();
     CheckLibVersion('pluginCore', $pC->version, $pm->plugins[$myPluginID]->fwversion);
+    CheckLibVersion('jquery', $jquery-version, $pm->plugins[$myPluginID]->jqversion);
 
     $jquery   = new jquery();
     $myHtml    = new myHTML($myPluginID, $myPluginIncludes);

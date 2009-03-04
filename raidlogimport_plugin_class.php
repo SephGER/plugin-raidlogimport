@@ -19,7 +19,9 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 {
 	var $vstatus = 'Stable';
 	var $version = '0.5.1';
-	var $build = 4080;
+	var $fwversion = '1.0.3';
+	var $jqversion = '2.0.1';
+	var $build = 4097;
 
     function raidlogimport_plugin_class($pm)
     {
@@ -48,7 +50,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
         	'author'            => 'Hoofy',
 	        'description'       => $user->lang['raidlogimport_short_desc'],
 	        'long_description'  => $user->lang['raidlogimport_long_desc'],
-	        'homepage'          => false,
+	        'homepage'          => 'http://www.eqdkp-plus.com',
 	        'manuallink'        => false #$eqdkp_root_path . 'plugins/raidlogimport/language/'.$user->data['user_language'].'/manual.txt',
 	    );
 
