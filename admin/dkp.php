@@ -328,7 +328,7 @@ class raidlogimport extends EQdkp_Admin
 		  {
 			$vars = ini_get('suhosin.post.max_vars') - 3;
 			$dic = (int) $vars/6;
-			if($_POST['checkitem'] != $user->lang['rli_checkitem'])
+			if(strpos($_POST['checkitem'], $user->lang['rli_checkitem']))
 			{
 				$page = str_replace($user->lang['rli_itempage'], '', $_POST['checkitem']);
 			}

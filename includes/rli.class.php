@@ -1166,7 +1166,7 @@ if(!class_exists('rli'))
 	function iteminput2tpl($data, $loot_cache, $start, $end, $members, $aliase)
 	{
 		global $db, $tpl, $myHtml, $eqdkp;
-
+		
 		foreach ($data['loots'] as $key => $loot)
         {
           if($start <= $key AND $key < $end)
@@ -1174,8 +1174,8 @@ if(!class_exists('rli'))
         	$bla = false;
         	if($loot_cache[$key]['trans'])
         	{
-        		$loot['name'] = $row['item_name_trans'];
-        		$loot['id'] = $row['item_id'];
+        		$loot['name'] = $loot_cache[$key]['trans'];
+        		$loot['id'] = $loot_cache[$key]['itemid'];
         		$bla = true;
         	}
         	elseif($loot_cache[$key]['name'])

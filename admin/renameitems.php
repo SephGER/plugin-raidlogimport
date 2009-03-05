@@ -8,6 +8,7 @@ include_once($eqdkp_root_path . 'common.php');
 include_once($eqdkp_root_path . 'itemstats/includes/urlreader.php');
 $user->check_auth('a_raidlogimport_dkp');
 My_ob_start();
+
 function get_itemID($itemname, $lang)
 {
 	$url_lang = ($lang == 'en') ? 'www' : $lang;
