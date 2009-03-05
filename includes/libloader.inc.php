@@ -46,7 +46,7 @@
     CheckLibVersion('pluginCore', $pC->version, $pm->plugins[$myPluginID]->fwversion);
 
     $jquery   = new jquery();
-    CheckLibVersion('jquery', $jquery->version, $pm->plugins[$myPluginID]->jqversion);
+    CheckLibVersion('jquery', $jquery->version, $pm->plugins[$myPluginID]->jqversion, '1.0.4');
     $myHtml    = new myHTML($myPluginID, $myPluginIncludes);
     $tpl->assign_vars(array('JQUERY_INCLUDES'   => $jquery->Header()));
   }else{
