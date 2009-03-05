@@ -74,7 +74,7 @@ function deep_in_array($search, $array)
 	{
 		if(!is_array($value))
 		{
-			if($search == $value) return true;
+			if($search === $value) return true;
 		}
 		else
 		{

@@ -329,7 +329,7 @@ class raidlogimport extends EQdkp_Admin
 			$vars = ini_get('suhosin.post.max_vars') - 3;
 			$dic = (int) $vars/6;
 			$page = 1;
-			
+
 			if(!(strpos($_POST['checkitem'], $user->lang['rli_itempage']) === FALSE))
 			{
 				$page = str_replace($user->lang['rli_itempage'], '', $_POST['checkitem']);
@@ -637,7 +637,7 @@ class raidlogimport extends EQdkp_Admin
 		{
 		  $sql = "SELECT member_id, member_name, member_firstraid, member_status, member_lastraid FROM __members";
 		  $result = $db->query($sql);
-		  $members = array();
+		  $members = array(0 => NULL);
 		  while ( $row = $db->fetch_record($result) )
 		  {
 		  	$members[$row['member_id']]['name'] = $row['member_name'];
@@ -764,6 +764,7 @@ class raidlogimport extends EQdkp_Admin
 			  {
                 if($isok)
                 {
+                	$dkp = 0;
                 	$sql = array();
                     $sql[0] = "UPDATE __members SET ";
             		if(!isset($member['status']) AND !isset($member['alias']))
@@ -783,9 +784,8 @@ class raidlogimport extends EQdkp_Admin
 					{
 					  if(!$member['status'])
 					  { //active
-					  	$sql[] = "member_status = 1, ";
+					  	$sql[] = "member_status = '1', ";
 					  }
-					  $dkp = 0;
                       $keys = array_keys($member['raid_list']);
                       if(!$member['firstraid'])
                       {
@@ -812,12 +812,12 @@ class raidlogimport extends EQdkp_Admin
 					  }
 					}
                     //inactive
-                    if($member['status'] AND !isset($member['raids']))
+                    if($member['status'] AND !isset($member['raid_list']))
                     {
                         $now = time();
                         if(($now - $eqdkp->config['inactive_period']*24*3600) > $member['lastraid'] AND $member['lastraid'])
                         { //move member to inactive
-                        	$sql[] = "member_status = 0, ";
+                        	$sql[] = "member_status = '0', ";
                         }
                     }
 
@@ -826,7 +826,7 @@ class raidlogimport extends EQdkp_Admin
 					{
 						if(!$rli->config['attendence_raid'])
 						{
-							$dkp = $dkp + $mem['att_dkp_begin'] + $mem['att_dkp_end'];
+							$dkp = $dkp + (($mem['att_dkp_begin']) ? $rli->config['attendence_begin'] : 0) + (($mem['att_dkp_end']) ? $rli->config['attendence_end'] : 0);
 						}
 						if($dkp)
 						{
