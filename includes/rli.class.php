@@ -1166,7 +1166,7 @@ if(!class_exists('rli'))
 	function iteminput2tpl($data, $loot_cache, $start, $end, $members, $aliase)
 	{
 		global $db, $tpl, $myHtml, $eqdkp;
-		
+
 		foreach ($data['loots'] as $key => $loot)
         {
           if($start <= $key AND $key < $end)

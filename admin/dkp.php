@@ -328,7 +328,9 @@ class raidlogimport extends EQdkp_Admin
 		  {
 			$vars = ini_get('suhosin.post.max_vars') - 3;
 			$dic = (int) $vars/6;
-			if(strpos($_POST['checkitem'], $user->lang['rli_checkitem']))
+			$page = 1;
+			
+			if(!(strpos($_POST['checkitem'], $user->lang['rli_itempage']) === FALSE))
 			{
 				$page = str_replace($user->lang['rli_itempage'], '', $_POST['checkitem']);
 			}
@@ -339,10 +341,7 @@ class raidlogimport extends EQdkp_Admin
 			}
 			$end = $start+$dic;
 		  }
-		  else
-		  {
 		  	$end = $p+1;
-		  }
 		  $rli->iteminput2tpl($data, $loot_cache, $start, $end, $members, $aliase);
 		}
 
@@ -362,13 +361,13 @@ class raidlogimport extends EQdkp_Admin
 			}
 		}
 
-		if($end <= $p)
+		if($end <= $p AND $end)
 		{
 			$next_button = '<input type="submit" name="checkitem" value="'.$user->lang['rli_itempage'].(($page) ? $page : 2).'" class="mainoption" />';
 		}
         elseif($end+$dic >= $p AND $dic)
         {
-            $next_button .= '<input type="submit" name="checkitem" value="'.$user->lang['rli_itempage'].(($page) ? $page : 2).'" class="mainoption" />';
+            $next_button .= ' <input type="submit" name="checkitem" value="'.$user->lang['rli_itempage'].(($page) ? $page : 2).'" class="mainoption" />';
         }
 		$tpl->assign_vars(array(
 			'DATA'			=> htmlspecialchars(serialize($data), ENT_QUOTES),
