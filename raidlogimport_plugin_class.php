@@ -18,7 +18,7 @@ if ( !defined('EQDKP_INC') )
 class raidlogimport_Plugin_Class extends EQdkp_Plugin
 {
 	var $vstatus = 'Stable';
-	var $version = '0.5.1.2';
+	var $version = '0.5.1.3';
 	var $fwversion = '1.0.3';
 	var $jqversion = '2.0.1';
 	var $build = 4130;
@@ -100,6 +100,8 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 				'auto_minus'		=> '0',		//automatic minus
 				'am_raidnum'		=> '3',		//if not joined last 3 raids
 				'am_value'			=> '10',	//member looses 10dkp
+				'am_value_raids'	=> '0',		//dkp-value depends on value of last 3 (or set number) of raids (option above becomes useless)
+				'am_allxraids'		=> '0',		//reset raidcounter if member gains minus? (default off)
 				'ignore_dissed'		=> '0',		//ignore disenchanted and bank loot?
 				'member_miss_time' 	=> '300'	//time in secs member can miss without it being tracked
 			);

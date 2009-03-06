@@ -588,24 +588,53 @@ if(!class_exists('rli'))
 		return $list;
 	}
 
-	function auto_minus_ra()
+	function auto_minus_ra($actualraidvalue)
 	{
-		global $db;
+		global $db, $user;
 		if($this->config['auto_minus'])
 		{
-			$sql = "SELECT raid_id FROM __raids ORDER BY raid_date DESC LIMIT ".($this->config['am_raidnum']-1).";";
+        	$raid_attendees = array();
+			$sql = "SELECT raid_id, raid_value, raid_date FROM __raids ORDER BY raid_date DESC LIMIT ".($this->config['am_raidnum']-1).";";
 			$res = $db->query($sql);
+			$raid_value = 0;
+			$raid_date = 9996191683;
 			while ($row = $db->fetch_record($res))
 			{
 				$raid_ids[] = $row['raid_id'];
+				$raid_date = ($raid_date > $row['raid_date']) ? $row['raid_date'] : $raid_date;
+				$raid_value += $row['raid_value'];
+			}
+			if($this->config['am_value_raids'])
+			{
+				$raid_value += $actualraidvalue;
 			}
 			$raidid = implode("' OR raid_id = '", $raid_ids);
+            if($this->config['am_allxraids'])
+            {
+                if($this->config['null_sum'])
+                {
+                	$sql = "SELECT item_date AS date, item_buyer AS member_name FROM __items WHERE item_name = '".$user->lang['am_name']."';";
+                }
+                else
+                {
+                	$sql = "SELECT adjustment_date AS date, member_name FROM __adjustments WHERE adjustment_reason = '".$user->lang['am_name']."';";
+                }
+                $res = $db->query($sql);
+                while ($row = $db->fetch_record($res))
+                {
+                	if($row['date'] >= $raid_date)
+                	{
+                		$raid_attendees[$row['member_name']] = ($raid_value) ? $raid_value : true;
+                	}
+                }
+            }
 			$sql = "SELECT member_name FROM __raid_attendees WHERE raid_id = '".$raidid."';";
 			$res = $db->query($sql);
 			while ($row = $db->fetch_record($res))
 			{
-				$raid_attendees[$row['member_name']] = true;
+				$raid_attendees[$row['member_name']] = ($raid_value) ? $raid_value : true;
 			}
+			$db->free_result($res);
 			return $raid_attendees;
 		}
 	}
@@ -647,13 +676,13 @@ if(!class_exists('rli'))
         			{
         				$data['loots'][$maxkey]['name'] = $user->lang['am_name'];
         				$data['loots'][$maxkey]['time'] = $data['raids'][1]['begin'] +1;
-        				$data['loots'][$maxkey]['dkp'] = $this->config['am_value'];
+        				$data['loots'][$maxkey]['dkp'] = ($this->config['am_value_raids']) ? $raid_attendees[$row['member_name']] : $this->config['am_value'];
         				$data['loots'][$maxkey]['player'] = $row['member_name'];
         			}
         			else
         			{
         				$data['adjs'][$maxkey]['reason'] = $user->lang['am_name'];
-        				$data['adjs'][$maxkey]['value'] = '-'.$this->config['am_value'];
+        				$data['adjs'][$maxkey]['value'] = '-'.(($this->config['am_value_raids']) ? $raid_attendees[$row['member_name']] : $this->config['am_value']);
         				$data['adjs'][$maxkey]['event'] = $data['raids'][1]['event'];
         				$data['adjs'][$maxkey]['member'] = $row['member_name'];
         			}
@@ -706,7 +735,7 @@ if(!class_exists('rli'))
 	function parse_members($post, $data)
 	{
 	  global $user;
-	  $raid_attendees = $this->auto_minus_ra();
+	  $raid_attendees = $this->auto_minus_ra($this->get_nsr_value($data));
       $members = array();
 	  foreach($post as $k => $mem)
 	  {
@@ -1217,6 +1246,32 @@ if(!class_exists('rli'))
 		  }
 		}
 	}
+	
+	function get_nsr_value($data, $raid_key=false)
+	{
+		global $db;
+		$value = 0;
+		foreach($data['raids'] as $key => $raid)
+		{
+			$raid['value'] = 0;
+			foreach($data['loots'] as $loot)
+			{
+				if($key == $loot['raid'])
+				{
+					$raid['value'] += $loot['dkp'];
+				}
+			}
+			$count = ($this->config['null_sum'] == 2) ? $db->query_first("SELECT COUNT(*) FROM __members") : count($data['members']);
+			$raid['value'] = $raid['value']/$count;
+			$raid['value'] = runden($raid['value']);
+			if($raid_key AND $key == $raid_key)
+			{
+				return $raid['value'];
+			}
+			$value += $raid['value'];
+		}
+		return $value;
+	}		
   }//class
 }//class exist
 ?>

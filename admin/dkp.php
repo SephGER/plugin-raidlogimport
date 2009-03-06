@@ -512,36 +512,16 @@ class raidlogimport extends EQdkp_Admin
 
        	if($rli->config['null_sum'] == 1)
         {
-        	$formel = $user->lang['form_null_sum_1'];
 			foreach($data['raids'] as $raid_key => $raid)
 			{
-				$raid['value'] = 0;
-				foreach($data['loots'] as $loot)
-				{
-					if($loot['raid'] == $raid_key)
-					{
-						$raid['value'] += $loot['dkp'];
-					}
-				}
-				$count = 0;
-				foreach($data['members'] as $member)
-				{
-					$member['raids'] = explode(',', $member['raid_list']);
-					if(in_array($raid_key, $member['raids']))
-					{
-						$count++;
-					}
-				}
+				$raid['value'] = $rli->get_nsr_value($data, $raid_key);
                 $formul[$raid_key] = $raid['value'].'/'.$count;
-            	$raid['value'] = $raid['value']/$count;
-            	$raid['value'] = runden($raid['value']);
             	$tpl->assign_block_vars('raids', raids2tpl($raid_key, $raid, $formul));
 			}
 		}
 
 		if($rli->config['null_sum'] == 2)
 		{
-			$formel = $user->lang['form_null_sum_2'];
 			$data['adjs'] = array();
 			$maxkey = 0;
 			foreach($data['members'] as $key => $member)
@@ -568,25 +548,14 @@ class raidlogimport extends EQdkp_Admin
         	{
         	  $events[$ev['event_name']] = $ev['event_name'];
         	}
-			$count = count($members);
 			foreach($data['raids'] as $raid_key => $raid)
 			{
-				$raid['value'] = 0;
-				foreach($data['loots'] as $loot)
-				{
-					if($loot['raid'] == $raid_key)
-					{
-						$raid['value'] += $loot['dkp'];
-					}
-				}
+				$raid['value'] = $rli->get_nsr_value($data, $raid_key);
                 $formul[$raid_key] = $raid['value'].'/'.$count;
-				$raid['value'] = $raid['value']/$count;
-                $raid['value'] = runden($raid['value']);
                 $u = 0;
 				foreach($data['members'] as $key => $member)
 				{
-					$member['raids'] = explode(',', $member['raid_list']);
-					if(!in_array($raid_key, $member['raids']))
+					if(!in_array($raid_key, $member['raid_list']))
 					{
 						$data['adjs'][$u]['member'] = $member['name'];
 						$data['adjs'][$u]['value'] = $raid['value'];
@@ -620,7 +589,7 @@ class raidlogimport extends EQdkp_Admin
 			'S_ATT_BEGIN'	=> ($rli->config['attendence_begin'] > 0) ? TRUE : FALSE,
 			'S_ATT_END'		=> ($rli->config['attendence_end'] > 0) ? TRUE : FALSE,
 			'S_NULL_SUM_2'	=> ($rli->config['null_sum'] == 2) ? TRUE : FALSE,
-			'FORMEL'		=> $formel)
+			'FORMEL'		=> $user->lang['form_null_sum_'.$rli->config['null_sum']])
 		);
 
 		//language

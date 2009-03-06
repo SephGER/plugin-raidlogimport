@@ -138,7 +138,7 @@ class RLI_Settings extends EQdkp_Admin
 				$holder['general'][$k]['value'] = $myHtml->DropDown($name, $ranks, $value);
 				$holder['general'][$k]['name'] = $name;
 			}
-			elseif($name == 'event_boss' OR $name == 'attendence_raid' OR $name == 'dep_match' OR $name == 'rli_upd_check' OR $name == 'use_bossdkp' OR $name == 'use_timedkp' OR $name == 'deactivate_adj' or $name == 'auto_minus' or $name == 'ignore_dissed')
+			elseif($name == 'event_boss' OR $name == 'attendence_raid' OR $name == 'dep_match' OR $name == 'rli_upd_check' OR $name == 'use_bossdkp' OR $name == 'use_timedkp' OR $name == 'deactivate_adj' or $name == 'auto_minus' or $name == 'ignore_dissed' OR $name == 'am_allxraids' OR $name == 'am_value_raids')
 			{
 				$hold = 'general';
 				if($name == 'dep_match')
@@ -157,7 +157,7 @@ class RLI_Settings extends EQdkp_Admin
 				{
 					$hold = 'parse';
 				}
-				elseif($name == 'auto_minus')
+				elseif($name == 'auto_minus' or $name == 'am_allxraids' or $name == 'am_value_raids')
 				{
 					$hold = 'am';
 				}

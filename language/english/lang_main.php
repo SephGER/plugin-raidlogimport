@@ -165,6 +165,9 @@
 	$lang['auto_minus'] = 'Activate automatic minus?'.$lang['addinfo_am'];
 	$lang['am_raidnum'] = 'Number of raids for automatic minus';
 	$lang['am_value'] = 'Amount of DKP drawn off';
+	$lang['am_value_raids'] = 'DKP value = DKP of last number of raids';
+	$lang['am_allxraids'] = "Reset raidcount on Minus-DKP? <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td>Example: A member looses DKP after 3 Raids of not being there. The 4th Raid he is missing again. If this option is deactivated, the member will loose DKP again. If its activated he will loose the DKP on his 6th Raid of not being there. </td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='help'></a>";
+	$lang['addinfo_am'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td> Diese Einstellung bewirkt, dass Spieler, die die eingestellte Anzahl an Raids nicht dabeigewesen sind, Minus-DKP bekommen. Wenn Null-Summen aktiviert sind, wird das ganze über ein Item gemacht. </td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='help'></a>";
 	$lang['am_name'] = 'lack of participation';
 	$lang['title_am'] = 'Automatic Minus';
 	$lang['title_adj'] = 'Adjustments';
