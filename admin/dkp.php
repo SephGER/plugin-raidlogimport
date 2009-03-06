@@ -332,7 +332,7 @@ class raidlogimport extends EQdkp_Admin
 
 		if(is_array($data['loots']))
 		{
-          $start = 1;
+          $start = 0;
 		  if(ini_get('suhosin.post.max_vars'))
 		  {
 			$vars = ini_get('suhosin.post.max_vars') - 3;
@@ -345,7 +345,7 @@ class raidlogimport extends EQdkp_Admin
 			}
 			if($page >= 1)
 			{
-				$start = ($page-1)*$dic+1;
+				$start = ($page-1)*$dic;
 				$page++;
 			}
 			$end = $start+$dic;
@@ -354,7 +354,7 @@ class raidlogimport extends EQdkp_Admin
 		  $rli->iteminput2tpl($data, $loot_cache, $start, $end, $members, $aliase);
 		}
 
-		if($rli->config['null_sum'] == 1)
+		if($rli->config['null_sum'])
 		{
 			$next_button = '<input type="submit" name="nullsum" value="'.$user->lang['check_raidval'].'" class="mainoption" />';
 		}
