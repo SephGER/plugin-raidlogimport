@@ -298,6 +298,15 @@ class raidlogimport extends EQdkp_Admin
             	$aliase[$member['alias']] = $member['name'];
             }
 		}
+		if($rli->config['null_sum'] AND $rli->config['auto_minus'])
+		{
+			$sql = "SELECT member_name FROM __members ORDER BY member_name ASC;";
+			$mem_res = $db->query($sql);
+			while ( $mrow = $db->fetch_record($mem_res) )
+			{
+				$members['name'][$mrow['member_name']] = $mrow['member_name'];
+			}
+		}
 
 		//add disenchanted and bank
         $members['name']['disenchanted'] = 'disenchanted';

@@ -107,6 +107,7 @@ if(!class_exists('rli'))
 				{
 					$rbosskills[$i]['name'] = $bosskill['name'];
 					$rbosskills[$i]['bonus'] = $boss['bonus'];
+					$rbosskills[$i]['note'] = $boss['note'];
 					$rbosskills[$i]['time'] = $bosskill['time'];
 					break;
 				}
@@ -131,7 +132,7 @@ if(!class_exists('rli'))
 		$bosss = array();
 		foreach($bosskills as $bosskill)
 		{
-			$bosss[] = $bosskill['name'].$this->suffix($this->config['dep_match']);
+			$bosss[] = $bosskill['note'].$this->suffix($this->config['dep_match']);
 		}
 		return implode(', ', $bosss);
 	}
@@ -611,7 +612,7 @@ if(!class_exists('rli'))
 
 	function auto_minus($data, $raid_attendees)
 	{
-		global $db;
+		global $db, $user;
         if($this->config['auto_minus'])
         {
         	$maxkey = 0;
@@ -1165,27 +1166,30 @@ if(!class_exists('rli'))
 
 	function iteminput2tpl($data, $loot_cache, $start, $end, $members, $aliase)
 	{
-		global $db, $tpl, $myHtml, $eqdkp;
+		global $db, $tpl, $myHtml, $eqdkp, $user;
 
 		foreach ($data['loots'] as $key => $loot)
         {
           if($start <= $key AND $key < $end)
           {
-        	$bla = false;
-        	if($loot_cache[$key]['trans'])
-        	{
-        		$loot['name'] = $loot_cache[$key]['trans'];
-        		$loot['id'] = $loot_cache[$key]['itemid'];
-        		$bla = true;
-        	}
-        	elseif($loot_cache[$key]['name'])
-        	{
-        		$bla = true;
-        	}
-        	if(!$bla)
-        	{
-        		$sql = "INSERT INTO item_rename (id, item_name, item_id) VALUES ('".$key."', '".mysql_real_escape_string($loot['name'])."', '".$loot['id']."');";
-        		$db->query($sql);
+            if($user->lang['am_minus'] != $loot['name'])
+            {
+        		$bla = false;
+        		if($loot_cache[$key]['trans'])
+        		{
+        			$loot['name'] = $loot_cache[$key]['trans'];
+        			$loot['id'] = $loot_cache[$key]['itemid'];
+   		  	   		$bla = true;
+  		      	}
+       	 		elseif($loot_cache[$key]['name'])
+    	    	{
+        			$bla = true;
+        		}
+        		if(!$bla)
+        		{
+        			$sql = "INSERT INTO item_rename (id, item_name, item_id) VALUES ('".$key."', '".mysql_real_escape_string($loot['name'])."', '".$loot['id']."');";
+        			$db->query($sql);
+        		}
         	}
         	if(isset($aliase[$loot['player']]))
         	{
