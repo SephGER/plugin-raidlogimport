@@ -192,6 +192,10 @@ class raidlogimport extends EQdkp_Admin
 				$data['members'][$h]['name'] = '';
 			}
 		}
+		if($rli->display_rank('member'))
+		{
+			$member_ranks = $rli->get_member_ranks();
+		}
             //load aliase
 		$sql = "SELECT m.member_name, a.alias_name FROM __raidlogimport_aliases a, __members m WHERE a.alias_member_id = m.member_id;";
 		$result = $db->query($sql);
@@ -245,7 +249,7 @@ class raidlogimport extends EQdkp_Admin
                 'ZAHL'     => $eqdkp->switch_row_class(),
                 'KEY'	   => $key,
                 'NR'	   => $key +1,
-                'RANK'	   => ($rli->display_rank('member')) ? $rli->rank_suffix($member['name']) : '')
+                'RANK'	   => ($rli->display_rank('member')) ? '('.get_RankIcon($member['rank']).')' : ''
            	);
         }//foreach members
 
@@ -452,11 +456,11 @@ class raidlogimport extends EQdkp_Admin
 			$members = array();
 			while ($row = $db->fetch_record($res))
 			{
-				$members[$row['member_name']] = $row['member_name'].(($rli->display_rank('adj')) ? $rli->rank_suffix($row['member_name']) : '');
+				$members[$row['member_name']] = $row['member_name'];
 			}
 			foreach($data['members'] as $member)
 			{
-				$members_r[$member['name']] = $member['name'].(($rli->display_rank('adj')) ? $rli->rank_suffix($member['name']) : '');
+				$members_r[$member['name']] = $member['name'];
 				if(isset($member['alias']))
 				{
 					$adj_alias[$member['alias']] = $member['name'];
@@ -519,9 +523,8 @@ class raidlogimport extends EQdkp_Admin
         {
 			foreach($data['raids'] as $raid_key => $raid)
 			{
-				$temp = $rli->get_nsr_value($data, $raid_key, true);
-				$raid['value'] = $temp['v'];
-                $formul[$raid_key] = $temp['p'].'/'.$temp['c'];
+				$raid['value'] = $rli->get_nsr_value($data, $raid_key);
+                $formul[$raid_key] = $raid['value'].'/'.$count;
             	$tpl->assign_block_vars('raids', raids2tpl($raid_key, $raid, $formul));
 			}
 		}
@@ -532,7 +535,7 @@ class raidlogimport extends EQdkp_Admin
 			$maxkey = 0;
 			foreach($data['members'] as $key => $member)
 			{
-				$members[$member['name']] = $member['name'].(($rli->display_rank('adj')) ? $rli->rank_suffix($member['name']) : '');
+				$members[$member['name']] = $member['name'];
 				$maxkey = ($maxkey < $key) ? $key : $maxkey;
 			}
 			$sql = "SELECT member_name FROM __members";
@@ -542,7 +545,7 @@ class raidlogimport extends EQdkp_Admin
 				if(!in_array($row['member_name'], $members))
 				{
 					$maxkey++;
-					$members[$row['member_name']] = $row['member_name'].(($rli->display_rank('adj')) ? $rli->rank_suffix($row['member_name']) : '');
+					$members[$row['member_name']] = $row['member_name'];
 					$data['members'][$maxkey]['name'] = $row['member_name'];
 					$data['members'][$maxkey]['raid_list'] = array();
 				}
@@ -556,9 +559,8 @@ class raidlogimport extends EQdkp_Admin
         	}
 			foreach($data['raids'] as $raid_key => $raid)
 			{
-				$temp = $rli->get_nsr_value($data, $raid_key, TRUE);
-				$raid['value'] = $temp['v'];
-                $formul[$raid_key] = $temp['p'].'/'.$temp['c'];
+				$raid['value'] = $rli->get_nsr_value($data, $raid_key);
+                $formul[$raid_key] = $raid['value'].'/'.$count;
                 $u = 0;
 				foreach($data['members'] as $key => $member)
 				{

@@ -47,7 +47,7 @@
 	  <!-- BEGIN player -->
       <tr class="{player.ZAHL}">
          <td align="right">{player.NR}&nbsp;<img src="./../../../images/global/delete.png" alt="{L_DELETE}"><input type="checkbox" name="members[{player.KEY}][delete]" value="true" title="{L_DELETE}" /></td>
-	     <td width="300"><input type="text" name="members[{player.KEY}][name]" value="{player.MITGLIED}" /> {player.ALIAS}</td>
+	     <td width="300"><input type="text" name="members[{player.KEY}][name]" value="{player.MITGLIED}" /> {player.ALIAS} {player.RANK}</td>
 	     <td>{player.RAID_LIST}</td>
 	     <!-- IF S_CONF_ADJ -->
 	     <td align="right"><input type="text" name="members[{player.KEY}][timedkp]" class="maininput" value="{player.ZEITDKP}" size="5" /></td>

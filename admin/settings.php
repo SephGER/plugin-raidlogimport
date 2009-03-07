@@ -60,6 +60,15 @@ class RLI_Settings extends EQdkp_Admin
 		$messages = array();
 		foreach($rli->config as $old_name => $old_value)
 		{
+			if($old_name == 's_member_rank')
+			{
+				$val = 0;
+				foreach($_POST[$old_name] as $pos)
+				{
+					$val += $pos;
+				}
+				$_POST[$old_name] = $val;
+			}
 			if(isset($_POST[$old_name]) AND $_POST[$old_name] != $old_value)  //update
 			{
 				$sql = "UPDATE __raidlogimport_config
@@ -101,8 +110,6 @@ class RLI_Settings extends EQdkp_Admin
 				System_Message($name, $user->lang['bz_save_suc'], 'green');
 			}
 		}
-		$k = 2;
-		$endvalues = array();
 		//select ranks
 		$sql = "SELECT rank_name, rank_id FROM __member_ranks ORDER BY rank_name DESC;";
 		$result = $db->query($sql);
@@ -110,147 +117,153 @@ class RLI_Settings extends EQdkp_Admin
 		{
 		  if($row['rank_id'])
 		  {
-			$ranks[$row['rank_id']] = $row['rank_name'];
+			$new_member_rank[$row['rank_id']] = $row['rank_name'];
 		  }
 		}
-		$holder = array();
-		foreach($rli->config as $name => $value)
+		
+		//select parsers
+		$parser = array('ctrt' => 'CT-Raidtracker');
+		
+		//select raidcount            
+        $raidcount = array();
+		for($i=0; $i<=3; $i++)
 		{
-			if($name == 'raidcount')
+			$raidcount[$i] = $user->lang['raidcount_'.$i];
+		}
+		
+		//select null_sum
+		$null_sum = array();
+		for($i=0; $i<=2; $i++)
+		{
+			$null_sum[$i] = $user->lang['null_sum_'.$i];
+		}
+		
+		//select item_save_lang
+		$item_save_lang = array('en' => 'en', 'de' => 'de', 'fr' => 'fr', 'es' => 'es', 'ru' => 'ru');
+		
+		$k = 2;
+		$configs = array(
+			'select' 	=> array(
+				'general' 		=> array('raidcount', 'new_member_rank', 'null_sum'),
+				'parse'			=> array('parser'),
+				'loot'			=> array('item_save_lang')
+			),
+			'yes_no'	=> array(
+				'general'		=> array('rli_upd_check', 'use_timedkp', 'use_bossdkp'),
+				'hnh_suffix' 	=> array('dep_match'),
+				'att'		 	=> array('attendence_raid'),
+				'adj'			=> array('deactivate_adj'),
+				'parse'			=> array('event_boss'),
+				'am'			=> array('auto_minus', 'am_value_raids', 'am_allxraids'),
+				'loot'			=> array('ignore_dissed')
+			),
+			'normal'	=> array(
+				'general'		=> array('member_miss_time'),
+				'am'			=> array('am_raidnum', 'am_value'),
+				'att'			=> array('attendence_begin', 'attendence_end', 'attendence_time'),
+				'loot'			=> array('loottime'),
+				'adj'			=> array('adj_parse'),
+				'hnh_suffix'	=> array('hero', 'non_hero'),
+				'parse'			=> array('bz_parse')
+			),
+			'text' 		=> array(
+				'general'		=> array('rli_inst_version', 'rli_round')
+			),
+			'ignore'	=> array(
+				'ignore'		=> array('rlic_data', 'rlic_lastcheck', 'rli_inst_build')
+			),
+			'special'	=> array(
+				'general'		=> array('s_member_rank')
+			)
+		);
+		
+		$holder = array();
+		foreach($configs as $display_type => $hold)
+		{
+			foreach($hold as $holde => $names)
 			{
-                $holder['general'][$k]['value'] = "<select name='".$name."'>";
-				for($i=0; $i<=3; $i++)
+				foreach($names as $name)
 				{
-					$select = ($i == $value) ? "selected='selected'" : "";
-					$holder['general'][$k]['value'] .= "<option value='".$i."' ".$select.">".$user->lang['raidcount_'.$i]."</option>";
+					switch($display_type)
+					{
+						case 'select':
+							$holder[$holde][$k]['value'] = $myHtml->DropDown($name, $$name, $rli->config[$name]);
+							$holder[$holde][$k]['name'] = $name;
+							break;
+							
+						case 'yes_no':
+							$a = $k;
+							if($name == 'rli_upd_check')
+							{
+								$k = 1;
+							}
+							$check_1 = '';
+							$check_0 = '';
+							if($rli->config[$name])
+							{
+								$check_1 = "checked='checked'";
+							}
+							else
+							{
+								$check_0 = "checked='checked'";
+							}
+							$holder[$holde][$k]['value'] = "<input type='radio' name='".$name."' value='1' ".$check_1." />".$user->lang['yes']."&nbsp;&nbsp;&nbsp;";
+							$holder[$holde][$k]['value'] .= "&nbsp;&nbsp;&nbsp;<input type='radio' name='".$name."' value='0' ".$check_0." />".$user->lang['no'];
+							$holder[$holde][$k]['name'] = $name;
+							$k = $a;
+							break;
+						
+						case 'text':
+							$a = $k;
+							if($name == 'rli_inst_version')
+							{
+								$k = 0;
+							}
+							if($name == 'rli_round')
+							{
+								$rli->config[$name] = $user->lang['rli_round_plus'];
+							}
+							$holder[$holde][$k]['value'] = $rli->config[$name];
+							$holder[$holde][$k]['name'] = $name;
+							$k = $a;
+							break;
+							
+						case 'normal':
+							$holder[$holde][$k]['value'] = "<input type='text' name='".$name."' value='".$rli->config[$name]."' class='maininput' />";
+							$holder[$holde][$k]['name'] = $name;
+							break;
+							
+						case 'special':
+							$value = $rli->config[$name];
+							$loot_c = '';
+							if($value == 2 || $value == 3 || $value == 6 || $value == 7)
+							{
+								$loot_c = 'checked="checked"';
+							}
+							$mem_c = '';
+							if($value == 1 || $value == 3 || $value == 5 || $value == 7)
+							{
+								$mem_c = 'checked="checked"';
+							}
+							$adj_c = '';
+							if($value == 4 || $value == 5 || $value == 6 || $value == 7)
+							{
+								$adj_c = 'checked="checked"';
+							}
+							$holder[$holde][$k]['value'] = "<input type='checkbox' name='".$name."[]' value='1' ".$mem_c." />".$user->lang['s_member_rank_1']."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+							$holder[$holde][$k]['value'] .= "<input type='checkbox' name='".$name."[]' value='2' ".$loot_c." />".$user->lang['s_member_rank_2']."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+							$holder[$holde][$k]['value'] .= "<input type='checkbox' name='".$name."[]' value='4' ".$adj_c." />".$user->lang['s_member_rank_4'];
+							$holder[$holde][$k]['name'] = $name;
+							break;
+							
+						default:
+							//do nothing
+							break;
+					}
+					$k++;
 				}
-				$holder['general'][$k]['value'] .= "</select>";
-				$holder['general'][$k]['name'] = $name;
 			}
-			elseif($name == 'parser')
-			{
-				$parsers = array('ctrt' => 'CT-Raidtracker');
-				$holder['parse'][$k]['value'] = $myHtml->DropDown($name, $parsers, $value);
-				$holder['parse'][$k]['name'] = $name;
-			}
-			elseif($name == 'new_member_rank')
-			{
-				$holder['general'][$k]['value'] = $myHtml->DropDown($name, $ranks, $value);
-				$holder['general'][$k]['name'] = $name;
-			}
-			elseif($name == 'event_boss' OR $name == 'attendence_raid' OR $name == 'dep_match' OR $name == 'rli_upd_check' OR $name == 'use_bossdkp' OR $name == 'use_timedkp' OR $name == 'deactivate_adj' or $name == 'auto_minus' or $name == 'ignore_dissed' OR $name == 'am_allxraids' OR $name == 'am_value_raids')
-			{
-				$hold = 'general';
-				if($name == 'dep_match')
-				{
-					$hold = 'hnh_suffix';
-				}
-				elseif($name == 'attendence_raid')
-				{
-					$hold = 'att';
-				}
-				elseif($name == 'deactivate_adj')
-				{
-					$hold = 'adj';
-				}
-				elseif($name == 'event_boss')
-				{
-					$hold = 'parse';
-				}
-				elseif($name == 'auto_minus' or $name == 'am_allxraids' or $name == 'am_value_raids')
-				{
-					$hold = 'am';
-				}
-				elseif($name == 'ignore_dissed')
-				{
-					$hold = 'loot';
-				}
-                $a = $k;
-				if($name == 'rli_upd_check')
-				{
-					$k = 1;
-				}
-				$check_1 = '';
-				$check_0 = '';
-				if($value)
-				{
-					$check_1 = "checked='checked'";
-				}
-				else
-				{
-					$check_0 = "checked='checked'";
-				}
-				$holder[$hold][$k]['value'] = "<input type='radio' name='".$name."' value='1' ".$check_1." />".$user->lang['yes']."&nbsp;&nbsp;&nbsp;";
-				$holder[$hold][$k]['value'] .= "&nbsp;&nbsp;&nbsp;<input type='radio' name='".$name."' value='0' ".$check_0." />".$user->lang['no'];
-				$holder[$hold][$k]['name'] = $name;
-				$k = $a;
-			}
-			elseif($name == 'rli_inst_version')
-			{
-				$holder['general'][0]['value'] = $value;
-				$holder['general'][0]['name'] = $name;
-			}
-			elseif($name == 'rlic_data' or $name == 'rlic_lastcheck' or $name == 'rli_inst_build')
-			{
-				//do nothing
-			}
-			elseif($name == 'null_sum')
-			{
-				$holder['general'][$k]['value'] = "<select name='".$name."'>";
-				for($i=0; $i<=2; $i++)
-				{
-					$select = ($i == $value) ? "selected='selected'" : "";
-					$holder['general'][$k]['value'] .= "<option value='".$i."' ".$select.">".$user->lang['null_sum_'.$i]."</option>";
-				}
-				$holder['general'][$k]['value'] .= "</select>";
-				$holder['general'][$k]['name'] = $name;
-			}
-			elseif($name == 'item_save_lang')
-			{
-				$options = array('en' => 'en', 'de' => 'de', 'fr' => 'fr', 'es' => 'es', 'ru' => 'ru');
-				$holder['loot'][$k]['value'] = '<select name="'.$name.'">';
-				foreach($options as $ey => $val)
-				{
-					$sel = ($ey == $value) ? 'selected="selected"' : '';
-					$holder['loot'][$k]['value'] .= '<option value="'.$ey.'" '.$sel.'>'.$val.'</option>';
-				}
-				$holder['loot'][$k]['value'] .= '</select>';
-				$holder['loot'][$k]['name'] = $name;
-			}
-			else
-			{
-				$hold = 'general';
-				if($name == 'am_raidnum' OR $name == 'am_value')
-				{
-					$hold = 'am';
-				}
-				elseif($name == 'attendence_begin' or $name == 'attendence_end' or $name == 'attendence_time')
-				{
-					$hold = 'att';
-				}
-				elseif($name == 'loottime')
-				{
-					$hold = 'loot';
-				}
-				elseif($name == 'adj_parse')
-				{
-					$hold = 'adj';
-				}
-				elseif($name == 'hero' or $name == 'non_hero')
-				{
-					$hold = 'hnh_suffix';
-				}
-				elseif($name == 'bz_parse')
-				{
-					$hold = 'parse';
-				}
-				$holder[$hold][$k]['value'] = "<input type='text' name='".$name."' value='".$value."' class='maininput' />";
-				$holder[$hold][$k]['name'] = $name;
-			}
-			$k++;
         }
-        $holder['general'][$k+1]['name'] = 'rli_round';
-        $holder['general'][$k+1]['value'] = $user->lang['rli_round_plus'];
         foreach($holder as $type => $hold)
         {
         	ksort($hold);

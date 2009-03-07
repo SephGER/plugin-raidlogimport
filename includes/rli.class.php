@@ -624,7 +624,7 @@ if(!class_exists('rli'))
                 {
                 	if($row['date'] >= $raid_date)
                 	{
-                		$raid_attendees[$row['member_name']] = ($raid_value) ? $raid_value : true;
+                		$raid_attendees[$row['member_name']] = true;
                 	}
                 }
             }
@@ -632,8 +632,9 @@ if(!class_exists('rli'))
 			$res = $db->query($sql);
 			while ($row = $db->fetch_record($res))
 			{
-				$raid_attendees[$row['member_name']] = ($raid_value) ? $raid_value : true;
+				$raid_attendees[$row['member_name']] = true;
 			}
+			$raid_attendees['raids_value'] = $raid_value;
 			$db->free_result($res);
 			return $raid_attendees;
 		}
@@ -676,13 +677,13 @@ if(!class_exists('rli'))
         			{
         				$data['loots'][$maxkey]['name'] = $user->lang['am_name'];
         				$data['loots'][$maxkey]['time'] = $data['raids'][1]['begin'] +1;
-        				$data['loots'][$maxkey]['dkp'] = ($this->config['am_value_raids']) ? $raid_attendees[$row['member_name']] : $this->config['am_value'];
+        				$data['loots'][$maxkey]['dkp'] = ($this->config['am_value_raids']) ? $raid_attendees['raids_value'] : $this->config['am_value'];
         				$data['loots'][$maxkey]['player'] = $row['member_name'];
         			}
         			else
         			{
         				$data['adjs'][$maxkey]['reason'] = $user->lang['am_name'];
-        				$data['adjs'][$maxkey]['value'] = '-'.(($this->config['am_value_raids']) ? $raid_attendees[$row['member_name']] : $this->config['am_value']);
+        				$data['adjs'][$maxkey]['value'] = -(($this->config['am_value_raids']) ? $raid_attendees['raids_value'] : $this->config['am_value']);
         				$data['adjs'][$maxkey]['event'] = $data['raids'][1]['event'];
         				$data['adjs'][$maxkey]['member'] = $row['member_name'];
         			}
@@ -735,7 +736,19 @@ if(!class_exists('rli'))
 	function parse_members($post, $data)
 	{
 	  global $user;
-	  $raid_attendees = $this->auto_minus_ra($this->get_nsr_value($data));
+	  $rv = 0;
+	  if($this->config['null_sum'])
+	  {
+	  	$rv = $this->get_nsr_value($data);
+	  }
+	  else
+	  {
+	  	foreach($data['raids'] as $ra)
+	  	{
+	  		$rv += $ra['value'];
+	  	}
+	  }
+	  $raid_attendees = $this->auto_minus_ra($rv);
       $members = array();
 	  foreach($post as $k => $mem)
 	  {
@@ -1196,7 +1209,14 @@ if(!class_exists('rli'))
 	function iteminput2tpl($data, $loot_cache, $start, $end, $members, $aliase)
 	{
 		global $db, $tpl, $myHtml, $eqdkp, $user;
-
+		
+		if($this->display_rank('loot'))
+		{
+			foreach($members['name'] as $kex => $member)
+			{
+				$members['name'][$kex] .= $this->rank_suffix($kex);
+			}
+		}
 		foreach ($data['loots'] as $key => $loot)
         {
           if($start <= $key AND $key < $end)
@@ -1246,8 +1266,8 @@ if(!class_exists('rli'))
 		  }
 		}
 	}
-	
-	function get_nsr_value($data, $raid_key=false)
+
+	function get_nsr_value($data, $raid_key=false, $returncount=false)
 	{
 		global $db;
 		$value = 0;
@@ -1261,17 +1281,67 @@ if(!class_exists('rli'))
 					$raid['value'] += $loot['dkp'];
 				}
 			}
-			$count = ($this->config['null_sum'] == 2) ? $db->query_first("SELECT COUNT(*) FROM __members") : count($data['members']);
+			$count = ($this->config['null_sum'] == 2) ? $db->query_first("SELECT COUNT(member_id) FROM __members;") : count($data['members']);
+			$pre = $raid['value'];
 			$raid['value'] = $raid['value']/$count;
 			$raid['value'] = runden($raid['value']);
 			if($raid_key AND $key == $raid_key)
 			{
+				if($returncount)
+				{
+					return array('v' => $raid['value'], 'c' => $count, 'p' => $pre);
+				}
 				return $raid['value'];
 			}
 			$value += $raid['value'];
 		}
+		if($returncount)
+		{
+			return array('v' => $value, 'c' => $count);
+		}
 		return $value;
-	}		
+	}
+	
+	function get_member_ranks()
+	{
+		global $db;
+		$member_ranks = array();
+		$sql = "SELECT m.member_name, r.rank_name FROM __members m, __member_ranks r WHERE m.member_rank_id = r.rank_id;";
+		$result = $db->query($sql);
+		while ($row = $db->fetch_record($result))
+		{
+			$member_ranks[$row['member_name']] = $row['rank_name'];
+		}
+		return $member_ranks;
+	}
+	
+	function display_rank($page)
+	{
+		$v = $this->config['s_member_rank'];
+		if($v == 7)
+		{
+			return true;
+		}
+		if($page == 'member' AND ($v == 1 || $v == 3 || $v == 5))
+		{
+			return true;
+		}
+		if($page == 'loot' AND ($v == 2 || $v == 3 || $v == 6))
+		{
+			return true;
+		}
+		if($page == 'adj' AND ($v == 4 || $v == 5 || $v == 6))
+		{
+			return true;
+		}
+		return false;
+	}
+	function rank_suffix($mname)
+	{
+		$member_ranks = $this->get_member_ranks();
+		$rank = (isset($member_ranks[$mname])) ? $member_ranks[$mname] : $this->config['new_member_rank'];
+		return ' ('.$rank.')';
+	}
   }//class
 }//class exist
 ?>

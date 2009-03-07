@@ -180,4 +180,8 @@
 	$lang['rli_round_plus'] = 'Um Runden zu verwenden, musst du es in den Plus-Einstellungen aktivieren.';
 	$lang['ignore_dissed'] = 'Disenchanted- und Bank-Loot ignorieren?';
 	$lang['member_miss_time'] = 'Zeit in Sekunden, die ein Member fehlen kann, ohne dass er Abzüge bekommt.';
+	$lang['s_member_rank'] = 'Member Rang anzeigen?';
+	$lang['s_member_rank_1'] = 'Member-Übersicht';
+	$lang['s_member_rank_2'] = 'Loot-Übersicht';
+	$lang['s_member_rank_4'] = 'Korrekturen-Übersicht';
 ?>
