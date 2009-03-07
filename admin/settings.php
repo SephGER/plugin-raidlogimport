@@ -170,7 +170,7 @@ class RLI_Settings extends EQdkp_Admin
 				'parse'			=> array('bz_parse')
 			),
 			'text' 		=> array(
-				'general'		=> array('rli_inst_version', 'rli_round')
+				'general'		=> array('rli_inst_version')
 			),
 			'ignore'	=> array(
 				'ignore'		=> array('rlic_data', 'rlic_lastcheck', 'rli_inst_build')
@@ -221,10 +221,6 @@ class RLI_Settings extends EQdkp_Admin
 							if($name == 'rli_inst_version')
 							{
 								$k = 0;
-							}
-							if($name == 'rli_round')
-							{
-								$rli->config[$name] = $user->lang['rli_round_plus'];
 							}
 							$holder[$holde][$k]['value'] = $rli->config[$name];
 							$holder[$holde][$k]['name'] = $name;

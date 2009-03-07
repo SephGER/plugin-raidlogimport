@@ -779,7 +779,7 @@ if(!class_exists('rli'))
 						$raid = $data['raids'][$raid_id];
 						if($this->config['use_timedkp'])
 						{
-							$dkp = $dkp + runden($this->calc_timedkp($raid['begin'], $raid['end'], $member, $raid['timebonus']));
+							$dkp = $dkp + $this->calc_timedkp($raid['begin'], $raid['end'], $member, $raid['timebonus']);
 						}
 						if($this->config['use_bossdkp'])
 						{
@@ -1299,7 +1299,6 @@ if(!class_exists('rli'))
 			$count = ($this->config['null_sum'] == 2) ? $db->query_first("SELECT COUNT(member_id) FROM __members;") : count($data['members']);
 			$pre = (float) $raid['value'];
 			$raid['value'] = $raid['value']/$count;
-			$raid['value'] = runden($raid['value']);
 			if($raid_key AND $key == $raid_key)
 			{
 				if($returncount)

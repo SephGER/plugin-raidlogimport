@@ -176,8 +176,6 @@
 	$lang['title_loot'] = 'Loot / Items';
 	$lang['title_parse'] = 'Parse-Einstellungen';
 	$lang['title_hnh_suffix'] = 'Heroic / Non-Heroic';
-	$lang['rli_round'] = 'Runden';
-	$lang['rli_round_plus'] = 'Um Runden zu verwenden, musst du es in den Plus-Einstellungen aktivieren.';
 	$lang['ignore_dissed'] = 'Disenchanted- und Bank-Loot ignorieren?';
 	$lang['member_miss_time'] = 'Zeit in Sekunden, die ein Member fehlen kann, ohne dass er Abzüge bekommt.';
 	$lang['s_member_rank'] = 'Member Rang anzeigen?';

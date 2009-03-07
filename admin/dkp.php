@@ -138,7 +138,7 @@ class raidlogimport extends EQdkp_Admin
                 'END_TIME'	=> date('H:i:s', $rai['end']),
 				'EVENT'		=> $myHtml->DropDown('raids['.$ky.'][event]', $events, $rai['event']),
 				'TIMEBONUS'	=> $rai['timebonus'],
-				'VALUE'		=> runden($rai['value']),
+				'VALUE'		=> $rai['value'],
 				'NOTE'		=> $rai['note']
 				)
 			);
@@ -478,7 +478,7 @@ class raidlogimport extends EQdkp_Admin
 					'MEMBER'	=> $myHtml->DropDown('adjs['.$a.'][member]', $members, $adj['member'], '', '', true),
 					'EVENT'		=> $myHtml->DropDown('adjs['.$a.'][event]', $events, $ev_sel, '', '', true),
 					'NOTE'		=> $adj['reason'],
-					'VALUE'		=> runden($adj['value']),
+					'VALUE'		=> $adj['value'],
 					'CLASS'		=> $eqdkp->switch_row_class(),
 					'KEY'		=> $a)
 				);
