@@ -590,7 +590,6 @@ if(!class_exists('rli'))
 
 	function auto_minus_ra($actualraidvalue)
 	{
-		var_dump($actualraidvalue);
 		global $db, $user;
 		if($this->config['auto_minus'])
 		{
@@ -1260,7 +1259,7 @@ if(!class_exists('rli'))
                 'ITEMID'    => $loot['id'],
                 'LOOTER'    => $myHtml->DropDown("loots[".$key."][player]", $members['name'], $loot['player'], '', '', true),
                 'RAID'      => $loot_select."</select>",
-                'LOOTDKP'   => $loot['dkp'],
+                'LOOTDKP'   => round($loot['dkp'], 2),
                 'KEY'       => $key,
                 'CLASS'     => $eqdkp->switch_row_class(),
                 'READONLY'	=> ($loot['name'] == $user->lang['am_name']) ? 'readonly="readonly"' : '')
@@ -1299,6 +1298,7 @@ if(!class_exists('rli'))
 			$count = ($this->config['null_sum'] == 2) ? $db->query_first("SELECT COUNT(member_id) FROM __members;") : count($data['members']);
 			$pre = (float) $raid['value'];
 			$raid['value'] = $raid['value']/$count;
+			$raid['value'] = round($raid['value'], 2);
 			if($raid_key AND $key == $raid_key)
 			{
 				if($returncount)

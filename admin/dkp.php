@@ -478,7 +478,7 @@ class raidlogimport extends EQdkp_Admin
 					'MEMBER'	=> $myHtml->DropDown('adjs['.$a.'][member]', $members, $adj['member'], '', '', true),
 					'EVENT'		=> $myHtml->DropDown('adjs['.$a.'][event]', $events, $ev_sel, '', '', true),
 					'NOTE'		=> $adj['reason'],
-					'VALUE'		=> $adj['value'],
+					'VALUE'		=> round($adj['value'], 2),
 					'CLASS'		=> $eqdkp->switch_row_class(),
 					'KEY'		=> $a)
 				);
