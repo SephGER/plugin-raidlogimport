@@ -590,6 +590,7 @@ if(!class_exists('rli'))
 
 	function auto_minus_ra($actualraidvalue)
 	{
+		var_dump($actualraidvalue);
 		global $db, $user;
 		if($this->config['auto_minus'])
 		{
@@ -1290,12 +1291,13 @@ if(!class_exists('rli'))
 				{
 					if(!($without_am AND $loot['name'] == $user->lang['am_name']))
 					{
-						$raid['value'] += $loot['dkp'];
+            			$loot['dkp'] = floatvalue($loot['dkp']);
+						$raid['value'] = $raid['value'] + $loot['dkp'];
 					}
 				}
 			}
 			$count = ($this->config['null_sum'] == 2) ? $db->query_first("SELECT COUNT(member_id) FROM __members;") : count($data['members']);
-			$pre = $raid['value'];
+			$pre = (float) $raid['value'];
 			$raid['value'] = $raid['value']/$count;
 			$raid['value'] = runden($raid['value']);
 			if($raid_key AND $key == $raid_key)
