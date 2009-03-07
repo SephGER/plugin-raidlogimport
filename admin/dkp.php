@@ -290,6 +290,10 @@ class raidlogimport extends EQdkp_Admin
 		//show raids&members
 		foreach($data['raids'] as $key => $raid)
 		{
+			if($rli->config['null_sum'])
+			{
+				$raid['value'] = $rli->get_nsr_value($data, $key, false, true);
+			}
 			$tpl->assign_block_vars('raids', raids2tpl($key, $raid));
 		}
 

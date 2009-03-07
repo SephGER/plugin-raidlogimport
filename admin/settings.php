@@ -63,9 +63,12 @@ class RLI_Settings extends EQdkp_Admin
 			if($old_name == 's_member_rank')
 			{
 				$val = 0;
-				foreach($_POST[$old_name] as $pos)
+				if(is_array($_POST[$old_name]))
 				{
+				  foreach($_POST[$old_name] as $pos)
+				  {
 					$val += $pos;
+				  }
 				}
 				$_POST[$old_name] = $val;
 			}
@@ -120,27 +123,27 @@ class RLI_Settings extends EQdkp_Admin
 			$new_member_rank[$row['rank_id']] = $row['rank_name'];
 		  }
 		}
-		
+
 		//select parsers
 		$parser = array('ctrt' => 'CT-Raidtracker');
-		
-		//select raidcount            
+
+		//select raidcount
         $raidcount = array();
 		for($i=0; $i<=3; $i++)
 		{
 			$raidcount[$i] = $user->lang['raidcount_'.$i];
 		}
-		
+
 		//select null_sum
 		$null_sum = array();
 		for($i=0; $i<=2; $i++)
 		{
 			$null_sum[$i] = $user->lang['null_sum_'.$i];
 		}
-		
+
 		//select item_save_lang
 		$item_save_lang = array('en' => 'en', 'de' => 'de', 'fr' => 'fr', 'es' => 'es', 'ru' => 'ru');
-		
+
 		$k = 2;
 		$configs = array(
 			'select' 	=> array(
@@ -176,7 +179,7 @@ class RLI_Settings extends EQdkp_Admin
 				'general'		=> array('s_member_rank')
 			)
 		);
-		
+
 		$holder = array();
 		foreach($configs as $display_type => $hold)
 		{
@@ -190,7 +193,7 @@ class RLI_Settings extends EQdkp_Admin
 							$holder[$holde][$k]['value'] = $myHtml->DropDown($name, $$name, $rli->config[$name]);
 							$holder[$holde][$k]['name'] = $name;
 							break;
-							
+
 						case 'yes_no':
 							$a = $k;
 							if($name == 'rli_upd_check')
@@ -212,7 +215,7 @@ class RLI_Settings extends EQdkp_Admin
 							$holder[$holde][$k]['name'] = $name;
 							$k = $a;
 							break;
-						
+
 						case 'text':
 							$a = $k;
 							if($name == 'rli_inst_version')
@@ -227,12 +230,12 @@ class RLI_Settings extends EQdkp_Admin
 							$holder[$holde][$k]['name'] = $name;
 							$k = $a;
 							break;
-							
+
 						case 'normal':
 							$holder[$holde][$k]['value'] = "<input type='text' name='".$name."' value='".$rli->config[$name]."' class='maininput' />";
 							$holder[$holde][$k]['name'] = $name;
 							break;
-							
+
 						case 'special':
 							$value = $rli->config[$name];
 							$loot_c = '';
@@ -255,7 +258,7 @@ class RLI_Settings extends EQdkp_Admin
 							$holder[$holde][$k]['value'] .= "<input type='checkbox' name='".$name."[]' value='4' ".$adj_c." />".$user->lang['s_member_rank_4'];
 							$holder[$holde][$k]['name'] = $name;
 							break;
-							
+
 						default:
 							//do nothing
 							break;

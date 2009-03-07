@@ -1209,7 +1209,7 @@ if(!class_exists('rli'))
 	function iteminput2tpl($data, $loot_cache, $start, $end, $members, $aliase)
 	{
 		global $db, $tpl, $myHtml, $eqdkp, $user;
-		
+
 		if($this->display_rank('loot'))
 		{
 			foreach($members['name'] as $kex => $member)
@@ -1248,7 +1248,7 @@ if(!class_exists('rli'))
           	foreach($data['raids'] as $i => $ra)
            	{
            		$loot_select .= "<option value='".$i."'";
-           		if($ra['begin'] < $loot['time'] AND $ra['end'] > $loot['time'])
+           		if($this->loot_in_raid($ra['begin'], $ra['end'], $loot['time']))
            		{
            			$loot_select .= ' selected="selected"';
            		}
@@ -1261,24 +1261,37 @@ if(!class_exists('rli'))
                 'RAID'      => $loot_select."</select>",
                 'LOOTDKP'   => $loot['dkp'],
                 'KEY'       => $key,
-                'CLASS'     => $eqdkp->switch_row_class())
+                'CLASS'     => $eqdkp->switch_row_class(),
+                'READONLY'	=> ($loot['name'] == $user->lang['am_name']) ? 'readonly="readonly"' : '')
             );
 		  }
 		}
 	}
-
-	function get_nsr_value($data, $raid_key=false, $returncount=false)
+	
+	function loot_in_raid($begin, $end, $time)
 	{
-		global $db;
+		if($begin < $time AND $end > $time)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	function get_nsr_value($data, $raid_key=false, $returncount=false, $without_am=false)
+	{
+		global $db, $user;
 		$value = 0;
 		foreach($data['raids'] as $key => $raid)
 		{
 			$raid['value'] = 0;
 			foreach($data['loots'] as $loot)
 			{
-				if($key == $loot['raid'])
+				if($this->loot_in_raid($raid['begin'], $raid['end'], $loot['time']))
 				{
-					$raid['value'] += $loot['dkp'];
+					if(!($without_am AND $loot['name'] == $user->lang['am_name']))
+					{
+						$raid['value'] += $loot['dkp'];
+					}
 				}
 			}
 			$count = ($this->config['null_sum'] == 2) ? $db->query_first("SELECT COUNT(member_id) FROM __members;") : count($data['members']);
@@ -1301,7 +1314,7 @@ if(!class_exists('rli'))
 		}
 		return $value;
 	}
-	
+
 	function get_member_ranks()
 	{
 		global $db;
@@ -1314,7 +1327,7 @@ if(!class_exists('rli'))
 		}
 		return $member_ranks;
 	}
-	
+
 	function display_rank($page)
 	{
 		$v = $this->config['s_member_rank'];
