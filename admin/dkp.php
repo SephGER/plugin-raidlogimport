@@ -109,7 +109,7 @@ class raidlogimport extends EQdkp_Admin
 				$rai['value'] = $rli->get_raidvalue($rai['begin'], $rai['end'], $rai['bosskills'], $rai['timebonus']);
 				if($rai['bosskills'] AND $rli->config['raidcount'] != 2)
 				{
-					$rai['note'] = $rli->get_note($rai['bosskills']);
+					$rai['note'] = $rli->get_note($rai['bosskills'], true);
 				}
 			}
 			if(isset($rai['bosskill_add']))
@@ -813,10 +813,6 @@ class raidlogimport extends EQdkp_Admin
                     //dkp
 					if(!$conf_plus['pk_multidkp'])
 					{
-						if(!$rli->config['attendence_raid'])
-						{
-							$dkp = $dkp + (($mem['att_dkp_begin']) ? $rli->config['attendence_begin'] : 0) + (($mem['att_dkp_end']) ? $rli->config['attendence_end'] : 0);
-						}
 						if($dkp)
 						{
 							$sql[] = "member_earned = member_earned + '".$dkp."', ";

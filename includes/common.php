@@ -9,6 +9,12 @@ if(!defined('EQDKP_INC'))
 	header('HTTP/1.0 Not Found');
 	exit;
 }
+
+if(!version_compare(phpversion(), '5.0.0', '>='))
+{
+	message_die('This Plugin needs at least PHP-Version 5. Your Version is: '.phpversion().'.');
+}
+
 global $eqdkp_root_path;
 include_once($eqdkp_root_path.'common.php');
 if (!$pm->check(PLUGIN_INSTALLED, 'raidlogimport') )

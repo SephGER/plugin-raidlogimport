@@ -251,7 +251,7 @@ class RLI_Settings extends EQdkp_Admin
 							}
 							$holder[$holde][$k]['value'] = "<input type='checkbox' name='".$name."[]' value='1' ".$mem_c." />".$user->lang['s_member_rank_1']."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 							$holder[$holde][$k]['value'] .= "<input type='checkbox' name='".$name."[]' value='2' ".$loot_c." />".$user->lang['s_member_rank_2']."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-							$holder[$holde][$k]['value'] .= "<input type='checkbox' name='".$name."[]' value='4' ".$adj_c." />".$user->lang['s_member_rank_4'];
+							$holder[$holde][$k]['value'] .= " <nobr><input type='checkbox' name='".$name."[]' value='4' ".$adj_c." />".$user->lang['s_member_rank_4']."</nobr>";
 							$holder[$holde][$k]['name'] = $name;
 							break;
 
@@ -282,7 +282,9 @@ class RLI_Settings extends EQdkp_Admin
 		}
 		$tpl->assign_vars(array(
 			'L_CONFIG' => $user->lang['raidlogimport'].' '.$user->lang['settings'],
-			'L_SAVE'	 => $user->lang['bz_save'])
+			'L_SAVE'	 => $user->lang['bz_save'],
+			'L_MANUAL'	=> $user->lang['rli_manual'],
+			'S_GERMAN'	=> ($user->lang['lang'] == 'german') ? true : false)
 		);
 
 		$eqdkp->set_vars(array(

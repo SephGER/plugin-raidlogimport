@@ -127,11 +127,22 @@ if(!class_exists('rli'))
 	  }
 	}
 
-	function get_note($bosskills)
+	function get_note($bosskills, $nonote=false)
 	{
 		$bosss = array();
 		foreach($bosskills as $bosskill)
 		{
+			if($nonote)
+			{
+				$this->get_bonus();
+				foreach($this->bonus['boss'] as $boss)
+				{
+					if(in_array($bosskill['name'], $boss['string']))
+					{
+						$bosskill['note'] = $boss['note'];
+					}
+				}
+			}
 			$bosss[] = $bosskill['note'].$this->suffix($this->config['dep_match']);
 		}
 		return implode(', ', $bosss);
@@ -517,11 +528,13 @@ if(!class_exists('rli'))
 		}
 		else
 		{
-		  foreach($raids as $k => $r)
+		  $rmaxkey = max(array_keys($raids));
+		  foreach($raids as $r)
 		  {
 			if($this->config['attendence_begin'] > 0 OR $this->config['attendence_end'] > 0)
 			{
-				$raids[$k]['value'] = $r['value'] + $this->config['attendence_begin'] + $this->config['attendence_end'];
+				$raids[1]['value'] = $r['value'] + $this->config['attendence_begin'];
+				$raids[$rmaxkey]['value'] = $r['value'] + $this->config['attendence_end'];
 			}
 		  }
 		}
@@ -583,7 +596,7 @@ if(!class_exists('rli'))
 		$list = array();
 		foreach($raids as $key => $raid)
 		{
-			$list[$key] = $raid['event'].': '.date('H:i:s', $raid['begin']).'-'.date('H:i:s', $raid['end']);
+			$list[$key] = $raid['event'].': '.date('H:i', $raid['begin']).'-'.date('H:i', $raid['end']);
 		}
 		return $list;
 	}
@@ -707,7 +720,7 @@ if(!class_exists('rli'))
       	list($hour, $min, $sec) = explode(':', $raid['end_time'], 3);
       	$raids[$key]['end'] = mktime($hour, $min, $sec, $month, $day, $year);
       	$raids[$key]['note'] = $raid['note'];
-      	$raids[$key]['value'] = $raid['value'];
+      	$raids[$key]['value'] = floatvalue($raid['value']);
       	$raids[$key]['event'] = $raid['event'];
       	$raids[$key]['bosskill_add'] = $raid['bosskill_add'];
       	$bosskills = array();
@@ -715,18 +728,18 @@ if(!class_exists('rli'))
       	{
       	  foreach($raid['bosskills'] as $u => $bk)
       	  {
-      		if(!$bk['delete'])
+      		if(!isset($bk['delete']))
       		{
     	  		list($hour, $min, $sec) = explode(':', $bk['time']);
 	      		list($day, $month, $year) = explode('.', $bk['date']);
       			$bosskills[$u]['time'] = mktime($hour, $min, $sec, $month, $day, $year);
-      			$bosskills[$u]['bonus'] = $bk['bonus'];
+      			$bosskills[$u]['bonus'] = floatvalue($bk['bonus']);
       			$bosskills[$u]['name'] = $bk['name'];
       		}
       	  }
       	}
       	$raids[$key]['bosskills'] = $bosskills;
-      	$raids[$key]['timebonus'] = $raid['timebonus'];
+      	$raids[$key]['timebonus'] = floatvalue($raid['timebonus']);
       }
 	 }
 	 $data['raids'] = $raids;
@@ -820,6 +833,7 @@ if(!class_exists('rli'))
 			  if(!$loot['delete'])
 			  {
 				$data['loots'][$key] = $loot;
+				$data['loots'][$key]['dkp'] = floatvalue($loot['dkp']);
 				$data['loots'][$key]['time'] = $item['time'];
 			  }
 			  else
@@ -841,6 +855,7 @@ if(!class_exists('rli'))
 		if(!$adj['delete'])
 		{
 			$adjs[$f] = $adj;
+			$adjs[$f]['value'] = floatvalue($adj['value']);
 		}
 	  }
 	  $data['adjs'] = $adjs;
@@ -1267,7 +1282,7 @@ if(!class_exists('rli'))
 		  }
 		}
 	}
-	
+
 	function loot_in_raid($begin, $end, $time)
 	{
 		if($begin < $time AND $end > $time)
@@ -1290,7 +1305,7 @@ if(!class_exists('rli'))
 				{
 					if(!($without_am AND $loot['name'] == $user->lang['am_name']))
 					{
-            			$loot['dkp'] = floatvalue($loot['dkp']);
+            			$loot['dkp'] = $loot['dkp'];
 						$raid['value'] = $raid['value'] + $loot['dkp'];
 					}
 				}

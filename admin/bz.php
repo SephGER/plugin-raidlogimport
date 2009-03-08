@@ -357,7 +357,7 @@ class Bz extends EQdkp_Admin
 	function display_form($messages=array())
 	{
 		global $tpl, $eqdkp, $pm, $db, $user, $SID;
-		
+
 		if($messages)
 		{
 			$type = 'green';
@@ -438,7 +438,7 @@ class Bz extends EQdkp_Admin
 			'L_BZ'			=> $user->lang['rli_bz_bz'],
 			'L_BOSS'		=> $user->lang['bz_boss_oz'],
 			'L_STRING'		=> $user->lang['bz_string'],
-			'L_BNOTE'		=> $user->lang['bz_bnote'],
+			'L_BNOTE'		=> $user->lang['bz_note_event'],
 			'L_BONUS'		=> $user->lang['bz_bonus'],
 			'L_UPDATE'		=> $user->lang['bz_update'],
 			'L_DELETE'		=> $user->lang['bz_delete'],

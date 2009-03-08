@@ -21,7 +21,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 	var $version = '0.5.1.4';
 	var $fwversion = '1.0.3';
 	var $jqversion = '2.0.1';
-	var $build = 4143;
+	var $build = 4150;
 
     function raidlogimport_plugin_class($pm)
     {
@@ -51,7 +51,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 	        'description'       => $user->lang['raidlogimport_short_desc'],
 	        'long_description'  => $user->lang['raidlogimport_long_desc'],
 	        'homepage'          => 'http://www.eqdkp-plus.com',
-	        'manuallink'        => false #$eqdkp_root_path . 'plugins/raidlogimport/language/'.$user->data['user_language'].'/manual.txt',
+	        'manuallink'        => ($user->data['user_language'] != 'german') ? false : $eqdkp_root_path . 'plugins/raidlogimport/language/'.$user->data['user_language'].'/Manual.pdf',
 	    );
 
 		//permissions
@@ -207,7 +207,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 		     $admin_menu = array(
 		    		'raidlogimport' => array(
 		    		99 => './../../plugins/raidlogimport/images/rli_logo.png',
-		            0 => 'DKP-Import',
+		            0 => $user->lang['raidlogimport'],
 		            1 => array(
 		            	'link' => $url_prefix . 'plugins/' . $this->get_data('path') . '/admin/settings.php',
 		            	'text' => $user->lang['settings'],
@@ -226,6 +226,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 		            	'check' => 'a_raidlogimport_alias')
 		        ),
 		           'raids' => array(
+		           					99 => 'calendar.png',
                                     0 => $user->lang['raids'],
                                     1 => array('link' => 'admin/addraid.php' . $SID,
                                                'text' => $user->lang['add'],

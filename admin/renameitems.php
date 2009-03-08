@@ -48,7 +48,14 @@ if($_GET['actual'] <= $_GET['count'])
         $output .= 'get itemid (search lang: '.$_GET['langfrom'].'): '.$items[$_GET['actual']]['itemID'].'<br />';
 	}
 	$output .= 'rename item to: '.$_GET['langto'].'<br />';
-	$renamed = get_itemname($items[$_GET['actual']]['itemID'], $_GET['langto']);
+	if($_GET['langfrom'] != $_GET['langto'])
+	{
+		$renamed = get_itemname($items[$_GET['actual']]['itemID'], $_GET['langto']);
+	}
+	else
+	{
+		$renamed = $items[$_GET['actual']]['name'];
+	}
 	$output .= 'new itemname: '.$renamed;
 	$sql = "UPDATE item_rename SET item_id = '".$items[$_GET['actual']]['itemID']."', item_name_trans = '".mysql_real_escape_string($renamed)."' WHERE id = '".$items[$_GET['actual']]['id']."';";
 	$db->query($sql);

@@ -182,4 +182,5 @@
 	$lang['s_member_rank_1'] = 'Member-Übersicht';
 	$lang['s_member_rank_2'] = 'Loot-Übersicht';
 	$lang['s_member_rank_4'] = 'Korrekturen-Übersicht';
+	$lang['rli_manual'] = 'Sollte dir die Bedeutung einiger Optionen nicht klar sein, so wirf einen Blick ins Manual (<a href="./../language/german/Manual.pdf">link</a>).';
 ?>
