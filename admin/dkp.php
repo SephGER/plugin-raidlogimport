@@ -119,7 +119,6 @@ class raidlogimport extends EQdkp_Admin
 					$rai['bosskills'][] = '';
 				}
 			}
-			$rai['event'] .= $rli->suffix(true);
 			if(!($rli->config['use_bossdkp'] or $rli->config['use_timedkp']))
 			{
 			  foreach($events as $name => $values)

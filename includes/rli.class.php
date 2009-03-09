@@ -91,6 +91,7 @@ if(!class_exists('rli'))
       		}
       	}
       }
+      $retu['event'] .= $this->suffix(true);
       return $retu;
     }
 
@@ -283,7 +284,7 @@ if(!class_exists('rli'))
 		$timedkp = $this->calc_timedkp($begin, $end, $tempmem, $timebonus);
 		$bossdkp = $this->calc_bossdkp($bosskills, $tempmem);
 		$dkp = $timedkp + $bossdkp;
-		return $dkp;
+		return round($dkp,2);
 	}
 
 	function get_bosskill_raidtime($begin, $end, $bosskill, $bosskill_before, $bosskill_after)
