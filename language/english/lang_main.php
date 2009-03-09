@@ -131,6 +131,7 @@
 	$lang['form_null_sum'] = 'Formula: Item-Costs / Number of Members ';
 	$lang['form_null_sum_1'] = $lang['form_null_sum'].'in the Raid';
 	$lang['form_null_sum_2'] = $lang['form_null_sum'].'in the System';
+	$lang['rli_choose_mem'] = 'Choose a Member ...';
 
 	//config
 	$lang['multidkp_need'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                    Activate for functionality with MultiDKP!                  </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='help'></a>";
@@ -177,6 +178,8 @@
 	$lang['title_parse'] = 'Parse';
 	$lang['title_hnh_suffix'] = 'Heroic / Non-Heroic';
 	$lang['ignore_dissed'] = 'Ignore disenchanted and bank loot?';
+	$lang['ignore_dissed_1'] = 'Ignore disenchanted';
+	$lang['ignore_dissed_2'] = 'Ignore bank';
 	$lang['member_miss_time'] = 'Time in seconds a member can miss without it being tracked.';
 	$lang['s_member_rank'] = 'Show member rank?';
 	$lang['s_member_rank_1'] = 'Members-Overview';

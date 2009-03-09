@@ -60,7 +60,7 @@ class RLI_Settings extends EQdkp_Admin
 		$messages = array();
 		foreach($rli->config as $old_name => $old_value)
 		{
-			if($old_name == 's_member_rank')
+			if($old_name == 's_member_rank' or $old_name == 'ignore_dissed')
 			{
 				$val = 0;
 				if(is_array($_POST[$old_name]))
@@ -157,8 +157,7 @@ class RLI_Settings extends EQdkp_Admin
 				'att'		 	=> array('attendence_raid'),
 				'adj'			=> array('deactivate_adj'),
 				'parse'			=> array('event_boss'),
-				'am'			=> array('auto_minus', 'am_value_raids', 'am_allxraids'),
-				'loot'			=> array('ignore_dissed')
+				'am'			=> array('auto_minus', 'am_value_raids', 'am_allxraids')
 			),
 			'normal'	=> array(
 				'general'		=> array('member_miss_time'),
@@ -176,7 +175,8 @@ class RLI_Settings extends EQdkp_Admin
 				'ignore'		=> array('rlic_data', 'rlic_lastcheck', 'rli_inst_build')
 			),
 			'special'	=> array(
-				'general'		=> array('s_member_rank')
+				'general'		=> array('s_member_rank'),
+				'loot'			=> array('ignore_dissed')
 			)
 		);
 
@@ -233,6 +233,8 @@ class RLI_Settings extends EQdkp_Admin
 							break;
 
 						case 'special':
+						  if($name == 's_member_rank')
+						  {
 							$value = $rli->config[$name];
 							$loot_c = '';
 							if($value == 2 || $value == 3 || $value == 6 || $value == 7)
@@ -252,8 +254,25 @@ class RLI_Settings extends EQdkp_Admin
 							$holder[$holde][$k]['value'] = "<input type='checkbox' name='".$name."[]' value='1' ".$mem_c." />".$user->lang['s_member_rank_1']."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 							$holder[$holde][$k]['value'] .= "<input type='checkbox' name='".$name."[]' value='2' ".$loot_c." />".$user->lang['s_member_rank_2']."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 							$holder[$holde][$k]['value'] .= " <nobr><input type='checkbox' name='".$name."[]' value='4' ".$adj_c." />".$user->lang['s_member_rank_4']."</nobr>";
-							$holder[$holde][$k]['name'] = $name;
-							break;
+						  }
+						  if($name == 'ignore_dissed')
+						  {
+						  	$value = $rli->config[$name];
+						  	$dissed = '';
+						  	if($value == 1 || $value == 3)
+						  	{
+						  		$dissed = 'checked="checked"';
+						  	}
+						  	$bank = '';
+						  	if($value == 2 || $value == 3)
+						  	{
+						  		$bank = 'checked="checked"';
+						  	}
+						  	$holder[$holde][$k]['value'] = "<input type='checkbox' name='".$name."[]' value='1' ".$dissed." />".$user->lang['ignore_dissed_1']."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+						  	$holder[$holde][$k]['value'] .= "<input type='checkbox' name='".$name."[]' value='2' ".$bank." />".$user->lang['ignore_dissed_2'];
+						  }
+                          $holder[$holde][$k]['name'] = $name;
+						  break;
 
 						default:
 							//do nothing

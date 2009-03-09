@@ -473,7 +473,8 @@ class raidlogimport extends EQdkp_Admin
 					'NOTE'		=> $adj['reason'],
 					'VALUE'		=> round($adj['value'], 2),
 					'CLASS'		=> $eqdkp->switch_row_class(),
-					'KEY'		=> $a)
+					'KEY'		=> $a,
+					'READONLY'	=> ($adj['reason'] == $user->lang['am_name']) ? "readonly='readonly'" : "")
 				);
 			}
 		}

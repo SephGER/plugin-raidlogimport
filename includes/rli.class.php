@@ -686,19 +686,22 @@ if(!class_exists('rli'))
         		if(!$raid_attendees[$row['member_name']])
         		{
                 	$maxkey++;
-        			if($this->config['null_sum'])
-        			{
+                    if($this->no_auto_minus_exists($row['member_name'], $data))
+                    {
+        			  if($this->config['null_sum'])
+        			  {
         				$data['loots'][$maxkey]['name'] = $user->lang['am_name'];
         				$data['loots'][$maxkey]['time'] = $data['raids'][1]['begin'] +1;
         				$data['loots'][$maxkey]['dkp'] = ($this->config['am_value_raids']) ? $raid_attendees['raids_value'] : $this->config['am_value'];
         				$data['loots'][$maxkey]['player'] = $row['member_name'];
-        			}
-        			else
-        			{
+        			  }
+        			  else
+        			  {
         				$data['adjs'][$maxkey]['reason'] = $user->lang['am_name'];
         				$data['adjs'][$maxkey]['value'] = -(($this->config['am_value_raids']) ? $raid_attendees['raids_value'] : $this->config['am_value']);
         				$data['adjs'][$maxkey]['event'] = $data['raids'][1]['event'];
         				$data['adjs'][$maxkey]['member'] = $row['member_name'];
+        			  }
         			}
         			unset($raid_attendees[$row['member_name']]);
         		}
@@ -1141,7 +1144,7 @@ if(!class_exists('rli'))
 			{
 				$raid['loots'][$i]['dkp'] = (int)$loot->Note;
 			}
-			if($this->config['ignore_dissed'] AND ($raid['loots'][$i]['player'] == 'disenchanted' OR $raid['loots'][$i]['player'] == 'bank'))
+			if(($this->config['ignore_dissed'] == 1 AND $raid['loots'][$i]['player'] == 'disenchanted') OR ($raid['loots'][$i]['player'] == 'bank' AND $this->config['ignore_dissed'] == 2) OR $this->config['ignore_dissed'] == 3)
 			{
 				unset($raid['loots'][$i]);
 				$i--;
@@ -1269,10 +1272,17 @@ if(!class_exists('rli'))
            		}
            		$loot_select .= ">".$i."</option>";
            	}
+           	$lm_s = "<select size='1' name='loots[".$key."][player]'>";
+           	$lm_s .= "<option disabled ".((in_array($loot['player'], $members['name'])) ? "" : "selected='selected'").">".$user->lang['rli_choose_mem']."</option>";
+           	foreach($members['name'] as $mn => $mem)
+           	{
+           		$lm_s .= "<option value='".$mn."' ".(($mn == $loot['player']) ? "selected='selected'" : "").">".$mem."</option>";
+           	}
+           	$lm_s .= "</select>";
 			$tpl->assign_block_vars('loots', array(
                 'LOOTNAME'  => $loot['name'],
                 'ITEMID'    => $loot['id'],
-                'LOOTER'    => $myHtml->DropDown("loots[".$key."][player]", $members['name'], $loot['player'], '', '', true),
+                'LOOTER'    => $lm_s,#$myHtml->DropDown("loots[".$key."][player]", $members['name'], $loot['player'], '', '', true),
                 'RAID'      => $loot_select."</select>",
                 'LOOTDKP'   => round($loot['dkp'], 2),
                 'KEY'       => $key,
@@ -1365,11 +1375,38 @@ if(!class_exists('rli'))
 		}
 		return false;
 	}
+	
 	function rank_suffix($mname)
 	{
 		$member_ranks = $this->get_member_ranks();
 		$rank = (isset($member_ranks[$mname])) ? $member_ranks[$mname] : $this->config['new_member_rank'];
 		return ' ('.$rank.')';
+	}
+	
+	function no_auto_minus_exists($memname, $data)
+	{
+		global $user;
+		if($this->config['null_sum'])
+		{
+			foreach($data['loots'] as $loot)
+			{
+				if($loot['player'] == $memname AND $loot['name'] == $user->lang['am_name'])
+				{
+					return false;
+				}
+			}
+  		}
+  		else
+  		{
+  			foreach($data['adjs'] as $adj)
+  			{
+  				if($adj['member'] == $memname AND $adj['reason'] == $user->lang['am_name'])
+  				{
+  					return false;
+  				}
+  			}
+  		}
+		return true;
 	}
   }//class
 }//class exist
