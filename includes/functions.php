@@ -2,7 +2,7 @@
 
 function floatvalue($value) {
      return floatval(preg_replace('#^([-]*[0-9\.,\' ]+?)((\.|,){1}([0-9-]{1,2}))*$#e', "str_replace(array('.', ',', \"'\", ' '), '', '\\1') . '.\\4'", $value));
-} 
+}
 
 /**
  * @author hoofy
@@ -86,6 +86,21 @@ function deep_in_array($search, $array)
 		}
 	}
 	return false;
+}
+
+function rli_get_aliases()
+{
+	global $db;
+	$aliases = array();
+	//load aliase
+	$sql = "SELECT m.member_name, a.alias_name FROM __raidlogimport_aliases a, __members m WHERE a.alias_member_id = m.member_id;";
+	$result = $db->query($sql);
+	$aliases = array();
+	while ( $row = $db->fetch_record($result))
+	{
+		$aliases[$row['alias_name']] = $row['member_name'];
+	}
+	return $aliases;
 }
 
 function create_member($member, $rank)

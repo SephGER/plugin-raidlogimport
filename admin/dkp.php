@@ -192,14 +192,7 @@ class raidlogimport extends EQdkp_Admin
 				$data['members'][$h]['name'] = '';
 			}
 		}
-            //load aliase
-		$sql = "SELECT m.member_name, a.alias_name FROM __raidlogimport_aliases a, __members m WHERE a.alias_member_id = m.member_id;";
-		$result = $db->query($sql);
-		$aliases = array();
-		while ( $row = $db->fetch_record($result))
-		{
-			$aliases[$row['alias_name']] = $row['member_name'];
-		}
+		$aliases = rli_get_aliases();
 		foreach($data['members'] as $key => $member)
 		{
 			if($rli->display_rank('member'))
