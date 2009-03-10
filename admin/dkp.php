@@ -99,7 +99,7 @@ class raidlogimport extends EQdkp_Admin
 		{
 			if($_POST['checkraid'] == $user->lang['rli_calc_note_value'])
 			{
-				$rai['value'] = $rli->get_raidvalue($rai['begin'], $rai['end'], $rai['bosskills'], $rai['timebonus']);
+				$rai['value'] = $rli->get_raidvalue($rai['begin'], $rai['end'], $rai['bosskills'], $rai['timebonus'], $rai['event']);
 				if($rai['bosskills'] AND $rli->config['raidcount'] != 2)
 				{
 					$rai['note'] = $rli->get_note($rai['bosskills'], true);
