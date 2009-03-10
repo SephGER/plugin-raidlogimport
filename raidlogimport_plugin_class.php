@@ -18,10 +18,10 @@ if ( !defined('EQDKP_INC') )
 class raidlogimport_Plugin_Class extends EQdkp_Plugin
 {
 	var $vstatus = 'Stable';
-	var $version = '0.5.1.5';
+	var $version = '0.5.1.6';
 	var $fwversion = '1.0.3';
 	var $jqversion = '2.0.1';
-	var $build = 4163;
+	var $build = 4168;
 
     function raidlogimport_plugin_class($pm)
     {
@@ -51,7 +51,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 	        'description'       => $user->lang['raidlogimport_short_desc'],
 	        'long_description'  => $user->lang['raidlogimport_long_desc'],
 	        'homepage'          => 'http://www.eqdkp-plus.com',
-	        'manuallink'        => ($user->data['user_language'] != 'german') ? false : $eqdkp_root_path . 'plugins/raidlogimport/language/'.$user->data['user_language'].'/Manual.pdf',
+	        'manuallink'        => ($user->lang_name != 'german') ? false : $eqdkp_root_path . 'plugins/raidlogimport/language/'.$user->data['user_language'].'/Manual.pdf',
 	    );
 
 		//permissions
@@ -92,8 +92,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 				'bz_parse'			=> ',',  //separator, which is used for separating the different strings of a boss or zone
 				'parser'			=> 'ctrt',  //which format has the xml-string?
 				'rli_upd_check'		=> '1',		//enable update check?
-				'use_bossdkp'		=> '1',
-				'use_timedkp'		=> '1',
+				'use_dkp'			=> '1',		//1: bossdkp, 2:zeitdkp, 4: event-dkp
 				'null_sum'			=> '0', 	//use null-sum-system?
 				'item_save_lang'	=> 'de',
 				'deactivate_adj'	=> '0',
@@ -104,7 +103,9 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 				'am_allxraids'		=> '0',		//reset raidcounter if member gains minus? (default off)
 				'ignore_dissed'		=> '0',		//ignore disenchanted and bank loot?
 				'member_miss_time' 	=> '300',	//time in secs member can miss without it being tracked
-				's_member_rank'		=> '0'		//show member_rank? (0: no, 1: memberpage, 2: lootpage, 4: adjustmentpage, 3:member+lootpage, 5:adjustments+memberpage, 6: loot+adjustmentpage, 7: overall)
+				's_member_rank'		=> '0',		//show member_rank? (0: no, 1: memberpage, 2: lootpage, 4: adjustmentpage, 3:member+lootpage, 5:adjustments+memberpage, 6: loot+adjustmentpage, 7: overall)
+				'member_start'		=> '0',		//amount of DKP a member gains as an individual adjustment, when he is auto-created
+				'member_start_event' => '0'		//event for Start-DKP
 			);
 			$this->insert_data($config_data);
 			//add default bz_data

@@ -85,14 +85,7 @@ class raidlogimport extends EQdkp_Admin
         }//post or string
 
         //get events
-        $eventqry = "SELECT event_name, event_value FROM __events ORDER BY event_name ASC;";
-        $eventres = $db->query($eventqry);
-        while ($ev = $db->fetch_record($eventres))
-        {
-          $events[$ev['event_name']] = $ev['event_name'];
-          $event_values[$ev['event_name']] = $ev['event_value'];
-        }
-        $db->free_result();
+        $rli->get_events();
 
 		if(isset($_POST['raid_add']))
 		{
@@ -119,23 +112,13 @@ class raidlogimport extends EQdkp_Admin
 					$rai['bosskills'][] = '';
 				}
 			}
-			if(!($rli->config['use_bossdkp'] or $rli->config['use_timedkp']))
-			{
-			  foreach($events as $name => $values)
-			  {
-				if($name == $rai['event'])
-				{
-					$rai['value'] = $event_values[$name];
-				}
-			  }
-			}
 			$tpl->assign_block_vars('raids', array(
                 'COUNT'     => $ky,
                 'START_DATE'=> date('d.m.y', $rai['begin']),
                 'START_TIME'=> date('H:i:s', $rai['begin']),
                 'END_DATE'	=> date('d.m.y', $rai['end']),
                 'END_TIME'	=> date('H:i:s', $rai['end']),
-				'EVENT'		=> $myHtml->DropDown('raids['.$ky.'][event]', $events, $rai['event']),
+				'EVENT'		=> $myHtml->DropDown('raids['.$ky.'][event]', $rli->events['name'], $rai['event']),
 				'TIMEBONUS'	=> $rai['timebonus'],
 				'VALUE'		=> $rai['value'],
 				'NOTE'		=> $rai['note']
@@ -158,8 +141,8 @@ class raidlogimport extends EQdkp_Admin
 
 		$tpl->assign_vars(array(
 			'DATA' =>htmlspecialchars(serialize($data), ENT_QUOTES),
-			'USE_TIMEDKP' => $rli->config['use_timedkp'],
-			'USE_BOSSDKP' => $rli->config['use_bossdkp'],
+			'USE_TIMEDKP' => ($this->config['use_dkp'] == 2 || $this->config['use_dkp'] == 3 || $this->config['use_dkp'] == 6 || $this->config['use_dkp'] == 7) ? TRUE : FALSE,
+			'USE_BOSSDKP' => ($this->config['use_dkp'] == 1 || $this->config['use_dkp'] == 3 || $this->config['use_dkp'] == 5 || $this->config['use_dkp'] == 7) ? TRUE : FALSE,
 			'S_NULL_SUM'  => $rli->config['null_sum'],
 			'L_RV_NS'	  => $user->lang['raidval_nullsum_later'])
 		);
@@ -196,7 +179,7 @@ class raidlogimport extends EQdkp_Admin
 		{
 			if($rli->display_rank('member'))
 			{
-				$member['rank'] = (isset($member_ranks[$member['name']])) ? $member_ranks[$member['name']] : $rli->config['new_member_rank'];
+				$member['rank'] = $rli->rank_suffix($member['name']);
 			}
 			if(isset($aliases[$member['name']]))
 			{
@@ -434,13 +417,8 @@ class raidlogimport extends EQdkp_Admin
 		}
 
         //get events
-        $eventqry = "SELECT event_name FROM __events ORDER BY event_name ASC;";
-        $eventres = $db->query($eventqry);
-        while ($ev = $db->fetch_record($eventres))
-        {
-          $events[$ev['event_name']] = $ev['event_name'];
-        }
-        $db->free_result();
+        $rli->get_events();
+
 		if(isset($data['adjs']))
 		{
 			$sql = "SELECT member_name FROM __members ORDER BY member_name ASC;";
@@ -468,7 +446,7 @@ class raidlogimport extends EQdkp_Admin
 				$ev_sel = (isset($adj['event'])) ? $adj['event'] : '';
 				$tpl->assign_block_vars('adjs', array(
 					'MEMBER'	=> $myHtml->DropDown('adjs['.$a.'][member]', $members, $adj['member'], '', '', true),
-					'EVENT'		=> $myHtml->DropDown('adjs['.$a.'][event]', $events, $ev_sel, '', '', true),
+					'EVENT'		=> $myHtml->DropDown('adjs['.$a.'][event]', $rli->events['name'], $ev_sel, '', '', true),
 					'NOTE'		=> $adj['reason'],
 					'VALUE'		=> round($adj['value'], 2),
 					'CLASS'		=> $eqdkp->switch_row_class(),
@@ -545,12 +523,8 @@ class raidlogimport extends EQdkp_Admin
 				}
 			}
         	//get events
-        	$eventqry = "SELECT event_name FROM __events ORDER BY event_name ASC;";
-        	$eventres = $db->query($eventqry);
-        	while ($ev = $db->fetch_record($eventres))
-        	{
-        	  $events[$ev['event_name']] = $ev['event_name'];
-        	}
+        	$rli->get_events();
+
 			foreach($data['raids'] as $raid_key => $raid)
 			{
 				$temp = $rli->get_nsr_value($data, $raid_key, TRUE);
@@ -579,7 +553,7 @@ class raidlogimport extends EQdkp_Admin
 				$ev_sel = (isset($adj['event'])) ? $adj['event'] : '';
 				$tpl->assign_block_vars('adjs', array(
 					'MEMBER'	=> $myHtml->DropDown('adjs['.$a.'][member]', $members, $adj['member'], '', '', true),
-					'EVENT'		=> $myHtml->DropDown('adjs['.$a.'][event]', $events, $ev_sel, '', '', true),
+					'EVENT'		=> $myHtml->DropDown('adjs['.$a.'][event]', $rli->events['name'], $ev_sel, '', '', true),
 					'NOTE'		=> $adj['reason'],
 					'VALUE'		=> $adj['value'],
 					'CLASS'		=> $eqdkp->switch_row_class(),

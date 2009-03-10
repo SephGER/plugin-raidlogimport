@@ -105,10 +105,8 @@ function rli_get_aliases()
 
 function create_member($member, $rank)
 {
-	global $db, $user, $eqdkp, $tpl;
-	$sql = "SELECT config_value FROM ".CONFIG_TABLE." WHERE config_name = 'game_language';";
-	$gl = $db->query_first($sql);
-	if($gl == "en")
+	global $db, $user, $eqdkp, $tpl, $rli, $raidlogimport;
+	if($eqdkp->config['game_language'] == "en")
 	{
 		switch($member['class'])
 		{
@@ -144,7 +142,7 @@ function create_member($member, $rank)
 			case "NightElf":	$member['race'] = "Night Elf";
 		}
 	}
-	elseif($gl == "de")
+	elseif($eqdkp->config['game_language'] == "de")
 	{
 		switch($member['class'])
 		{
@@ -201,9 +199,9 @@ function create_member($member, $rank)
 
 	//insert member into database, create log
 	$sql = "INSERT INTO __members
-				(member_name, member_level, member_race_id, member_class_id, member_rank_id)
+				(member_name, member_level, member_race_id, member_class_id, member_rank_id, member_adjustment)
 		   VALUES
-		   		('".$member['name']."', '".$member['level']."', '".$r_i."', '".$c_i."', '".$rank."');";
+		   		('".$member['name']."', '".$member['level']."', '".$r_i."', '".$c_i."', '".$rank."', '".$rli->config['member_start']."');";
 	$result = $db->query($sql);
 	if(!$result)
 	{
@@ -212,13 +210,52 @@ function create_member($member, $rank)
 	}
 	else
 	{
+		if($rli->config['member_start'])
+		{
+          $group_key = $raidlogimport->gen_group_key(time(), stripslashes($user->lang['member_start_name']), $rli->config['member_start'], $rli->config['member_start_event']);
+		  $sql = "INSERT INTO __adjustments
+			       (adjustment_value,
+			        adjustment_date,
+			        adjustment_reason,
+			        adjustment_added_by,
+			        adjustment_group_key,
+			        member_name,
+			        raid_name)
+				  VALUES
+				   ('".$rli->config['member_start']."',
+				    '".time()."', 
+				    '".$user->lang['member_start_name']."', 
+				    'RaidLogImport (by ".$user->data['username'].")', 
+				    '".$group_key."', 
+				    '".$member['name']."', 
+				    '".$rli->config['member_start_event']."');";
+		  if($db->query($sql))
+		  {
+        	$log_action = array(
+            	'header'         => '{L_ACTION_INDIVADJ_ADDED}',
+            	'{L_ADJUSTMENT}' => $rli->config['member_start'],
+            	'{L_REASON}'     => stripslashes($rli->config['member_start_name']),
+            	'{L_MEMBER}'	 => $member['name'],
+				'{L_EVENT}'      => $rli->config['member_start_event'],
+            	'{L_ADDED_BY}'   => $raidlogimport->admin_user
+            );
+            $raidlogimport->log_insert(array(
+            	'log_type'	 => $log_action['header'],
+            	'log_action' => $log_action)
+            );
+          }
+          else
+          {
+          	$adj_null = true;
+          }
+        }
 		$retu[2] = $user->lang['member'].' '.$member['name'].' '.$user->lang['rli_mem_auto'];
 		$log_action = array(
             'header'         => '{L_ACTION_MEMBER_ADDED}',
             '{L_NAME}'       => $member['name'],
             '{L_EARNED}'     => '0',
             '{L_SPENT}'      => '0',
-            '{L_ADJUSTMENT}' => '0',
+            '{L_ADJUSTMENT}' => ($adj_null) ? 0 : $rli->config['member_start'],
             '{L_LEVEL}'      => $member['level'],
             '{L_RACE}'       => $member['race'],
             '{L_CLASS}'      => $member['class']

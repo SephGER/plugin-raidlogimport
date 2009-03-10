@@ -154,8 +154,10 @@
 	$lang['parser'] = 'Welches XML-Format hat der String?';
 	$lang['rli_man_db_up'] = 'DB-Update erzwingen';
 	$lang['rli_upd_check'] = 'Update-Check aktivieren?';
-	$lang['use_bossdkp'] = 'Boss-DKP verwenden?';
-	$lang['use_timedkp'] = 'Zeit-DKP verwenden?';
+	$lang['use_dkp'] = 'Welche DKP sollen verwendet werden?';
+	$lang['use_dkp_1'] = 'Boss-DKP';
+	$lang['use_dkp_2'] = 'Zeit-DKP';
+	$lang['use_dkp_4'] = 'Ereignis-DKP';
 	$lang['null_sum'] = 'Null-Summen-Systen verwenden?';
 	$lang['null_sum_0'] = 'Nein';
 	$lang['null_sum_1'] = 'Jedes Mitglied im Raid bekommt die DKP';
@@ -177,6 +179,7 @@
 	$lang['title_loot'] = 'Loot / Items';
 	$lang['title_parse'] = 'Parse-Einstellungen';
 	$lang['title_hnh_suffix'] = 'Heroic / Non-Heroic';
+	$lang['title_member'] = 'Mitglieder Einstellungen';
 	$lang['ignore_dissed'] = 'Disenchanted- und Bank-Loot ignorieren?';
 	$lang['ignore_dissed_1'] = 'Disenchanted ignorieren';
 	$lang['ignore_dissed_2'] = 'Bank ignorieren';
@@ -186,4 +189,7 @@
 	$lang['s_member_rank_2'] = 'Loot-Übersicht';
 	$lang['s_member_rank_4'] = 'Korrekturen-Übersicht';
 	$lang['rli_manual'] = 'Sollte dir die Bedeutung einiger Optionen nicht klar sein, so wirf einen Blick ins Manual (<a href="./../language/german/Manual.pdf">link</a>).';
+	$lang['member_start'] = 'Start-DKP, die ein Mitglied bekommt, wenn es automatisch erstellt wird.';
+	$lang['member_start_name'] = 'Start-DKP'; //value is used for reason of adjustment
+	$lang['member_start_event'] = 'Ereignis für die Start-DKP';
 ?>

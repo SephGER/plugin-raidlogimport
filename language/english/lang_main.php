@@ -154,8 +154,10 @@
 	$lang['parser'] = 'In which XML-Format is the string?';
 	$lang['rli_man_db_up'] = 'Force DB-Update';
 	$lang['rli_upd_check'] = 'Enable Update Check?';
-	$lang['use_bossdkp'] = 'Use Boss-DKP?';
-	$lang['use_timedkp'] = 'Use Time-DKP?';
+	$lang['use_dkp'] = 'Which DKP shall be used?';
+	$lang['use_dkp_1'] = 'Boss-DKP';
+	$lang['use_dkp_2'] = 'Time-DKP';
+	$lang['use_dkp_4'] = 'Event-DKP';
 	$lang['null_sum'] = 'Use Null-Sum-System?';
 	$lang['null_sum_0'] = 'No';
 	$lang['null_sum_1'] = 'Every member in the raid gets the DKP';
@@ -175,8 +177,9 @@
 	$lang['title_att'] = 'Attendence';
 	$lang['title_general'] = 'General';
 	$lang['title_loot'] = 'Loot / Items';
-	$lang['title_parse'] = 'Parse';
+	$lang['title_parse'] = 'Parse Settings';
 	$lang['title_hnh_suffix'] = 'Heroic / Non-Heroic';
+	$lang['title_member'] = 'Member Settings';
 	$lang['ignore_dissed'] = 'Ignore disenchanted and bank loot?';
 	$lang['ignore_dissed_1'] = 'Ignore disenchanted';
 	$lang['ignore_dissed_2'] = 'Ignore bank';
@@ -185,4 +188,7 @@
 	$lang['s_member_rank_1'] = 'Members-Overview';
 	$lang['s_member_rank_2'] = 'Loot-Overview';
 	$lang['s_member_rank_4'] = 'Adjustments-Overview';
+	$lang['member_start'] = 'Start-DKP a Member gains, when he is automatically created';
+	$lang['member_start_name'] = 'Start-DKP'; //value is used for reason of adjustment
+	$lang['member_start_event'] = 'Event for Start-DKP';
 ?>

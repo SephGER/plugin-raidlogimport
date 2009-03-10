@@ -60,7 +60,7 @@ class RLI_Settings extends EQdkp_Admin
 		$messages = array();
 		foreach($rli->config as $old_name => $old_value)
 		{
-			if($old_name == 's_member_rank' or $old_name == 'ignore_dissed')
+			if($old_name == 's_member_rank' or $old_name == 'ignore_dissed' or $old_name == 'use_dkp')
 			{
 				$val = 0;
 				if(is_array($_POST[$old_name]))
@@ -143,16 +143,21 @@ class RLI_Settings extends EQdkp_Admin
 
 		//select item_save_lang
 		$item_save_lang = array('en' => 'en', 'de' => 'de', 'fr' => 'fr', 'es' => 'es', 'ru' => 'ru');
+		
+		//select member_start_event
+		$rli->get_events();
+		$member_start_event = $rli->events['name'];
 
 		$k = 2;
 		$configs = array(
 			'select' 	=> array(
-				'general' 		=> array('raidcount', 'new_member_rank', 'null_sum'),
+				'general' 		=> array('raidcount', 'null_sum'),
+				'member'		=> array('new_member_rank', 'member_start_event'),
 				'parse'			=> array('parser'),
 				'loot'			=> array('item_save_lang')
 			),
 			'yes_no'	=> array(
-				'general'		=> array('rli_upd_check', 'use_timedkp', 'use_bossdkp'),
+				'general'		=> array('rli_upd_check'),
 				'hnh_suffix' 	=> array('dep_match'),
 				'att'		 	=> array('attendence_raid'),
 				'adj'			=> array('deactivate_adj'),
@@ -160,7 +165,7 @@ class RLI_Settings extends EQdkp_Admin
 				'am'			=> array('auto_minus', 'am_value_raids', 'am_allxraids')
 			),
 			'normal'	=> array(
-				'general'		=> array('member_miss_time'),
+				'member'		=> array('member_miss_time', 'member_start'),
 				'am'			=> array('am_raidnum', 'am_value'),
 				'att'			=> array('attendence_begin', 'attendence_end', 'attendence_time'),
 				'loot'			=> array('loottime'),
@@ -175,8 +180,9 @@ class RLI_Settings extends EQdkp_Admin
 				'ignore'		=> array('rlic_data', 'rlic_lastcheck', 'rli_inst_build')
 			),
 			'special'	=> array(
-				'general'		=> array('s_member_rank'),
-				'loot'			=> array('ignore_dissed')
+				'general'		=> array('use_dkp'),
+				'loot'			=> array('ignore_dissed'),
+				'member'		=> array('s_member_rank')
 			)
 		);
 
@@ -233,27 +239,27 @@ class RLI_Settings extends EQdkp_Admin
 							break;
 
 						case 'special':
-						  if($name == 's_member_rank')
+						  if($name == 's_member_rank' or $name == 'use_dkp')
 						  {
 							$value = $rli->config[$name];
-							$loot_c = '';
+                            $c1 = '';
+                            if($value == 1 || $value == 3 || $value == 5 || $value == 7)
+                            {
+                                $c1 = 'checked="checked"';
+                            }
+							$c2 = '';
 							if($value == 2 || $value == 3 || $value == 6 || $value == 7)
 							{
-								$loot_c = 'checked="checked"';
+								$c2 = 'checked="checked"';
 							}
-							$mem_c = '';
-							if($value == 1 || $value == 3 || $value == 5 || $value == 7)
-							{
-								$mem_c = 'checked="checked"';
-							}
-							$adj_c = '';
+							$c4 = '';
 							if($value == 4 || $value == 5 || $value == 6 || $value == 7)
 							{
-								$adj_c = 'checked="checked"';
+								$c4 = 'checked="checked"';
 							}
-							$holder[$holde][$k]['value'] = "<input type='checkbox' name='".$name."[]' value='1' ".$mem_c." />".$user->lang['s_member_rank_1']."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-							$holder[$holde][$k]['value'] .= "<input type='checkbox' name='".$name."[]' value='2' ".$loot_c." />".$user->lang['s_member_rank_2']."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-							$holder[$holde][$k]['value'] .= " <nobr><input type='checkbox' name='".$name."[]' value='4' ".$adj_c." />".$user->lang['s_member_rank_4']."</nobr>";
+							$holder[$holde][$k]['value'] = "<input type='checkbox' name='".$name."[]' value='1' ".$c1." />".$user->lang[$name.'_1']."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+							$holder[$holde][$k]['value'] .= "<input type='checkbox' name='".$name."[]' value='2' ".$c2." />".$user->lang[$name.'_2']."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+							$holder[$holde][$k]['value'] .= " <nobr><input type='checkbox' name='".$name."[]' value='4' ".$c4." />".$user->lang[$name.'_4']."</nobr>";
 						  }
 						  if($name == 'ignore_dissed')
 						  {
@@ -268,8 +274,8 @@ class RLI_Settings extends EQdkp_Admin
 						  	{
 						  		$bank = 'checked="checked"';
 						  	}
-						  	$holder[$holde][$k]['value'] = "<input type='checkbox' name='".$name."[]' value='1' ".$dissed." />".$user->lang['ignore_dissed_1']."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-						  	$holder[$holde][$k]['value'] .= "<input type='checkbox' name='".$name."[]' value='2' ".$bank." />".$user->lang['ignore_dissed_2'];
+						  	$holder[$holde][$k]['value'] = "<input type='checkbox' name='".$name."[]' value='1' ".$dissed." />".$user->lang[$name.'_1']."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+						  	$holder[$holde][$k]['value'] .= "<input type='checkbox' name='".$name."[]' value='2' ".$bank." />".$user->lang[$name.'_2'];
 						  }
                           $holder[$holde][$k]['name'] = $name;
 						  break;
