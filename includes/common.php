@@ -10,13 +10,13 @@ if(!defined('EQDKP_INC'))
 	exit;
 }
 
-if(!version_compare(phpversion(), '5.0.0', '>='))
-{
-	message_die('This Plugin needs at least PHP-Version 5. Your Version is: '.phpversion().'.');
-}
 
 global $eqdkp_root_path;
 include_once($eqdkp_root_path.'common.php');
+if(!version_compare(phpversion(), '5.0.0', '>='))
+{
+    message_die('This Plugin needs at least PHP-Version 5. Your Version is: '.phpversion().'.');
+}
 if (!$pm->check(PLUGIN_INSTALLED, 'raidlogimport') )
 {
     message_die('The Raid-Log-Import plugin is not installed.');
