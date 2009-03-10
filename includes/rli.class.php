@@ -63,7 +63,7 @@ if(!class_exists('rli'))
 		  }
 		}
 	}
-	
+
 	function get_events()
 	{
 		global $db;
@@ -291,7 +291,7 @@ if(!class_exists('rli'))
 	  }
 	  return $bossdkp;
 	}
-	
+
 	function calc_eventdkp($event)
 	{
 		$eventdkp = 0;
@@ -1433,7 +1433,7 @@ if(!class_exists('rli'))
   			}
   		}
 		return true;
-	}   
+	}
   }//class
 }//class exist
 ?>

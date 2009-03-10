@@ -141,8 +141,8 @@ class raidlogimport extends EQdkp_Admin
 
 		$tpl->assign_vars(array(
 			'DATA' =>htmlspecialchars(serialize($data), ENT_QUOTES),
-			'USE_TIMEDKP' => ($this->config['use_dkp'] == 2 || $this->config['use_dkp'] == 3 || $this->config['use_dkp'] == 6 || $this->config['use_dkp'] == 7) ? TRUE : FALSE,
-			'USE_BOSSDKP' => ($this->config['use_dkp'] == 1 || $this->config['use_dkp'] == 3 || $this->config['use_dkp'] == 5 || $this->config['use_dkp'] == 7) ? TRUE : FALSE,
+			'USE_TIMEDKP' => ($rli->config['use_dkp'] == 2 || $rli->config['use_dkp'] == 3 || $rli->config['use_dkp'] == 6 || $rli->config['use_dkp'] == 7) ? TRUE : FALSE,
+			'USE_BOSSDKP' => ($rli->config['use_dkp'] == 1 || $rli->config['use_dkp'] == 3 || $rli->config['use_dkp'] == 5 || $rli->config['use_dkp'] == 7) ? TRUE : FALSE,
 			'S_NULL_SUM'  => $rli->config['null_sum'],
 			'L_RV_NS'	  => $user->lang['raidval_nullsum_later'])
 		);
