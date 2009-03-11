@@ -317,9 +317,10 @@ class raidlogimport extends EQdkp_Admin
 		if(is_array($data['loots']))
 		{
           $start = 0;
+          $end = $p+1;
 		  if(ini_get('suhosin.post.max_vars'))
 		  {
-			$vars = ini_get('suhosin.post.max_vars') - 3;
+			$vars = ini_get('suhosin.post.max_vars') - 5;
 			$dic = (int) $vars/6;
 			$page = 1;
 
@@ -334,7 +335,6 @@ class raidlogimport extends EQdkp_Admin
 			}
 			$end = $start+$dic;
 		  }
-		  	$end = $p+1;
 		  $rli->iteminput2tpl($data, $loot_cache, $start, $end, $members, $aliase);
 		}
 
