@@ -165,7 +165,7 @@ if(!class_exists('rli'))
 		return implode(', ', $bosss);
 	}
 
-	function get_member_times($member)
+	function get_member_times($member, $begin=false, $end=false)
 	{
 		global $user;
 
@@ -208,7 +208,15 @@ if(!class_exists('rli'))
 	      }
 	      else
 	      {
-	      	if(key($times[$i]) == 'leave' AND ($times[$k]['join'] - $this->config['member_miss_time']) < $times[$i]['leave'])
+            if($begin AND key($times[$i]) == 'join' AND ($begin + $this->config['member_miss_time']) > $times[$i]['join'])
+            {
+                $times[$i]['join'] = $begin;
+            }
+            if($end AND key($times[$i]) == 'leave' AND ($end - $this->config['member_miss_time']) < $times[$i]['leave'])
+            {
+                $times[$i]['leave'] = $end;
+            }
+	      	if(key($times[$i]) == 'leave' AND ($times[$i]['leave'] + $this->config['member_miss_time']) > $times[$k]['join'])
 	      	{
 	      		unset($times[$i]);
 	      		unset($times[$k]);
@@ -251,7 +259,7 @@ if(!class_exists('rli'))
       $timedkp = 0;
 	  if($this->config['use_dkp'] == 2 || $this->config['use_dkp'] == 3 || $this->config['use_dkp'] == 6 || $this->config['use_dkp'] == 7)
 	  {
-		$times = format_duration($this->get_member_secs_inraid($this->get_member_times($player), $begin, $end));
+		$times = format_duration($this->get_member_secs_inraid($this->get_member_times($player, $begin, $end), $begin, $end));
 		$timedkp = $times['hours'] * $timebonus;
 		$timedkp = $timedkp + $timebonus * ($times['minutes']/60);
 	  }
@@ -715,7 +723,18 @@ if(!class_exists('rli'))
         		if(!$raid_attendees[$row['member_name']])
         		{
                 	$maxkey++;
-                    if($this->no_auto_minus_exists($row['member_name'], $data))
+                    if($tempkey = $this->check_adj_exists($row['member_name'], $user->lang['am_name'], $data))
+                    {
+                      if($this->config['null_sum'])
+                      {
+                      	$data['loots'][$tempkey]['dkp'] = ($this->config['am_value_raids']) ? $raid_attendees['raids_value'] : $this->config['am_value'];
+                      }
+                      else
+                      {
+                      	$data['adjs'][$tempkey]['value'] = -(($this->config['am_value_raids']) ? $raid_attendees['raids_value'] : $this->config['am_value']);
+                      }
+                    }
+                    else
                     {
         			  if($this->config['null_sum'])
         			  {
@@ -834,14 +853,22 @@ if(!class_exists('rli'))
 							$dkp = $dkp + $this->calc_eventdkp($raid['event']);
 						}
 						$dkp = $dkp + (($mem['att_begin']) ? $this->config['attendence_begin'] : 0) + (($mem['att_end']) ? $this->config['attendence_end'] : 0);
+						$dkp = round($dkp, 2);
 						if($dkp <  $raid['value'])
 						{	//add an adjustment
-							$dkp -= $raid['value'];
+                          $dkp -= $raid['value'];
+						  if($tempkey = $this->check_adj_exists($mem['name'], $user->lang['rli_partial_raid']." ".date('d.m.y H:i:s', $raid['begin']), $data))
+						  {
+						  	$data['adjs'][$tempkey]['value'] = $dkp;
+						  }
+						  else
+						  {
 							$data['adjs'][$i]['member'] = $mem['name'];
 							$data['adjs'][$i]['reason'] = $user->lang['rli_partial_raid']." ".date('d.m.y H:i:s', $raid['begin']);
 							$data['adjs'][$i]['value'] = $dkp;
 							$data['adjs'][$i]['event'] = $raid['event'];
 							$i++;
+						  }
 						}
 					}
 				}
@@ -1409,30 +1436,32 @@ if(!class_exists('rli'))
 		return ' ('.$rank.')';
 	}
 
-	function no_auto_minus_exists($memname, $data)
+	function check_adj_exists($memname, $adjreason, $data)
 	{
-		global $user;
 		if($this->config['null_sum'])
 		{
-			foreach($data['loots'] as $loot)
+			foreach($data['loots'] as $key => $loot)
 			{
-				if($loot['player'] == $memname AND $loot['name'] == $user->lang['am_name'])
+				if($loot['player'] == $memname AND $loot['name'] == $adjreason)
 				{
-					return false;
+					return $key;
 				}
 			}
   		}
   		else
   		{
-  			foreach($data['adjs'] as $adj)
+  		  if(is_array($data['adjs']))
+  		  {
+  			foreach($data['adjs'] as $key => $adj)
   			{
-  				if($adj['member'] == $memname AND $adj['reason'] == $user->lang['am_name'])
+  				if($adj['member'] == $memname AND $adj['reason'] == $adjreason)
   				{
-  					return false;
+  					return $key;
   				}
   			}
+  		  }
   		}
-		return true;
+		return false;
 	}
   }//class
 }//class exist
