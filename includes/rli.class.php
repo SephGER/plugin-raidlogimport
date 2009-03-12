@@ -1195,7 +1195,8 @@ if(!class_exists('rli'))
 			{
 				$raid['loots'][$i]['dkp'] = (int)$loot->Note;
 			}
-			if(($this->config['ignore_dissed'] == 1 AND $raid['loots'][$i]['player'] == 'disenchanted') OR ($raid['loots'][$i]['player'] == 'bank' AND $this->config['ignore_dissed'] == 2) OR $this->config['ignore_dissed'] == 3)
+			if((($this->config['ignore_dissed'] == 1 OR $this->config['ignore_dissed'] == 3) AND $raid['loots'][$i]['player'] == 'disenchanted') OR 
+			   (($this->config['ignore_dissed'] == 2 OR $this->config['ignore_dissed'] == 3) AND $raid['loots'][$i]['player'] == 'bank'))
 			{
 				unset($raid['loots'][$i]);
 				$i--;

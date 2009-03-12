@@ -252,7 +252,7 @@ class raidlogimport extends EQdkp_Admin
 		global $myHtml, $rli;
 
 		$data = $rli->parse_post($_POST, $data);
-        $p = max(array_keys($data['loots']));
+        $p = ($data['loots']) ? max(array_keys($data['loots'])) : 0;
 		if(isset($_POST['items_add']))
 		{
 			for($i=1; $i<=$_POST['items_add']; $i++)

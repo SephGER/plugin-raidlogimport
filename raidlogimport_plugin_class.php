@@ -21,7 +21,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 	var $version = '0.5.1.8';
 	var $fwversion = '1.0.3';
 	var $jqversion = '2.0.1';
-	var $build = 4201;
+	var $build = 4202;
 
     function raidlogimport_plugin_class($pm)
     {
@@ -189,7 +189,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 
 			case "3b":
 				$sql = "CREATE TABLE IF NOT EXISTS __raidlogimport_config (
-						`config_name` VARCHAR(255) NOT NULL,
+						`config_name` VARCHAR(255) NOT NULL PRIMARY KEY,
 						`config_value` VARCHAR(255) NOT NULL
 						);";
 				break;
