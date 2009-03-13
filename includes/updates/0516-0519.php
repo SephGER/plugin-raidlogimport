@@ -6,7 +6,7 @@ if(!defined('EQDKP_INC'))
 	exit;
 }
 
-$new_version    = '0.5.1.8';
+$new_version    = '0.5.1.9';
 $updateFunction = false;
 
 $updateDESC = array(
@@ -16,7 +16,7 @@ $updateDESC = array(
 $reloadSETT = 'settings.php';
 
 $updateSQL = array(
-	"ALTER TABLE __raidlogimport_config ADD PRIMARY KEY ('config_name');",
+	"ALTER TABLE __raidlogimport_config ADD PRIMARY KEY (`config_name`);",
 );
 
 
