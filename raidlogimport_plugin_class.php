@@ -18,10 +18,10 @@ if ( !defined('EQDKP_INC') )
 class raidlogimport_Plugin_Class extends EQdkp_Plugin
 {
 	var $vstatus = 'Stable';
-	var $version = '0.5.1.8';
+	var $version = '0.5.1.9';
 	var $fwversion = '1.0.3';
 	var $jqversion = '2.0.1';
-	var $build = 4202;
+	var $build = 4205;
 
     function raidlogimport_plugin_class($pm)
     {
@@ -51,7 +51,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 	        'description'       => $user->lang['raidlogimport_short_desc'],
 	        'long_description'  => $user->lang['raidlogimport_long_desc'],
 	        'homepage'          => 'http://www.eqdkp-plus.com',
-	        'manuallink'        => ($user->lang_name != 'german') ? false : $eqdkp_root_path . 'plugins/raidlogimport/language/'.$user->data['user_language'].'/Manual.pdf',
+	        'manuallink'        => ($user->lang_name != 'german') ? false : $eqdkp_root_path . 'plugins/raidlogimport/language/'.$user->lang_name.'/Manual.pdf',
 	    );
 
 		//permissions

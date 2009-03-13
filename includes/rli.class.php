@@ -319,7 +319,14 @@ if(!class_exists('rli'))
 		$timedkp = $this->calc_timedkp($begin, $end, $tempmem, $timebonus);
 		$bossdkp = $this->calc_bossdkp($bosskills, $tempmem);
 		$eventdkp = $this->calc_eventdkp($event);
-		$dkp = $timedkp + $bossdkp + $eventdkp;
+		$tempattdkp = $this->calculate_attendence($tempmem, $begin, $end);
+		$attdkp = 0;
+		if(!$this->config['attendence_raid'])
+		{
+			$attdkp = $tempattdkp['begin'] + $tempattedkp['end'];
+			unset($tempattdkp);
+		}
+		$dkp = $timedkp + $bossdkp + $eventdkp + $attdkp;
 		return round($dkp,2);
 	}
 
@@ -1195,7 +1202,7 @@ if(!class_exists('rli'))
 			{
 				$raid['loots'][$i]['dkp'] = (int)$loot->Note;
 			}
-			if((($this->config['ignore_dissed'] == 1 OR $this->config['ignore_dissed'] == 3) AND $raid['loots'][$i]['player'] == 'disenchanted') OR 
+			if((($this->config['ignore_dissed'] == 1 OR $this->config['ignore_dissed'] == 3) AND $raid['loots'][$i]['player'] == 'disenchanted') OR
 			   (($this->config['ignore_dissed'] == 2 OR $this->config['ignore_dissed'] == 3) AND $raid['loots'][$i]['player'] == 'bank'))
 			{
 				unset($raid['loots'][$i]);
