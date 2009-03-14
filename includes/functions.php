@@ -223,11 +223,11 @@ function create_member($member, $rank)
 			        raid_name)
 				  VALUES
 				   ('".$rli->config['member_start']."',
-				    '".time()."', 
-				    '".$user->lang['member_start_name']."', 
-				    'RaidLogImport (by ".$user->data['username'].")', 
-				    '".$group_key."', 
-				    '".$member['name']."', 
+				    '".time()."',
+				    '".$user->lang['member_start_name']."',
+				    'RaidLogImport (by ".$user->data['username'].")',
+				    '".$group_key."',
+				    '".$member['name']."',
 				    '".$rli->config['member_start_event']."');";
 		  if($db->query($sql))
 		  {
@@ -349,7 +349,7 @@ function mems2tpl($key, $member, $data)
     {
       foreach($member['raid_list'] as $rakey)
       {
-    	$rali[] = $data['raids'][$rakey]['event'].': '.date('H:i:s', $data['raids'][$rakey]['begin']).'-'.date('H:i:s', $data['raids'][$rakey]['end']);
+    	$rali[] = $data['raids'][$rakey]['note'];
       }
     }
 	if(isset($member['alias']))
@@ -359,7 +359,7 @@ function mems2tpl($key, $member, $data)
 	return array(
        	'MITGLIED' => (($key < 9) ? '&nbsp;&nbsp;' : '').($key+1).'&nbsp;'.$member['name'],
         'ALIAS'    => $member['alias'],
-        'RAID_LIST'=> implode(',&nbsp;&nbsp;', $rali),
+        'RAID_LIST'=> implode(';&nbsp;', $rali),
         'ATT_BEGIN'=> (($member['att_dkp_begin']) ? $user->lang['yes'] : $user->lang['no']),
         'ATT_END'  => (($member['att_dkp_end']) ? $user->lang['yes'] : $user->lang['no']),
         'ZAHL'     => $eqdkp->switch_row_class(),

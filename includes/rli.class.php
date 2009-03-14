@@ -640,7 +640,7 @@ if(!class_exists('rli'))
 		$list = array();
 		foreach($raids as $key => $raid)
 		{
-			$list[$key] = $raid['event'].': '.date('H:i', $raid['begin']).'-'.date('H:i', $raid['end']);
+			$list[$key] = $raid['note'];
 		}
 		return $list;
 	}
