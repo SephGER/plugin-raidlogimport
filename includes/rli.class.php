@@ -1379,7 +1379,22 @@ if(!class_exists('rli'))
 					}
 				}
 			}
-			$count = ($this->config['null_sum'] == 2) ? $db->query_first("SELECT COUNT(member_id) FROM __members;") : count($data['members']);
+			$count = 0;
+			if($this->config['null_sum'] == 2)
+			{
+				$count = $db->query_first("SELECT COUNT(member_id) FROM __members;");
+			}
+			else
+			{
+				foreach($data['members'] as $member)
+				{
+					if($member['raid_list'] AND in_array($key, $member['raid_list']))
+					{
+						$count++;
+					}
+				}
+			}
+			$count = ($count) ? $count : 1; //prevent zero-division
 			$pre = (float) $raid['value'];
 			$raid['value'] = $raid['value']/$count;
 			$raid['value'] = round($raid['value'], 2);
