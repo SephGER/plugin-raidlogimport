@@ -30,16 +30,13 @@
 	</table>
 	<table width="100%" border="0" cellspacing="1" cellpadding="1" id="member">
 	  <tr>
-	  	<th colspan="7">{L_MEMBERS}</th>
+        <th colspan="3">{L_MEMBERS}</th>
+        <!-- IF S_ATT_BEGIN or S_ATT_END --><th <!-- IF S_ATT_BEGIN and S_ATT_END -->colspan="2"<!-- ENDIF -->>{L_ATT}</th><!-- ENDIF -->
 	  </tr>
 	  <tr>
         <th width="45px">&nbsp;</th>
 	  	<th width="150">{L_MEMBER}</th>
 	  	<th>{L_RAIDS}</th>
-	  	<!-- IF S_CONF_ADJ -->
-	  	<th>{L_T_DKP}</th>
-	  	<th>{L_B_DKP}</th>
-	  	<!-- ENDIF -->
 	  	<!-- IF S_ATT_BEGIN --><th>{L_START}</th><!-- ENDIF -->
 	  	<!-- IF S_ATT_END --><th>{L_END}</th><!-- ENDIF -->
 	  </tr>
