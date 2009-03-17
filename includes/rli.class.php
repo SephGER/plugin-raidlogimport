@@ -18,6 +18,7 @@ if(!class_exists('rli'))
   	var $diff = '';
   	var $bk_list = array();
   	var $events = array();
+  	var $member_ranks = array();
 
   	function rli()
   	{
@@ -1418,16 +1419,16 @@ if(!class_exists('rli'))
 	function get_member_ranks()
 	{
 		global $db;
-		$member_ranks = array();
-		$sql = "SELECT m.member_name, r.rank_name FROM __members m, __member_ranks r WHERE m.member_rank_id = r.rank_id;";
-		$result = $db->query($sql);
-		while ($row = $db->fetch_record($result))
+		if(!$this->member_ranks)
 		{
-			$member_ranks[$row['member_name']] = $row['rank_name'];
-		}
-		$ssql = "SELECT rank_name FROM __member_ranks WHERE rank_id = '".$this->config['new_member_rank']."';";
-		$member_ranks['new'] = $db->query_first($ssql);
-		return $member_ranks;
+			$sql = "SELECT m.member_name, r.rank_name FROM __members m, __member_ranks r WHERE m.member_rank_id = r.rank_id;";
+			$result = $db->query($sql);
+			while ($row = $db->fetch_record($result))
+			{
+				$this->member_ranks[$row['member_name']] = $row['rank_name'];
+			}
+			$ssql = "SELECT rank_name FROM __member_ranks WHERE rank_id = '".$this->config['new_member_rank']."';";
+			$this->member_ranks['new'] = $db->query_first($ssql);
 	}
 
 	function display_rank($page)
@@ -1454,8 +1455,8 @@ if(!class_exists('rli'))
 
 	function rank_suffix($mname)
 	{
-		$member_ranks = $this->get_member_ranks();
-		$rank = (isset($member_ranks[$mname])) ? $member_ranks[$mname] : $member_ranks['new'];
+		$this->get_member_ranks();
+		$rank = (isset($this->member_ranks[$mname])) ? $this->member_ranks[$mname] : $this->member_ranks['new'];
 		return ' ('.$rank.')';
 	}
 
