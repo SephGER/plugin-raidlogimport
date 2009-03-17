@@ -1429,6 +1429,7 @@ if(!class_exists('rli'))
 			}
 			$ssql = "SELECT rank_name FROM __member_ranks WHERE rank_id = '".$this->config['new_member_rank']."';";
 			$this->member_ranks['new'] = $db->query_first($ssql);
+		}
 	}
 
 	function display_rank($page)
