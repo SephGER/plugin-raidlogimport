@@ -24,6 +24,21 @@ $bz_data  = array(
 	21 => array('boss', 'Sartharion 2D', 'Sartharion 2D', '6', '19', '2'),
 	22 => array('boss', 'Sartharion 3D', 'Sartharion 3D', '8', '19', '3'),
     23 => array('zone', 'Vault of Archavon', 'Archavon', '5', '0', '3'),
-    24 => array('boss', 'Archavon the Stone Watcher', 'Archavon', '2', '24', '0')
+    24 => array('boss', 'Archavon the Stone Watcher', 'Archavon', '2', '24', '0'),
+    25 => array('zone', 'Ulduar', 'Ulduar', '5', '0', '4'),
+    26 => array('boss', 'Flame Leviathan', 'Leviathan', '3', '26', '0'),
+    27 => array('boss', 'Ignis the Furnace Master', 'Ignis', '3', '26', '1'),
+    28 => array('boss', 'Razorscale', 'Razorscale', '3', '26', '2'),
+    29 => array('boss', 'XT-002 Deconstuctor', 'XT-002', '3', '26', '3'),
+    30 => array('boss', 'The Iron Council', 'Iron Council', '3', '26', '4'),
+    31 => array('boss', 'Kologarn', 'Kologarn', '3', '26', '5'),
+    32 => array('boss', 'Auriaya', 'Auriaya', '3', '26', '6'),
+    33 => array('boss', 'Hodir', 'Hodir', '3', '26', '7'),
+    34 => array('boss', 'Thorim', 'Thorim', '3', '26', '8'),
+    35 => array('boss', 'Freya', 'Freya', '3', '26', '9'),
+    36 => array('boss', 'Mimiron', 'Mimiron', '3', '26', '10'),
+    37 => array('boss', 'General-Vezax', 'Vezax', '3', '26', '11'),
+    38 => array('boss', 'Yogg-Saron', 'Yoggy', '4', '26', '12'),
+    39 => array('boss', 'Algalon the Observer', 'Algalon', '4', '26', '13')
 );
 ?>
