@@ -262,7 +262,14 @@ if(!class_exists('rli'))
 	  {
 		$times = format_duration($this->get_member_secs_inraid($this->get_member_times($player, $begin, $end), $begin, $end));
 		$timedkp = $times['hours'] * $timebonus;
-		$timedkp = $timedkp + $timebonus * ($times['minutes']/60);
+		if($this->config['timedkp_handle'])
+		{
+			$timedkp = $timedkp + (($times['minutes'] >= $this->config['timedkp_handle']) ? $timebonus : 0);
+		}
+		else
+		{
+			$timedkp = $timedkp + $timebonus * ($times['minutes']/60);
+		}
 	  }
 	  return $timedkp;
 	}
@@ -408,49 +415,40 @@ if(!class_exists('rli'))
 			}
 			case "1": //one raid per hour
 			{
-				if($this->config['use_dkp'] > 1)
+				for($i = $raid['begin']; $i<=($raid['end']); $i+=3600)
 				{
-					for($i = $raid['begin']; $i<=($raid['end']); $i+=3600)
+                	//time
+					$raids[$key]['begin'] = $i;
+					$raids[$key]['end'] = (($i+3600) > $raid['end']) ? $raid['end'] : $i+3600;
+                    
+                    //event
+					$temp = $this->get_event($raid['zone']);
+					$raids[$key]['event'] = $temp['event'];
+					$raids[$key]['timebonus'] = $temp['timebonus'];
+					
+					//bosskills
+					$raids[$key]['bosskills'] = array();
+					if(is_array($raid['bosskills']))
 					{
-                    	//time
-						$raids[$key]['begin'] = $i;
-						$raids[$key]['end'] = $i+3600;
-
-                    	//event
-						$temp = $this->get_event($raid['zone']);
-						$raids[$key]['event'] = $temp['event'];
-						$raids[$key]['timebonus'] = $temp['timebonus'];
-
-						//bosskills
-						$raids[$key]['bosskills'] = array();
-						if(is_array($raid['bosskills']))
-						{
-							$raids[$key]['bosskills'] = $this->get_bosskills($raid['bosskills'], $raids[$key]['begin'], $raids[$key]['end']);
-						}
-
-	                    //note
-	                    $raids[$key]['note'] = $this->get_note($raids[$key]['bosskills']);
-
-						//value
-						$raids[$key]['value'] = $this->get_raidvalue($raids[$key]['begin'], $raids[$key]['end'], $raids[$key]['bosskills'], $raids[$key]['timebonus'], $raids[$key]['event']);
-						$key++;
+						$raids[$key]['bosskills'] = $this->get_bosskills($raid['bosskills'], $raids[$key]['begin'], $raids[$key]['end']);
 					}
-					break;
+					
+	                //note
+                    $raids[$key]['note'] = $this->get_note($raids[$key]['bosskills']);
+                    
+					//value
+					$raids[$key]['value'] = $this->get_raidvalue($raids[$key]['begin'], $raids[$key]['end'], $raids[$key]['bosskills'], $raids[$key]['timebonus'], $raids[$key]['event']);
+					$key++;
+				}
+				break;
 
-				}
-				else
-				{
-				  	message_die($user->lang['wrong_settings_1']);
-				}
 			}
 			case "2": //one raid per bosskill
 			{
-				if($this->config['use_dkp'] != 2)
+				if(is_array($raid['bosskills']))
 				{
-					if(is_array($raid['bosskills']))
+					foreach($raid['bosskills'] as $b => $bosskill)
 					{
-					  foreach($raid['bosskills'] as $b => $bosskill)
-					  {
 						//time
 						$temp = $this->get_bosskill_raidtime($raid['begin'], $raid['end'], $bosskill['time'], $raid['bosskills'][$b-1]['time'], $raid['bosskills'][$b+1]['time']);
 						$raids[$key]['begin'] = $temp['begin'];
@@ -477,44 +475,47 @@ if(!class_exists('rli'))
 						//value
 						$raids[$key]['value'] = $this->get_raidvalue($raids[$key]['begin'], $raids[$key]['end'], $raids[$key]['bosskills'], $raids[$key]['timebonus'], $raids[$key]['event']);
 						$key++;
-					  }
-					}
-					break;
-				}
-				else
-				{
-				  	message_die($user->lang['wrong_settings_2']);
-				}
+				  }
+			}
+			break;
+					
 			}
 			case "3": //one raid per hour and one per boss
 			{
-				if($this->config['use_dkp'] > 2)
+				$tc = 1;
+				for($i = $raid['begin']; $i<=($raid['end']); $i+=3600)
 				{
-					for($i = $raid['begin']; $i<=($raid['end']); $i+=3600)
-					{
-                    	//time
-						$raids[$key]['begin'] = $i;
-						$raids[$key]['end'] = (($i+3600) > $raid['end']) ? $raid['end'] : $i+3600;
-
-                    	//event
-                    	$temp = $this->get_event($raid['zone']);
-                    	$raids[$key]['event'] = $temp['event'];
-						$raids[$key]['timebonus'] = $temp['timebonus'];
-
-						//bosskills
-						$raids[$key]['bosskills'] = array();
-
-	                    //note
+                   	//time
+					$raids[$key]['begin'] = $i;
+					$raids[$key]['end'] = (($i+3600) > $raid['end']) ? $raid['end'] : $i+3600;
+					
+                    //event
+                   	$temp = $this->get_event($raid['zone']);
+                   	$raids[$key]['event'] = $temp['event'];
+					$raids[$key]['timebonus'] = $temp['timebonus'];
+					
+					//bosskills
+					$raids[$key]['bosskills'] = array();
+	                
+	                //note
+	                if($this->config['raid_note_time'])
+	                {
+	                  	$raid[$key]['note'] = $tc.'. '.$user->lang['rli_hour'];
+	                  	$tc++;
+	                }
+	                else
+	                {
 						$raids[$key]['note'] = date('H:i:s', $i).' - '.date('H:i:s', $raids[$key]['end']).' '.$user->lang['rli_clock'];
-
-						//value
-						$raids[$key]['value'] = $this->get_raidvalue($raids[$key]['begin'], $raids[$key]['end'], $raids[$key]['bosskills'], $raids[$key]['timebonus'], $raids[$key]['event']);
-						$key++;
 					}
-					if(is_array($raid['bosskills']))
+
+					//value
+					$raids[$key]['value'] = $this->get_raidvalue($raids[$key]['begin'], $raids[$key]['end'], $raids[$key]['bosskills'], $raids[$key]['timebonus'], $raids[$key]['event']);
+					$key++;
+				}
+				if(is_array($raid['bosskills']))
+				{
+					foreach($raid['bosskills'] as $b => $bosskill)
 					{
-					  foreach($raid['bosskills'] as $b => $bosskill)
-					  {
 						//time
 						$temp = $this->get_bosskill_raidtime($raid['begin'], $raid['end'], $bosskill['time'], $raid['bosskills'][$b-1]['time'], $raid['bosskills'][$b+1]['time']);
 						$raids[$key]['begin'] = $temp['begin'];
@@ -541,15 +542,10 @@ if(!class_exists('rli'))
 						//value
 						$raids[$key]['value'] = $raids[$key]['bosskills'][$b]['bonus'];
 						$key++;
-					  }
 					}
-					break;
-
 				}
-				else
-				{
-				  	message_die($user->lang['wrong_settings_3']);
-				}
+				break;
+					
 			}
 		}//switch
 		if($this->config['attendence_raid'])
@@ -559,7 +555,7 @@ if(!class_exists('rli'))
 				$raids[0]['begin'] = $raids[1]['begin'];
 				$raids[0]['end'] = $raids[1]['begin'] + $this->config['attendence_time'];
 				$raids[0]['event'] = $raids[1]['event'];
-				$raids[0]['note'] = $user->lang['rli_att']." ".$user->lang['rli_start'];
+				$raids[0]['note'] = $this->config['att_note_begin'];
 				$raids[0]['value'] = $this->config['attendence_begin'];
 			}
 			if($this->config['attendence_end'] > 0)
@@ -567,7 +563,7 @@ if(!class_exists('rli'))
 				$raids[$key]['begin'] = $raids[$key-1]['end'] - $this->config['attendence_time'];
 				$raids[$key]['end'] = $raids[$key-1]['end'];
 				$raids[$key]['event'] = $raids[$key-1]['event'];
-				$raids[$key]['note'] = $user->lang['rli_att']." ".$user->lang['rli_end'];
+				$raids[$key]['note'] = $this->config['att_note_end'];
 				$raids[$key]['value'] = $this->config['attendence_end'];
 			}
 		}
@@ -844,7 +840,7 @@ if(!class_exists('rli'))
 				{
 					$raids = $mem['raid_list'];
 	           		$raid_attendees[$mem['name']] = true;
-	           		
+
 	           		//check which raids, are for the adjustment
 	           		if($this->config['attendence_raid'])
 	           		{
@@ -860,7 +856,7 @@ if(!class_exists('rli'))
 	           			$adj_ra['start'] = 1;
 	           			$adj_ra['end'] = count($data['raids']);
 	           		}
-	           			
+
 					foreach($raids as $raid_id)
 					{
                         $dkp = 0;
@@ -1512,6 +1508,34 @@ if(!class_exists('rli'))
   		}
 		return false;
 	}
+	
+	function get_checkraidlist($raids, $memberraids, $mkey)
+	{
+		global $eqdkp_root_path, $pcache;
+		
+		$td = '';
+		if(!$this->th_raidlist)
+		{
+			$pcache->CheckCreateFolder($pcache->CacheFolder.'raidlogimport');
+            foreach($raids as $rkey => $raid)
+            {
+            	$imagefile = $eqdkp_root_path.$pcache->FileLink('image'.$rkey.'.png', 'raidlogimport');
+            	$image = imagecreate(20, 150);
+            	$weiss = imagecolorallocate($image, 0xFF, 0xFF, 0xFF);
+            	$schwarz = imagecolorallocate($image, 0x00, 0x00, 0x00);
+				imagefill($image, 0, 0, $weiss);
+				imagestringup($image, 2, 2, 148, $raid['note'], $schwarz);
+				imagepng($image, $imagefile);
+				$this->th_raidlist .= '<td width="20px"><img src="'.$imagefile.'" title="'.$raid['note'].'" alt="'.$rkey.'" /></td>';
+            	imagedestroy($image);
+			}
+		}
+		foreach($raids as $rkey => $raid)
+		{
+		$td .= '<td><input type="checkbox" name="members['.$mkey.'][raid_list][]" value="'.$rkey.'" title="'.$raid['note'].'" '.((in_array($rkey, $memberraids)) ? 'checked="checked"' : '').' /></td>';
+		}
+		return $td;
+  	}
   }//class
 }//class exist
 ?>

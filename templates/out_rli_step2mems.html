@@ -30,22 +30,27 @@
 	</table>
 	<table width="100%" border="0" cellspacing="1" cellpadding="1" id="member">
 	  <tr>
-        <th colspan="3">{L_MEMBERS}</th>
+        <th colspan="{RAIDCOUNT3}">{L_MEMBERS}</th>
         <!-- IF S_ATT_BEGIN or S_ATT_END --><th <!-- IF S_ATT_BEGIN and S_ATT_END -->colspan="2"<!-- ENDIF -->>{L_ATT}</th><!-- ENDIF -->
 	  </tr>
 	  <tr>
         <th width="45px">&nbsp;</th>
 	  	<th width="150">{L_MEMBER}</th>
-	  	<th>{L_RAIDS}</th>
+	  	<th colspan="{RAIDCOUNT}">{L_RAIDS}</th>
 	  	<!-- IF S_ATT_BEGIN --><th>{L_START}</th><!-- ENDIF -->
 	  	<!-- IF S_ATT_END --><th>{L_END}</th><!-- ENDIF -->
 	  </tr>
+	  <!-- IF MEMBER_DISPLAY -->
+	  <tr>
+	  	<td colspan="2"></td>{MEMBER_DISPLAY}<!-- IF S_ATT_BEGIN --><td></td><!-- ENDIF --><!-- IF S_ATT_END --><td></td><!-- ENDIF -->
+	  </tr>
+	  <!-- ENDIF -->
 
 	  <!-- BEGIN player -->
       <tr class="{player.ZAHL}">
          <td align="right">{player.NR}&nbsp;<img src="./../../../images/global/delete.png" alt="{L_DELETE}"><input type="checkbox" name="members[{player.KEY}][delete]" value="true" title="{L_DELETE}" /></td>
 	     <td width="300"><input type="text" name="members[{player.KEY}][name]" value="{player.MITGLIED}" /> {player.ALIAS} {player.RANK}</td>
-	     <td>{player.RAID_LIST}</td>
+	     {player.RAID_LIST}
 	     <!-- IF S_CONF_ADJ -->
 	     <td align="right"><input type="text" name="members[{player.KEY}][timedkp]" class="maininput" value="{player.ZEITDKP}" size="5" /></td>
 	     <td align="right"><input type="text" name="members[{player.KEY}][bossdkp]" class="maininput" value="{player.BOSSDKP}" size="5" /></td>
@@ -69,7 +74,7 @@
 	  		</select>
 	  		<input type="submit" name="checkmem" value="{L_UPD}" class="mainoption" />
 	  	</td>
-	  	<td class="row2" colspan="6">&nbsp;</td>
+	  	<td class="row2" colspan="99">&nbsp;</td>
 	  </tr>
     </table>
     <table width="100%" border="0" cellspacing="1" cellpadding="1">

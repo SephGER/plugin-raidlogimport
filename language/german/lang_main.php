@@ -85,6 +85,7 @@
 	$lang['xml_error'] = 'XML-Error. Bitte überprüf das Log!';
 	$lang['parse_error'] = 'Parse-Error!';
 	$lang['rli_clock'] = 'Uhr';
+	$lang['rli_hour'] = 'Stunde';
 	$lang['rli_att'] = 'Anwesenheit';
 	$lang['rli_checkmem'] = 'Member-Daten überprüfen';
 	$lang['rli_back2raid'] = 'Zurück zu Raids';
@@ -192,4 +193,15 @@
 	$lang['member_start'] = 'Start-DKP, die ein Mitglied bekommt, wenn es automatisch erstellt wird.';
 	$lang['member_start_name'] = 'Start-DKP'; //value is used for reason of adjustment
 	$lang['member_start_event'] = 'Ereignis für die Start-DKP';
+	$lang['att_note_begin'] = 'Raidnotiz des Anwesenheits-Start-Raids';
+	$lang['att_note_end'] = 'Raidnotiz des Anwesenheits-End-Raids';
+	$lang['raid_note_time']	= 'Raidnotiz der Raids pro Stunde';
+	$lang['raid_note_time_0'] = '20:00-21:00, 21:00-22:00, usw.';
+	$lang['raid_note_time_1'] = '1.Stunde, 2.Stunde, usw.';
+	$lang['timedkp_handle']	= "Berechnung der Zeit-DKP <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td> 0: exakte Berechnung pro Minute<br />&gt;0: Minuten, nach denen der Member die vollen DKP der Stunde bekommt </td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='help'></a>";
+	$lang['member_display'] = 'Wie soll die Member-Liste angezeigt werden?';
+	$lang['member_display_0'] = 'Multi-Select';
+	$lang['member_display_1'] = 'Mehrere Checkboxen';
+    $lang['member_display_add'] = " <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td>Um die Ansicht \'".$lang['member_display_1']."\' zu verwenden, muss die GD-Lib vorhanden sein (PHP-Extension). Folgende GD-Lib wurde gefunden:<br />%s</td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/error.gif' alt='help'></a>";
+    $lang['no_gd_lib'] = '<span class=\\\'negative\\\'>keine GD-Lib gefunden</span>';
 ?>

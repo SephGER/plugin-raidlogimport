@@ -143,16 +143,22 @@ class RLI_Settings extends EQdkp_Admin
 
 		//select item_save_lang
 		$item_save_lang = array('en' => 'en', 'de' => 'de', 'fr' => 'fr', 'es' => 'es', 'ru' => 'ru');
-		
+
 		//select member_start_event
 		$rli->get_events();
 		$member_start_event = $rli->events['name'];
 
+		//select member_display
+		$member_display = array(0 => $user->lang['member_display_0'], 1 => $user->lang['member_display_1']);
+
+		//select raid_note_time
+		$raid_note_time = array(0 => $user->lang['raid_note_time_0'], 1 => $user->lang['raid_note_time_1']);
+
 		$k = 2;
 		$configs = array(
 			'select' 	=> array(
-				'general' 		=> array('raidcount', 'null_sum'),
-				'member'		=> array('new_member_rank', 'member_start_event'),
+				'general' 		=> array('raidcount', 'null_sum', 'raid_note_time'),
+				'member'		=> array('new_member_rank', 'member_start_event', 'member_display'),
 				'parse'			=> array('parser'),
 				'loot'			=> array('item_save_lang')
 			),
@@ -165,9 +171,10 @@ class RLI_Settings extends EQdkp_Admin
 				'am'			=> array('auto_minus', 'am_value_raids', 'am_allxraids')
 			),
 			'normal'	=> array(
+				'general'		=> array('timedkp_handle'),
 				'member'		=> array('member_miss_time', 'member_start'),
 				'am'			=> array('am_raidnum', 'am_value'),
-				'att'			=> array('attendence_begin', 'attendence_end', 'attendence_time'),
+				'att'			=> array('attendence_begin', 'attendence_end', 'attendence_time', 'att_note_begin', 'att_note_end'),
 				'loot'			=> array('loottime'),
 				'adj'			=> array('adj_parse'),
 				'hnh_suffix'	=> array('hero', 'non_hero'),
@@ -298,8 +305,21 @@ class RLI_Settings extends EQdkp_Admin
 			$tpl->assign_block_vars('holder', array('TITLE'	=> $user->lang['title_'.$type]));
 			foreach($hold as $nava)
 			{
+				$add = '';
+				if($nava['name'] == 'member_display')
+				{
+				  	if(extension_loaded('gd'))
+				  	{
+						$info = gd_info();
+						$add = sprintf($user->lang['member_display_add'], '<span class=\\\'positive\\\'>'.$info['GD Version'].'</span>');
+				  	}
+				  	else
+				  	{
+				 		$add = sprintf($user->lang['member_display_add'], $user->lang['no_gd_lib']);
+				  	}
+				}
 				$tpl->assign_block_vars('holder.config', array(
-					'NAME'	=> $user->lang[$nava['name']],
+					'NAME'	=> $user->lang[$nava['name']].$add,
 					'VALUE' => $nava['value'],
 					'CLASS'	=> $eqdkp->switch_row_class())
 				);

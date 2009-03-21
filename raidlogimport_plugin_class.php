@@ -18,10 +18,10 @@ if ( !defined('EQDKP_INC') )
 class raidlogimport_Plugin_Class extends EQdkp_Plugin
 {
 	var $vstatus = 'Stable';
-	var $version = '0.5.2.2';
+	var $version = '0.5.3';
 	var $fwversion = '1.0.3';
 	var $jqversion = '2.0.1';
-	var $build = 4296;
+	var $build = 4330;
 
     function raidlogimport_plugin_class($pm)
     {
@@ -105,7 +105,12 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 				'member_miss_time' 	=> '300',	//time in secs member can miss without it being tracked
 				's_member_rank'		=> '0',		//show member_rank? (0: no, 1: memberpage, 2: lootpage, 4: adjustmentpage, 3:member+lootpage, 5:adjustments+memberpage, 6: loot+adjustmentpage, 7: overall)
 				'member_start'		=> '0',		//amount of DKP a member gains as an individual adjustment, when he is auto-created
-				'member_start_event' => '0'		//event for Start-DKP
+				'member_start_event' => '0',	//event for Start-DKP
+				'att_note_begin'	=> $user->lang['rli_att'].' '.$user->lang['rli_start'],	//note for attendence_start-raid
+				'att_note_end'		=> $user->lang['rli_att'].' '.$user->lang['rli_end'],	//  "	"		"	 _end-raid
+				'raid_note_time'	=> '0', 	//0: exact time (20:03:43-21:03:43); 1: hour (1. hour, 2. hour)
+				'timedkp_handle'	=> '0',		//should timedkp be given exactly(0) or fully after x minutes
+				'member_display'	=> '0'		//0: multi-dropdown; 1: checkboxes
 			);
 			$this->insert_data($config_data);
 			//add default bz_data

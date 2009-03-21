@@ -211,10 +211,12 @@ class raidlogimport extends EQdkp_Admin
 	            $member['att_dkp_begin'] = $att_dkp['begin'];
 	            $member['att_dkp_end'] = $att_dkp['end'];
 	        }
+	        $ralit = '<td>'.$jquery->MultiSelect('members['.$key.'][raid_list]', $rli->raidlist($data['raids']), $member['raid_list'], '200', '200', false, 'members_'.$key.'_raidlist').'</td>';
+	        $checklist = $rli->get_checkraidlist($data['raids'], $member['raid_list'], $key);
            	$tpl->assign_block_vars('player', array(
                	'MITGLIED' => $member['name'],
                 'ALIAS'    => $alias,
-                'RAID_LIST'=> $jquery->MultiSelect('members['.$key.'][raid_list]', $rli->raidlist($data['raids']), $member['raid_list'], '200', '200', false, 'members_'.$key.'_raidlist'),
+                'RAID_LIST'=> ($rli->config['member_display']) ? $checklist : $ralit,
                 'ATT_BEGIN'=> ($member['att_dkp_begin']) ? 'checked="checked"' : '',
                 'ATT_END'  => ($member['att_dkp_end']) ? 'checked="checked"' : '',
                 'ZAHL'     => $eqdkp->switch_row_class(),
@@ -230,14 +232,18 @@ class raidlogimport extends EQdkp_Admin
 			$tpl->assign_block_vars('raids', raids2tpl($key, $raid));
 		}
 
+        //language
+        $tpl->assign_vars(lang2tpl());
+        
 		$tpl->assign_vars(array(
-			'DATA'			=> htmlspecialchars(serialize($data), ENT_QUOTES),
-			'S_ATT_BEGIN'	=> ($rli->config['attendence_begin'] > 0) ? TRUE : FALSE,
-			'S_ATT_END'		=> ($rli->config['attendence_end'] > 0) ? TRUE : FALSE)
+			'DATA'			 => htmlspecialchars(serialize($data), ENT_QUOTES),
+			'S_ATT_BEGIN'	 => ($rli->config['attendence_begin'] > 0) ? TRUE : FALSE,
+			'S_ATT_END'		 => ($rli->config['attendence_end'] > 0) ? TRUE : FALSE,
+			'MEMBER_DISPLAY' => ($rli->config['member_display']) ? $rli->th_raidlist : false,
+			'RAIDCOUNT'		 => ($rli->config['member_display']) ? count($data['raids']) : 1,
+			'RAIDCOUNT3'	 => ($rli->config['member_display']) ? count($data['raids']) +2 : 3)
 		);
 
-		//language
-		$tpl->assign_vars(lang2tpl());
 		$eqdkp->set_vars(array(
         	'page_title'        => sprintf($user->lang['admin_title_prefix'], $eqdkp->config['guildtag'], $eqdkp->config['dkp_name']).': Daten prüfen',
             'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
