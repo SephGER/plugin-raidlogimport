@@ -818,6 +818,23 @@ if(!class_exists('rli'))
 	  }
 	  $raid_attendees = $this->auto_minus_ra($rv);
       $members = array();
+      
+	  //check which raids, are for the adjustment
+	  if($this->config['attendence_raid'])
+	  {
+	  	$adj_ra['start'] = 0;
+	  	if($this->config['attendence_end'])
+	  	{
+	  		$adj_ra['end'] = count($data['raids']);
+	    }
+	    $adj_ra['end'] = ($this->config['attendence_begin']) ? $adj_ra['end']-1 : $adj_ra['end'];
+	  }
+	  else
+	  {
+	  	  $adj_ra['start'] = ($this->config['attendence_begin']) ? 1 : 0;
+	  	  $adj_ra['end'] = ($this->config['attendence_end']) ? count($data['raids']) : 0;
+	  }
+	  
 	  foreach($post as $k => $mem)
 	  {
         $i = count($data['adjs'])+1;
@@ -841,24 +858,10 @@ if(!class_exists('rli'))
 					$raids = $mem['raid_list'];
 	           		$raid_attendees[$mem['name']] = true;
 
-	           		//check which raids, are for the adjustment
-	           		if($this->config['attendence_raid'])
-	           		{
-	           			$adj_ra['start'] = 0;
-	           			if($this->config['attendence_end'])
-	           			{
-	           				$adj_ra['end'] = count($data['raids']);
-	           			}
-	           			$adj_ra['end'] = ($this->config['attendence_begin']) ? $adj_ra['end']-1 : $adj_ra['end'];
-	           		}
-	           		else
-	           		{
-	           			$adj_ra['start'] = 1;
-	           			$adj_ra['end'] = count($data['raids']);
-	           		}
-
 					foreach($raids as $raid_id)
 					{
+					  if(($raid_id != $adj_ra['start'] AND $raid_id != $adj_ra['end']) OR !$this->config['attendence_raid'])
+					  {
                         $dkp = 0;
 						$raid = $data['raids'][$raid_id];
 						if($this->config['use_dkp'] == 2 || $this->config['use_dkp'] == 3 || $this->config['use_dkp'] == 6 || $this->config['use_dkp'] == 7)
@@ -873,11 +876,11 @@ if(!class_exists('rli'))
 						{
 							$dkp = $dkp + $this->calc_eventdkp($raid['event']);
 						}
-						if($adj_ra['start'] == $raid_id)
+						if($this->config['attendence_begin'] AND $raid_id == $adj_ra['start'])
 						{
 							$dkp = $dkp + (($mem['att_begin']) ? $this->config['attendence_begin'] : 0);
 						}
-						if($adj_ra['end'] == $raid_id)
+						if($this->config['attendence_end'] AND $raid_id == $adj_ra['end'])
 						{
 							$dkp = $dkp + (($mem['att_end']) ? $this->config['attendence_end'] : 0);
 						}
@@ -898,6 +901,7 @@ if(!class_exists('rli'))
 							$i++;
 						  }
 						}
+					  }
 					}
 				}
 			  } //delete
