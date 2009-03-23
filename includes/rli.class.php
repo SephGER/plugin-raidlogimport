@@ -849,7 +849,7 @@ if(!class_exists('rli'))
 	           			{
 	           				$adj_ra['end'] = count($data['raids']);
 	           			}
-	           			$adj_ra['end'] = ($this->config['attendence_start']) ? $adj_ra['end']-1 : $adj_ra['end'];
+	           			$adj_ra['end'] = ($this->config['attendence_begin']) ? $adj_ra['end']-1 : $adj_ra['end'];
 	           		}
 	           		else
 	           		{
