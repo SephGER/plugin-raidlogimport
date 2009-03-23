@@ -234,11 +234,11 @@ class raidlogimport extends EQdkp_Admin
 
         //language
         $tpl->assign_vars(lang2tpl());
-        
+
 		$tpl->assign_vars(array(
 			'DATA'			 => htmlspecialchars(serialize($data), ENT_QUOTES),
-			'S_ATT_BEGIN'	 => ($rli->config['attendence_begin'] > 0) ? TRUE : FALSE,
-			'S_ATT_END'		 => ($rli->config['attendence_end'] > 0) ? TRUE : FALSE,
+			'S_ATT_BEGIN'	 => ($rli->config['attendence_begin'] > 0 AND !$rli->config['attendence_raid']) ? TRUE : FALSE,
+			'S_ATT_END'		 => ($rli->config['attendence_end'] > 0 AND !$rli->config['attendence_raid']) ? TRUE : FALSE,
 			'MEMBER_DISPLAY' => ($rli->config['member_display']) ? $rli->th_raidlist : false,
 			'RAIDCOUNT'		 => ($rli->config['member_display']) ? count($data['raids']) : 1,
 			'RAIDCOUNT3'	 => ($rli->config['member_display']) ? count($data['raids']) +2 : 3)
@@ -464,8 +464,8 @@ class raidlogimport extends EQdkp_Admin
 
 		$tpl->assign_vars(array(
 			'DATA'			=> htmlspecialchars(serialize($data), ENT_QUOTES),
-			'S_ATT_BEGIN'	=> ($rli->config['attendence_begin'] > 0) ? TRUE : FALSE,
-			'S_ATT_END'		=> ($rli->config['attendence_end'] > 0) ? TRUE : FALSE)
+			'S_ATT_BEGIN'	=> ($rli->config['attendence_begin'] > 0 AND !$rli->config['attendence_raid']) ? TRUE : FALSE,
+			'S_ATT_END'		=> ($rli->config['attendence_end'] > 0 AND !$rli->config['attendence_raid']) ? TRUE : FALSE)
 		);
 
 		//language
@@ -570,8 +570,8 @@ class raidlogimport extends EQdkp_Admin
 
 		$tpl->assign_vars(array(
 			'DATA'			=> htmlspecialchars(serialize($data), ENT_QUOTES),
-			'S_ATT_BEGIN'	=> ($rli->config['attendence_begin'] > 0) ? TRUE : FALSE,
-			'S_ATT_END'		=> ($rli->config['attendence_end'] > 0) ? TRUE : FALSE,
+			'S_ATT_BEGIN'	=> ($rli->config['attendence_begin'] > 0 AND !$rli->config['attendence_raid']) ? TRUE : FALSE,
+			'S_ATT_END'		=> ($rli->config['attendence_end'] > 0 AND !$rli->config['attendence_raid']) ? TRUE : FALSE,
 			'S_NULL_SUM_2'	=> ($rli->config['null_sum'] == 2) ? TRUE : FALSE,
 			'FORMEL'		=> $user->lang['form_null_sum_'.$rli->config['null_sum']])
 		);
