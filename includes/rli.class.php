@@ -420,22 +420,22 @@ if(!class_exists('rli'))
                 	//time
 					$raids[$key]['begin'] = $i;
 					$raids[$key]['end'] = (($i+3600) > $raid['end']) ? $raid['end'] : $i+3600;
-                    
+
                     //event
 					$temp = $this->get_event($raid['zone']);
 					$raids[$key]['event'] = $temp['event'];
 					$raids[$key]['timebonus'] = $temp['timebonus'];
-					
+
 					//bosskills
 					$raids[$key]['bosskills'] = array();
 					if(is_array($raid['bosskills']))
 					{
 						$raids[$key]['bosskills'] = $this->get_bosskills($raid['bosskills'], $raids[$key]['begin'], $raids[$key]['end']);
 					}
-					
+
 	                //note
                     $raids[$key]['note'] = $this->get_note($raids[$key]['bosskills']);
-                    
+
 					//value
 					$raids[$key]['value'] = $this->get_raidvalue($raids[$key]['begin'], $raids[$key]['end'], $raids[$key]['bosskills'], $raids[$key]['timebonus'], $raids[$key]['event']);
 					$key++;
@@ -478,7 +478,7 @@ if(!class_exists('rli'))
 				  }
 			}
 			break;
-					
+
 			}
 			case "3": //one raid per hour and one per boss
 			{
@@ -488,15 +488,15 @@ if(!class_exists('rli'))
                    	//time
 					$raids[$key]['begin'] = $i;
 					$raids[$key]['end'] = (($i+3600) > $raid['end']) ? $raid['end'] : $i+3600;
-					
+
                     //event
                    	$temp = $this->get_event($raid['zone']);
                    	$raids[$key]['event'] = $temp['event'];
 					$raids[$key]['timebonus'] = $temp['timebonus'];
-					
+
 					//bosskills
 					$raids[$key]['bosskills'] = array();
-	                
+
 	                //note
 	                if($this->config['raid_note_time'])
 	                {
@@ -545,7 +545,7 @@ if(!class_exists('rli'))
 					}
 				}
 				break;
-					
+
 			}
 		}//switch
 		if($this->config['attendence_raid'])
@@ -1346,9 +1346,19 @@ if(!class_exists('rli'))
           	foreach($data['raids'] as $i => $ra)
            	{
            		$loot_select .= "<option value='".$i."'";
-           		if($this->loot_in_raid($ra['begin'], $ra['end'], $loot['time']))
+           		if(!isset($loot['raid']))
            		{
+           			if($this->loot_in_raid($ra['begin'], $ra['end'], $loot['time']))
+           			{
            			$loot_select .= ' selected="selected"';
+           			}
+           		}
+           		else
+           		{
+           			if($i == $loot['raid'])
+           			{
+           				$loot_select .= ' selected="selected"';
+           			}
            		}
            		$loot_select .= ">".$i."</option>";
            	}
@@ -1391,7 +1401,7 @@ if(!class_exists('rli'))
 			$raid['value'] = 0;
 			foreach($data['loots'] as $loot)
 			{
-				if($this->loot_in_raid($raid['begin'], $raid['end'], $loot['time']))
+				if($key == $loot['raid'])
 				{
 					if(!($without_am AND $loot['name'] == $user->lang['am_name']))
 					{
@@ -1508,11 +1518,11 @@ if(!class_exists('rli'))
   		}
 		return false;
 	}
-	
+
 	function get_checkraidlist($raids, $memberraids, $mkey)
 	{
 		global $eqdkp_root_path, $pcache;
-		
+
 		$td = '';
 		if(!$this->th_raidlist)
 		{
