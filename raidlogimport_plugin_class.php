@@ -130,8 +130,8 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 						}
 					}
 					$config_data = array(
-						'hero'				=> '_25',	//suffix for hero
-						'non_hero'			=> '_10',	//suffix for non-hero
+						'hero'				=> ' (25)',	//suffix for hero
+						'non_hero'			=> ' (10)',	//suffix for non-hero
 						'dep_match'			=> '0'		//also append suffix to boss-note?
 					);
 					$this->insert_data($config_data);
