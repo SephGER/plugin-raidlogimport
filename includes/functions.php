@@ -267,7 +267,7 @@ function create_member($member, $rank)
 
 function lang2tpl()
 {
-	global $tpl, $user;
+	global $tpl, $user, $rli;
 	$la_ar = array(
 		'L_ADJ_ADD'		=> $user->lang['rli_add_adj'],
 		'L_ADJS_ADD'	=> $user->lang['rli_add_adjs'],
@@ -310,7 +310,7 @@ function lang2tpl()
 		'L_START'		=> $user->lang['rli_start'],
 		'L_T_DKP'		=> $user->lang['rli_t_dkp'],
 		'L_TIME'		=> $user->lang['time'],
-		'L_TRANSLATE_ITEMS' => $user->lang['translate_items'],
+		'L_TRANSLATE_ITEMS' => ($rli->data['log_lang'] == $rli->config['item_save_lang']) ? $user->lang['get_itemid'] : $user->lang['translate_items'],
 		'L_TRANSLATE_ITEMS_TIP' => $user->lang['translate_items_tip'],
 		'L_UPD'			=> $user->lang['update'],
         'L_VALUE'       => $user->lang['value']

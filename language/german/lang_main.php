@@ -118,14 +118,16 @@
 	$lang['rli_miss'] = 'Folgende Nodes fehlen: ';
 	$lang['rli_lgaobk'] = 'Log Guild Attendees on Bosskill muss vor und während des Aufzeichnens deaktiviert sein. Wenn du den Raid trotzdem importieren willst, musst du alle Joins mit der selben Zeit von Bosskills löschen.';
 	$lang['wrong_format'] = 'Der Parser und das Raid-Log stimmen nicht überein.';
-	$lang['ctrt_format'] = 'Bitte stell die Optionen vom CT-Raidtracker auf ';
+	$lang['eqdkp_format'] = 'Bitte stell die Optionen vom CT-Raidtracker auf <img src="$eqdkp_root_path'.'plugins/raidlogimport/images/eqdkp_options.png">';
+	$lang['plus_format'] = 'Bitte stell das Ausgabeformat deines Trackers auf "EQdkpPlus XML Format"';
 	$lang['wrong_settings'] = '<img src="$eqdkp_root_path'.'images/error.png" alt="error"> Verkehrte Einstellungen!';
 	$lang['wrong_settings_1'] = $lang['wrong_settings'].' '.$lang['raidcount_1'].' kann nicht mit keinen Zeit-DKP kombiniert werden.';
 	$lang['wrong_settings_2'] = $lang['wrong_settings'].' '.$lang['raidcount_2'].' kann nicht mit keinen Boss-DKP kombiniert werden.';
 	$lang['wrong_settings_3'] = $lang['wrong_settings'].' '.$lang['raidcount_3'].' kann nicht mit keine Boss- und/oder Zeit-DKP kombiniert werden.';
 	$lang['rli_process'] = 'Ausführen';
 	$lang['translate_items'] = 'Items übersetzen';
-	$lang['translate_items_tip'] = 'Nach dem Übersetzen einmal auf "Aktualisieren" drücken, damit die neuen Item-Namen übernommen werden.';
+	$lang['get_itemid'] = 'Item-ID laden';
+	$lang['translate_items_tip'] = 'Nach dem Übersetzen einmal auf "Aktualisieren" drücken, damit die neuen Item-Daten übernommen werden.';
 	$lang['raidval_nullsum_later'] = 'Beim Null-Summen-System wird der Raid-Wert später eingegeben.';
 	$lang['check_raidval'] = 'Raid-Werte überprüfen';
 	$lang['rli_log_lang'] = 'In welcher Sprache sind die Items im Log?';
@@ -153,6 +155,8 @@
 	$lang['adj_parse'] = 'Trennzeichen zwischen Grund und Wert einer Korrektur';
 	$lang['bz_parse'] = 'Trennzeichen zwischen den Strings die zu einem "Event" gehören';
 	$lang['parser'] = 'Welches XML-Format hat der String?';
+	$lang['parser_eqdkp'] = 'MLDKP 1.1 / EQdkp Plugin';
+	$lang['parser_plus'] = 'EQdkpPlus XML Format';
 	$lang['rli_man_db_up'] = 'DB-Update erzwingen';
 	$lang['rli_upd_check'] = 'Update-Check aktivieren?';
 	$lang['use_dkp'] = 'Welche DKP sollen verwendet werden?';

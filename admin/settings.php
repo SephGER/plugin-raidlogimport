@@ -125,7 +125,7 @@ class RLI_Settings extends EQdkp_Admin
 		}
 
 		//select parsers
-		$parser = array('ctrt' => 'CT-Raidtracker');
+		$parser = array('eqdkp' => $user->lang['parser_eqdkp'], 'plus' => $user->lang['parser_plus']);
 
 		//select raidcount
         $raidcount = array();

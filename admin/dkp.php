@@ -66,7 +66,7 @@ class raidlogimport extends EQdkp_Admin
 
         if(isset($_POST['rest']))
         {
-			$data = $rli->parse_post($_POST, $data);
+			$rli->parse_post();
         }
         if(isset($_POST['log']))
         {
@@ -79,9 +79,9 @@ class raidlogimport extends EQdkp_Admin
 		  }
 		  else
 		  {
-		      $data = $rli->create_raids($raidxml);
+		      $rli->create_raids($raidxml);
 		  }
-		  $data['log_lang'] = $_POST['log_lang'];
+		  $rli->data['log_lang'] = $_POST['log_lang'];
         }//post or string
 
         //get events
@@ -91,11 +91,10 @@ class raidlogimport extends EQdkp_Admin
 		{
 			for($i=1; $i<=$_POST['raid_add']; $i++)
 			{
-				$data['raids'][] = '';
+				$rli->data['raids'][] = '';
 			}
 		}
-
-		foreach($data['raids'] as $ky => $rai)
+		foreach($rli->data['raids'] as $ky => $rai)
 		{
 			if($_POST['checkraid'] == $user->lang['rli_calc_note_value'])
 			{
@@ -140,9 +139,9 @@ class raidlogimport extends EQdkp_Admin
 		}
 
 		$tpl->assign_vars(array(
-			'DATA' =>htmlspecialchars(serialize($data), ENT_QUOTES),
-			'USE_TIMEDKP' => ($rli->config['use_dkp'] == 2 || $rli->config['use_dkp'] == 3 || $rli->config['use_dkp'] == 6 || $rli->config['use_dkp'] == 7) ? TRUE : FALSE,
-			'USE_BOSSDKP' => ($rli->config['use_dkp'] == 1 || $rli->config['use_dkp'] == 3 || $rli->config['use_dkp'] == 5 || $rli->config['use_dkp'] == 7) ? TRUE : FALSE,
+			'DATA' =>htmlspecialchars(serialize($rli->data), ENT_QUOTES),
+			'USE_TIMEDKP' => $rli->get_multiconfig($rli->config['use_dkp'], 2),
+			'USE_BOSSDKP' => $rli->get_multiconfig($rli->config['use_dkp'], 1),
 			'S_NULL_SUM'  => $rli->config['null_sum'],
 			'L_RV_NS'	  => $user->lang['raidval_nullsum_later'])
 		);
@@ -162,30 +161,29 @@ class raidlogimport extends EQdkp_Admin
 		global $db, $eqdkp, $user, $tpl, $pm;
 		global $myHtml, $rli, $jquery;
 
-		$data = $rli->parse_post($_POST, $data);
+		$rli->parse_post();
 		if(isset($_POST['members_add']))
 		{
-            $h = max(array_keys($data['members']));
+            $h = max(array_keys($rli->data['members']));
 			for($i=1; $i<=$_POST['members_add']; $i++)
 			{
 				$h++;
-				$data['members'][$h]['join'] = array();
-				$data['members'][$h]['leave'] = array();
-				$data['members'][$h]['name'] = '';
+				$rli->data['members'][$h]['times'] = array();
+				$rli->data['members'][$h]['name'] = '';
 			}
 		}
 		$aliases = rli_get_aliases();
-		foreach($data['members'] as $key => $member)
+		foreach($rli->data['members'] as $key => $member)
 		{
-			if($rli->display_rank('member'))
+			if($rli->get_multiconfig($rli->config['s_member_rank'], 1))
 			{
 				$member['rank'] = $rli->rank_suffix($member['name']);
 			}
 			if(isset($aliases[$member['name']]))
 			{
-            	$data['members'][$key]['alias'] = $member['name'];
+            	$rli->data['members'][$key]['alias'] = $member['name'];
                 $member['alias'] = $member['name'];
-                $data['members'][$key]['name'] = $aliases[$member['name']];
+                $rli->data['members'][$key]['name'] = $aliases[$member['name']];
             	$member['name'] = $aliases[$member['name']];
             }
          	//Ursprungsname hinter das Mitglied schreiben
@@ -197,22 +195,22 @@ class raidlogimport extends EQdkp_Admin
             if($_POST['checkmem'] == $user->lang['rli_checkmem'])
             {
             	$member['raid_list'] = array();
-	           	foreach($data['raids'] as $u => $ra)
+	           	foreach($rli->data['raids'] as $u => $ra)
 	           	{
 	           		//check events
-	           		if($rli->member_in_raid($member, $ra))
+	           		if($rli->member_in_raid($key, $ra['begin'], $ra['end']))
 	           		{
 	           			$member['raid_list'][] = $u;
 	           		}
 		        }
-		        $begin = $data['raids'][1]['begin'];
-		        $end = $data['raids'][count($data['raids'])]['end'];
-	            $att_dkp = $rli->calculate_attendence($member, $begin, $end);
+		        $begin = $rli->data['raids'][1]['begin'];
+		        $end = $rli->data['raids'][count($rli->data['raids'])]['end'];
+	            $att_dkp = $rli->calculate_attendence($member['times'], $begin, $end);
 	            $member['att_dkp_begin'] = $att_dkp['begin'];
 	            $member['att_dkp_end'] = $att_dkp['end'];
 	        }
-	        $ralit = '<td>'.$jquery->MultiSelect('members['.$key.'][raid_list]', $rli->raidlist($data['raids']), $member['raid_list'], '200', '200', false, 'members_'.$key.'_raidlist').'</td>';
-	        $checklist = $rli->get_checkraidlist($data['raids'], $member['raid_list'], $key);
+	        $ralit = '<td>'.$jquery->MultiSelect('members['.$key.'][raid_list]', $rli->raidlist(), $member['raid_list'], '200', '200', false, 'members_'.$key.'_raidlist').'</td>';
+	        $checklist = $rli->get_checkraidlist($member['raid_list'], $key);
            	$tpl->assign_block_vars('player', array(
                	'MITGLIED' => $member['name'],
                 'ALIAS'    => $alias,
@@ -222,12 +220,12 @@ class raidlogimport extends EQdkp_Admin
                 'ZAHL'     => $eqdkp->switch_row_class(),
                 'KEY'	   => $key,
                 'NR'	   => $key +1,
-                'RANK'	   => ($rli->display_rank('member')) ? $rli->rank_suffix($member['name']) : '')
+                'RANK'	   => ($rli->get_multiconfig($rli->config['s_member_rank'], 1)) ? $rli->rank_suffix($member['name']) : '')
            	);
         }//foreach members
 
 		//show raids
-		foreach($data['raids'] as $key => $raid)
+		foreach($rli->data['raids'] as $key => $raid)
 		{
 			$tpl->assign_block_vars('raids', raids2tpl($key, $raid));
 		}
@@ -236,12 +234,12 @@ class raidlogimport extends EQdkp_Admin
         $tpl->assign_vars(lang2tpl());
 
 		$tpl->assign_vars(array(
-			'DATA'			 => htmlspecialchars(serialize($data), ENT_QUOTES),
+			'DATA'			 => htmlspecialchars(serialize($rli->data), ENT_QUOTES),
 			'S_ATT_BEGIN'	 => ($rli->config['attendence_begin'] > 0 AND !$rli->config['attendence_raid']) ? TRUE : FALSE,
 			'S_ATT_END'		 => ($rli->config['attendence_end'] > 0 AND !$rli->config['attendence_raid']) ? TRUE : FALSE,
 			'MEMBER_DISPLAY' => ($rli->config['member_display']) ? $rli->th_raidlist : false,
-			'RAIDCOUNT'		 => ($rli->config['member_display']) ? count($data['raids']) : 1,
-			'RAIDCOUNT3'	 => ($rli->config['member_display']) ? count($data['raids']) +2 : 3)
+			'RAIDCOUNT'		 => ($rli->config['member_display']) ? count($rli->data['raids']) : 1,
+			'RAIDCOUNT3'	 => ($rli->config['member_display']) ? count($rli->data['raids']) +2 : 3)
 		);
 
 		$eqdkp->set_vars(array(
@@ -257,31 +255,31 @@ class raidlogimport extends EQdkp_Admin
 		global $db, $eqdkp, $user, $tpl, $pm;
 		global $myHtml, $rli;
 
-		$data = $rli->parse_post($_POST, $data);
-        $p = ($data['loots']) ? max(array_keys($data['loots'])) : 0;
+		$rli->parse_post();
+        $p = ($rli->data['loots']) ? max(array_keys($rli->data['loots'])) : 0;
 		if(isset($_POST['items_add']))
 		{
 			for($i=1; $i<=$_POST['items_add']; $i++)
 			{
 				$p++;
-				$data['loots'][$p] = array();
+				$rli->data['loots'][$p] = array();
 			}
 		}
 
 		//show raids&members
-		foreach($data['raids'] as $key => $raid)
+		foreach($rli->data['raids'] as $key => $raid)
 		{
 			if($rli->config['null_sum'])
 			{
-				$raid['value'] = $rli->get_nsr_value($data, $key, false, true);
+				$raid['value'] = $rli->get_nsr_value($key, false, true);
 			}
 			$tpl->assign_block_vars('raids', raids2tpl($key, $raid));
 		}
 
 		$members = array(); //for select in loots
-		foreach($data['members'] as $key => $member)
+		foreach($rli->data['members'] as $key => $member)
 		{
-			$tpl->assign_block_vars('player', mems2tpl($key, $member, $data));
+			$tpl->assign_block_vars('player', mems2tpl($key, $member, $rli->data));
             $members['name'][$member['name']] = $member['name'];
             if(isset($member['alias']))
             {
@@ -320,7 +318,7 @@ class raidlogimport extends EQdkp_Admin
         	$loot_cache[$row['id']]['itemid'] = $row['item_id'];
         }
 
-		if(is_array($data['loots']))
+		if(is_array($rli->data['loots']))
 		{
           $start = 0;
           $end = $p+1;
@@ -341,7 +339,7 @@ class raidlogimport extends EQdkp_Admin
 			}
 			$end = $start+$dic;
 		  }
-		  $rli->iteminput2tpl($data, $loot_cache, $start, $end, $members, $aliase);
+		  $rli->iteminput2tpl($loot_cache, $start, $end, $members, $aliase);
 		}
 
 		if($rli->config['null_sum'])
@@ -369,11 +367,12 @@ class raidlogimport extends EQdkp_Admin
             $next_button .= ' <input type="submit" name="checkitem" value="'.$user->lang['rli_itempage'].(($page) ? $page : 2).'" class="mainoption" />';
         }
 		$tpl->assign_vars(array(
-			'DATA'			=> htmlspecialchars(serialize($data), ENT_QUOTES),
+			'DATA'			=> htmlspecialchars(serialize($rli->data), ENT_QUOTES),
 			'S_ATT_BEGIN'	=> ($rli->config['attendence_begin'] > 0 AND !$rli->config['attendence_raid']) ? TRUE : FALSE,
 			'S_ATT_END'		=> ($rli->config['attendence_end'] > 0 AND !$rli->config['attendence_raid']) ? TRUE : FALSE,
-			'MAXCOUNT'		=> $p,
-			'LANGFROM'		=> $data['log_lang'],
+			'MAXCOUNT'		=> $end,
+			'MINCOUNT'		=> $start,
+			'LANGFROM'		=> $rli->data['log_lang'],
 			'LANGTO'		=> $rli->config['item_save_lang'],
 			'NEXT_BUTTON'	=> $next_button)
 		);
@@ -395,28 +394,28 @@ class raidlogimport extends EQdkp_Admin
 
 		$db->query("DROP TABLE IF EXISTS item_rename;");
 
-		$data = $rli->parse_post($_POST, $data);
+		$rli->parse_post();
 
 		if(isset($_POST['adjs_add']))
 		{
 			for($i=1; $i<=$_POST['adjs_add']; $i++)
 			{
-				$data['adjs'][] = '';
+				$rli->data['adjs'][] = '';
 			}
 		}
 
 		//show raids, members & items
-		foreach($data['raids'] as $key => $raid)
+		foreach($rli->data['raids'] as $key => $raid)
 		{
 			$tpl->assign_block_vars('raids', raids2tpl($key, $raid));
 		}
-		foreach($data['members'] as $key => $member)
+		foreach($rli->data['members'] as $key => $member)
 		{
-			$tpl->assign_block_vars('player', mems2tpl($key, $member, $data));
+			$tpl->assign_block_vars('player', mems2tpl($key, $member, $rli->data));
 		}
-		if(is_array($data['loots']))
+		if(is_array($rli->data['loots']))
 		{
-		  foreach($data['loots'] as $loot)
+		  foreach($rli->data['loots'] as $loot)
 		  {
 			$tpl->assign_block_vars('loots', items2tpl($loot));
 		  }
@@ -425,25 +424,25 @@ class raidlogimport extends EQdkp_Admin
         //get events
         $rli->get_events();
 
-		if(isset($data['adjs']))
+		if(isset($rli->data['adjs']))
 		{
 			$sql = "SELECT member_name FROM __members ORDER BY member_name ASC;";
 			$res = $db->query($sql);
 			$members = array();
 			while ($row = $db->fetch_record($res))
 			{
-				$members[$row['member_name']] = $row['member_name'].(($rli->display_rank('adj')) ? $rli->rank_suffix($row['member_name']) : '');
+				$members[$row['member_name']] = $row['member_name'].(($rli->get_multiconfig($rli->config['s_member_rank'], 4)) ? $rli->rank_suffix($row['member_name']) : '');
 			}
-			foreach($data['members'] as $member)
+			foreach($rli->data['members'] as $member)
 			{
-				$members_r[$member['name']] = $member['name'].(($rli->display_rank('adj')) ? $rli->rank_suffix($member['name']) : '');
+				$members_r[$member['name']] = $member['name'].(($rli->get_multiconfig($rli->config['s_member_rank'], 4)) ? $rli->rank_suffix($member['name']) : '');
 				if(isset($member['alias']))
 				{
 					$adj_alias[$member['alias']] = $member['name'];
 				}
 			}
 			$members = array_merge($members_r, $members);
-			foreach($data['adjs'] as $a => $adj)
+			foreach($rli->data['adjs'] as $a => $adj)
 			{
 				if(isset($adj_alias[$adj['member']]))
 				{
@@ -463,7 +462,7 @@ class raidlogimport extends EQdkp_Admin
 		}
 
 		$tpl->assign_vars(array(
-			'DATA'			=> htmlspecialchars(serialize($data), ENT_QUOTES),
+			'DATA'			=> htmlspecialchars(serialize($rli->data), ENT_QUOTES),
 			'S_ATT_BEGIN'	=> ($rli->config['attendence_begin'] > 0 AND !$rli->config['attendence_raid']) ? TRUE : FALSE,
 			'S_ATT_END'		=> ($rli->config['attendence_end'] > 0 AND !$rli->config['attendence_raid']) ? TRUE : FALSE)
 		);
@@ -484,23 +483,23 @@ class raidlogimport extends EQdkp_Admin
 
 		$db->query("DROP TABLE IF EXISTS item_rename");
 
-		$data = $rli->parse_post($_POST, $data);
+		$rli->parse_post();
 
 		//show members & items
-		foreach($data['members'] as $key => $member)
+		foreach($rli->data['members'] as $key => $member)
 		{
-			$tpl->assign_block_vars('player', mems2tpl($key, $member, $data));
+			$tpl->assign_block_vars('player', mems2tpl($key, $member, $rli->data));
 		}
-		foreach($data['loots'] as $loot)
+		foreach($rli->data['loots'] as $loot)
 		{
 			$tpl->assign_block_vars('loots', items2tpl($loot));
 		}
 
        	if($rli->config['null_sum'] == 1)
         {
-			foreach($data['raids'] as $raid_key => $raid)
+			foreach($rli->data['raids'] as $raid_key => $raid)
 			{
-				$temp = $rli->get_nsr_value($data, $raid_key, true);
+				$temp = $rli->get_nsr_value($raid_key, true);
 				$raid['value'] = $temp['v'];
                 $formul[$raid_key] = $temp['p'].'/'.$temp['c'];
             	$tpl->assign_block_vars('raids', raids2tpl($raid_key, $raid, $formul));
@@ -509,11 +508,11 @@ class raidlogimport extends EQdkp_Admin
 
 		if($rli->config['null_sum'] == 2)
 		{
-			$data['adjs'] = array();
+			$rli->data['adjs'] = array();
 			$maxkey = 0;
-			foreach($data['members'] as $key => $member)
+			foreach($rli->data['members'] as $key => $member)
 			{
-				$members[$member['name']] = $member['name'].(($rli->display_rank('adj')) ? $rli->rank_suffix($member['name']) : '');
+				$members[$member['name']] = $member['name'].(($rli->get_multiconfig($rli->config['s_member_rank'], 4)) ? $rli->rank_suffix($member['name']) : '');
 				$maxkey = ($maxkey < $key) ? $key : $maxkey;
 			}
 			$sql = "SELECT member_name FROM __members";
@@ -523,34 +522,34 @@ class raidlogimport extends EQdkp_Admin
 				if(!in_array($row['member_name'], $members))
 				{
 					$maxkey++;
-					$members[$row['member_name']] = $row['member_name'].(($rli->display_rank('adj')) ? $rli->rank_suffix($row['member_name']) : '');
-					$data['members'][$maxkey]['name'] = $row['member_name'];
-					$data['members'][$maxkey]['raid_list'] = array();
+					$members[$row['member_name']] = $row['member_name'].(($rli->get_multiconfig($rli->config['s_member_rank'], 4)) ? $rli->rank_suffix($row['member_name']) : '');
+					$rli->data['members'][$maxkey]['name'] = $row['member_name'];
+					$rli->data['members'][$maxkey]['raid_list'] = array();
 				}
 			}
         	//get events
         	$rli->get_events();
 
-			foreach($data['raids'] as $raid_key => $raid)
+			foreach($rli->data['raids'] as $raid_key => $raid)
 			{
-				$temp = $rli->get_nsr_value($data, $raid_key, TRUE);
+				$temp = $rli->get_nsr_value($raid_key, TRUE);
 				$raid['value'] = $temp['v'];
                 $formul[$raid_key] = $temp['p'].'/'.$temp['c'];
                 $u = 0;
-				foreach($data['members'] as $key => $member)
+				foreach($rli->data['members'] as $key => $member)
 				{
 					if(!in_array($raid_key, $member['raid_list']))
 					{
-						$data['adjs'][$u]['member'] = $member['name'];
-						$data['adjs'][$u]['value'] = $raid['value'];
-						$data['adjs'][$u]['event'] = $raid['event'];
-						$data['adjs'][$u]['reason'] = 'Raid '.date('d.m.y', $raid['begin']);
+						$rli->data['adjs'][$u]['member'] = $member['name'];
+						$rli->data['adjs'][$u]['value'] = $raid['value'];
+						$rli->data['adjs'][$u]['event'] = $raid['event'];
+						$rli->data['adjs'][$u]['reason'] = 'Raid '.date('d.m.y', $raid['begin']);
 						$u++;
 					}
 				}
             	$tpl->assign_block_vars('raids', raids2tpl($raid_key, $raid, $formul));
 			}
-			foreach($data['adjs'] as $a => $adj)
+			foreach($rli->data['adjs'] as $a => $adj)
 			{
 				if(isset($adj_alias[$adj['member']]))
 				{
@@ -569,7 +568,7 @@ class raidlogimport extends EQdkp_Admin
 		}
 
 		$tpl->assign_vars(array(
-			'DATA'			=> htmlspecialchars(serialize($data), ENT_QUOTES),
+			'DATA'			=> htmlspecialchars(serialize($rli->data), ENT_QUOTES),
 			'S_ATT_BEGIN'	=> ($rli->config['attendence_begin'] > 0 AND !$rli->config['attendence_raid']) ? TRUE : FALSE,
 			'S_ATT_END'		=> ($rli->config['attendence_end'] > 0 AND !$rli->config['attendence_raid']) ? TRUE : FALSE,
 			'S_NULL_SUM_2'	=> ($rli->config['null_sum'] == 2) ? TRUE : FALSE,
@@ -591,10 +590,10 @@ class raidlogimport extends EQdkp_Admin
 		global $db, $eqdkp, $user, $tpl, $pm;
 		global $SID, $rli, $conf_plus;
 
-		$data = $rli->parse_post($_POST, $data);
+		$rli->parse_post();
 		$isok = true;
 
-		$bools = $rli->check_data($data);
+		$bools = $rli->check_data();
 		if(!isset($bools['false']))
 		{
 		  $sql = "SELECT member_id, member_name, member_firstraid, member_status, member_lastraid FROM __members";
@@ -611,10 +610,10 @@ class raidlogimport extends EQdkp_Admin
 		  $newraidid = 0;
 		  $newraidid = $db->query_first("SELECT MAX(`raid_id`) FROM __raids;");
 
-		  foreach($data['raids'] as $raid_key => $raid)
+		  foreach($rli->data['raids'] as $raid_key => $raid)
 		  {
 			$newraidid++;
-			$data['raids'][$raid_key]['id'] = $newraidid;
+			$rli->data['raids'][$raid_key]['id'] = $newraidid;
 			$sql = "INSERT INTO __raids
         		      (`raid_id`, `raid_name`, `raid_date`, `raid_note`, `raid_value`, `raid_added_by`)
         		    VALUES
@@ -637,9 +636,9 @@ class raidlogimport extends EQdkp_Admin
 	            $item_gameidExists = TRUE;
 	        }
        		$lootdkp = array();
-       		if(is_array($data['loots']))
+       		if(is_array($rli->data['loots']))
        		{
-	          foreach($data['loots'] as $key => $loot)
+	          foreach($rli->data['loots'] as $key => $loot)
 	          {
 	        	$lootdkp[$loot['player']] = $lootdkp[$loot['player']] + $loot['dkp'];
 				$sql = "INSERT INTO __items
@@ -656,11 +655,11 @@ class raidlogimport extends EQdkp_Admin
 	            $sql .= ") VALUES
 	                     ('".mysql_real_escape_string(mysql_real_escape_string($loot['name']))."',
 	                      '".mysql_real_escape_string($loot['player'])."',
-	                      '".mysql_real_escape_string($data['raids'][$loot['raid']]['id'])."',
+	                      '".mysql_real_escape_string($rli->data['raids'][$loot['raid']]['id'])."',
 	                      '".mysql_real_escape_string($loot['dkp'])."',
 	                      '".mysql_real_escape_string($loot['time'])."',
 	                      'DKP Import(by ".$user->data['username'].")',
-	                      '".mysql_real_escape_string($this->gen_group_key($loot['name'], $loot['time'], $data['raids'][$loot['raid']]['id']))."'";
+	                      '".mysql_real_escape_string($this->gen_group_key($loot['name'], $loot['time'], $rli->data['raids'][$loot['raid']]['id']))."'";
 	            if ($item_gameidExists) {
 	                $sql .= ",'".mysql_real_escape_string($loot['id'])."'";
 	            }
@@ -679,15 +678,15 @@ class raidlogimport extends EQdkp_Admin
 		  {
 		   if(!($rli->config['null_sum'] == 1 OR $rli->config['deactivate_adj']))
 		   {
-		  	if(is_array($data['adjs']))
+		  	if(is_array($rli->data['adjs']))
 		  	{
-			  	foreach($data['adjs'] as $adj)
+			  	foreach($rli->data['adjs'] as $adj)
 			  	{
 					$group_key = $this->gen_group_key($this->time, stripslashes($adj['reason']), $adj['value'], mysql_real_escape_string($adj['event']));
 					$sql = "INSERT INTO __adjustments
 								(`adjustment_value`, `adjustment_date`, `member_name`, `adjustment_reason`, `adjustment_added_by`, `adjustment_group_key`, `raid_name`)
 						    VALUES
-						    	('".$adj['value']."', '".$data['raids'][1]['begin']."', '".$adj['member']."', '".mysql_real_escape_string($adj['reason'])."', 'Raid-Log-Import (by ".$user->data['username'].")', '".$group_key."', '".mysql_real_escape_string($adj['event'])."');";
+						    	('".$adj['value']."', '".$rli->data['raids'][1]['begin']."', '".$adj['member']."', '".mysql_real_escape_string($adj['reason'])."', 'Raid-Log-Import (by ".$user->data['username'].")', '".$group_key."', '".mysql_real_escape_string($adj['event'])."');";
 					$adj_dkp[$adj['member']] += $adj['value'];
 					if(!$db->query($sql))
 					{
@@ -702,7 +701,7 @@ class raidlogimport extends EQdkp_Admin
 
 		  if($isok)
 		  {
-          	foreach($data['members'] as $dmem)
+          	foreach($rli->data['members'] as $dmem)
             {
 		  		foreach($members as $id => $mem)
 		  		{
@@ -751,11 +750,11 @@ class raidlogimport extends EQdkp_Admin
                       $keys = array_keys($member['raid_list']);
                       if(!$member['firstraid'])
                       {
-                      	$sql[] = "member_firstraid = '".$data['raids'][$member['raid_list'][$keys[0]]]['begin']."', ";
+                      	$sql[] = "member_firstraid = '".$rli->data['raids'][$member['raid_list'][$keys[0]]]['begin']."', ";
                       }
                       krsort($keys);
-                      $sql[] = "member_lastraid = '".$data['raids'][$member['raid_list'][$keys[0]]]['end']."', ";
-					  foreach($data['raids'] as $raid_key => $raid)
+                      $sql[] = "member_lastraid = '".$rli->data['raids'][$member['raid_list'][$keys[0]]]['end']."', ";
+					  foreach($rli->data['raids'] as $raid_key => $raid)
 					  {
 						if(in_array($raid_key, $member['raid_list']) AND $isok)
 						{
@@ -834,13 +833,13 @@ class raidlogimport extends EQdkp_Admin
 
 			//logging
 			//raids
-            $num = count($data['members'])-1;
-            $member_str = $data['members'][0]['name'];
+            $num = count($rli->data['members'])-1;
+            $member_str = $rli->data['members'][0]['name'];
             for ( $i=1; $i<=$num; $i++ )
             {
-                $member_str .= ", ".$data['members'][$i]['name'];
+                $member_str .= ", ".$rli->data['members'][$i]['name'];
             }
-			foreach($data['raids'] as $key => $raid)
+			foreach($rli->data['raids'] as $key => $raid)
 			{
 				$log_actions[] = array(
 					'header'		=> '{L_ACTION_RAID_ADDED}',
@@ -854,9 +853,9 @@ class raidlogimport extends EQdkp_Admin
 			}
 
             //items
-            if(is_array($data['loots']))
+            if(is_array($rli->data['loots']))
             {
-              	foreach ($data['loots'] as $loot)
+              	foreach ($rli->data['loots'] as $loot)
               	{
 	            	$log_actions[] = array(
     	        		'header' 		=> '{L_ACTION_ITEM_ADDED}',
@@ -872,9 +871,9 @@ class raidlogimport extends EQdkp_Admin
             //adjs
             if(!$rli->config['deactivate_adj'])
             {
-              if(is_array($data['adjs']))
+              if(is_array($rli->data['adjs']))
               {
-              	foreach($data['adjs'] as $adj)
+              	foreach($rli->data['adjs'] as $adj)
               	{
               		$log_actions[] = array(
             			'header'			=> '{L_ACTION_INDIVADJ_ADDED}',
@@ -940,7 +939,7 @@ class raidlogimport extends EQdkp_Admin
 		  $tpl->assign_vars(array(
 		  	'L_NO_IMP_SUC'	=> $user->lang['rli_imp_no_suc'],
 		  	'CHECK'			=> $check,
-		  	'DATA'			=> htmlspecialchars(serialize($data), ENT_QUOTES))
+		  	'DATA'			=> htmlspecialchars(serialize($rli->data), ENT_QUOTES))
 		  );
     	  $eqdkp->set_vars(array(
     	  	'page_title'		=> sprintf($user->lang['admin_title_prefix'], $eqdkp->config['guildtag'], $eqdkp->config['dkp_name']).': '.$user->lang['rli_imp_no_suc'],
