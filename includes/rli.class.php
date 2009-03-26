@@ -1051,29 +1051,96 @@ if(!class_exists('rli'))
 		}
 		return $bools;
 	}
-
+	
+	/**
+	 *	checks wether all nodes are available (if not optional) and complete.
+	 *	returns an array(1 => bool, 2 => array( contains strings of missing/wrong nodes ))
+	 *	params: xml => xml to check
+	 *			xml_form => array, which describes the xml: array(node => array(node => '')); 
+	 *					if prefix is "optional:", the node is only checked for completion
+	 *					if prefix is "multiple:", all occuring nodes are checked
+	 */
 	function check_xml_format($xml, $xml_form, $back=array(1 => true), $pre='')
 	{
-		$this->counter++;
 		foreach($xml_form as $name => $val)
 		{
-			if(!isset($xml->$name) AND $val == '')
+			$optional = false;
+			if(strpos($name, 'optional:') !== false)
 			{
-				$back[1] = false;
-				$back[2][] = $pre.$name;
+				$name = str_replace('optional:', '', $name);
+				$optional = true;
 			}
-			elseif(is_array($val))
+			$multiple = false;
+			if(strpos($name, 'multiple:') !== false)
+			{
+				$name = str_replace('multiple:', '', $name);
+				$multiple = true;
+			}
+			if($multiple)
 			{
 				$pre .= $name.'->';
-				$back = $this->check_xml_format($xml->$name, $val, $back, $pre);
+				foreach($val as $nname => $vval)
+				{
+                	$optional = false;
+                    if(strpos($nname, 'optional:') !== false)
+                    {
+                        $nname = str_replace('optional:', '', $nname);
+                        $optional = true;
+                    }
+                    $pre .= $nname.'->';
+                    if((!isset($xml->$name->$nname)) AND !$optional)
+                    {
+                    	$back[1] = false;
+                    	$back[2][] = $pre.$name;
+                    }
+                    else
+                    {
+					  if(is_array($vval))
+					  {
+						foreach($xml->$name->children() as $child)
+						{
+							$back = $this->check_xml_format($child, $vval, $back, $pre);
+						}
+                    	$pre = substr($pre, 0, -(strlen($nname)+2));						
+					  }
+					  else
+					  {
+                    	foreach($xml->$name->children() as $child)
+                    	{
+                        	if((!isset($child) OR trim($child) == '') AND !$optional)
+                        	{
+                            	$back[1] = false;
+                            	$back[2][] = $pre.$name;
+                        	}
+                    	}
+                      }
+					}
+					$pre = '';
+				}				
 			}
-			elseif(strpos($val, 'function:'))
+			else
+			{
+				if((!isset($xml->$name) OR (trim($xml->$name) == '') AND !is_array($val)) AND !$optional)
+				{
+					$back[1] = false;
+					$back[2][] = $pre.$name;
+				}
+				else
+				{
+					if(is_array($val))
+					{
+						$pre .= $name.'->';
+						$back = $this->check_xml_format($xml->$name, $val, $back, $pre);
+						$pre = '';
+					}
+				}
+			}
+			if(strpos($val, 'function:') !== false)
 			{
 				$func = str_replace('function:', '', $val);
 				$back = call_user_func($func, $xml->name, $back);
 			}
 		}
-        $pre = '';
 		return $back;
 	}
 
@@ -1081,34 +1148,33 @@ if(!class_exists('rli'))
 	{
 		$xml = $xml->raiddata;
 		$xml_form = array(
-			'zones' => array(
+			'multiple:zones' => array(
 				'zone' => array(
 					'enter'	=> '',
 					'leave' => '',
 					'name'	=> ''
 				)
 			),
-			'bosskills' => array(
-				'bosskill' => array(
+			'multiple:bosskills' => array(
+				'optional:bosskill' => array(
 					'name'	=> '',
 					'time'	=> ''
 				)
 			),
-			'members' => array(
+			'multiple:members' => array(
 				'member' => array(
 					'name'	=> '',
-					'times' => array('time' => '')
+					'multiple:times' => array('time' => '')
 				)
 			),
-			'items' => array(
-				'item'	=> array(
+			'multiple:items' => array(
+				'optional:item'	=> array(
 					'name'		=> '',
 					'time'		=> '',
 					'member'	=> ''
 				)
 			)
 		);
-		$this->counter = 0;
 		return $this->check_xml_format($xml, $xml_form);
 	}
 
@@ -1134,6 +1200,8 @@ if(!class_exists('rli'))
 		}
 		foreach($xml->members->children() as $member)
 		{
+			$times = array();
+			$type = '';
 			foreach($member->times->children() as $time)
 			{
 				foreach($time->attributes() as $type);
@@ -1161,7 +1229,7 @@ if(!class_exists('rli'))
 			$this->data['loots'][] = array(
 				'name'		=> trim(utf8_decode($item->name)),
 				'time'		=> (int) trim($item->time),
-				'member'	=> trim(utf8_decode($item->member)),
+				'player'	=> trim(utf8_decode($item->member)),
 				'cost'		=> (int) $cost,
 				'id'		=> (int) $id
 			);
