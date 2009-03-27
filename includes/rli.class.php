@@ -622,14 +622,14 @@ if(!class_exists('rli'))
 			{
             	if(($begin + $this->config['attendence_time']) > $time['join'])
             	{
-                	$dkp['begin'] = true;
+                	$dkp['begin'] = $this->config['attendence_begin'];
            		}
 			}
 			elseif(key($time) == 'leave')
 			{
 				if(($end - $this->config['attendence_time']) < $time['leave'])
 				{
-					$dkp['end'] = true;
+					$dkp['end'] = $this->config['attendence_end'];
 				}
 			}
 		}
