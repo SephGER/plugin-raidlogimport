@@ -1178,8 +1178,9 @@ if(!class_exists('rli'))
 
 	function parse_plus_string($xml)
 	{
-		global $eqdkp;
-		
+		global $eqdkp, $user;
+
+        $this->data = array();
 		if((trim($xml->head->gameinfo->game) == 'Runes of Magic' AND strtolower($eqdkp->config['default_game']) != 'runesofmagic') OR
 		   (trim($xml->head->gameinfo->game) == 'World of Warcraft' AND strtolower($eqdkp->config['default_game']) != 'wow'))
 		{
@@ -1188,23 +1189,27 @@ if(!class_exists('rli'))
 		$lang = trim($xml->head->gameinfo->language);
 		$this->data['log_lang'] = substr($lang, 0, 2);
 		$xml = $xml->raiddata;
-		$this->data = array();
+		$key = 1;
 		foreach($xml->zones->children() as $zone)
 		{
-			$this->data['zones'][] = array(
+			$this->data['zones'][$key] = array(
 				'enter'	=> (int) trim($zone->enter),
 				'leave'	=> (int) trim($zone->leave),
 				'name'	=> trim(utf8_decode($zone->name)),
 				'diff'	=> (int) trim($zone->difficulty)
 			);
+			$key++;
 		}
+		$key = 1;
 		foreach($xml->bosskills->children() as $bosskill)
 		{
-			$this->data['bosskills'][] = array(
+			$this->data['bosskills'][$key] = array(
 				'name'	=> trim(utf8_decode($bosskill->name)),
 				'time'	=> (int) trim($bosskill->time)
 			);
+			$key++;
 		}
+		$key = 1;
 		foreach($xml->members->children() as $member)
 		{
 			$times = array();
@@ -1220,7 +1225,7 @@ if(!class_exists('rli'))
 			}
             $times = $this->check_times($times);
 			$note = (isset($member->note)) ? trim(utf8_decode($member->note)) : '';
-			$this->data['members'][] = array(
+			$this->data['members'][$key] = array(
 				'name'	=> trim(utf8_decode($member->name)),
 				'race'	=> trim(utf8_decode($member->race)),
 				'class'	=> trim(utf8_decode($member->class)),
@@ -1228,18 +1233,21 @@ if(!class_exists('rli'))
 				'note'	=> $note,
 				'times'	=> $times
 			);
+			$key++;
 		}
+		$key = 1;
 		foreach($xml->items->children() as $item)
 		{
-			$cost = (isset($item->cost)) ? trim($item->cost) : '';
+			$cost = (isset($item->costs)) ? trim($item->costs) : '';
 			$id = (isset($item->itemid)) ? trim($item->itemid) : '';
-			$this->data['loots'][] = array(
+			$this->data['loots'][$key] = array(
 				'name'		=> trim(utf8_decode($item->name)),
 				'time'		=> (int) trim($item->time),
 				'player'	=> trim(utf8_decode($item->member)),
-				'cost'		=> (int) $cost,
+				'dkp'		=> (int) $cost,
 				'id'		=> (int) $id
 			);
+			$key++;
 		}
 	}
 

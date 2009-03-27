@@ -34,12 +34,13 @@ elseif(strtolower($eqdkp->config['default_game']) == 'runesofmagic')
 	$parseblasc = new ParseBlasc;
 	function get_itemID($itemname, $lang)
 	{
+		global $parseblasc;
 		return $parseblasc->searchitemid($itemname);
 	}
-	
+
 	function get_itemname($itemID, $lang, $itemname='')
 	{
-		global $conf_plus;
+		global $conf_plus, $parseblasc;
 		$lang = ($lang == 'de') ? 'deDE' : 'enUS';
 		if($conf_plus['pk_is_useitemlist'])
 		{
@@ -55,14 +56,14 @@ elseif(strtolower($eqdkp->config['default_game']) == 'runesofmagic')
         settype($itemID, 'int');
 		if(!$itemID) return null;
 		$url = ($lang == 'deDE') ? 'buffed.de' : 'getbuffed.com';
-		$itemxml = itemstats_read_url('http://romdata.'.$url.'/tooltiprom/items/xml/'.$item_id.'.xml', $lang);
+		$itemxml = itemstats_read_url('http://romdata.'.$url.'/tooltiprom/items/xml/'.$itemID.'.xml', $lang);
 		$xmltoarray = new XmlToArray;
 		$itemdata = $xmltoarray->parse($itemxml);
 		$itemdata = $itemdata[0]['child'];
 		$item_name = (isUTF8($itemdata[2]['data'])) ? utf8_decode($itemdata[2]['data']) : $itemdata[2]['data'];
 		unset($itemdata);
 		$parseblasc->close();
-		return $item_name;		
+		return $item_name;
 	}
 }
 

@@ -989,8 +989,8 @@ class raidlogimport extends EQdkp_Admin
             'L_INSERT'		 => $user->lang['rli_dkp_insert'],
             'L_SEND'		 => $user->lang['rli_send'],
             'S_STEP1'        => true,
-            'WHICH_LANG'	 => ($rli->config('parser') == 'plus') ? '' : $user->lang['rli_log_lang'],
-            'LANG_SELECT'	 => ($rli->config('parser') == 'plus') ? '' : $myHtml->DropDown('log_lang', $lang_array, $sel_lang))
+            'WHICH_LANG'	 => ($rli->config['parser'] == 'plus') ? '' : $user->lang['rli_log_lang'],
+            'LANG_SELECT'	 => ($rli->config['parser'] == 'plus') ? '' : $myHtml->DropDown('log_lang', $lang_array, $sel_lang))
         );
 
         $eqdkp->set_vars(array(
