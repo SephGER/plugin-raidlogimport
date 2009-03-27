@@ -106,8 +106,10 @@ function rli_get_aliases()
 function create_member($member, $rank)
 {
 	global $db, $user, $eqdkp, $tpl, $rli, $raidlogimport;
-	if($eqdkp->config['game_language'] == "en")
+	if(strtolower($eqdkp->config['default_game']) == 'wow')
 	{
+	  if($eqdkp->config['game_language'] == "en")
+	  {
 		switch($member['class'])
 		{
 			case "DRUID": 	$member['class'] = "Druid";
@@ -141,9 +143,9 @@ function create_member($member, $rank)
 				break;
 			case "NightElf":	$member['race'] = "Night Elf";
 		}
-	}
-	elseif($eqdkp->config['game_language'] == "de")
-	{
+	  }
+	  elseif($eqdkp->config['game_language'] == "de")
+	  {
 		switch($member['class'])
 		{
 			case "DRUID": 	$member['class'] = "Druide";
@@ -190,6 +192,7 @@ function create_member($member, $rank)
 			case "Dwarf":		$member['race'] = "Zwerg";
 				break;
 		}
+	  }
 	}
 	//get member_id, race_id and rank_id
 	$sql = "SELECT race_id FROM __races WHERE race_name = '".$member['race']."';";
@@ -289,6 +292,7 @@ function lang2tpl()
         'L_DELETE'		=> $user->lang['delete'],
         'L_END'         => $user->lang['rli_end'],
         'L_EVENT'       => $user->lang['event'],
+        'L_GO_ON'		=> $user->lang['rli_go_on'],
         'L_INSERT'		=> $user->lang['rli_insert'],
         'L_ITEM'		=> $user->lang['item'],
         'L_ITEM_ADD'	=> $user->lang['rli_add_item'],

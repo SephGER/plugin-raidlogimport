@@ -168,8 +168,6 @@ if(!class_exists('rli'))
 
 	function get_member_times($member, $begin=false, $end=false)
 	{
-		global $user;
-
 		$time = array();
 		foreach($member['join'] as $tj)
 		{
@@ -1051,12 +1049,12 @@ if(!class_exists('rli'))
 		}
 		return $bools;
 	}
-	
+
 	/**
 	 *	checks wether all nodes are available (if not optional) and complete.
 	 *	returns an array(1 => bool, 2 => array( contains strings of missing/wrong nodes ))
 	 *	params: xml => xml to check
-	 *			xml_form => array, which describes the xml: array(node => array(node => '')); 
+	 *			xml_form => array, which describes the xml: array(node => array(node => ''));
 	 *					if prefix is "optional:", the node is only checked for completion
 	 *					if prefix is "multiple:", all occuring nodes are checked
 	 */
@@ -1101,7 +1099,7 @@ if(!class_exists('rli'))
 						{
 							$back = $this->check_xml_format($child, $vval, $back, $pre);
 						}
-                    	$pre = substr($pre, 0, -(strlen($nname)+2));						
+                    	$pre = substr($pre, 0, -(strlen($nname)+2));
 					  }
 					  else
 					  {
@@ -1116,7 +1114,7 @@ if(!class_exists('rli'))
                       }
 					}
 					$pre = '';
-				}				
+				}
 			}
 			else
 			{
@@ -1180,6 +1178,15 @@ if(!class_exists('rli'))
 
 	function parse_plus_string($xml)
 	{
+		global $eqdkp;
+		
+		if((trim($xml->head->gameinfo->game) == 'Runes of Magic' AND strtolower($eqdkp->config['default_game']) != 'runesofmagic') OR
+		   (trim($xml->head->gameinfo->game) == 'World of Warcraft' AND strtolower($eqdkp->config['default_game']) != 'wow'))
+		{
+			message_die($user->lang['wrong_game']);
+		}
+		$lang = trim($xml->head->gameinfo->language);
+		$this->data['log_lang'] = substr($lang, 0, 2);
 		$xml = $xml->raiddata;
 		$this->data = array();
 		foreach($xml->zones->children() as $zone)

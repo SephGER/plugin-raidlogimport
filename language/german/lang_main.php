@@ -120,6 +120,7 @@
 	$lang['wrong_format'] = 'Der Parser und das Raid-Log stimmen nicht überein.';
 	$lang['eqdkp_format'] = 'Bitte stell die Optionen vom CT-Raidtracker auf <img src="$eqdkp_root_path'.'plugins/raidlogimport/images/eqdkp_options.png">';
 	$lang['plus_format'] = 'Bitte stell das Ausgabeformat deines Trackers auf "EQdkpPlus XML Format"';
+	$lang['wrong_game'] = 'Das Raidlog stammt nicht aus dem unter Konfiguration angegebenen Spiel!';
 	$lang['wrong_settings'] = '<img src="$eqdkp_root_path'.'images/error.png" alt="error"> Verkehrte Einstellungen!';
 	$lang['wrong_settings_1'] = $lang['wrong_settings'].' '.$lang['raidcount_1'].' kann nicht mit keinen Zeit-DKP kombiniert werden.';
 	$lang['wrong_settings_2'] = $lang['wrong_settings'].' '.$lang['raidcount_2'].' kann nicht mit keinen Boss-DKP kombiniert werden.';
@@ -135,6 +136,7 @@
 	$lang['form_null_sum_1'] = $lang['form_null_sum'].'im Raid';
 	$lang['form_null_sum_2'] = $lang['form_null_sum'].'im System';
 	$lang['rli_choose_mem'] = 'Member wählen ...';
+	$lang['rli_go_on'] = 'Weiter';
 
 	//config
 	$lang['multidkp_need'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                    Für Multi-DKP Funktionalität aktivieren!                  </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='help'></a>";

@@ -21,11 +21,12 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 	var $version = '0.5.4';
 	var $fwversion = '1.0.3';
 	var $jqversion = '2.0.1';
-	var $build = 4352;
 
     function raidlogimport_plugin_class($pm)
     {
         global $eqdkp_root_path, $user, $SID, $conf_plus, $eqdkp;
+        
+        $this->build = (int) '$Rev$';
 
         $this->eqdkp_plugin($pm);
         $this->pm->get_language_pack('raidlogimport');

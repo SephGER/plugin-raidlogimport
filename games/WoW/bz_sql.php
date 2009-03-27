@@ -1,5 +1,6 @@
 <?php
 $bz_data  = array(
+#			    type  |  string   | note  |dkp|tozone|order
 	0 => array('zone', 'Naxxramas', 'Naxx', '5', '0', '0'),
 	1 => array('boss', 'Loatheb', 'Loatheb', '2', '1', '5'),
 	2 => array('boss', 'Instructor Razuvious', 'Razuvious', '2', '1', '6'),

@@ -120,6 +120,7 @@
 	$lang['wrong_format'] = 'The parser you haven chosen and the raid-log you have posted, do not match.';
 	$lang['eqdkp_format'] = 'Please set the options of your CT-Raidtracker to <img src="$eqdkp_root_path'.'plugins/raidlogimport/images/eqdkp_options.png">';
 	$lang['plus_format'] = 'Please set the output of your Tracker to EQdkpPlus XML Format';
+	$lang['wrong_game'] = 'The game from which you exported the log and the game you specified in the configuration are not the same!';
 	$lang['wrong_settings'] = '<img src="$eqdkp_root_path'.'images/error.png" alt="error"> Wrong Settings!';
 	$lang['wrong_settings_1'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_1'].' with no Time-DKP.';
 	$lang['wrong_settings_2'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_2'].' with no Boss-DKP.';
@@ -135,6 +136,7 @@
 	$lang['form_null_sum_1'] = $lang['form_null_sum'].'in the Raid';
 	$lang['form_null_sum_2'] = $lang['form_null_sum'].'in the System';
 	$lang['rli_choose_mem'] = 'Choose a Member ...';
+	$lang['rli_go_on'] = 'Forward';
 
 	//config
 	$lang['multidkp_need'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                    Activate for functionality with MultiDKP!                  </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='help'></a>";

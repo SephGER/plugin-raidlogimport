@@ -9,21 +9,61 @@ include_once($eqdkp_root_path . 'itemstats/includes/urlreader.php');
 $user->check_auth('a_raidlogimport_dkp');
 My_ob_start();
 
-function get_itemID($itemname, $lang)
+if(strtolower($eqdkp->config['default_game']) == 'wow')
 {
-	$url_lang = ($lang == 'en') ? 'www' : $lang;
-	$encoded_name = urlencode(utf8_encode($itemname));
-	$encoded_name = str_replace('+' , '%20' , $encoded_name);
-    $encoded_name = str_replace(' ' , '%20' , $encoded_name);
-	$item_xml = simplexml_load_string(itemstats_read_url('http://'.$url_lang.'.wowhead.com/?item='.$encoded_name.'&xml', $lang));
-	return trim($item_xml->item['id']);
-}
+	function get_itemID($itemname, $lang)
+	{
+		$url_lang = ($lang == 'en') ? 'www' : $lang;
+		$encoded_name = urlencode(utf8_encode($itemname));
+		$encoded_name = str_replace('+' , '%20' , $encoded_name);
+    	$encoded_name = str_replace(' ' , '%20' , $encoded_name);
+		$item_xml = simplexml_load_string(itemstats_read_url('http://'.$url_lang.'.wowhead.com/?item='.$encoded_name.'&xml', $lang));
+		return trim($item_xml->item['id']);
+	}
 
-function get_itemname($itemID, $lang)
+	function get_itemname($itemID, $lang)
+	{
+		$url_lang = ($lang == 'en') ? 'www' : $lang;
+		$item_xml = simplexml_load_string(itemstats_read_url('http://'.$url_lang.'.wowhead.com/?item='.$itemID.'&xml', $lang));
+		return utf8_decode(trim($item_xml->item->name));
+	}
+}
+elseif(strtolower($eqdkp->config['default_game']) == 'runesofmagic')
 {
-	$url_lang = ($lang == 'en') ? 'www' : $lang;
-	$item_xml = simplexml_load_string(itemstats_read_url('http://'.$url_lang.'.wowhead.com/?item='.$itemID.'&xml', $lang));
-	return utf8_decode(trim($item_xml->item->name));
+	include_once($eqdkp_root_path . 'itemstats/includes/rom_blasc.php');
+	$parseblasc = new ParseBlasc;
+	function get_itemID($itemname, $lang)
+	{
+		return $parseblasc->searchitemid($itemname);
+	}
+	
+	function get_itemname($itemID, $lang, $itemname='')
+	{
+		global $conf_plus;
+		$lang = ($lang == 'de') ? 'deDE' : 'enUS';
+		if($conf_plus['pk_is_useitemlist'])
+		{
+			$parseblasc->getItemlist();
+			foreach($parseblasc->itemlist as $iteml)
+			{
+				if($iteml['id'] == $itemID)
+				{
+					return $iteml[$lang];
+				}
+			}
+		}
+        settype($itemID, 'int');
+		if(!$itemID) return null;
+		$url = ($lang == 'deDE') ? 'buffed.de' : 'getbuffed.com';
+		$itemxml = itemstats_read_url('http://romdata.'.$url.'/tooltiprom/items/xml/'.$item_id.'.xml', $lang);
+		$xmltoarray = new XmlToArray;
+		$itemdata = $xmltoarray->parse($itemxml);
+		$itemdata = $itemdata[0]['child'];
+		$item_name = (isUTF8($itemdata[2]['data'])) ? utf8_decode($itemdata[2]['data']) : $itemdata[2]['data'];
+		unset($itemdata);
+		$parseblasc->close();
+		return $item_name;		
+	}
 }
 
 $sql = "SELECT id, item_name, item_id FROM item_rename;";
@@ -50,7 +90,7 @@ if($_GET['actual'] <= $_GET['count'])
 	$output .= 'rename item to: '.$_GET['langto'].'<br />';
 	if($_GET['langfrom'] != $_GET['langto'])
 	{
-		$renamed = get_itemname($items[$_GET['actual']]['itemID'], $_GET['langto']);
+		$renamed = get_itemname($items[$_GET['actual']]['itemID'], $_GET['langto'], $items[$_GET['actual']]['name']);
 	}
 	else
 	{

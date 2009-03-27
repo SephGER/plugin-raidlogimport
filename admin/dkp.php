@@ -81,7 +81,10 @@ class raidlogimport extends EQdkp_Admin
 		  {
 		      $rli->create_raids($raidxml);
 		  }
-		  $rli->data['log_lang'] = $_POST['log_lang'];
+		  if(isset($_POST['log_lang']))
+		  {
+		  	$rli->data['log_lang'] = $_POST['log_lang'];
+		  }
         }//post or string
 
         //get events
@@ -192,7 +195,7 @@ class raidlogimport extends EQdkp_Admin
                $alias = "(".$member['alias'].")";
                $alias .= '<input type="hidden" name="members['.$key.'][alias]" value="'.$member['alias'].'" />';
             }
-            if($_POST['checkmem'] == $user->lang['rli_checkmem'])
+            if($_POST['checkmem'] == $user->lang['rli_go_on'].' ('.$user->lang['rli_checkmem'].')')
             {
             	$member['raid_list'] = array();
 	           	foreach($rli->data['raids'] as $u => $ra)
@@ -344,17 +347,17 @@ class raidlogimport extends EQdkp_Admin
 
 		if($rli->config['null_sum'])
 		{
-			$next_button = '<input type="submit" name="nullsum" value="'.$user->lang['check_raidval'].'" class="mainoption" />';
+			$next_button = '<input type="submit" name="nullsum" value="'.$user->lang['rli_go_on'].' ('.$user->lang['check_raidval'].')" class="mainoption" />';
 		}
 		else
 		{
 			if($rli->config['deactivate_adj'])
 			{
-				$next_button = '<input type="submit" name="insert" value="'.$user->lang['rli_insert'].'" class="mainoption" />';
+				$next_button = '<input type="submit" name="insert" value="'.$user->lang['rli_go_on'].' ('.$user->lang['rli_insert'].')" class="mainoption" />';
 			}
 			else
 			{
-				$next_button = '<input type="submit" name="checkadj" value="'.$user->lang['rli_checkadj'].'" class="mainoption" />';
+				$next_button = '<input type="submit" name="checkadj" value="'.$user->lang['rli_go_on'].' ('.$user->lang['rli_checkadj'].')" class="mainoption" />';
 			}
 		}
 
@@ -954,7 +957,7 @@ class raidlogimport extends EQdkp_Admin
 	function display_form($messages=array())
     {
         global $db, $eqdkp, $user, $tpl, $pm;
-        global $SID, $myHtml;
+        global $SID, $myHtml, $rli;
 
 		if($messages)
 		{
@@ -986,8 +989,8 @@ class raidlogimport extends EQdkp_Admin
             'L_INSERT'		 => $user->lang['rli_dkp_insert'],
             'L_SEND'		 => $user->lang['rli_send'],
             'S_STEP1'        => true,
-            'WHICH_LANG'	 => $user->lang['rli_log_lang'],
-            'LANG_SELECT'	 => $myHtml->DropDown('log_lang', $lang_array, $sel_lang))
+            'WHICH_LANG'	 => ($rli->config('parser') == 'plus') ? '' : $user->lang['rli_log_lang'],
+            'LANG_SELECT'	 => ($rli->config('parser') == 'plus') ? '' : $myHtml->DropDown('log_lang', $lang_array, $sel_lang))
         );
 
         $eqdkp->set_vars(array(
