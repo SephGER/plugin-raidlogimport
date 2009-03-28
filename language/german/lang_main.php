@@ -120,6 +120,7 @@
 	$lang['wrong_format'] = 'Der Parser und das Raid-Log stimmen nicht überein.';
 	$lang['eqdkp_format'] = 'Bitte stell die Optionen vom CT-Raidtracker auf <img src="$eqdkp_root_path'.'plugins/raidlogimport/images/eqdkp_options.png">';
 	$lang['plus_format'] = 'Bitte stell das Ausgabeformat deines Trackers auf "EQdkpPlus XML Format"';
+	$lang['magicdkp_format'] = 'Es trat ein Fehler auf.';
 	$lang['wrong_game'] = 'Das Raidlog stammt nicht aus dem unter Konfiguration angegebenen Spiel!';
 	$lang['wrong_settings'] = '<img src="$eqdkp_root_path'.'images/error.png" alt="error"> Verkehrte Einstellungen!';
 	$lang['wrong_settings_1'] = $lang['wrong_settings'].' '.$lang['raidcount_1'].' kann nicht mit keinen Zeit-DKP kombiniert werden.';
@@ -159,6 +160,7 @@
 	$lang['parser'] = 'Welches XML-Format hat der String?';
 	$lang['parser_eqdkp'] = 'MLDKP 1.1 / EQdkp Plugin';
 	$lang['parser_plus'] = 'EQdkpPlus XML Format';
+	$lang['parser_magicdkp'] = 'MagicDKP';
 	$lang['rli_man_db_up'] = 'DB-Update erzwingen';
 	$lang['rli_upd_check'] = 'Update-Check aktivieren?';
 	$lang['use_dkp'] = 'Welche DKP sollen verwendet werden?';

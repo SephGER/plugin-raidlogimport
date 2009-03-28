@@ -1475,6 +1475,202 @@ if(!class_exists('rli'))
 			$this->data['members'][$key]['times'] = $times;
 		}
 	}
+	
+	function check_magicdkp_format($xml)
+	{
+		$back[1] = true;
+		if(!isset($xml->start))
+		{
+			$back[1] = false;
+			$back[2][] = 'start';
+		}
+		else
+		{
+			if(!(stristr($xml->start, ':')))
+			{
+				$back[1] = false;
+				$back[2][] = 'start in format: MM/DD/YY HH:MM:SS';
+			}
+		}
+		if(!isset($xml->end))
+		{
+		 	$back[1] = false;
+		 	$back[2][] = 'end';
+		}
+		else
+		{
+			if(!(stristr($xml->start, ':')))
+			{
+				$back[1] = false;
+				$back[2][] = 'end in format: MM/DD/YY HH:MM:SS';
+			}
+		}
+		if(!isset($xml->BossKills))
+		{
+		  	$back[1] = false;
+		  	$back[2][] = 'BossKills';
+		}
+		else
+		{
+			foreach($xml->BossKills->children() as $bosskill)
+			{
+			  if($bosskill)
+			  {
+				if(!isset($bosskill->name))
+				{
+					$back[1] = false;
+					$back[2][] = 'BossKills->name';
+				}
+				if(!isset($bosskill->time))
+				{
+					$back[1] = false;
+					$back[2][] = 'BossKills->time';
+				}
+			  }
+			}
+		}
+		if(!isset($xml->Loot))
+		{
+		   	$back[1] = false;
+		   	$back[2][] = 'Loot';
+		}
+		else
+		{
+			foreach($xml->Loot->children() as $loot)
+			{
+			  if($loot)
+			  {
+				if(!isset($loot->ItemName))
+				{
+					$back[1] = false;
+					$back[2][] = 'Loot->ItemName';
+				}
+				if(!isset($loot->Player))
+				{
+					$back[1] = false;
+					$back[2][] = 'Loot->Player';
+				}
+				if(!isset($loot->Time))
+				{
+					$back[1] = false;
+					$back[2] = 'Loot->Time';
+				}
+			  }
+			}
+		}
+		if(!isset($xml->Join))
+		{
+			$back[1] = false;
+			$back[2][] = 'Join';
+		}
+		else
+		{
+			foreach($xml->Join->children() as $join)
+			{
+				if(!isset($join->player))
+				{
+					$back[1] = false;
+					$back[2][] = 'Join->player';
+				}
+				if(!isset($join->time))
+				{
+					$back[1] = false;
+					$back[2][] = 'Join->time';
+				}
+			}
+		}
+		if(!isset($xml->Leave))
+		{
+			$back[1] = false;
+			$back[2][] = 'Leave';
+		}
+		else
+		{
+			foreach($xml->Leave->children() as $leave)
+			{
+				if(!isset($leave->player))
+				{
+					$back[1] = false;
+					$back[2][] = 'Leave->player';
+				}
+				if(!isset($leave->time))
+				{
+					$back[1] = false;
+					$back[2][] = 'Leave->time';
+				}
+			}
+		}
+		return $back;
+	}
+
+	function parse_magicdkp_string($xml)
+	{
+		$this->data = array();
+		$this->data['zones'][1]['enter'] = strtotime($xml->start);
+		$this->data['zones'][1]['leave'] = strtotime($xml->end);
+		$this->data['zones'][1]['name']  = trim($xml->zone);
+		$this->data['zones'][1]['difficulty'] = trim($xml->difficulty);
+		$i = 0;
+		foreach ($xml->BossKills->children() as $bosskill)
+		{
+			$this->data['bosskills'][$i]['name'] = trim($bosskill->name);
+			$this->data['bosskills'][$i]['time'] = strtotime($bosskill->time);
+			$i++;
+		}
+		$i = 0;
+		foreach($xml->Loot->children() as $loot)
+		{
+			$this->data['loots'][$i]['name'] 	 = utf8_decode(trim($loot->ItemName));
+			$this->data['loots'][$i]['id']     = substr(trim($loot->ItemID), 0, 5);
+			$this->data['loots'][$i]['player'] = utf8_decode(trim($loot->Player));
+			$this->data['loots'][$i]['boss']    = trim($loot->Boss);
+			$this->data['loots'][$i]['time']    = strtotime($loot->Time);
+			if (array_key_exists('Costs',$loot))
+			{
+				$this->data['loots'][$i]['dkp'] = (int)$loot->Costs;
+			}
+			else
+			{
+				$this->data['loots'][$i]['dkp'] = (int)$loot->Note;
+			}
+			if((($this->config['ignore_dissed'] == 1 OR $this->config['ignore_dissed'] == 3) AND $this->data['loots'][$i]['player'] == 'disenchanted') OR
+			   (($this->config['ignore_dissed'] == 2 OR $this->config['ignore_dissed'] == 3) AND $this->data['loots'][$i]['player'] == 'bank'))
+			{
+				unset($this->data['loots'][$i]);
+				$i--;
+			}
+			$i++;
+		}
+		foreach ($xml->Join->children() as $joiner)
+		{
+			$this->data['members'] = array(
+				'jl' => array(
+					'join' => array(
+						strtotime($joiner->time)
+					)
+				),
+				'name' => utf8_decode(trim($joiner->player)),
+				'race' => utf8_decode(trim($joiner->race)),
+				'level' => (int) trim($joiner->level),
+				'class' => utf8_decode(trim($joiner->class))
+			);
+		}
+		foreach ($xml->Leave->children() as $leaver)
+		{
+			$search = utf8_decode(trim($leaver->player));
+			$key = fktMultiArraySearch($this->data['members'],$search);
+		    if ($key)
+		    {
+			   $this->data['members'][$key[0]]['jl']['leave'][] = strtotime($leaver->time);
+			}
+		}
+		foreach($this->data['members'] as $key => $member)
+		{
+			$times = $this->get_member_times($member['jl'], $this->data['zones'][1]['enter'], $this->data['zones'][1]['leave']);
+			unset($this->data['members'][$key]['jl']);
+			$this->data['members'][$key]['times'] = $times;
+		}
+	}
 
 	function parse_string($xml)
 	{
