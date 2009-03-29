@@ -115,29 +115,29 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 			);
 			$this->insert_data($config_data);
 			//add default bz_data
-			switch($eqdkp->config['default_game'])
+			if(strtolower($eqdkp->config['default_game']) == 'wow' or strtolower($eqdkp->config['default_game']) == 'runesofmagic')
 			{
-				case "WoW":
-					include_once($eqdkp_root_path.'plugins/raidlogimport/games/WoW/bz_sql.php');
-					if(is_array($bz_data))
+				include_once($eqdkp_root_path.'plugins/raidlogimport/games/'.$eqdkp->config['default_game'].'/bz_sql.php');
+				if(is_array($bz_data))
+				{
+					foreach($bz_data as $bz)
 					{
-						foreach($bz_data as $bz)
-						{
-							$sql = "INSERT INTO __raidlogimport_bz
-									(bz_type, bz_string, bz_note, bz_bonus, bz_tozone, bz_sort)
-									VALUES
-									('".$bz[0]."', '".mysql_escape_string($bz[1])."', '".mysql_escape_string($bz[2])."', '".$bz[3]."', '".$bz[4]."', '".$bz[5]."');";
-							$this->add_sql(SQL_INSTALL, $sql);
-						}
+						$sql = "INSERT INTO __raidlogimport_bz
+								(bz_type, bz_string, bz_note, bz_bonus, bz_tozone, bz_sort)
+								VALUES
+								('".$bz[0]."', '".mysql_escape_string($bz[1])."', '".mysql_escape_string($bz[2])."', '".$bz[3]."', '".$bz[4]."', '".$bz[5]."');";
+						$this->add_sql(SQL_INSTALL, $sql);
 					}
+				}
+				if(strtolower($eqdkp->config['default_game']) == 'wow')
+				{
 					$config_data = array(
 						'hero'				=> ' (25)',	//suffix for hero
 						'non_hero'			=> ' (10)',	//suffix for non-hero
 						'dep_match'			=> '0'		//also append suffix to boss-note?
 					);
 					$this->insert_data($config_data);
-					break;
-
+				}
 			}
 		}
 
