@@ -105,7 +105,7 @@ function rli_get_aliases()
 
 function create_member($member, $rank)
 {
-	global $db, $user, $eqdkp, $tpl, $rli, $raidlogimport;
+	global $db, $user, $eqdkp, $tpl, $rli, $raidlogimport, $pconvertion;
 	if(strtolower($eqdkp->config['default_game']) == 'wow')
 	{
 	  if($eqdkp->config['game_language'] == "en")
@@ -193,6 +193,25 @@ function create_member($member, $rank)
 				break;
 		}
 	  }
+	}
+	else
+	{
+        if($eqdkp->config['game_language'] != $rli->data['log_lang'])
+        {
+			if($eqdkp->config['game_language'] == 'de')
+			{
+				$tolang = 'german';
+			}
+			else
+			{
+				$tolang = '';
+			}
+			if($rli->data['log_lang'] != 'en')
+			{
+				$member['class'] = $pconvertion->classname($member['class']);
+			}
+			$member['class'] = $pconvertion->classname($member['class'], $tolang);
+		}
 	}
 	//get member_id, race_id and rank_id
 	$sql = "SELECT race_id FROM __races WHERE race_name = '".$member['race']."';";
