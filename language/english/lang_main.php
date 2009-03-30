@@ -118,7 +118,7 @@
 	$lang['rli_miss'] = 'The following nodes are missing: ';
 	$lang['rli_lgaobk'] = 'Log guild attendees on bosskill must be deactivated, before tracking. If you want to import the log anyway, you have to delete all the joins which have the same time as the bosskills.';
 	$lang['wrong_format'] = 'The parser you haven chosen and the raid-log you have posted, do not match.';
-	$lang['eqdkp_format'] = 'Please set the options of your CT-Raidtracker to <img src="$eqdkp_root_path'.'plugins/raidlogimport/images/eqdkp_options.png">';
+	$lang['eqdkp_format'] = 'Please set the options of your CT-Raidtracker to <img src="'.$eqdkp_root_path.'plugins/raidlogimport/images/eqdkp_options.png">';
 	$lang['plus_format'] = 'Please set the output of your Tracker to EQdkpPlus XML Format';
 	$lang['magicdkp_format'] = 'An error occured.';
 	$lang['wrong_game'] = 'The game from which you exported the log and the game you specified in the configuration are not the same!';

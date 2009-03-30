@@ -1238,7 +1238,7 @@ if(!class_exists('rli'))
 		$key = 1;
 		foreach($xml->items->children() as $item)
 		{
-			$cost = (isset($item->costs)) ? trim($item->costs) : '';
+			$cost = (isset($item->cost)) ? trim($item->cost) : '';
 			$id = (isset($item->itemid)) ? trim($item->itemid) : '';
 			$this->data['loots'][$key] = array(
 				'name'		=> trim(utf8_decode($item->name)),
@@ -1475,7 +1475,7 @@ if(!class_exists('rli'))
 			$this->data['members'][$key]['times'] = $times;
 		}
 	}
-	
+
 	function check_magicdkp_format($xml)
 	{
 		$back[1] = true;
@@ -1676,6 +1676,7 @@ if(!class_exists('rli'))
 	{
 		global $user, $eqdkp_root_path;
 
+                echo $this->config['parser'];
 		if(method_exists($this, 'parse_'.$this->config['parser'].'_string'))
 		{
 			$back = call_user_func(array($this, 'check_'.$this->config['parser'].'_format'), $xml);

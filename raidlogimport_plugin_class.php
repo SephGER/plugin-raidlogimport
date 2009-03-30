@@ -91,7 +91,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 				'event_boss'		=> '0',  //exists an event per boss?
 				'adj_parse'			=> ': ', //string, which separates the reason and the value for a adjustment in the note of a member
 				'bz_parse'			=> ',',  //separator, which is used for separating the different strings of a boss or zone
-				'parser'			=> 'ctrt',  //which format has the xml-string?
+				'parser'			=> 'plus',  //which format has the xml-string?
 				'rli_upd_check'		=> '1',		//enable update check?
 				'use_dkp'			=> '1',		//1: bossdkp, 2:zeitdkp, 4: event-dkp
 				'null_sum'			=> '0', 	//use null-sum-system?
