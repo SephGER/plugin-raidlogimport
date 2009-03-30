@@ -34,15 +34,15 @@ $bz_data = array(
 30 => array('boss', 'Boddosh', 'Boddosh(Podag)', '25', '30', '1'),
 31 => array('boss', 'Zurhidon Negotiator', 'Zurhidon Negotiator(Zurhidon-Unterhändler)', '25', '30', '2'),
 32 => array('boss', 'Ordig', 'Ordig(Ortiga)', '25', '30', '3'),
-34 => array('boss', 'Masso', 'Masso(Matthew)', '25', '30', '4'),
-35 => array('boss', 'Gorn', 'Gorn(Gaia)', '25', '30', '5'),
-36 => array('boss', 'Uguda', 'Uguda(Wagoda)', '25', '30', '6'),
-37 => array('zone', 'Kalin Shrine', 'Kalin Shrine', '20', '0', '7'),
-38 => array('boss', 'Iron Rune Warrior', 'Iron Rune Warrior(Eisenrunenkrieger)', '30', '38', '1'),
-39 => array('boss', 'Yusalien', 'Yusalien', '30', '38', '2'),
-40 => array('boss', 'Locatha', 'Locatha', '30', '38', '3'),
-41 => array('boss', 'Goddess of Art\'s Disciple', 'Goddess of Art\'s Disciple(Adept der Göttin)', '30', '38', '4'),
-42 => array('boss', 'Ensia', 'Ensia', '30', '38', '5'),
-43 => array('boss', 'Regin', 'Regin', '30', '38', '6')
+33 => array('boss', 'Masso', 'Masso(Matthew)', '25', '30', '4'),
+34 => array('boss', 'Gorn', 'Gorn(Gaia)', '25', '30', '5'),
+35 => array('boss', 'Uguda', 'Uguda(Wagoda)', '25', '30', '6'),
+36 => array('zone', 'Kalin Shrine', 'Kalin Shrine', '20', '0', '7'),
+37 => array('boss', 'Iron Rune Warrior', 'Iron Rune Warrior(Eisenrunenkrieger)', '30', '37', '1'),
+38 => array('boss', 'Yusalien', 'Yusalien', '30', '37', '2'),
+39 => array('boss', 'Locatha', 'Locatha', '30', '37', '3'),
+40 => array('boss', 'Goddess of Art\'s Disciple', 'Goddess of Art\'s Disciple(Adept der Göttin)', '30', '37', '4'),
+41 => array('boss', 'Ensia', 'Ensia', '30', '37', '5'),
+42 => array('boss', 'Regin', 'Regin', '30', '37', '6')
 );
 ?>
