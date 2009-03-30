@@ -38,11 +38,11 @@ $bz_data = array(
 35 => array('boss', 'Gorn', 'Gorn(Gaia)', '25', '30', '5'),
 36 => array('boss', 'Uguda', 'Uguda(Wagoda)', '25', '30', '6'),
 37 => array('zone', 'Kalin Shrine', 'Kalin Shrine', '20', '0', '7'),
-38 => array('boss', 'Iron Rune Warrior', 'Iron Rune Warrior(Eisenrunenkrieger)', '30', '36', '1'),
-39 => array('boss', 'Yusalien', 'Yusalien', '30', '36', '2'),
-40 => array('boss', 'Locatha', 'Locatha', '30', '36', '3'),
-41 => array('boss', 'Goddess of Art\'s Disciple', 'Goddess of Art\'s Disciple(Adept der Göttin)', '30', '36', '4'),
-42 => array('boss', 'Ensia', 'Ensia', '30', '36', '5'),
-43 => array('boss', 'Regin', 'Regin', '30', '36', '6')
+38 => array('boss', 'Iron Rune Warrior', 'Iron Rune Warrior(Eisenrunenkrieger)', '30', '38', '1'),
+39 => array('boss', 'Yusalien', 'Yusalien', '30', '38', '2'),
+40 => array('boss', 'Locatha', 'Locatha', '30', '38', '3'),
+41 => array('boss', 'Goddess of Art\'s Disciple', 'Goddess of Art\'s Disciple(Adept der Göttin)', '30', '38', '4'),
+42 => array('boss', 'Ensia', 'Ensia', '30', '38', '5'),
+43 => array('boss', 'Regin', 'Regin', '30', '38', '6')
 );
 ?>
