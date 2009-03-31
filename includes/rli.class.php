@@ -202,13 +202,17 @@ if(!class_exists('rli'))
 
     function check_times($times)
     {
+    	global $user;
+    	
 		$n = count($times)-1;
+		var_dump($times);
+		echo "<br /><br />";
 	    for($i=0; $i<$n; $i++)
 	    {
 	      $k = $i+1;
 	      if(key($times[$i]) == key($times[$k]))
 	      {
-			message_die($user->lang['parse_error'].' '.$user->lang[$this->config['parser'].'_format'].' <img src="'.$eqdkp_root_path.'plugins/raidlogimport/images/'.$this->config['parser'].'_options.png"><br />'.$user->lang['rli_lgaobk']);
+			message_die($user->lang['parse_error'].' '.$user->lang[$this->config['parser'].'_format'].'<br />'.$user->lang['rli_lgaobk']);
 	      }
 	      else
 	      {
@@ -1470,6 +1474,7 @@ if(!class_exists('rli'))
 		}
 		foreach($this->data['members'] as $key => $member)
 		{
+			echo $member['name'].': ';
 			$times = $this->get_member_times($member['jl'], $this->data['zones'][1]['enter'], $this->data['zones'][1]['leave']);
 			unset($this->data['members'][$key]['jl']);
 			$this->data['members'][$key]['times'] = $times;
