@@ -203,16 +203,14 @@ if(!class_exists('rli'))
     function check_times($times)
     {
     	global $user;
-    	
+
 		$n = count($times)-1;
-		var_dump($times);
-		echo "<br /><br />";
 	    for($i=0; $i<$n; $i++)
 	    {
 	      $k = $i+1;
 	      if(key($times[$i]) == key($times[$k]))
 	      {
-			message_die($user->lang['parse_error'].' '.$user->lang[$this->config['parser'].'_format'].'<br />'.$user->lang['rli_lgaobk']);
+			return array(false, '<br />Wrong Member: %1$s, '.key($times[$i]).'-times: '.date('H:i:s', $times[$i][key($times[$i])]).' and '.date('H:i:s', $times[$k][key($times[$k])]));
 	      }
 	      else
 	      {
@@ -1400,6 +1398,8 @@ if(!class_exists('rli'))
 
 	function parse_eqdkp_string($xml)
 	{
+		global $user;
+		
 		$this->data = array();
 		$this->data['zones'][1]['enter'] = strtotime($xml->start);
 		$this->data['zones'][1]['leave'] = strtotime($xml->end);
@@ -1474,10 +1474,17 @@ if(!class_exists('rli'))
 		}
 		foreach($this->data['members'] as $key => $member)
 		{
-			echo $member['name'].': ';
 			$times = $this->get_member_times($member['jl'], $this->data['zones'][1]['enter'], $this->data['zones'][1]['leave']);
+			if($times[0] === false)
+			{
+				$message .= sprintf($times[1], $member['name']);
+			}
 			unset($this->data['members'][$key]['jl']);
 			$this->data['members'][$key]['times'] = $times;
+		}
+		if($message)
+		{
+			message_die($user->lang['parse_error'].' '.$user->lang[$this->config['parser'].'_format'].'<br />'.$user->lang['rli_lgaobk'].$message);
 		}
 	}
 
@@ -1681,7 +1688,6 @@ if(!class_exists('rli'))
 	{
 		global $user, $eqdkp_root_path;
 
-                echo $this->config['parser'];
 		if(method_exists($this, 'parse_'.$this->config['parser'].'_string'))
 		{
 			$back = call_user_func(array($this, 'check_'.$this->config['parser'].'_format'), $xml);
