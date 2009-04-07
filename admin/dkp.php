@@ -104,6 +104,7 @@ class raidlogimport extends EQdkp_Admin
 				$rai['value'] = $rli->get_raidvalue($rai['begin'], $rai['end'], $rai['bosskills'], $rai['timebonus'], $rai['event']);
 				if($rai['bosskills'] AND $rli->config['raidcount'] != 2)
 				{
+					$rli->diff = $rai['diff'];
 					$rai['note'] = $rli->get_note($rai['bosskills'], true);
 				}
 			}
@@ -123,7 +124,8 @@ class raidlogimport extends EQdkp_Admin
 				'EVENT'		=> $myHtml->DropDown('raids['.$ky.'][event]', $rli->events['name'], $rai['event']),
 				'TIMEBONUS'	=> $rai['timebonus'],
 				'VALUE'		=> $rai['value'],
-				'NOTE'		=> $rai['note']
+				'NOTE'		=> $rai['note'],
+				'DIFF'		=> $rai['diff']
 				)
 			);
 			if(is_array($rai['bosskills']))

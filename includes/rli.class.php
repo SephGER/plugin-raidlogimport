@@ -407,6 +407,9 @@ if(!class_exists('rli'))
 					$raids[$key]['bosskills'] = $this->get_bosskills($this->data['bosskills'], $raids[$key]['begin'], $raids[$key]['end']);
 				}
 
+				//diff
+				$raids[$key]['diff'] = $this->diff;
+
                 //note
                 $raids[$key]['note'] = $this->get_note($raids[$key]['bosskills']);
 
@@ -435,6 +438,9 @@ if(!class_exists('rli'))
 						$raids[$key]['bosskills'] = $this->get_bosskills($this->data['bosskills'], $raids[$key]['begin'], $raids[$key]['end']);
 					}
 
+					//diff
+					$raids[$key]['diff'] = $this->diff;
+
 	                //note
                     $raids[$key]['note'] = $this->get_note($raids[$key]['bosskills']);
 
@@ -458,6 +464,9 @@ if(!class_exists('rli'))
 
 						//bosskills
 						$raids[$key]['bosskills'] = $this->get_bosskills($this->data['bosskills'], $raids[$key]['begin'], $raids[$key]['end']);
+
+						//diff
+						$raids[$key]['diff'] = $this->diff;
 
 						$temp = array();
 						//event+note
@@ -499,6 +508,9 @@ if(!class_exists('rli'))
 					//bosskills
 					$raids[$key]['bosskills'] = array();
 
+					//diff
+					$raids[$key]['diff'] = $this->diff;
+
 	                //note
 	                if($this->config['raid_note_time'])
 	                {
@@ -525,6 +537,9 @@ if(!class_exists('rli'))
 
 						//bosskills
 						$raids[$key]['bosskills'] = $this->get_bosskills($this->data['bosskills'], $raids[$key]['begin'], $raids[$key]['end']);
+						
+						//diff
+						$raids[$key]['diff'] = $this->diff;
 
 						//note
 						$raids[$key]['note'] = $this->get_note($raids[$key]['bosskills']);
@@ -782,6 +797,7 @@ if(!class_exists('rli'))
       	$raids[$key]['value'] = floatvalue($raid['value']);
       	$raids[$key]['event'] = $raid['event'];
       	$raids[$key]['bosskill_add'] = $raid['bosskill_add'];
+      	$raids[$key]['diff'] = $raid['diff'];
       	$bosskills = array();
       	if(is_array($raid['bosskills']))
       	{
@@ -1399,12 +1415,12 @@ if(!class_exists('rli'))
 	function parse_eqdkp_string($xml)
 	{
 		global $user;
-		
+
 		$this->data = array();
 		$this->data['zones'][1]['enter'] = strtotime($xml->start);
 		$this->data['zones'][1]['leave'] = strtotime($xml->end);
 		$this->data['zones'][1]['name']  = trim($xml->zone);
-		$this->data['zones'][1]['difficulty'] = trim($xml->difficulty);
+		$this->data['zones'][1]['diff'] = trim($xml->difficulty);
 		$i = 0;
 		foreach ($xml->BossKills->children() as $bosskill)
 		{
