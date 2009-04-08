@@ -214,12 +214,18 @@ class raidlogimport extends EQdkp_Admin
 	            $member['att_dkp_begin'] = $att_dkp['begin'];
 	            $member['att_dkp_end'] = $att_dkp['end'];
 	        }
-	        $ralit = '<td>'.$jquery->MultiSelect('members['.$key.'][raid_list]', $rli->raidlist(), $member['raid_list'], '200', '200', false, 'members_'.$key.'_raidlist').'</td>';
-	        $checklist = $rli->get_checkraidlist($member['raid_list'], $key);
+	        if(!$rli->config['member_display'])
+	        {
+	        	$raid_list = '<td>'.$jquery->MultiSelect('members['.$key.'][raid_list]', $rli->raidlist(), $member['raid_list'], '200', '200', false, 'members_'.$key.'_raidlist').'</td>';
+	        }
+	        else
+	        {
+	        	$raid_list = $rli->get_checkraidlist($member['raid_list'], $key);
+	        }
            	$tpl->assign_block_vars('player', array(
                	'MITGLIED' => $member['name'],
                 'ALIAS'    => $alias,
-                'RAID_LIST'=> ($rli->config['member_display']) ? $checklist : $ralit,
+                'RAID_LIST'=> $raid_list,
                 'ATT_BEGIN'=> ($member['att_dkp_begin']) ? 'checked="checked"' : '',
                 'ATT_END'  => ($member['att_dkp_end']) ? 'checked="checked"' : '',
                 'ZAHL'     => $eqdkp->switch_row_class(),
