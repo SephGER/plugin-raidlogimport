@@ -779,8 +779,8 @@ class raidlogimport extends EQdkp_Admin
 								$isok = false;
 								break;
 							}
+                        	$dkp = $dkp + $raid['value'];
 						}
-						$dkp = $dkp + $raid['value'];
 					  }
 					}
                     //inactive
