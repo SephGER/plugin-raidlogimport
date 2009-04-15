@@ -537,7 +537,7 @@ if(!class_exists('rli'))
 
 						//bosskills
 						$raids[$key]['bosskills'] = $this->get_bosskills($this->data['bosskills'], $raids[$key]['begin'], $raids[$key]['end']);
-						
+
 						//diff
 						$raids[$key]['diff'] = $this->diff;
 
@@ -780,6 +780,25 @@ if(!class_exists('rli'))
         	}
         }
     }
+    
+    function get_adj_raidkeys()
+    {
+		if($this->config['attendence_raid'])
+		{
+			$adj_ra['start'] = 0;
+			if($this->config['attendence_end'])
+			{
+				$adj_ra['end'] = count($this->data['raids']);
+			}
+			$adj_ra['end'] = ($this->config['attendence_begin']) ? $adj_ra['end']-1 : $adj_ra['end'];
+		}
+		else
+		{
+			$adj_ra['start'] = ($this->config['attendence_begin']) ? 1 : 0;
+			$adj_ra['end'] = ($this->config['attendence_end']) ? count($this->data['raids']) : 0;
+		}
+		return $adj_ra;
+	}
 
 	function parse_raids()
 	{
@@ -837,22 +856,8 @@ if(!class_exists('rli'))
 	  }
 	  $raid_attendees = $this->auto_minus_ra($rv);
       $members = array();
-
-	  //check which raids, are for the adjustment
-	  if($this->config['attendence_raid'])
-	  {
-	  	$adj_ra['start'] = 0;
-	  	if($this->config['attendence_end'])
-	  	{
-	  		$adj_ra['end'] = count($this->data['raids']);
-	    }
-	    $adj_ra['end'] = ($this->config['attendence_begin']) ? $adj_ra['end']-1 : $adj_ra['end'];
-	  }
-	  else
-	  {
-	  	  $adj_ra['start'] = ($this->config['attendence_begin']) ? 1 : 0;
-	  	  $adj_ra['end'] = ($this->config['attendence_end']) ? count($this->data['raids']) : 0;
-	  }
+      
+	  $adj_ra = $this->get_adj_raidkeys();
 
 	  foreach($_POST['members'] as $k => $mem)
 	  {
@@ -864,11 +869,16 @@ if(!class_exists('rli'))
 			  if(!$mem['delete'])
 			  {
 			  	$members[$key] = $member;
+			  	if($members[$key]['name'] != $mem['name'] AND !$mem['alias'])
+			  	{
+			  		$mem['alias'] = $members[$key]['name'];
+			  		$force_alias = true;
+			  	}
 			  	$members[$key]['name'] = $mem['name'];
 				$members[$key]['raid_list'] = $mem['raid_list'];
 				$members[$key]['att_dkp_begin'] = (isset($mem['att_begin'])) ? true : false;
 				$members[$key]['att_dkp_end'] = (isset($mem['att_end'])) ? true : false;
-				if(isset($mem['alias']))
+				if(isset($mem['alias']) or $force_alias)
 				{
 	                $members[$key]['alias'] = $mem['alias'];
 	            }
@@ -1103,32 +1113,39 @@ if(!class_exists('rli'))
                         $nname = str_replace('optional:', '', $nname);
                         $optional = true;
                     }
-                    $pre .= $nname.'->';
                     if((!isset($xml->$name->$nname)) AND !$optional)
                     {
                     	$back[1] = false;
-                    	$back[2][] = $pre.$name;
+                    	$back[2][] = $pre.$nname;
                     }
                     else
                     {
-					  if(is_array($vval))
-					  {
-						foreach($xml->$name->children() as $child)
-						{
+                      if(isset($xml->$name))
+                      {
+					    if(is_array($vval))
+					    {
+						  foreach($xml->$name->children() as $child)
+						  {
 							$back = $this->check_xml_format($child, $vval, $back, $pre);
-						}
-                    	$pre = substr($pre, 0, -(strlen($nname)+2));
-					  }
-					  else
-					  {
-                    	foreach($xml->$name->children() as $child)
-                    	{
+						  }
+                    	  $pre = substr($pre, 0, -(strlen($nname)+2));
+					    }
+					    else
+					    {
+                    	  foreach($xml->$name->children() as $child)
+                    	  {
                         	if((!isset($child) OR trim($child) == '') AND !$optional)
                         	{
                             	$back[1] = false;
                             	$back[2][] = $pre.$name;
                         	}
-                    	}
+                    	  }
+                        }
+                      }
+                      else
+                      {
+                          $back[1] = false;
+                          $back[2][] = $name;
                       }
 					}
 					$pre = '';
@@ -1695,7 +1712,7 @@ if(!class_exists('rli'))
 		foreach($this->data['members'] as $key => $member)
 		{
 			$times = $this->get_member_times($member['jl'], $this->data['zones'][1]['enter'], $this->data['zones'][1]['leave']);
-			unset($this->data['members'][$key]['jl']);
+			@unset($this->data['members'][$key]['jl']);
 			$this->data['members'][$key]['times'] = $times;
 		}
 	}
@@ -1761,14 +1778,18 @@ if(!class_exists('rli'))
         		$loot['player'] = $aliase[$loot['player']];
         	}
         	$loot_select = "<select size='1' name='loots[".$key."][raid]'>";
+        	$adj_ra = $this->get_adj_raidkeys();
           	foreach($this->data['raids'] as $i => $ra)
            	{
+           	  if(!(in_array($i, $adj_ra) AND $this->config['attendence_raid']))
+           	  {
            		$loot_select .= "<option value='".$i."'";
            		if($this->loot_in_raid($ra['begin'], $ra['end'], $loot['time']))
            		{
            			$loot_select .= ' selected="selected"';
            		}
            		$loot_select .= ">".$i."</option>";
+           	  }
            	}
            	$lm_s = "<select size='1' name='loots[".$key."][player]'>";
            	$lm_s .= "<option disabled ".((in_array($loot['player'], $members['name'])) ? "" : "selected='selected'").">".$user->lang['rli_choose_mem']."</option>";

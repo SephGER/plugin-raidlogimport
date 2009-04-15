@@ -693,6 +693,8 @@ class raidlogimport extends EQdkp_Admin
 		  	{
 			  	foreach($rli->data['adjs'] as $adj)
 			  	{
+			  	  if($adj['value'])
+			  	  {
 					$group_key = $this->gen_group_key($this->time, stripslashes($adj['reason']), $adj['value'], mysql_real_escape_string($adj['event']));
 					$sql = "INSERT INTO __adjustments
 								(`adjustment_value`, `adjustment_date`, `member_name`, `adjustment_reason`, `adjustment_added_by`, `adjustment_group_key`, `raid_name`)
@@ -705,6 +707,7 @@ class raidlogimport extends EQdkp_Admin
 						$isok = false;
 						break;
 					}
+				  }
 				}
 		  	}
 		   }
