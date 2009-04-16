@@ -214,13 +214,13 @@ class raidlogimport extends EQdkp_Admin
 	            $member['att_dkp_begin'] = $att_dkp['begin'];
 	            $member['att_dkp_end'] = $att_dkp['end'];
 	        }
-	        if(!$rli->config['member_display'])
+	        if($rli->config['member_display'] AND extension_loaded('gd'))
 	        {
-	        	$raid_list = '<td>'.$jquery->MultiSelect('members['.$key.'][raid_list]', $rli->raidlist(), $member['raid_list'], '200', '200', false, 'members_'.$key.'_raidlist').'</td>';
+	        	$raid_list = $rli->get_checkraidlist($member['raid_list'], $key);
 	        }
 	        else
 	        {
-	        	$raid_list = $rli->get_checkraidlist($member['raid_list'], $key);
+	        	$raid_list = '<td>'.$jquery->MultiSelect('members['.$key.'][raid_list]', $rli->raidlist(), $member['raid_list'], '200', '200', false, 'members_'.$key.'_raidlist').'</td>';
 	        }
            	$tpl->assign_block_vars('player', array(
                	'MITGLIED' => $member['name'],
