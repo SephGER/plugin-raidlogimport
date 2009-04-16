@@ -780,7 +780,7 @@ if(!class_exists('rli'))
         	}
         }
     }
-    
+
     function get_adj_raidkeys()
     {
 		if($this->config['attendence_raid'])
@@ -856,7 +856,7 @@ if(!class_exists('rli'))
 	  }
 	  $raid_attendees = $this->auto_minus_ra($rv);
       $members = array();
-      
+
 	  $adj_ra = $this->get_adj_raidkeys();
 
 	  foreach($_POST['members'] as $k => $mem)
@@ -1688,7 +1688,7 @@ if(!class_exists('rli'))
 		}
 		foreach ($xml->Join->children() as $joiner)
 		{
-			$this->data['members'] = array(
+			$this->data['members'][] = array(
 				'jl' => array(
 					'join' => array(
 						strtotime($joiner->time)
@@ -1712,7 +1712,7 @@ if(!class_exists('rli'))
 		foreach($this->data['members'] as $key => $member)
 		{
 			$times = $this->get_member_times($member['jl'], $this->data['zones'][1]['enter'], $this->data['zones'][1]['leave']);
-			@unset($this->data['members'][$key]['jl']);
+			unset($this->data['members'][$key]['jl']);
 			$this->data['members'][$key]['times'] = $times;
 		}
 	}
