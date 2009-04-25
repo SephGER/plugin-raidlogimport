@@ -60,7 +60,7 @@ class RLI_Settings extends EQdkp_Admin
 		$messages = array();
 		foreach($rli->config as $old_name => $old_value)
 		{
-			if($old_name == 's_member_rank' or $old_name == 'ignore_dissed' or $old_name == 'use_dkp')
+			if($old_name == 's_member_rank' or $old_name == 'ignore_dissed' or $old_name == 'use_dkp' or $old_name == 'event_boss')
 			{
 				$val = 0;
 				if(is_array($_POST[$old_name]))
@@ -171,7 +171,6 @@ class RLI_Settings extends EQdkp_Admin
 				'hnh_suffix' 	=> array('dep_match'),
 				'att'		 	=> array('attendence_raid'),
 				'adj'			=> array('deactivate_adj'),
-				'parse'			=> array('event_boss'),
 				'am'			=> array('auto_minus', 'am_value_raids', 'am_allxraids')
 			),
 			'normal'	=> array(
@@ -191,9 +190,10 @@ class RLI_Settings extends EQdkp_Admin
 				'ignore'		=> array('rlic_data', 'rlic_lastcheck', 'rli_inst_build')
 			),
 			'special'	=> array(
-				'general'		=> array('use_dkp'),
-				'loot'			=> array('ignore_dissed'),
-				'member'		=> array('s_member_rank')
+				'general'		=> array('3:use_dkp'),
+				'loot'			=> array('2:ignore_dissed'),
+				'member'		=> array('3:s_member_rank'),
+				'parse'			=> array('2:event_boss')
 			)
 		);
 
@@ -250,44 +250,14 @@ class RLI_Settings extends EQdkp_Admin
 							break;
 
 						case 'special':
-						  if($name == 's_member_rank' or $name == 'use_dkp')
+						  list($num_of_opt, $name) = explode(':', $name);
+						  $value = $rli->config[$name];
+						  $pv = array(0,1,2,4,8,16,32);
+						  for($i=1; $i<=$num_of_opt; $i++)
 						  {
-							$value = $rli->config[$name];
-                            $c1 = '';
-                            if($value == 1 || $value == 3 || $value == 5 || $value == 7)
-                            {
-                                $c1 = 'checked="checked"';
-                            }
-							$c2 = '';
-							if($value == 2 || $value == 3 || $value == 6 || $value == 7)
-							{
-								$c2 = 'checked="checked"';
-							}
-							$c4 = '';
-							if($value == 4 || $value == 5 || $value == 6 || $value == 7)
-							{
-								$c4 = 'checked="checked"';
-							}
-							$holder[$holde][$k]['value'] = "<input type='checkbox' name='".$name."[]' value='1' ".$c1." />".$user->lang[$name.'_1']."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-							$holder[$holde][$k]['value'] .= "<input type='checkbox' name='".$name."[]' value='2' ".$c2." />".$user->lang[$name.'_2']."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-							$holder[$holde][$k]['value'] .= " <nobr><input type='checkbox' name='".$name."[]' value='4' ".$c4." />".$user->lang[$name.'_4']."</nobr>";
-						  }
-						  if($name == 'ignore_dissed')
-						  {
-						  	$value = $rli->config[$name];
-						  	$dissed = '';
-						  	if($value == 1 || $value == 3)
-						  	{
-						  		$dissed = 'checked="checked"';
-						  	}
-						  	$bank = '';
-						  	if($value == 2 || $value == 3)
-						  	{
-						  		$bank = 'checked="checked"';
-						  	}
-						  	$holder[$holde][$k]['value'] = "<input type='checkbox' name='".$name."[]' value='1' ".$dissed." />".$user->lang[$name.'_1']."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-						  	$holder[$holde][$k]['value'] .= "<input type='checkbox' name='".$name."[]' value='2' ".$bank." />".$user->lang[$name.'_2'];
-						  }
+							  $checked = ($value & $pv[$i]) ? 'checked="checked"' : '';
+                              $holder[$holde][$k]['value'] .= "<nobr><input type='checkbox' name='".$name."[]' value='".$pv[$i]."' ".$checked." />".$user->lang[$name.'_'.$pv[$i]]."</nobr>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                          }
                           $holder[$holde][$k]['name'] = $name;
 						  break;
 

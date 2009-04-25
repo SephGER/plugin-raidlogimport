@@ -27,7 +27,7 @@ function addUlduar()
 		26 => array('boss', 'Flame Leviathan', 'Leviathan', '3', $id, '0'),
 		27 => array('boss', 'Ignis the Furnace Master', 'Ignis', '3', $id, '1'),
 	    28 => array('boss', 'Razorscale', 'Razorscale', '3', $id, '2'),
-	    29 => array('boss', 'XT-002 Deconstuctor', 'XT-002', '3', $id, '3'),
+	    29 => array('boss', 'XT-002 Deconstructor', 'XT-002', '3', $id, '3'),
 	    30 => array('boss', 'The Iron Council', 'Iron Council', '3', $id, '4'),
 	    31 => array('boss', 'Kologarn', 'Kologarn', '3', $id, '5'),
 	    32 => array('boss', 'Auriaya', 'Auriaya', '3', $id, '6'),

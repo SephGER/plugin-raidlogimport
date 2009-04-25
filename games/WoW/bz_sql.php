@@ -30,7 +30,7 @@ $bz_data  = array(
     26 => array('boss', 'Flame Leviathan', 'Leviathan', '3', '26', '0'),
     27 => array('boss', 'Ignis the Furnace Master', 'Ignis', '3', '26', '1'),
     28 => array('boss', 'Razorscale', 'Razorscale', '3', '26', '2'),
-    29 => array('boss', 'XT-002 Deconstuctor', 'XT-002', '3', '26', '3'),
+    29 => array('boss', 'XT-002 Deconstructor', 'XT-002', '3', '26', '3'),
     30 => array('boss', 'The Iron Council', 'Iron Council', '3', '26', '4'),
     31 => array('boss', 'Kologarn', 'Kologarn', '3', '26', '5'),
     32 => array('boss', 'Auriaya', 'Auriaya', '3', '26', '6'),
@@ -40,6 +40,7 @@ $bz_data  = array(
     36 => array('boss', 'Mimiron', 'Mimiron', '3', '26', '10'),
     37 => array('boss', 'General-Vezax', 'Vezax', '3', '26', '11'),
     38 => array('boss', 'Yogg-Saron', 'Yoggy', '4', '26', '12'),
-    39 => array('boss', 'Algalon the Observer', 'Algalon', '4', '26', '13')
+    39 => array('boss', 'Algalon the Observer', 'Algalon', '4', '26', '13'),
+    40 => array('boss', 'Emalon the Storm Watcher', 'Emalon', '2', '24', '1')
 );
 ?>

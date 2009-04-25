@@ -151,6 +151,8 @@
 	$lang['attendence_end'] = 'Bonus for attendence during raidend';
 	$lang['config_success'] = 'Configuration Success';
 	$lang['event_boss'] = 'Exists an event for each boss?';
+	$lang['event_boss_1'] = 'Yes';
+	$lang['event_boss_2'] = 'Use the name of the boss as raid-note';
 	$lang['attendence_raid'] = 'Should an extra raid be created for attendency?';
 	$lang['loottime'] = 'Time in seconds, the loot belongs to the boss before.';
 	$lang['attendence_time'] = 'Time in seconds, the invite / end of raid lasts.';

@@ -263,7 +263,7 @@ if(!class_exists('rli'))
 	function calc_timedkp($begin, $end, $player, $timebonus)
 	{
       $timedkp = 0;
-	  if($this->get_multiconfig($this->config['use_dkp'], 2))
+	  if($this->config['use_dkp'] & 2)
 	  {
 		$times = format_duration($this->get_member_secs_inraid($player['times'], $begin, $end));
 		$timedkp = $times['hours'] * $timebonus;
@@ -282,7 +282,7 @@ if(!class_exists('rli'))
 	function calc_bossdkp($kills, $player)
 	{
 	  $bossdkp = 0;
-	  if($this->get_multiconfig($this->config['use_dkp'], 1))
+	  if($this->config['use_dkp'] & 1)
 	  {
 		foreach($kills as $kill)
 		{
@@ -470,9 +470,9 @@ if(!class_exists('rli'))
 
 						$temp = array();
 						//event+note
-						if($this->config['event_boss'] == 1)
+						if($this->config['event_boss'])
 						{
-							$temp = $this->get_event($bosskill['name'], true);
+                        	$temp = $this->get_event($bosskill['name'], ($this->config['event_boss'] == 1));
 							$raids[$key]['note'] = date('H:i:s', $raids[$key]['begin']).' - '.date('H:i:s', $raids[$key]['end']).' '.$user->lang['rli_clock'];
 						}
 						else
@@ -613,7 +613,7 @@ if(!class_exists('rli'))
 		  foreach($this->bonus['boss'] as $boss)
 		  {
 			$this->bk_list[htmlspecialchars($boss['string'][0], ENT_QUOTES)] = htmlentities($boss['note'], ENT_QUOTES);
-			if($this->get_multiconfig($this->config['use_dkp'], 1))
+			if($this->config['use_dkp'] & 1)
 			{
 				$this->bk_list[htmlspecialchars($boss['string'][0], ENT_QUOTES)] .= ' ('.$boss['bonus'].')';
 			}
@@ -893,15 +893,15 @@ if(!class_exists('rli'))
 					  {
                         $dkp = 0;
 						$raid = $this->data['raids'][$raid_id];
-						if($this->get_multiconfig($this->config['use_dkp'], 2))
+						if($this->config['use_dkp'] & 2)
 						{
 							$dkp = $dkp + $this->calc_timedkp($raid['begin'], $raid['end'], $member, $raid['timebonus']);
 						}
-						if($this->get_multiconfig($this->config['use_dkp'], 1))
+						if($this->config['use_dkp'] & 1)
 						{
 							$dkp = $dkp + $this->calc_bossdkp($raid['bosskills'], $member);
 						}
-						if($this->get_multiconfig($this->config['use_dkp'], 4))
+						if($this->config['use_dkp'] & 4)
 						{
 							$dkp = $dkp + $this->calc_eventdkp($raid['event']);
 						}
@@ -1012,7 +1012,7 @@ if(!class_exists('rli'))
 					{
 						if($k == $key)
 						{
-							$this->data['raids'][$k]['value'] = $r['value'];
+							$this->data['raids'][$k]['value'] = floatvalue($r['value']);
 						}
 					}
 				}
@@ -1513,7 +1513,28 @@ if(!class_exists('rli'))
 				$message .= sprintf($times[1], $member['name']);
 			}
 			unset($this->data['members'][$key]['jl']);
-			$this->data['members'][$key]['times'] = $times;
+
+			if(false)
+			{
+			  echo $member['name'].': ';
+			  foreach($times as $types)
+			  {
+				foreach($types as $type => $time)
+				{
+					if($type == 'join')
+					{
+						echo "<br />";
+					}
+					else
+					{
+						echo ", ";
+					}
+					echo ' '.$type.': '.date('H:i:s', $time);
+				}
+			  }
+			  echo "<br />";
+			  $this->data['members'][$key]['times'] = $times;
+			}
 		}
 		if($message)
 		{
@@ -1743,7 +1764,7 @@ if(!class_exists('rli'))
 	{
 		global $db, $tpl, $myHtml, $eqdkp, $user;
 
-		if($this->get_multiconfig($this->config['s_member_rank'], 2))
+		if($this->config['s_member_rank'] & 2)
 		{
 			foreach($members['name'] as $kex => $member)
 			{
@@ -1956,27 +1977,6 @@ if(!class_exists('rli'))
 		}
 		return $td;
   	}
-
-  	function get_multiconfig($v, $p)
-  	{
-		if($v == 7)
-		{
-			return true;
-		}
-		if($p == 1 AND ($v == 1 || $v == 3 || $v == 5))
-		{
-			return true;
-		}
-		if($p == 2 AND ($v == 2 || $v == 3 || $v == 6))
-		{
-			return true;
-		}
-		if($p == 4 AND ($v == 4 || $v == 5 || $v == 6))
-		{
-			return true;
-		}
-		return false;
-	}
   }//class
 }//class exist
 ?>
