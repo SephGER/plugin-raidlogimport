@@ -460,7 +460,13 @@ class raidlogimport extends EQdkp_Admin
 					$adj['member'] = $adj_alias[$adj['member']];
 				}
 				$ev_sel = (isset($adj['event'])) ? $adj['event'] : '';
-				$tpl->assign_block_vars('adjs', array(
+				if(runden($adj['value']) === 0)
+				{
+					unset($data['adjs'][$a]);
+				}
+				else
+				{
+				  $tpl->assign_block_vars('adjs', array(
 					'MEMBER'	=> $myHtml->DropDown('adjs['.$a.'][member]', $members, $adj['member'], '', '', true),
 					'EVENT'		=> $myHtml->DropDown('adjs['.$a.'][event]', $rli->events['name'], $ev_sel, '', '', true),
 					'NOTE'		=> $adj['reason'],
@@ -468,7 +474,8 @@ class raidlogimport extends EQdkp_Admin
 					'CLASS'		=> $eqdkp->switch_row_class(),
 					'KEY'		=> $a,
 					'READONLY'	=> ($adj['reason'] == $user->lang['am_name']) ? "readonly='readonly'" : "")
-				);
+				  );
+				}
 			}
 		}
 
@@ -567,14 +574,21 @@ class raidlogimport extends EQdkp_Admin
 					$adj['member'] = $adj_alias[$adj['member']];
 				}
 				$ev_sel = (isset($adj['event'])) ? $adj['event'] : '';
-				$tpl->assign_block_vars('adjs', array(
+				if(runden($adj['value']) === 0)
+				{
+					unset($data['adjs'][$a]);
+				}
+				else
+				{
+				  $tpl->assign_block_vars('adjs', array(
 					'MEMBER'	=> $myHtml->DropDown('adjs['.$a.'][member]', $members, $adj['member'], '', '', true),
 					'EVENT'		=> $myHtml->DropDown('adjs['.$a.'][event]', $rli->events['name'], $ev_sel, '', '', true),
 					'NOTE'		=> $adj['reason'],
 					'VALUE'		=> $adj['value'],
 					'CLASS'		=> $eqdkp->switch_row_class(),
 					'KEY'		=> $a)
-				);
+				  );
+				}
 			}
 		}
 
@@ -908,7 +922,7 @@ class raidlogimport extends EQdkp_Admin
             	);
             }
 			$db->query("COMMIT;");
-			$pm->do_hooks('plugins/raidlogimport/admin/dkp.php');
+			$pm->do_hooks('/plugins/raidlogimport/admin/dkp.php');
 			$message[] = $user->lang['bz_save_suc'];
 		  }
 		  else
