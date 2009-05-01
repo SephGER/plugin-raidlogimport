@@ -9,7 +9,7 @@ class RLI_Settings extends EQdkp_Admin
 {
 	function rli_settings()
 	{
-		global $db, $pm, $tpl, $user, $eqdkp, $SID, $pC, $rli_config;
+		global $db, $pm, $tpl, $user, $eqdkp, $SID, $pC, $rli;
 		parent::eqdkp_admin();
 
 		$this->assoc_buttons(array(
@@ -34,15 +34,15 @@ class RLI_Settings extends EQdkp_Admin
 		$pluginfo = array(
 			'name'		=> 'raidlogimport',
 			'version'	=> $pm->get_data('raidlogimport', 'version'),
-			'enabled'	=> $rli_config['rli_upd_check'],
+			'enabled'	=> $rli->config['rli_upd_check'],
 			'vstatus'	=> $pm->plugins['raidlogimport']->vstatus,
 			'build'		=> $pm->plugins['raidlogimport']->build
 		);
 		$cachedb = array(
 			'table'			=> 'raidlogimport_config',
-			'data'			=> $rli_config['rlic_data'],
+			'data'			=> $rli->config['rlic_data'],
 			'f_data'		=> 'rlic_data',
-			'lastcheck' 	=> $rli_config['rlic_lastcheck'],
+			'lastcheck' 	=> $rli->config['rlic_lastcheck'],
 			'f_lastcheck'	=> 'rlic_lastcheck'
 		);
 		$this->upd_check = new PluginUpdCheck($pluginfo, $cachedb);
