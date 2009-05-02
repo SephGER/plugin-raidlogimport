@@ -1514,7 +1514,7 @@ if(!class_exists('rli'))
 			}
 			unset($this->data['members'][$key]['jl']);
 
-			if(true)
+			if(false)
 			{
 			  echo $member['name'].': ';
 			  foreach($times as $types)
