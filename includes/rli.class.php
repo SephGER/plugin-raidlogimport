@@ -1514,7 +1514,7 @@ if(!class_exists('rli'))
 			}
 			unset($this->data['members'][$key]['jl']);
 
-			if(false)
+			if(true)
 			{
 			  echo $member['name'].': ';
 			  foreach($times as $types)
@@ -1533,8 +1533,8 @@ if(!class_exists('rli'))
 				}
 			  }
 			  echo "<br />";
-			  $this->data['members'][$key]['times'] = $times;
 			}
+            $this->data['members'][$key]['times'] = $times;
 		}
 		if($message)
 		{

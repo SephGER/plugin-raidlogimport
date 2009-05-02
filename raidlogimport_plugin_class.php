@@ -26,7 +26,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
     {
         global $eqdkp_root_path, $user, $SID, $conf_plus, $eqdkp;
 
-        $this->build = (int) substr('$Rev$', 6);
+        $this->build = 4706;
 
         $this->eqdkp_plugin($pm);
         $this->pm->get_language_pack('raidlogimport');
