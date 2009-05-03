@@ -1671,6 +1671,8 @@ if(!class_exists('rli'))
 
 	function parse_magicdkp_string($xml)
 	{
+		global $user;
+		
 		$this->data = array();
 		$this->data['zones'][1]['enter'] = strtotime($xml->start);
 		$this->data['zones'][1]['leave'] = strtotime($xml->end);
@@ -1733,8 +1735,16 @@ if(!class_exists('rli'))
 		foreach($this->data['members'] as $key => $member)
 		{
 			$times = $this->get_member_times($member['jl'], $this->data['zones'][1]['enter'], $this->data['zones'][1]['leave']);
+			if($times[0] === false)
+			{
+				$message .= sprintf($times[1], $member['name']);
+			}
 			unset($this->data['members'][$key]['jl']);
 			$this->data['members'][$key]['times'] = $times;
+		}
+		if($message)
+		{
+			message_die($user->lang['parse_error'].' '.$user->lang[$this->config['parser'].'_format'].'<br />'.$message);
 		}
 	}
 
