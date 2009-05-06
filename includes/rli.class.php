@@ -788,14 +788,13 @@ if(!class_exists('rli'))
 			$adj_ra['start'] = 0;
 			if($this->config['attendence_end'])
 			{
-				$adj_ra['end'] = count($this->data['raids']);
+				$adj_ra['end'] = max(array_keys($this->data['raids']));
 			}
-			$adj_ra['end'] = ($this->config['attendence_begin']) ? $adj_ra['end']-1 : $adj_ra['end'];
 		}
 		else
 		{
 			$adj_ra['start'] = ($this->config['attendence_begin']) ? 1 : 0;
-			$adj_ra['end'] = ($this->config['attendence_end']) ? count($this->data['raids']) : 0;
+			$adj_ra['end'] = ($this->config['attendence_end']) ? max(array_keys($this->data['raids'])) : 0;
 		}
 		return $adj_ra;
 	}
@@ -1672,7 +1671,7 @@ if(!class_exists('rli'))
 	function parse_magicdkp_string($xml)
 	{
 		global $user;
-		
+
 		$this->data = array();
 		$this->data['zones'][1]['enter'] = strtotime($xml->start);
 		$this->data['zones'][1]['leave'] = strtotime($xml->end);

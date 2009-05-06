@@ -12,6 +12,7 @@ if(!defined('EQDKP_INC'))
 
 
 global $eqdkp_root_path;
+
 include_once($eqdkp_root_path.'common.php');
 if(!version_compare(phpversion(), '5.0.0', '>='))
 {

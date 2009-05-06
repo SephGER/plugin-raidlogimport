@@ -18,7 +18,7 @@ if ( !defined('EQDKP_INC') )
 class raidlogimport_Plugin_Class extends EQdkp_Plugin
 {
 	var $vstatus = 'Stable';
-	var $version = '0.5.4.1';
+	var $version = '0.5.4.3';
 	var $fwversion = '1.0.3';
 	var $jqversion = '2.0.1';
 
@@ -26,7 +26,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
     {
         global $eqdkp_root_path, $user, $SID, $conf_plus, $eqdkp;
 
-        $this->build = 4727;
+        $this->build = (int) substr('$Rev$', 6);
 
         $this->eqdkp_plugin($pm);
         $this->pm->get_language_pack('raidlogimport');
