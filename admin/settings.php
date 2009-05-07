@@ -1,4 +1,20 @@
 <?php
+ /*
+ * Project:     EQdkp-Plus Raidlogimport
+ * License:     Creative Commons - Attribution-Noncommercial-Share Alike 3.0 Unported
+ * Link:		http://creativecommons.org/licenses/by-nc-sa/3.0/
+ * -----------------------------------------------------------------------
+ * Began:       2008
+ * Date:        $Date$
+ * -----------------------------------------------------------------------
+ * @author      $Author$
+ * @copyright   2008-2009 hoofy_leon
+ * @link        http://eqdkp-plus.com
+ * @package     raidlogimport
+ * @version     $Rev$
+ *
+ * $Id$
+ */
 define('EQDKP_INC', true);
 define('IN_ADMIN', true);
 
@@ -58,9 +74,11 @@ class RLI_Settings extends EQdkp_Admin
 		global $db, $user, $tpl, $eqdkp, $pm, $SID, $rli;
 
 		$messages = array();
+		$bytes = array('s_member_rank', 'ignore_dissed', 'use_dkp', 'event_boss');
+		$floats = array('member_start', 'attendence_begin', 'attendence_end', 'am_value');
 		foreach($rli->config as $old_name => $old_value)
 		{
-			if($old_name == 's_member_rank' or $old_name == 'ignore_dissed' or $old_name == 'use_dkp' or $old_name == 'event_boss')
+			if(in_array($old_name, $bytes))
 			{
 				$val = 0;
 				if(is_array($_POST[$old_name]))
@@ -71,6 +89,10 @@ class RLI_Settings extends EQdkp_Admin
 				  }
 				}
 				$_POST[$old_name] = $val;
+			}
+			elseif(in_array($old_name, $floats))
+			{
+				$_POST[$old_name] = number_format(floatvalue($_POST[$old_name]), 2, '.', '');
 			}
 			if(isset($_POST[$old_name]) AND $_POST[$old_name] != $old_value)  //update
 			{

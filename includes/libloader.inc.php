@@ -5,15 +5,15 @@
  * Link:		    http://creativecommons.org/licenses/by-nc-sa/3.0/
  * -----------------------------------------------------------------------
  * Began:       2008
- * Date:        $Date: 2008-11-21 13:29:16 +0100 (Fr, 21 Nov 2008) $
+ * Date:        $Date$
  * -----------------------------------------------------------------------
- * @author      $Author: wallenium $
+ * @author      $Author$
  * @copyright   2008 Simon (Wallenium) Wallmann
  * @link        http://eqdkp-plus.com
  * @package     libraries
- * @version     $Rev: 3215 $
+ * @version     $Rev$
  *
- * $Id: libloader.inc.php 3215 2008-11-21 12:29:16Z wallenium $
+ * $Id$
  */
 
   // Configuration

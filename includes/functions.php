@@ -1,16 +1,27 @@
 <?php
+ /*
+ * Project:     EQdkp-Plus Raidlogimport
+ * License:     Creative Commons - Attribution-Noncommercial-Share Alike 3.0 Unported
+ * Link:		http://creativecommons.org/licenses/by-nc-sa/3.0/
+ * -----------------------------------------------------------------------
+ * Began:       2008
+ * Date:        $Date$
+ * -----------------------------------------------------------------------
+ * @author      $Author$
+ * @copyright   2008-2009 hoofy_leon
+ * @link        http://eqdkp-plus.com
+ * @package     raidlogimport
+ * @version     $Rev$
+ *
+ * $Id$
+ */
 
 if(!function_exists('floatvalue'))
 {
-	function floatvalue($value) {
-    	return floatval(preg_replace('#^([-]*[0-9\.,\' ]+?)((\.|,){1}([0-9-]{1,2}))*$#e', "str_replace(array('.', ',', \"'\", ' '), '', '\\1') . '.\\4'", $value));
+    function floatvalue($value) {
+        return floatval(preg_replace('#^([-]*[0-9\.,]+?)((\.|,)([0-9-]+))*$#e', "str_replace(array('.', ','), '', '\\1') . '.\\4'", $value));
     }
 }
-
-/**
- * @author hoofy
- * @copyright 2008-2009
- */
 
 if(!defined('EQDKP_INC'))
 {

@@ -1,4 +1,21 @@
 <?php
+ /*
+ * Project:     EQdkp-Plus Raidlogimport
+ * License:     Creative Commons - Attribution-Noncommercial-Share Alike 3.0 Unported
+ * Link:		http://creativecommons.org/licenses/by-nc-sa/3.0/
+ * -----------------------------------------------------------------------
+ * Began:       2008
+ * Date:        $Date$
+ * -----------------------------------------------------------------------
+ * @author      $Author$
+ * @copyright   2008-2009 hoofy_leon
+ * @link        http://eqdkp-plus.com
+ * @package     raidlogimport
+ * @version     $Rev$
+ *
+ * $Id$
+ */
+ 
 // EQdkp required files/vars
 define('EQDKP_INC', true);
 define('IN_ADMIN', true);
@@ -58,7 +75,7 @@ class Bz extends EQdkp_Admin
                     $data[$id]['type'] = $type;
                     $data[$id]['string'] = $_POST['bz_string'][$id];
                     $data[$id]['note'] = $_POST['bz_note'][$id];
-                    $data[$id]['bonus'] = $_POST['bz_bonus'][$id];
+                    $data[$id]['bonus'] = number_format(floatvalue($_POST['bz_bonus'][$id]), 2, '.', '');
                     $data[$id]['sort'] = $_POST['bz_sort'][$id];
                     if($type == 'boss')
                     {
