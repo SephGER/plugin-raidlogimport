@@ -347,7 +347,7 @@ if(!class_exists('rli'))
 		$attdkp = 0;
 		if(!$this->config['attendence_raid'])
 		{
-			$attdkp = $tempattdkp['begin'] + $tempattedkp['end'];
+			$attdkp = $tempattdkp['begin'] + $tempattdkp['end'];
 			unset($tempattdkp);
 		}
 		$dkp = $timedkp + $bossdkp + $eventdkp + $attdkp;

@@ -190,6 +190,7 @@ class raidlogimport extends EQdkp_Admin
 			}
 		}
 		$aliases = rli_get_aliases();
+		$att_raids = $rli->get_adj_raidkeys();
 		foreach($rli->data['members'] as $key => $member)
 		{
 			if($rli->config['s_member_rank'] & 1)
@@ -224,7 +225,13 @@ class raidlogimport extends EQdkp_Admin
 		        $end = $rli->data['raids'][count($rli->data['raids'])]['end'];
 	            $att_dkp = $rli->calculate_attendence($member['times'], $begin, $end);
 	            $member['att_dkp_begin'] = $att_dkp['begin'];
+	            if($att_dkp['begin'] AND !in_array($att_raids['begin'], $member['raid_list'])) {
+	            	$member['raid_list'][] = $att_raids['start'];
+	            }
 	            $member['att_dkp_end'] = $att_dkp['end'];
+	            if($att_dkp['end'] AND !in_array($att_raids['end'], $member['raid_list'])) {
+	            	$member['raid_list'][] = $att_raids['end'];
+	            }
 	        }
 	        if($rli->config['member_display'] AND extension_loaded('gd'))
 	        {
