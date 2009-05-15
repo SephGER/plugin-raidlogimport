@@ -59,6 +59,7 @@
 	$lang['bz_boss_oz'] = 'Bosses without Zone';
 	$lang['bz_zone'] = 'Zones';
 	$lang['bz_zone_s'] = 'Zone';
+	$lang['bz_no_zone'] = 'no Zone';
 	$lang['bz_string'] = 'String';
 	$lang['bz_bnote'] = 'Note';
 	$lang['bz_bonus'] = 'Bonus-DKP / DKP/h';
@@ -100,8 +101,8 @@
 	$lang['rli_looter'] = 'Looter';
 	$lang['xml_error'] = 'XML-Error. Please check the log!';
 	$lang['parse_error'] = 'Parsing-Error!';
-	$lang['rli_clock'] = 'clock';
-	$lang['rli_clock'] = 'hour';
+	$lang['rli_clock'] = '';
+	$lang['rli_hour'] = 'hour';
 	$lang['rli_att'] = 'Attendence';
 	$lang['rli_checkmem'] = 'Check member-data';
 	$lang['rli_back2raid'] = 'Back to raids';
@@ -229,7 +230,7 @@
 	 $lang['member_display_0'] = 'Multi-Select';
     $lang['member_display_add'] = " <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td>If you want to use <nobr>".$lang['member_display_1']."</nobr>, you must have the GD-lib (PHP-Extension).<br /> You are running the following GD-lib version:<br />%s</td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/error.gif' alt='warn'></a>";
 	 $lang['no_gd_lib'] = '<span class="negative">no GD-lib found</span>';
-	 
+
     //portal
     $lang['p_rli_zone_display'] = 'Which zones shall be displayed?';
     $lang['dkpvals'] = 'DKP-Values';

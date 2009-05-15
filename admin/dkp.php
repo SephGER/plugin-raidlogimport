@@ -109,16 +109,20 @@ class raidlogimport extends EQdkp_Admin
 				$rli->data['raids'][] = '';
 			}
 		}
+		$att_raids = $rli->get_adj_raidkeys();
 		foreach($rli->data['raids'] as $ky => $rai)
 		{
-			if($_POST['checkraid'] == $user->lang['rli_calc_note_value'])
+			if(!($rli->config['attendence_raid'] AND ($ky === $att_raids['start'] OR $ky === $att_raids['end'])))
 			{
+			  if($_POST['checkraid'] == $user->lang['rli_calc_note_value'])
+			  {
 				$rai['value'] = $rli->get_raidvalue($rai['begin'], $rai['end'], $rai['bosskills'], $rai['timebonus'], $rai['event']);
 				if($rai['bosskills'] AND $rli->config['raidcount'] != 2)
 				{
 					$rli->diff = $rai['diff'];
 					$rai['note'] = $rli->get_note($rai['bosskills'], true);
 				}
+			  }
 			}
 			if(isset($rai['bosskill_add']))
 			{
@@ -774,7 +778,6 @@ class raidlogimport extends EQdkp_Admin
                 {
                 	$dkp = 0;
                 	$sql = array();
-                    $sql[0] = "UPDATE __members SET ";
             		if(!isset($member['status']) AND !isset($member['alias']))
             		{
             			$answer = create_member($member, $rli->config['new_member_rank']);
@@ -792,15 +795,15 @@ class raidlogimport extends EQdkp_Admin
 					{
 					  if(!$member['status'])
 					  { //active
-					  	$sql[] = "member_status = '1', ";
+					  	$sql[] = "member_status = '1'";
 					  }
                       $keys = array_keys($member['raid_list']);
                       if(!$member['firstraid'])
                       {
-                      	$sql[] = "member_firstraid = '".$rli->data['raids'][$member['raid_list'][$keys[0]]]['begin']."', ";
+                      	$sql[] = "member_firstraid = '".$rli->data['raids'][$member['raid_list'][$keys[0]]]['begin']."'";
                       }
                       krsort($keys);
-                      $sql[] = "member_lastraid = '".$rli->data['raids'][$member['raid_list'][$keys[0]]]['end']."', ";
+                      $sql[] = "member_lastraid = '".$rli->data['raids'][$member['raid_list'][$keys[0]]]['end']."'";
 					  foreach($rli->data['raids'] as $raid_key => $raid)
 					  {
 						if(in_array($raid_key, $member['raid_list']) AND $isok)
@@ -825,7 +828,7 @@ class raidlogimport extends EQdkp_Admin
                         $now = time();
                         if(($now - $eqdkp->config['inactive_period']*24*3600) > $member['lastraid'] AND $member['lastraid'])
                         { //move member to inactive
-                        	$sql[] = "member_status = '0', ";
+                        	$sql[] = "member_status = '0'";
                         }
                     }
 
@@ -834,30 +837,23 @@ class raidlogimport extends EQdkp_Admin
 					{
 						if($dkp)
 						{
-							$sql[] = "member_earned = member_earned + '".number_format($dkp, 2, '.', '')."', ";
+							$sql[] = "member_earned = member_earned + '".number_format($dkp, 2, '.', '')."'";
 						}
 						if($lootdkp[$member['name']])
 						{
-							$sql[] = "member_spent = member_spent + '".number_format($lootdkp[$member['name']], 2, '.', '')."', ";
+							$sql[] = "member_spent = member_spent + '".number_format($lootdkp[$member['name']], 2, '.', '')."'";
 						}
 						if($adj_dkp[$member['name']])
 						{
-							$sql[] = "member_adjustment = member_adjustment + '".number_format($adj_dkp[$member['name']], 2, '.', '')."', ";
+							$sql[] = "member_adjustment = member_adjustment + '".number_format($adj_dkp[$member['name']], 2, '.', '')."'";
 						}
 					}
 
 					if($sql[1])
 					{
-						$esql = '';
-						foreach($sql as $ssql)
-						{
-							$esql .= $ssql;
-						}
-						if(substr($esql, -2) == ', ')
-						{
-							$esql = substr_replace($esql, '', -2, 1);
-						}
-						$esql .= "WHERE
+						$esql = "UPDATE __members SET ";
+						$esql .= implode(', ', $sql);
+						$esql .= " WHERE
 						   			member_name = '".$member['name']."' LIMIT 1;";
 						if(!$db->query($esql))
 						{

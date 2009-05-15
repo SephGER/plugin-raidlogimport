@@ -15,7 +15,7 @@
  *
  * $Id$
  */
- 
+
 // EQdkp required files/vars
 define('EQDKP_INC', true);
 define('IN_ADMIN', true);
@@ -295,7 +295,7 @@ class Bz extends EQdkp_Admin
 		$sql1 = "SELECT bz_id, bz_note FROM __raidlogimport_bz WHERE bz_type = 'zone';";
 		$result1 = $db->query($sql1);
 		$zones = array();
-        $zones[NULL] = 'Keine Zone';
+        $zones[NULL] = $user->lang['bz_no_zone'];
 		while ( $row1 = $db->fetch_record($result1) )
 		{
 			$zones[$row1['bz_id']] = $row1['bz_note'];

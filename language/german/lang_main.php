@@ -59,6 +59,7 @@
 	$lang['bz_boss_oz'] = 'Bosse ohne Zone';
 	$lang['bz_zone'] = 'Zonen';
 	$lang['bz_zone_s'] = 'Zone';
+	$lang['bz_no_zone'] = 'keine Zone';
 	$lang['bz_string'] = 'String';
 	$lang['bz_bnote'] = 'Notiz';
 	$lang['bz_bonus'] = 'Bonus-DKP / DKP/h';
