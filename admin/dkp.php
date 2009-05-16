@@ -804,6 +804,7 @@ class raidlogimport extends EQdkp_Admin
                       }
                       krsort($keys);
                       $sql[] = "member_lastraid = '".$rli->data['raids'][$member['raid_list'][$keys[0]]]['end']."'";
+                      $member_raid_count = 0;
 					  foreach($rli->data['raids'] as $raid_key => $raid)
 					  {
 						if(in_array($raid_key, $member['raid_list']) AND $isok)
@@ -819,7 +820,13 @@ class raidlogimport extends EQdkp_Admin
 								break;
 							}
                         	$dkp = $dkp + $raid['value'];
+                        	$member_raid_count++;
 						}
+					  }
+					  //update raidcount
+					  if($member_raid_count)
+					  {
+					  	$sql[] = "member_raidcount = 'ember_raidcount + ".$member_raid_count;
 					  }
 					}
                     //inactive
