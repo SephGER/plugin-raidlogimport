@@ -826,7 +826,7 @@ class raidlogimport extends EQdkp_Admin
 					  //update raidcount
 					  if($member_raid_count)
 					  {
-					  	$sql[] = "member_raidcount = 'ember_raidcount + ".$member_raid_count;
+					  	$sql[] = "member_raidcount = member_raidcount + '".$member_raid_count."'";
 					  }
 					}
                     //inactive

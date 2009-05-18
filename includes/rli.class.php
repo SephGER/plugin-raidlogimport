@@ -41,6 +41,10 @@ if(!class_exists('rli'))
 		{
 			$this->config[$row['config_name']] = $row['config_value'];
 		}
+		if($this->config['bz_parse'] == '')
+		{
+			$this->config['bz_parse'] = ',';
+		}
 		$db->free_result();
   	}
 
@@ -596,18 +600,6 @@ if(!class_exists('rli'))
 				$raids[$key]['note'] = $this->config['att_note_end'];
 				$raids[$key]['value'] = $this->config['attendence_end'];
 			}
-		}
-		else
-		{
-		  $rmaxkey = max(array_keys($raids));
-		  foreach($raids as $r)
-		  {
-			if($this->config['attendence_begin'] > 0 OR $this->config['attendence_end'] > 0)
-			{
-				$raids[1]['value'] = $r['value'] + $this->config['attendence_begin'];
-				$raids[$rmaxkey]['value'] = $r['value'] + $this->config['attendence_end'];
-			}
-		  }
 		}
 		ksort($raids);
 		$this->data['raids'] = $raids;
