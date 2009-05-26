@@ -486,9 +486,9 @@ if(!class_exists('rli'))
 
 						$temp = array();
 						//event+note
-						if($this->config['event_boss'])
+						if($this->config['event_boss'] & 1)
 						{
-                        	$temp = $this->get_event($bosskill['name'], ($this->config['event_boss'] == 1));
+                        	$temp = $this->get_event($bosskill['name'], true);
 							$raids[$key]['note'] = date('H:i:s', $raids[$key]['begin']).' - '.date('H:i:s', $raids[$key]['end']).' '.$user->lang['rli_clock'];
 						}
 						else
