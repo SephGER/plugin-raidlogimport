@@ -41,7 +41,7 @@ if(!class_exists('rli'))
 		{
 			$this->config[$row['config_name']] = $row['config_value'];
 		}
-		if($this->config['bz_parse'] == '')
+		if($this->config['bz_parse'] == '' or !$this->config['bz_parse'])
 		{
 			$this->config['bz_parse'] = ',';
 		}

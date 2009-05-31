@@ -59,9 +59,10 @@ if(!class_exists('rli_portal'))
 
   class rli_portal extends rli {
   	function rli_portal() {
+  		$this->rli();
   		$this->get_bonus();
 	}
-	
+
 	function create_zone_array()
 	{
 		$arr = array();
