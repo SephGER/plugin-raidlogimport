@@ -356,10 +356,11 @@ class raidlogimport extends EQdkp_Admin
 		{
           $start = 0;
           $end = $p+1;
-		  if(ini_get('suhosin.post.max_vars'))
+		  if($vars = ini_get('suhosin.post.max_vars'))
 		  {
-			$vars = ini_get('suhosin.post.max_vars') - 5;
-			$dic = (int) $vars/6;
+			$vars = $vars - 5;
+			$dic = $vars/6;
+			settype($dic, 'int');
 			$page = 1;
 
 			if(!(strpos($_POST['checkitem'], $user->lang['rli_itempage']) === FALSE))
@@ -404,7 +405,7 @@ class raidlogimport extends EQdkp_Admin
 			'DATA'			=> htmlspecialchars(serialize($rli->data), ENT_QUOTES),
 			'S_ATT_BEGIN'	=> ($rli->config['attendence_begin'] > 0 AND !$rli->config['attendence_raid']) ? TRUE : FALSE,
 			'S_ATT_END'		=> ($rli->config['attendence_end'] > 0 AND !$rli->config['attendence_raid']) ? TRUE : FALSE,
-			'MAXCOUNT'		=> $end,
+			'MAXCOUNT'		=> ($end < p) ? $end : $p,
 			'MINCOUNT'		=> $start,
 			'LANGFROM'		=> $rli->data['log_lang'],
 			'LANGTO'		=> $rli->config['item_save_lang'],
