@@ -303,7 +303,7 @@ function create_member($member, $rank)
 
 function lang2tpl()
 {
-	global $tpl, $user, $rli;
+	global $tpl, $user, $rli, $eqdkp;
 	$la_ar = array(
 		'L_ADJ_ADD'		=> $user->lang['rli_add_adj'],
 		'L_ADJS_ADD'	=> $user->lang['rli_add_adjs'],
@@ -323,9 +323,11 @@ function lang2tpl()
         'L_COST'		=> $user->lang['rli_cost'],
         'L_DATE'		=> $user->lang['date'],
         'L_DELETE'		=> $user->lang['delete'],
+        'L_DIFFICULTY' 	=> ($eqdkp->config['default_game'] == 'WoW') ? $user->lang['difficulty'] : false,
         'L_END'         => $user->lang['rli_end'],
         'L_EVENT'       => $user->lang['event'],
         'L_GO_ON'		=> $user->lang['rli_go_on'],
+        'L_HEROIC'		=> $user->lang['heroic'],
         'L_INSERT'		=> $user->lang['rli_insert'],
         'L_ITEM'		=> $user->lang['item'],
         'L_ITEM_ADD'	=> $user->lang['rli_add_item'],
@@ -337,6 +339,7 @@ function lang2tpl()
         'L_MEMBER'      => $user->lang['member'],
         'L_MEMBERS'     => $user->lang['members'],
         'L_NAME'		=> $user->lang['name'],
+        'L_NONHEROIC'	=> $user->lang['non_heroic'],
         'L_NOTE'        => $user->lang['note'],
         'L_PROCESS'		=> $user->lang['rli_process'],
         'L_RAID'        => $user->lang['raid'],
