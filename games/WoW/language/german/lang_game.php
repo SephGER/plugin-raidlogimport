@@ -15,7 +15,10 @@
  *
  * $Id$
  */
-$lang['hero'] = 'Suffix für Heroic Events';
-$lang['non_hero'] = 'Suffix für Non-Heroic Events';
+$lang['hero'] = 'Suffix für Heroische Ereignisse';
+$lang['non_hero'] = 'Suffix für Nicht-Heroische Ereignisse';
+$lang['difficulty'] = 'Schwierigkeit';
+$lang['heroic'] = 'Heroisch';
+$lang['non_heroic'] = 'Nicht Heroisch';
 $lang['dep_match'] = 'Soll den Boss-Notizen der Suffix angehängt werden?';
 ?>

@@ -1,14 +1,17 @@
 <form method="post" action="{F_PARSE_LOG}" name="post">
     <table width="100%" border="0" cellspacing="1" cellpadding="2" id="raid">
       <tr>
-        <th colspan="2">{L_RAIDS}</th>
+      	<th colspan="2">{L_RAIDS}</th>
       </tr>
       <!-- BEGIN raids -->
       <tr>
-      	<th colspan="2"> {raids.COUNT}. {L_RAID}:&nbsp;&nbsp;&nbsp;
-      		<img src="./../../../images/global/delete.png" alt="{L_DELETE}"><input type="checkbox" name="raids[{raids.COUNT}][delete]" value="true" title="{L_DELETE}" />
-      		<input type="hidden" name="raids[{raids.COUNT}][diff]" value="{raids.DIFF}" />
+      	<th <!-- IF not L_DIFFICULTY -->colspan="2"<!-- ENDIF -->> {raids.COUNT}. {L_RAID}:&nbsp;&nbsp;&nbsp;
+      		<img src="./../../../images/global/delete.png" alt="{L_DELETE}"><input type="checkbox" name="raids[{raids.COUNT}][delete]" value="true" title="{L_DELETE}" /></th>
+        <!-- IF L_DIFFICULTY -->
+        <th>{L_DIFFICULTY}: <input type="radio" name="raids[{raids.COUNT}][diff]" value="2" <!-- IF raids.HEROIC --> checked="checked" <!-- ENDIF --> />{L_HEROIC} &nbsp;&nbsp;&nbsp;
+        				    <input type="radio" name="raids[{raids.COUNT}][diff]" value="1" <!-- IF not raids.HEROIC --> checked="checked" <!-- ENDIF --> />{L_NONHEROIC}
       	</th>
+      	<!-- ENDIF -->
       </tr>
       <tr class="row1">
       	<td>{L_START}: <input type="text" name="raids[{raids.COUNT}][start_date]" id="raid_start_date_{raids.COUNT}" value="{raids.START_DATE}" class="maininput" size="9" />

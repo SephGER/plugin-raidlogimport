@@ -127,6 +127,23 @@ if(!class_exists('rli'))
       $retu['event'] .= $this->suffix(true);
       return $retu;
     }
+    
+    function get_diff_event($event)
+    {
+      global $eqdkp;
+      if($eqdkp->config['default_game'] == 'WoW')
+      {
+    	if(strpos($event, $this->config['hero']))
+    	{
+    		$event = str_replace($this->config['hero'], '', $event);
+    	}
+    	else
+    	{
+    		$event = str_replace($this->config['non_hero'], '', $event);
+    	}
+      }
+      return $event.$this->suffix(true);
+    }
 
 	function get_bosskills($bosskills, $begin, $end)
 	{

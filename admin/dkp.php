@@ -116,10 +116,11 @@ class raidlogimport extends EQdkp_Admin
 			{
 			  if($_POST['checkraid'] == $user->lang['rli_calc_note_value'])
 			  {
+              	$rli->diff = $rai['diff'];
+              	$rai['event'] = $rli->get_diff_event($rai['event']);
 				$rai['value'] = $rli->get_raidvalue($rai['begin'], $rai['end'], $rai['bosskills'], $rai['timebonus'], $rai['event']);
 				if($rai['bosskills'] AND $rli->config['raidcount'] != 2)
 				{
-					$rli->diff = $rai['diff'];
 					$rai['note'] = $rli->get_note($rai['bosskills'], true);
 				}
 			  }
@@ -141,7 +142,7 @@ class raidlogimport extends EQdkp_Admin
 				'TIMEBONUS'	=> $rai['timebonus'],
 				'VALUE'		=> $rai['value'],
 				'NOTE'		=> $rai['note'],
-				'DIFF'		=> $rai['diff']
+				'HEROIC'	=> ($rai['diff'] == 2) ? TRUE : FALSE
 				)
 			);
 			if(is_array($rai['bosskills']))
