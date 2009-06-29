@@ -86,7 +86,7 @@ if(!class_exists('rli'))
 		global $db;
 		if(!$this->events)
 		{
-			$sql = "SELECT event_name, event_value FROM __events;";
+			$sql = "SELECT event_name, event_value FROM __events ORDER BY event_name ASC;";
 			$result = $db->query($sql);
 			while ( $row = $db->fetch_record($result) )
 			{
@@ -127,7 +127,7 @@ if(!class_exists('rli'))
       $retu['event'] .= $this->suffix(true);
       return $retu;
     }
-    
+
     function get_diff_event($event)
     {
       global $eqdkp;
@@ -348,7 +348,7 @@ if(!class_exists('rli'))
 	function calc_eventdkp($event)
 	{
 		$eventdkp = 0;
-		if($this->config['use_dkp'] > 3)
+		if($this->config['use_dkp'] & 4)
 		{
 			$this->get_events();
 			$eventdkp = $this->events['values'][$event];
