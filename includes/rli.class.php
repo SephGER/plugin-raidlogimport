@@ -1265,6 +1265,7 @@ if(!class_exists('rli'))
 			$key++;
 		}
 		$key = 1;
+		$akey = 1;
 		foreach($xml->members->children() as $member)
 		{
 			$times = array();
@@ -1285,10 +1286,14 @@ if(!class_exists('rli'))
 				'race'	=> trim(utf8_decode($member->race)),
 				'class'	=> trim(utf8_decode($member->class)),
 				'level'	=> trim($member->level),
-				'note'	=> $note,
 				'times'	=> $times
 			);
 			$key++;
+			if(strpos($this->config['adj_parse'], $note)) {
+				list($this->data['reason'], $this->data['value']) = explode($this->config['adj_parse'], $note);
+				$this->data['adj'][$akey]['member'] = utf8_decode($member->name);
+				$akey++;
+			}
 		}
 		$key = 1;
 		foreach($xml->items->children() as $item)
