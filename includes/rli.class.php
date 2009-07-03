@@ -1289,12 +1289,13 @@ if(!class_exists('rli'))
 				'times'	=> $times
 			);
 			$key++;
-			if(strpos($this->config['adj_parse'], $note)) {
-				list($this->data['reason'], $this->data['value']) = explode($this->config['adj_parse'], $note);
-				$this->data['adj'][$akey]['member'] = utf8_decode($member->name);
+			if(strpos($note, $this->config['adj_parse'])) {
+				list($this->data['adjs'][$akey]['reason'], $this->data['adjs'][$akey]['value']) = explode($this->config['adj_parse'], $note);
+				$this->data['adjs'][$akey]['member'] = utf8_decode($member->name);
 				$akey++;
 			}
 		}
+		var_dump($this->data['adjs']);
 		$key = 1;
 		foreach($xml->items->children() as $item)
 		{
