@@ -638,7 +638,7 @@ class raidlogimport extends EQdkp_Admin
 	function insert_log()
 	{
 		global $db, $eqdkp, $user, $tpl, $pm;
-		global $SID, $rli, $conf_plus, $eqdkp_root_path;
+		global $SID, $rli, $conf_plus, $eqdkp_root_path, $pdc;
 
 		$rli->parse_post();
 		$isok = true;
@@ -947,6 +947,7 @@ class raidlogimport extends EQdkp_Admin
             }
 			$db->query("COMMIT;");
 			$pm->do_hooks('/plugins/raidlogimport/admin/dkp.php');
+			$pdc->del_suffix('dkp');
 			$message[] = $user->lang['bz_save_suc'];
 		  }
 		  else
