@@ -506,7 +506,11 @@ if(!class_exists('rli'))
 						if($this->config['event_boss'] & 1)
 						{
                         	$temp = $this->get_event($bosskill['name'], true);
-							$raids[$key]['note'] = date('H:i:s', $raids[$key]['begin']).' - '.date('H:i:s', $raids[$key]['end']).' '.$user->lang['rli_clock'];
+                        	if($this->config['event_boss'] & 2) {
+                        		$raids[$key]['note'] = $this->get_note($raids[$key]['bosskills']);
+                        	} else {
+								$raids[$key]['note'] = date('H:i:s', $raids[$key]['begin']).' - '.date('H:i:s', $raids[$key]['end']).' '.$user->lang['rli_clock'];
+							}
 						}
 						else
 						{
