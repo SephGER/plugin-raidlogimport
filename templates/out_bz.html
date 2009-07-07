@@ -1,0 +1,38 @@
+<form action="bz.php" method="post">
+	<table width="100%" border="0" cellspacing="1" cellpadding="2">
+        <tr>
+            <th colspan="4">{L_BZ}</th>
+        </tr>
+		<tr>
+			<th width="10"></th><th>{L_STRING}</th><th>{L_BNOTE}</th><th>{L_BONUS}</th>
+		</tr>
+		<!-- BEGIN zone_list -->
+		<tr>
+			<th><input type="checkbox" name="bz_id[]" value="{zone_list.Z_ID}" /></th>
+			<th>{zone_list.Z_STRING}</th>
+			<th>{zone_list.Z_NOTE}</th>
+			<th>{zone_list.Z_BONUS}</th>
+		</tr>
+		{zone_list.BOSSES}
+		<!-- END zone_list -->
+		<!-- IF BOSS -->
+		<tr>
+			<th colspan="4">{L_BOSS}</th>
+		</tr>
+		<!-- ENDIF -->
+		<!-- BEGIN boss_list -->
+		<tr class="{boss_list.CLASS}">
+			<td><input type="checkbox" name="bz_id[]" value="{boss_list.B_ID}" /></td>
+			<td>{boss_list.B_STRING}</td>
+			<td>{boss_list.B_NOTE}</td>
+			<td>{boss_list.B_BONUS}</td>
+		</tr>
+		<!-- END boss_list -->
+		<tr>
+			<th colspan="4">
+				<input type="submit" name="update" value="{L_UPDATE}" class="mainoption" />
+				<input type="submit" name="delete" value="{L_DELETE}" class="mainoption" />
+			</th>
+		</tr>
+	</table>
+</form>
