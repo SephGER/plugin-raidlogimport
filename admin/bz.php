@@ -290,7 +290,7 @@ class Bz extends EQdkp_Admin
 
 	function bz_upd()
 	{
-		global $db, $eqdkp, $user, $tpl, $SID, $pm, $html;
+		global $db, $eqdkp, $user, $tpl, $SID, $pm, $myHtml;
 
 		$sql1 = "SELECT bz_id, bz_note FROM __raidlogimport_bz WHERE bz_type = 'zone';";
 		$result1 = $db->query($sql1);
@@ -330,7 +330,7 @@ class Bz extends EQdkp_Admin
 					'BZ_SORT'	 => $row['bz_sort'],
 					'B_SELECTED' => $b_selected,
 					'Z_SELECTED' => $z_selected,
-					'ZONE_ARRAY' => $html->DropDown("bz_tozone[".$row['bz_id']."]", $zones, $row['bz_tozone'],'','',true),
+					'ZONE_ARRAY' => $myHtml->DropDown("bz_tozone[".$row['bz_id']."]", $zones, $row['bz_tozone'],'','',true),
 					'CLASS'		 => $eqdkp->switch_row_class())
 				);
 			}
@@ -345,7 +345,7 @@ class Bz extends EQdkp_Admin
 				'BZ_SORT'	 => '',
 				'B_SELECTED' => '',
 				'Z_SELECTED' => '',
-				'ZONE_ARRAY' => $html->DropDown("bz_tozone[neu]", $zones, $row['bz_tozone'],'','',true),
+				'ZONE_ARRAY' => $myHtml->DropDown("bz_tozone[neu]", $zones, $row['bz_tozone'],'','',true),
 				'CLASS'		 => $eqdkp->switch_row_class())
 			);
 		}

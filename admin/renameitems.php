@@ -102,9 +102,9 @@ if($_GET['actual'] <= $_GET['count'])
 	if(!$items[$_GET['actual']]['itemID'])
 	{
 		$items[$_GET['actual']]['itemID'] = get_itemID($items[$_GET['actual']]['name'], $_GET['langfrom']);
-        $output .= 'get itemid (search lang: '.$_GET['langfrom'].'): '.$items[$_GET['actual']]['itemID'].'<br />';
+        $output .= 'get itemid (search lang: '.$in->get('langfrom').'): '.$items[$_GET['actual']]['itemID'].'<br />';
 	}
-	$output .= 'rename item to: '.$_GET['langto'].'<br />';
+	$output .= 'rename item to: '.$in->get('langto').'<br />';
 	if($_GET['langfrom'] != $_GET['langto'])
 	{
 		$renamed = get_itemname($items[$_GET['actual']]['itemID'], $_GET['langto'], $items[$_GET['actual']]['name']);
@@ -118,7 +118,7 @@ if($_GET['actual'] <= $_GET['count'])
 	$db->query($sql);
 	echo $output;
 
-	header('Refresh: 0.1; url=renameitems.php?count='.$_GET['count'].'&actual='.$nextactual.'&langto='.$_GET['langto'].'&langfrom='.$_GET['langfrom']);
+	header('Refresh: 0.1; url=renameitems.php?count='.$in->get('count').'&actual='.$nextactual.'&langto='.$in->get('langto').'&langfrom='.$in->get('langfrom'));
 	ob_get_contents();
 }
 if($_GET['actual'] > $_GET['count'])
