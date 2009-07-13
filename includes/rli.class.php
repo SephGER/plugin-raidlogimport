@@ -266,39 +266,39 @@ if(!class_exists('rli'))
 	    return $times;
 	}
 
-	function get_member_secs_inraid($times, $begin, $end)
+	function get_member_secs_inraid($times, $begin, $end, $add='')
 	{
 		$tim = 0;
         $nu = max(array_keys($times));
 		foreach($times as $i => $time)
 		{
-		  if(key($time) == 'join')
+		  if(key($time) == $add.'join')
 		  {
 			$k = $i+1;
 			$j = '';
 			for($k; $k<=$nu; $k++)
 			{
-				if(isset($times[$k]) AND key($times[$k]) == 'leave')
+				if(isset($times[$k]) AND key($times[$k]) == $add.'leave')
 				{
 					$j = $k;
 					break;
 				}
 			}
-            if($times[$j]['leave'] > $begin AND $time['join'] < $end)
+            if($times[$j][$add.'leave'] > $begin AND $time[$add.'join'] < $end)
             {
-                $tim = $tim + ((($times[$j]['leave'] > $end) ? $end : $times[$j]['leave']) - (($time['join'] < $begin) ? $begin : $time['join']));
+                $tim = $tim + ((($times[$j][$add.'leave'] > $end) ? $end : $times[$j][$add.'leave']) - (($time[$add.'join'] < $begin) ? $begin : $time[$add.'join']));
             }
           }
         }
         return $tim;
     }
 
-	function calc_timedkp($begin, $end, $player, $timebonus)
+	function calc_timedkp($begin, $end, $player, $timebonus, $type, $add='')
 	{
       $timedkp = 0;
-	  if($this->config['use_dkp'] & 2)
+	  if($this->config[$type] & 2)
 	  {
-		$times = format_duration($this->get_member_secs_inraid($player['times'], $begin, $end));
+		$times = format_duration($this->get_member_secs_inraid($player['times'], $begin, $end, $add));
 		$timedkp = $times['hours'] * $timebonus;
 		if($this->config['timedkp_handle'])
 		{
@@ -312,10 +312,10 @@ if(!class_exists('rli'))
 	  return $timedkp;
 	}
 
-	function calc_bossdkp($kills, $player)
+	function calc_bossdkp($kills, $player, $type, $add='')
 	{
 	  $bossdkp = 0;
-	  if($this->config['use_dkp'] & 1)
+	  if($this->config[$type] & 1)
 	  {
 		foreach($kills as $kill)
 		{
@@ -326,15 +326,15 @@ if(!class_exists('rli'))
 			$j = '';
 			for($k; $k<=$nu; $k++)
 			{
-				if(isset($player['times'][$k]) AND key($player['times'][$k]) == 'leave')
+				if(isset($player['times'][$k]) AND key($player['times'][$k]) == $add.'leave')
 				{
 					$j = $k;
 					break;
 				}
 			}
-			if(key($time) == 'join')
+			if(key($time) == $add.'join')
 			{
-				if($time['join'] < $kill['time'] AND $player['times'][$j]['leave'] > $kill['time'])
+				if($time[$add.'join'] < $kill['time'] AND $player['times'][$j][$add.'leave'] > $kill['time'])
 				{
 					$bossdkp = $bossdkp + $kill['bonus'];
 				}
@@ -345,10 +345,10 @@ if(!class_exists('rli'))
 	  return $bossdkp;
 	}
 
-	function calc_eventdkp($event)
+	function calc_eventdkp($event, $type)
 	{
 		$eventdkp = 0;
-		if($this->config['use_dkp'] & 4)
+		if($this->config[$type] & 4)
 		{
 			$this->get_events();
 			$eventdkp = $this->events['values'][$event];
@@ -356,20 +356,28 @@ if(!class_exists('rli'))
 		return $eventdkp;
 	}
 
-	function get_raidvalue($begin, $end, $bosskills, $timebonus, $event)
+	function get_raidvalue($begin, $end, $bosskills, $timebonus, $event, $type='use_dkp')
 	{
 		$dkp = 0;
 		$tempmem['times'][1]['join'] = $begin;
 		$tempmem['times'][2]['leave'] = $end;
-		$timedkp = $this->calc_timedkp($begin, $end, $tempmem, $timebonus);
-		$bossdkp = $this->calc_bossdkp($bosskills, $tempmem);
-		$eventdkp = $this->calc_eventdkp($event);
+		$timedkp = $this->calc_timedkp($begin, $end, $tempmem, $timebonus, $type);
+		$bossdkp = $this->calc_bossdkp($bosskills, $tempmem, $type);
+		$eventdkp = $this->calc_eventdkp($event, $type);
 		$tempattdkp = $this->calculate_attendence($tempmem['times'], $begin, $end);
 		$attdkp = 0;
-		if(!$this->config['attendence_raid'])
+		if(!$this->config['attendence_raid'] AND $type == 'use_dkp')
 		{
 			$attdkp = $tempattdkp['begin'] + $tempattdkp['end'];
 			unset($tempattdkp);
+		}
+		if($type == 'standby_dkptype') {
+			if($this->config['standby_att'] & 1) {
+				$attdkp += $tempattdkp['begin'];
+			}
+			if($this->config['standby_att'] & 2) {
+				$attdkp += $tempattdkp['end'];
+			}
 		}
 		$dkp = $timedkp + $bossdkp + $eventdkp + $attdkp;
 		return round($dkp,2);
@@ -602,6 +610,39 @@ if(!class_exists('rli'))
 
 			}
 		  }//switch
+        	if($this->config['standby_raid'] != 2) {
+				//time
+				$sraid['begin'] = $zone['enter'];
+				$sraid['end'] = $zone['leave'];
+
+				//event
+				$temp = $this->get_event($zone['name']);
+				$sraid['event'] = $temp['event'];
+				$sraid['timebonus'] = $temp['timebonus'];
+
+				//bosskills
+				$sraid['bosskills'] = array();
+				if(is_array($this->data['bosskills']))
+				{
+					$sraid['bosskills'] = $this->get_bosskills($this->data['bosskills'], $sraid['begin'], $sraid['end']);
+				}
+
+				//diff
+				$sraid['diff'] = $this->diff;
+
+                //note
+                $sraid['note'] = $this->config['standby_raidnote'];
+
+				//value
+            	$sraid['value'] = $this->get_standby_value($sraid['begin'], $sraid['end'], $sraid['bosskills'], $sraid['timebonus'], $sraid['event']);
+            	if($this->config['standby_raid'] == 1) {
+            		$raids[$key] = $sraid;
+            		$rli->data['special_raids']['standby'] = $key;
+                	$key++;
+                } else {
+                	$this->data['standby_raid'] = $sraid;
+                }
+        	}
 		}//foreach zones
 		if($this->config['attendence_raid'])
 		{
@@ -612,6 +653,7 @@ if(!class_exists('rli'))
 				$raids[0]['event'] = $raids[1]['event'];
 				$raids[0]['note'] = $this->config['att_note_begin'];
 				$raids[0]['value'] = $this->config['attendence_begin'];
+            	$rli->data['special_raids']['start'] = 0;
 			}
 			if($this->config['attendence_end'] > 0)
 			{
@@ -620,6 +662,7 @@ if(!class_exists('rli'))
 				$raids[$key]['event'] = $raids[$key-1]['event'];
 				$raids[$key]['note'] = $this->config['att_note_end'];
 				$raids[$key]['value'] = $this->config['attendence_end'];
+            	$rli->data['special_raids']['end'] = $key;
 			}
 		}
 		ksort($raids);
@@ -658,18 +701,20 @@ if(!class_exists('rli'))
 	{
 		$dkp['begin'] = false;
 		$dkp['end'] = false;
+		$inv = $begin + $this->config['attendence_time'];
+		$leave = $end - $this->config['attendence_time'];
 		foreach($times as $time)
 		{
 			if(key($time) == 'join')
 			{
-            	if(($begin + $this->config['attendence_time']) > $time['join'])
+            	if($inv > $time['join'] OR ($inv > $time['standbyjoin'] AND $this->config['standby_att'] & 1))
             	{
                 	$dkp['begin'] = $this->config['attendence_begin'];
            		}
 			}
 			elseif(key($time) == 'leave')
 			{
-				if(($end - $this->config['attendence_time']) < $time['leave'])
+				if($leave < $time['leave'] OR ($leave < $time['standbyleave'] AND $this->config['standby_att'] & 2))
 				{
 					$dkp['end'] = $this->config['attendence_end'];
 				}
@@ -805,23 +850,34 @@ if(!class_exists('rli'))
         	}
         }
     }
-
+    
+    function get_standby_value($begin, $end, $bosskills, $timebonus, $event)
+    {
+    	if($this->config['standby_absolute']) {
+			return $this->config['standby_value'];
+		} else {
+			return ($this->config['standby_value'] * $this->get_raidvalue($begin, $end, $bosskills, $timebonus, $event, 'standby_dkptype'));
+		}
+	}
+	
     function get_adj_raidkeys()
     {
-		if($this->config['attendence_raid'])
-		{
-			$adj_ra['start'] = 0;
-			if($this->config['attendence_end'])
-			{
-				$adj_ra['end'] = max(array_keys($this->data['raids']));
-			}
-		}
-		else
-		{
-			$adj_ra['start'] = ($this->config['attendence_begin']) ? 1 : 0;
-			$adj_ra['end'] = ($this->config['attendence_end']) ? max(array_keys($this->data['raids'])) : 0;
-		}
-		return $adj_ra;
+    	if(!$this->config['attendence_raid']) {
+    		$this->data['special_raids']['start'] = 1;
+    		if($this->config['standby_raid'] == 1) {
+    			$start = max(array_keys($this->data['raids']))-1;
+    			for($i=$start; $i>=1; $i--) {
+    				if($this->data['raids'][$i]) {
+    					break;
+    				}
+    			}
+    			$end = $i;
+    		} else {
+    			$end = max(array_keys($this->data['raids']));
+    		}
+    		$this->data['special_raids']['end'] = $end;
+    	}
+		return $this->data['special_raids'];
 	}
 
 	function parse_raids()
@@ -862,7 +918,7 @@ if(!class_exists('rli'))
 	 }
 	 $this->data['raids'] = $raids;
 	}
-
+	
 	function parse_members()
 	{
 	  global $user;
@@ -911,48 +967,109 @@ if(!class_exists('rli'))
 					$raids = $mem['raid_list'];
 	           		$raid_attendees[$mem['name']] = true;
 
-					foreach($raids as $raid_id)
+					foreach($this->data['raids'] as $raid_id => $raid)
 					{
-					  if(($raid_id != $adj_ra['start'] AND $raid_id != $adj_ra['end']) OR !$this->config['attendence_raid'])
+					  if((($raid_id != $adj_ra['start'] AND $raid_id != $adj_ra['end']) OR !$this->config['attendence_raid']) AND $raid_id != $adj_ra['standby'])
 					  {
                         $dkp = 0;
-						$raid = $this->data['raids'][$raid_id];
-						if($this->config['use_dkp'] & 2)
-						{
-							$dkp = $dkp + $this->calc_timedkp($raid['begin'], $raid['end'], $member, $raid['timebonus']);
-						}
-						if($this->config['use_dkp'] & 1)
-						{
-							$dkp = $dkp + $this->calc_bossdkp($raid['bosskills'], $member);
-						}
-						if($this->config['use_dkp'] & 4)
-						{
-							$dkp = $dkp + $this->calc_eventdkp($raid['event']);
+                    	$standby = 0;
+						$dkp += $this->calc_timedkp($raid['begin'], $raid['end'], $member, $raid['timebonus']);
+						$dkp += $this->calc_bossdkp($raid['bosskills'], $member);
+						if(in_array($raid_id, $raids)) {
+							$dkp += $this->calc_eventdkp($raid['event']);
 						}
 						if($this->config['attendence_begin'] AND $raid_id == $adj_ra['start'])
 						{
-							$dkp = $dkp + (($mem['att_begin']) ? $this->config['attendence_begin'] : 0);
+							$adkp = (($mem['att_begin']) ? $this->config['attendence_begin'] : 0);
 						}
 						if($this->config['attendence_end'] AND $raid_id == $adj_ra['end'])
 						{
-							$dkp = $dkp + (($mem['att_end']) ? $this->config['attendence_end'] : 0);
+							$bdkp = (($mem['att_end']) ? $this->config['attendence_end'] : 0);
 						}
+						if($dkp != 0) {
+							$dkp += $adkp + $bdkp;
+							$standby_att = false;
+						} else {
+                            $standby_att = true;
+                        }							
+						if(!$this->config['standby_absolute'] AND $this->config['standby_raid'] == 2) {
+                        	if($this->member_in_raid($key, $raid['begin'], $raid['end'], 'standby')) {
+                            	$standby += $this->calc_eventdkp($raid['event'], 'standby_dkptype');
+                        	}
+                        	$standby += $this->calc_timedkp($raid['begin'], $raid['end'], $member, $raid['timebonus'], 'standby_dkptype', 'standby');
+                        	$standby += $this->calc_bossdkp($raid['bosskills'], $member, 'standby_dkptype', 'standby');
+                        	if($standby_att) {
+                        		$standby += $adkp + $bdkp;
+                        	}
+                        }
 						$dkp = round($dkp, 2);
-						if($dkp <  $raid['value'])
+						$standby = $standby * $this->config['standby_value'] / 100;
+                        $standby = round($standby, 2);
+						if($dkp <= $raid['value'] AND $dkp != 0)
 						{	//add an adjustment
-                          $dkp -= $raid['value'];
-						  if($tempkey = $this->check_adj_exists($mem['name'], $user->lang['rli_partial_raid']." ".date('d.m.y H:i:s', $raid['begin'])))
-						  {
-						  	$this->data['adjs'][$tempkey]['value'] = $dkp;
+						  if(in_array($raid_id, $raids)) {
+                          	$dkp -= $raid['value'];
+                          }
+                          if($dkp != 0) {
+						    if($tempkey = $this->check_adj_exists($mem['name'], $user->lang['rli_partial_raid']." ".date('d.m.y H:i:s', $raid['begin']))) {
+						  		$this->data['adjs'][$tempkey]['value'] = $dkp;
+						    } else {
+								$this->data['adjs'][$i]['member'] = $mem['name'];
+								$this->data['adjs'][$i]['reason'] = $user->lang['rli_partial_raid']." ".date('d.m.y H:i:s', $raid['begin']);
+								$this->data['adjs'][$i]['value'] = $dkp;
+								$this->data['adjs'][$i]['event'] = $raid['event'];
+								$i++;
+						  	}
 						  }
-						  else
-						  {
+						}
+						if($standby != 0) {
+							if(in_array($raid_id, $raids)) {
+                        		$standby -= $raid['value'];
+                        	}
+                        	if($standby != 0) {
+							  if($tempkey = $this->check_adj_exists($mem['name'], $user->lang['standby_raid_note']." ".date('d.m.y H:i:s', $raid['begin']))) {
+								$this->data['adjs'][$tempkey]['value'] = $standby;
+							  } else {
+								$this->data['adjs'][$i]['member'] = $mem['name'];
+								$this->data['adjs'][$i]['reason'] = $user->lang['standby_raid_note']." ".date('d.m.y H:i:s', $raid['begin']);
+								$this->data['adjs'][$i]['value'] = $standby;
+								$this->data['adjs'][$i]['event'] = $raid['event'];
+								$i++;
+							  }
+							}
+						}
+					  }
+					}//foreach raids
+					$standby = 0;
+					if($this->config['standby_raid'] != 1 AND !$this->config['standby_absolute']) {
+						$raid = ($this->config['standby_raid'] == 1) ? $this->data['raids'][$adj_ra['standby']] : $this->data['standby_raid'];
+                		if($this->member_in_raid($key, $raid['begin'], $raid['end'], 'standby')) {
+                    		$standby += $this->calc_eventdkp($raid['event'], 'standby_dkptype');
+                    	}
+                    	$standby += $this->calc_timedkp($raid['begin'], $raid['end'], $member, $raid['timebonus'], 'standby_dkptype', 'standby');
+                    	$standby += $this->calc_bossdkp($raid['bosskills'], $member, 'standby_dkptype', 'standby');
+                    	if($standby_att) {
+                    		$standby += $adkp + $bdkp;
+                    	}
+						$standby = $standby * $this->config['standby_value'] / 100;
+                        $standby = round($standby, 2);
+                	} elseif(!$this->config['standby_absolute']) {
+                		$end_id = max(array_keys($this->data['raids']));
+                    	$standby = ($this->member_in_raid($key, $this->data['raids'][1]['begin'], $this->data['raids'][$end_id]['end'], 'standby')) ? $this->config['standby_value'] : 0;
+                	}
+                	if($standby != 0) {
+                		if($this->config['standby_raid'] == 1 AND in_array($adj_ra['standby'], $raids)) {
+                			$standby -= $raid['value'];
+                		}
+                		if($standby != 0) {
+						  if($tempkey = $this->check_adj_exists($mem['name'], $user->lang['standby_raid_note'])) {
+							$this->data['adjs'][$tempkey]['value'] = $standby;
+						  } else {
 							$this->data['adjs'][$i]['member'] = $mem['name'];
-							$this->data['adjs'][$i]['reason'] = $user->lang['rli_partial_raid']." ".date('d.m.y H:i:s', $raid['begin']);
-							$this->data['adjs'][$i]['value'] = $dkp;
+							$this->data['adjs'][$i]['reason'] = $user->lang['standby_raid_note'];
+							$this->data['adjs'][$i]['value'] = $standby;
 							$this->data['adjs'][$i]['event'] = $raid['event'];
 							$i++;
-						  }
 						}
 					  }
 					}
@@ -1044,11 +1161,11 @@ if(!class_exists('rli'))
 		}
 	}
 
-	function member_in_raid($mkey, $begin, $end)
+	function member_in_raid($mkey, $begin, $end, $add='')
 	{
-		$time = $end - $begin;
-		$member_raidtime = $this->get_member_secs_inraid($this->data['members'][$mkey]['times'], $begin, $end);
-		if($member_raidtime > $time/2)
+		$time = $this->config['member_raid']*($end - $begin)/100;
+		$member_raidtime = $this->get_member_secs_inraid($this->data['members'][$mkey]['times'], $begin, $end, $add);
+		if($member_raidtime > $time)
 		{
 			return true;
 		}
@@ -1276,12 +1393,11 @@ if(!class_exists('rli'))
 			$type = '';
 			foreach($member->times->children() as $time)
 			{
-				foreach($time->attributes() as $type);
+				foreach($time->attributes() as $att_name => $att_val);
 				{
-					$type = (string) $type[0];
-					$time = (int) $time;
-					$times[] = array($type => $time);
+					${$att_name} = $att_val;
 				}
+				$times[] = array($extra.$type => $time);
 			}
             $times = $this->check_times($times);
 			$note = (isset($member->note)) ? trim(utf8_decode($member->note)) : '';
@@ -1776,6 +1892,31 @@ if(!class_exists('rli'))
 		{
 			message_die($user->lang['parse_error'].' '.$user->lang[$this->config['parser'].'_format'].'<br />'.$message);
 		}
+	}
+
+	//dummy
+	function check_eq_format($string)
+	{
+		return array(1 => true);
+	}
+
+	function parse_eq_string($string)
+	{
+		$lines = explode('<br />', $string);
+		$k = 1;
+		foreach($lines as $line) {
+			$matches = array();
+			preg_match('#[0-9]\s+(.*?)\s+([0-9]{1,2})\s+(.*?)\s+#', $line, $matches);
+			$this->data['members'][$k]['name'] = $matches[1];
+			$this->data['members'][$k]['level'] = $matches[2];
+			$this->data['members'][$k]['class'] = $matches[3];
+			$this->data['members'][$k]['times'][0]['join'] = 1; //date in the past
+			$this->data['members'][$k]['times'][1]['leave'] = mktime();  //since the raid ist definetly over now
+			$k++;
+		}
+		//add a dummy raid
+		$this->data['zones'][1]['enter'] = (mktime() - (60*60*2));  //before 2 hours, just a default value
+		$this->data['zones'][1]['leave'] = mktime();
 	}
 
 	function parse_string($xml)

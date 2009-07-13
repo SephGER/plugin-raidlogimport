@@ -29,7 +29,7 @@ if ( !defined('EQDKP_INC') )
 class raidlogimport_Plugin_Class extends EQdkp_Plugin
 {
 	var $vstatus = 'Stable';
-	var $version = '0.5.4.7';
+	var $version = '0.5.5';
 	var $fwversion = '1.0.3';
 	var $jqversion = '2.0.1';
 
@@ -37,7 +37,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
     {
         global $eqdkp_root_path, $user, $SID, $conf_plus, $eqdkp;
 
-        $this->build = 5231;
+        $this->build = 5252;
 
         $this->eqdkp_plugin($pm);
         $this->pm->get_language_pack('raidlogimport');
@@ -122,7 +122,14 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 				'att_note_end'		=> $user->lang['rli_att'].' '.$user->lang['rli_end'],	//  "	"		"	 _end-raid
 				'raid_note_time'	=> '0', 	//0: exact time (20:03:43-21:03:43); 1: hour (1. hour, 2. hour)
 				'timedkp_handle'	=> '0',		//should timedkp be given exactly(0) or fully after x minutes
-				'member_display'	=> '0'		//0: multi-dropdown; 1: checkboxes
+				'member_display'	=> '0',		//0: multi-dropdown; 1: checkboxes
+				'standby_raid'		=> '0',		//0: no extra-raid for standby, 1: extra-raid, 2: attendance on normal raid
+				'standby_absolute'	=> '0',		//0: relative dkp, 1: absolute dkp
+				'standby_value'		=> '0',		//value in percent or absolute
+				'standby_att'		=> '0', 	//shall standbys get att start/end?
+				'standby_dkptype'	=> '0',		//which dkp shall standbys get? (1 boss, 2 time, 4 event)
+				'standby_raidnote'	=> $user->lang['standby_raid_note'],		//note for standby-raid
+				'member_raid'		=> '50'		//percent which member has to be in raid, to gain assignment to raid
 			);
 			$this->insert_data($config_data);
 			//add default bz_data
