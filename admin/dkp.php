@@ -288,7 +288,7 @@ class raidlogimport extends EQdkp_Admin
 	function process_items()
 	{
 		global $db, $eqdkp, $user, $tpl, $pm;
-		global $myHtml, $rli;
+		global $myHtml, $rli, $jquery;
 
 		$rli->parse_post();
         $p = ($rli->data['loots']) ? max(array_keys($rli->data['loots'])) : 0;
@@ -410,7 +410,8 @@ class raidlogimport extends EQdkp_Admin
 			'MINCOUNT'		=> $start,
 			'LANGFROM'		=> $rli->data['log_lang'],
 			'LANGTO'		=> $rli->config['item_save_lang'],
-			'NEXT_BUTTON'	=> $next_button)
+			'NEXT_BUTTON'	=> $next_button,
+			'JBOX_RENAME_WINDOW' => $jquery->Dialog_URL('RenameItemsWindow', 'Rename Items', "renameitems.php?actual=0&langto='+langto+'&langfrom='+langfrom+'&count='+count+'", '440', '330'))
 		);
 
 		//language
