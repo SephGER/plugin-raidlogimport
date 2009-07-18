@@ -75,7 +75,7 @@ if(!class_exists('rli'))
 
   	private function load_bonus()
   	{
-  		global $db, $psl, $dbname, $table_prefix;
+  		global $db, $pdl, $dbname, $table_prefix;
 
   		if(!$this->bonus)
   		{
@@ -102,7 +102,7 @@ if(!class_exists('rli'))
 		  else
 		  {
 		  	$sql_error = $db->_sql_error();
-			$psl->log('sql_error', $sql, $sql_error['message'], $sql_error['code'], $dbname, $table_prefix);
+			$pdl->log('sql_error', $sql, $sql_error['message'], $sql_error['code'], $dbname, $table_prefix);
 			message_die("SQL-Error! <br /> Query:".$sql);
 		  }
 		}
