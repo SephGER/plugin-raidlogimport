@@ -82,13 +82,9 @@ class raidlogimport extends EQdkp_Admin
         }
         if(isset($_POST['log']))
         {
-          if($rli->config['parser'] != 'eq') {
-          	$_POST['log'] = trim(str_replace("&", "and", html_entity_decode($_POST['log'])));
-          	$dkpstring   = utf8_encode($_POST['log']);
-          	$raidxml     = simplexml_load_string($dkpstring);
-          } else {
-          	$raidxml = nl2br($_POST['log']);
-          }
+          $_POST['log'] = trim(str_replace("&", "and", html_entity_decode($_POST['log'])));
+          $dkpstring   = utf8_encode($_POST['log']);
+          $raidxml     = simplexml_load_string($dkpstring);
 		  if ($raidxml === false)
 		  {
 			  message_die($user->lang['xml_error']);
@@ -225,19 +221,11 @@ class raidlogimport extends EQdkp_Admin
 	           	foreach($rli->data['raids'] as $u => $ra)
 	           	{
 	           		//check events
-	           		if($u != $att_raids['standby'] AND ($rli->member_in_raid($key, $ra['begin'], $ra['end']) OR $rli->member_in_raid($key, $ra['begin'], $ra['end'], 'standby')))
+	           		if($rli->member_in_raid($key, $ra['begin'], $ra['end']))
 	           		{
 	           			$member['raid_list'][] = $u;
 	           		}
 		        }
-		        //standby raid
-		        if($rli->config['standby_raid'] == 1) {
-		        	$ra = $rli->data['raids'][$att_raids['standby']];
-		        	if($rli->member_in_raid($key, $ra['begin'], $ra['end'], 'standby')) {
-		        		$member['raid_list'][] = $att_raids['standby'];
-		        	}
-		        }
-		        
 		        $begin = $rli->data['raids'][1]['begin'];
 		        $end = $rli->data['raids'][count($rli->data['raids'])]['end'];
 	            $att_dkp = $rli->calculate_attendence($member['times'], $begin, $end);
@@ -300,7 +288,7 @@ class raidlogimport extends EQdkp_Admin
 	function process_items()
 	{
 		global $db, $eqdkp, $user, $tpl, $pm;
-		global $myHtml, $rli;
+		global $myHtml, $rli, $jquery;
 
 		$rli->parse_post();
         $p = ($rli->data['loots']) ? max(array_keys($rli->data['loots'])) : 0;
@@ -423,7 +411,7 @@ class raidlogimport extends EQdkp_Admin
 			'LANGFROM'		=> $rli->data['log_lang'],
 			'LANGTO'		=> $rli->config['item_save_lang'],
 			'NEXT_BUTTON'	=> $next_button,
-			'TRANS_ITEMS'	=> ($eqdkp->config['default_game'] == 'WoW' || $eqdkp->config['default_game'] == 'RunesOfMagic') ? true : false)
+			'JBOX_RENAME_WINDOW' => $jquery->Dialog_URL('RenameItemsWindow', 'Rename Items', "renameitems.php?actual=0&langto='+langto+'&langfrom='+langfrom+'&count='+count+'", '440', '330'))
 		);
 
 		//language
@@ -969,6 +957,8 @@ class raidlogimport extends EQdkp_Admin
 			$message[] = $user->lang['rli_error'];
 		  }
 
+		  #$success['rli_insert'] = $message;
+		  #$this->display_form($success);
 		  foreach($message as $answer)
 		  {
 			$tpl->assign_block_vars('sucs', array(
@@ -976,41 +966,6 @@ class raidlogimport extends EQdkp_Admin
 				'CLASS'	=> $eqdkp->switch_row_class())
 			);
 		  }
-          //links
-          $menus = $eqdkp->gen_menus();
-          $menus = array_merge($menus['menu1'], $menus['menu2']);
-          foreach($menus as $menu) {
-                if(empty($menu['check'])||$user->check_auth($menu['check'], false)) {
-                    $links[] = "<a href='".$eqdkp_root_path.$menu['link']."'>".$menu['text']."</a>";
-                }
-          }
-		  //add additional links to the normal menus
-          $add_main_menu0 = $eqdkp->createLinkMenu($conf_plus['pk_links'],$this->root_path,0);
-          $add_main_menu1 = $eqdkp->createLinkMenu(true,$this->root_path,1);
-          $add_main_menu2 = $eqdkp->createLinkMenu(true,$this->root_path,2);
-       	  $add_main_menu3 = $eqdkp->createLinkMenu(true,$this->root_path,3);
-          if($add_main_menu0['H']) {
-        	$links = array_merge($links, explode('| ', $add_main_menu0['H']));
-          }
-          if($add_main_menu1['H']) {
-          	$links = array_merge($links, explode('| ', $add_main_menu1['H']));
-          }
-          if($add_main_menu2['H']) {
-          	$links = array_merge($links, explode('| ', $add_main_menu2['H']));
-          }
-          if($add_main_menu3['H']) {
-        	$links = array_merge($links, explode('| ', $add_main_menu3['H']));
-          }
-          //output rnd link:
-          $max = count($links)-1;
-          $keys[] = rand(0, $max);
-          foreach($keys as $key) {
-          	$tpl->assign_block_vars('links', array(
-          		'CLASS' => $eqdkp->switch_row_class(),
-          		'RDY'	=> true,
-          		'SUC_LINK' => $links[$key])
-          	);
-          }
           $tpl->assign_vars(array(
             'L_SUCCESS' => $user->lang['rli_success'],
             'L_LINKS'	=> $user->lang['links'])
@@ -1054,7 +1009,7 @@ class raidlogimport extends EQdkp_Admin
 	function display_form($messages=array())
     {
         global $db, $eqdkp, $user, $tpl, $pm;
-        global $SID, $myHtml, $rli, $eqdkp_root_path, $conf_plus;
+        global $SID, $myHtml, $rli;
 
 		if($messages)
 		{

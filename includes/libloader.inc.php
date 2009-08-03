@@ -28,9 +28,7 @@
   // Do we need the Library or is it included with eqdkpPLUS 0.7++?
   if(!function_exists('CheckLibVersion')){
 
-    // Check the php Version... php4 does not allow _autoloader
-    $phpversionnr   = (version_compare(phpversion(), "5.0.0", ">=")) ? '5' : '4';
-    $myLibraryPath  = $eqdkp_root_path . 'libraries/libraries.php'.$phpversionnr.'.php';
+    $myLibraryPath  = $eqdkp_root_path . 'libraries/libraries.php5.php';
 
     // The library Loader is not available
     if(!file_exists($myLibraryPath)){
@@ -41,18 +39,11 @@
     // Load the Plugin Core
     require_once($myLibraryPath);
 
-    // Load the needed Plugin Core Library & check ifs needed Version..
-    $pC = new pluginCore();
-    CheckLibVersion('pluginCore', $pC->version, $pm->plugins[$myPluginID]->fwversion);
-
     $jquery   = new jquery();
     CheckLibVersion('jquery', $jquery->version, $pm->plugins[$myPluginID]->jqversion, '1.0.4');
     $myHtml    = new myHTML($myPluginID, $myPluginIncludes);
     $tpl->assign_vars(array('JQUERY_INCLUDES'   => $jquery->Header()));
   }else{
-    // Load the needed Plugin Core Library & check ifs needed Version..
-    $pC = new pluginCore();
-    CheckLibVersion('pluginCore', $pC->version, $pm->plugins[$myPluginID]->fwversion);
     $myHtml    = new myHTML($myPluginID, $myPluginIncludes);
     $tpl->assign_vars(array('JQUERY_INCLUDES'   => ''));
   }

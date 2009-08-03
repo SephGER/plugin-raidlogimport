@@ -15,7 +15,7 @@
  *
  * $Id$
  */
- 
+
 if(!defined('EQDKP_INC'))
 {
 	header('HTTP/1.0 Not Found');
@@ -46,7 +46,6 @@ $_REQUEST = stripslashes_array($_REQUEST);
 
 //include library
 require($eqdkp_root_path.'plugins/raidlogimport/includes/libloader.inc.php');
-$pC->pluginCore();
 
 $raidlogimport = $pm->get_plugin('raidlogimport');
 ?>

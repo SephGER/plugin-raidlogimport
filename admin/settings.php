@@ -43,7 +43,6 @@ class RLI_Settings extends EQdkp_Admin
 				'check'		=> 'a_raidlogimport_config')
 			)
 		);
-		$pC->InitAdmin();
 		$this->plug_upd = new PluginUpdater('raidlogimport', 'rli_', 'raidlogimport_config', 'includes');
 
 		//initialise upd_check
@@ -150,8 +149,7 @@ class RLI_Settings extends EQdkp_Admin
 		$parser = array(
 			'eqdkp' => $user->lang['parser_eqdkp'],
 			'plus' => $user->lang['parser_plus'],
-			'magicdkp' => $user->lang['parser_magicdkp'],
-			'eq' => $user->lang['parser_eq']
+			'magicdkp' => $user->lang['parser_magicdkp']
 		);
 
 		//select raidcount
@@ -161,13 +159,11 @@ class RLI_Settings extends EQdkp_Admin
 			$raidcount[$i] = $user->lang['raidcount_'.$i];
 		}
 
-		//select null_sum & standbyraidoptions
+		//select null_sum
 		$null_sum = array();
-		$standby_raid = array();
 		for($i=0; $i<=2; $i++)
 		{
 			$null_sum[$i] = $user->lang['null_sum_'.$i];
-			$standby_raid[$i] = $user->lang['standby_raid_'.$i];
 		}
 
 		//select item_save_lang
@@ -189,27 +185,24 @@ class RLI_Settings extends EQdkp_Admin
 				'general' 		=> array('raidcount', 'null_sum', 'raid_note_time'),
 				'member'		=> array('new_member_rank', 'member_start_event', 'member_display'),
 				'parse'			=> array('parser'),
-				'loot'			=> array('item_save_lang'),
-				'standby'		=> array('standby_raid')
+				'loot'			=> array('item_save_lang')
 			),
 			'yes_no'	=> array(
 				'general'		=> array('rli_upd_check'),
 				'hnh_suffix' 	=> array('dep_match'),
 				'att'		 	=> array('attendence_raid'),
 				'adj'			=> array('deactivate_adj'),
-				'am'			=> array('auto_minus', 'am_value_raids', 'am_allxraids'),
-				'standby'		=> array('standby_absolute')
+				'am'			=> array('auto_minus', 'am_value_raids', 'am_allxraids')
 			),
 			'normal'	=> array(
 				'general'		=> array('timedkp_handle'),
-				'member'		=> array('member_miss_time', 'member_start', 'member_raid'),
+				'member'		=> array('member_miss_time', 'member_start'),
 				'am'			=> array('am_raidnum', 'am_value'),
 				'att'			=> array('attendence_begin', 'attendence_end', 'attendence_time', 'att_note_begin', 'att_note_end'),
 				'loot'			=> array('loottime'),
 				'adj'			=> array('adj_parse'),
 				'hnh_suffix'	=> array('hero', 'non_hero'),
-				'parse'			=> array('bz_parse'),
-				'standby'		=> array('standby_value', 'standby_raidnote')
+				'parse'			=> array('bz_parse')
 			),
 			'text' 		=> array(
 				'general'		=> array('rli_inst_version')
@@ -221,8 +214,7 @@ class RLI_Settings extends EQdkp_Admin
 				'general'		=> array('3:use_dkp'),
 				'loot'			=> array('2:ignore_dissed'),
 				'member'		=> array('3:s_member_rank'),
-				'parse'			=> array('2:event_boss'),
-				'standby'		=> array('3:standby_dkptype', '2:standby_att')
+				'parse'			=> array('2:event_boss')
 			)
 		);
 
