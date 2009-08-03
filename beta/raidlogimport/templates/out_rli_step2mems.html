@@ -1,0 +1,88 @@
+{JQUERY_INCLUDES}
+<form method="post" action="{F_PARSE}" name="post">
+	<table width="100%" border="0" cellspacing="1" cellpadding="1">
+		<tr>
+			<th colspan="4">{L_RAIDS}</th>
+		</tr>
+      <!-- BEGIN raids -->
+      <tr>
+      	<th colspan="4">{raids.COUNT}. {L_RAID}: </th>
+      </tr>
+      <tr class="row1">
+      	<td colspan="2">{L_START}: {raids.START_DATE} {raids.START_TIME}</td>
+        <td colspan="2">{L_END}: {raids.END_DATE} {raids.END_TIME}</td>
+      </tr>
+      <tr class="row2">
+        <td colspan="2">{L_EVENT}: {raids.EVENT}</td>
+        <td colspan="2">{L_VALUE}: {raids.VALUE}</td>
+      </tr>
+      <tr class="row1">
+        <td colspan="4">{L_NOTE}: {raids.NOTE}</td>
+      </tr>
+      <tr class="row2">
+        <td colspan="4">{L_BOSSKILLS}:</td>
+      </tr>
+      <tr class="row1">
+      	<td width="33%">{L_NAME}</td><td colspan="2" width="33%">{L_TIME}</td><td width="33%">{L_VALUE}</td>
+      </tr>
+      {raids.BOSSKILLS}
+	  <!-- END raids -->
+	</table>
+	<table width="100%" border="0" cellspacing="1" cellpadding="1" id="member">
+	  <tr>
+        <th colspan="{RAIDCOUNT3}">{L_MEMBERS}</th>
+        <!-- IF S_ATT_BEGIN or S_ATT_END --><th <!-- IF S_ATT_BEGIN and S_ATT_END -->colspan="2"<!-- ENDIF -->>{L_ATT}</th><!-- ENDIF -->
+	  </tr>
+	  <tr>
+        <th width="45px">&nbsp;</th>
+	  	<th width="150">{L_MEMBER}</th>
+	  	<th colspan="{RAIDCOUNT}">{L_RAIDS}</th>
+	  	<!-- IF S_ATT_BEGIN --><th>{L_START}</th><!-- ENDIF -->
+	  	<!-- IF S_ATT_END --><th>{L_END}</th><!-- ENDIF -->
+	  </tr>
+	  <!-- IF MEMBER_DISPLAY -->
+	  <tr>
+	  	<td colspan="2"></td>{MEMBER_DISPLAY}<!-- IF S_ATT_BEGIN --><td></td><!-- ENDIF --><!-- IF S_ATT_END --><td></td><!-- ENDIF -->
+	  </tr>
+	  <!-- ENDIF -->
+
+	  <!-- BEGIN player -->
+      <tr class="{player.ZAHL}">
+         <td align="right">{player.NR}&nbsp;<img src="./../../../images/global/delete.png" alt="{L_DELETE}"><input type="checkbox" name="members[{player.KEY}][delete]" value="true" title="{L_DELETE}" /></td>
+	     <td width="300"><input type="text" name="members[{player.KEY}][name]" value="{player.MITGLIED}" /> {player.ALIAS} {player.RANK}</td>
+	     {player.RAID_LIST}
+	     <!-- IF S_CONF_ADJ -->
+	     <td align="right"><input type="text" name="members[{player.KEY}][timedkp]" class="maininput" value="{player.ZEITDKP}" size="5" /></td>
+	     <td align="right"><input type="text" name="members[{player.KEY}][bossdkp]" class="maininput" value="{player.BOSSDKP}" size="5" /></td>
+	     <!-- ENDIF -->
+	     <!-- IF S_ATT_BEGIN -->
+	     	<td align="right"><input type="checkbox" name="members[{player.KEY}][att_begin]" class="maininput" value="true" {player.ATT_BEGIN} size="5" /></td>
+	     <!-- ENDIF -->
+	     <!-- IF S_ATT_END -->
+	     	<td align="right"><input type="checkbox" name="members[{player.KEY}][att_end]" class="maininput" value="true" {player.ATT_END} size="5" /></td>
+	     <!-- ENDIF -->
+	  </tr>
+      <!-- END player -->
+	  <tr class="row2">
+	  	<td colspan="2"><select name="members_add">
+	  		  <option value="0">0..{L_MEMS_ADD}</option>
+	  		  <option value="1">1..{L_MEM_ADD}</option>
+	  		  <option value="2">2..{L_MEMS_ADD}</option>
+	  		  <option value="3">3..{L_MEMS_ADD}</option>
+	  		  <option value="4">4..{L_MEMS_ADD}</option>
+	  		  <option value="5">5..{L_MEMS_ADD}</option>
+	  		</select>
+	  		<input type="submit" name="checkmem" value="{L_UPD}" class="mainoption" />
+	  	</td>
+	  	<td class="row2" colspan="99">&nbsp;</td>
+	  </tr>
+    </table>
+    <table width="100%" border="0" cellspacing="1" cellpadding="1">
+      <tr>
+        <th align="center" colspan="8">
+      	   <input type="hidden" name="rest" value="{DATA}" />
+      	   <input type="submit" name="checkraid" value="{L_BACK2RAID}" class="mainoption" />
+		   <input type="submit" name="checkitem" value="{L_GO_ON} ({L_CHECKITEMS})" class="mainoption" /></th>
+      </tr>
+	</table>
+</form>

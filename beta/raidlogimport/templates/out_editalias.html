@@ -1,0 +1,20 @@
+<form action="" method="post" name="post">
+	<table width="100%" cellspacing="1" cellpadding="2">
+		<tr>
+			<th> {RLI_EDIT} </th>
+		</tr>
+		<tr class="row1">
+			<td><input type="hidden" name="alias_id" value="{ALIAS_ID}" />{RLI_OF}
+				<input type="text" name="alias_name" value="{ALIAS}" class="input" /> {RLI_GET}
+				<select name="member_id" class="input">
+					{MEMBER_LIST}
+				</select>.
+			</td>
+		</tr>
+		<tr>
+			<th><input type="submit" name="submit" value="{RLI_UPD}" class="mainoption" />
+				<input type="submit" name="submit" value="{RLI_DEL}" class="mainoption" />
+			</th>
+		</tr>
+	</table>
+</form>
