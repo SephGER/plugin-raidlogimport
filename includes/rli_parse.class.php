@@ -33,20 +33,14 @@ if(!class_exists('rli_parse'))
 		global $db;
 		if(isset($_POST['adjs'])) {
 			$this->parse_adjs();
-		} else {
-			$this->toload[] = 'adj';
 		}
 		if(isset($_POST['loots'])) {
 			$this->parse_items();
-		} else {
-			$this->toload[] = 'item';
 		}
 		if(isset($_POST['members'])) {
 			$this->parse_members();
-		} else {
-		  	$this->toload[] = 'member';
 		}
-		if(isset($_POST['raid'])) {
+		if(isset($_POST['raids'])) {
 			if(!isset($_POST['ns'])) {
 				$this->parse_raids();
 			} else {
@@ -58,56 +52,40 @@ if(!class_exists('rli_parse'))
 					}
 				}
 			}
-		} else {
-			$this->toload[] = 'raids';
-		}
-		$this->load_cache();
-	}
-
-	private function load_cache()
-	{
-		global $db, $rli, $eqdkp;
-		$data = array();
-		$sql = "SELECT cache_class, cache_data FROM __raidlogimport_cache WHERE cache_class = '".implode("' OR '", $this->toload)."';";
-		$result = $db->query($sql);
-		while ( $row = $db->fetch_record($result) ) {
-			$data[$row['cache_class']] = ($eqdkp->config['enable_gzip']) ? unserialize(gzuncompress($row['cache_data'])) : unserialize($row['cache_data']);
-		}
-		foreach($data as $type => $dat) {
-			$rli->$type->give($dat);
 		}
 	}
 
 	private function parse_raids()
 	{
 		global $in, $rli;
+
 	 	foreach($_POST['raids'] as $key => $raid) {
 	  		if(!isset($raid['delete'])) {
-      			list($day, $month, $year) = explode('.', $raid['start_date'], 3);
-      			list($hour, $min, $sec) = explode(':', $raid['start_time'], 3);
+      			list($day, $month, $year) = explode('.', $in->get('raids:'.$key.':start_date','1.1.1970'), 3);
+      			list($hour, $min, $sec) = explode(':', $in->get('raids:'.$key.':start_time','00:00:00'), 3);
       			$raids[$key]['begin'] = mktime($hour, $min, $sec, $month, $day, $year);
-      			list($day, $month, $year) = explode('.', $raid['end_date'], 3);
-      			list($hour, $min, $sec) = explode(':', $raid['end_time'], 3);
+      			list($day, $month, $year) = explode('.', $in->get('raids:'.$key.':end_date','1.1.1970'), 3);
+      			list($hour, $min, $sec) = explode(':', $in->get('raids:'.$key.':end_time','00:00:00'), 3);
       			$raids[$key]['end'] = mktime($hour, $min, $sec, $month, $day, $year);
-      			$raids[$key]['note'] = $in->cleanString($raid['note']);
-      			$raids[$key]['value'] = floatvalue($raid['value']);
-      			$raids[$key]['event'] = $in->cleanString($raid['event']);
-      			$raids[$key]['bosskill_add'] = intval($raid['bosskill_add']);
-      			$raids[$key]['diff'] = intval($raid['diff']);
+      			$raids[$key]['note'] = $in->get('raids:'.$key.':note');
+      			$raids[$key]['value'] = $in->get('raids:'.$key.':value', 0.0);
+      			$raids[$key]['event'] = $in->get('raids:'.$key.':event');
+      			$raids[$key]['bosskill_add'] = $in->get('raids:'.$key.':bosskill_add',0);
+      			$raids[$key]['diff'] = $in->get('raids:'.$key.':diff',0);
       			$bosskills = array();
       			if(is_array($raid['bosskills'])) {
       	  			foreach($raid['bosskills'] as $u => $bk) {
       					if(!isset($bk['delete'])) {
-    	  					list($hour, $min, $sec) = explode(':', $bk['time']);
-	      					list($day, $month, $year) = explode('.', $bk['date']);
+    	  					list($hour, $min, $sec) = explode(':', $in->get('raids:'.$key.':bosskills:'.$u.':time', '00:00:00'), 3);
+	      					list($day, $month, $year) = explode('.', $in->get('raids:'.$key.':bosskills:'.$u.':date', '1.1.1970'), 3);
       						$bosskills[$u]['time'] = mktime($hour, $min, $sec, $month, $day, $year);
-      						$bosskills[$u]['bonus'] = floatvalue($bk['bonus']);
-      						$bosskills[$u]['name'] = $in->cleanString($bk['name']);
+      						$bosskills[$u]['bonus'] = $in->get('raids:'.$key.':bosskills:'.$u.':bonus', 0.0);
+      						$bosskills[$u]['name'] = $in->get('raids:'.$key.':bosskills:'.$u.':name');
 						}
 					}
 				}
       			$raids[$key]['bosskills'] = $bosskills;
-      			$raids[$key]['timebonus'] = floatvalue($raid['timebonus']);
+      			$raids[$key]['timebonus'] = $in->get('raids:'.$key.':timebonus', 0.0);
 			}
 		}
 		$rli->raid->give($raids);
@@ -241,43 +219,6 @@ if(!class_exists('rli_parse'))
 		}
 	  }
 	  $this->data['adjs'] = $adjs;
-	}
-
-	function parse_post()
-	{
-		$this->data = unserialize($_POST['rest']);
-		if(isset($_POST['adjs']))
-		{
-			$this->parse_adjs();
-		}
-		if(isset($_POST['loots']))
-		{
-			$this->parse_items();
-		}
-		if(isset($_POST['members']))
-		{
-			$this->parse_members();
-		}
-		if(isset($_POST['raids']))
-		{
-			if(!isset($_POST['ns']))
-			{
-				$this->parse_raids();
-			}
-			else
-			{
-				foreach($this->data['raids'] as $key => $raid)
-				{
-					foreach($_POST['raids'] as $k => $r)
-					{
-						if($k == $key)
-						{
-							$this->data['raids'][$k]['value'] = floatvalue($r['value']);
-						}
-					}
-				}
-			}
-		}
 	}
 
 	/**
@@ -423,7 +364,7 @@ if(!class_exists('rli_parse'))
 			message_die($user->lang['wrong_game']);
 		}
 		$lang = trim($xml->head->gameinfo->language);
-		$rli->data['log_lang'] = substr($lang, 0, 2);
+		$rli->add_data['log_lang'] = substr($lang, 0, 2);
 		$xml = $xml->raiddata;
 		foreach($xml->zones->children() as $zone)
 		{
@@ -440,10 +381,9 @@ if(!class_exists('rli_parse'))
 			$rli->member->add($name, trim(utf8_decode($xmember->race)), trim(utf8_decode($xmember->class)), trim($xmember->level), $note);
 			foreach($xmember->times->children() as $time)
 			{
-				foreach($time->attributes() as $att_name => $att_val);
-				{
-					${$att_name} = $att_val;
-				}
+				$attrs = $time->attributes();
+				$type = $attrs['type'];
+                $extra = $attrs['extra'];
 				$rli->member->add_time($name, $time, $type, $extra);
 			}
 		}
@@ -451,7 +391,7 @@ if(!class_exists('rli_parse'))
 		{
 			$cost = (isset($xitem->cost)) ? trim($xitem->cost) : '';
 			$id = (isset($xitem->itemid)) ? trim($xitem->itemid) : '';
-			$rli->item->add($trim(utf8_decode($xitem->name)), trim(utf8_decode($xitem->member)), $cost, $id, (int) trim($xitem->time));
+			$rli->item->add(trim(utf8_decode($xitem->name)), trim(utf8_decode($xitem->member)), $cost, $id, (int) trim($xitem->time));
 		}
 	}
 
@@ -628,11 +568,11 @@ if(!class_exists('rli_parse'))
 		}
 		foreach ($xml->Join->children() as $joiner)
 		{
-			$rli->member->add_time(utf8_decode(trim($joiner->player)), $joiner->time, 'join');
+			$rli->member->add_time(utf8_decode(trim($joiner->player)), strtotime($joiner->time), 'join');
 		}
 		foreach ($xml->Leave->children() as $leaver)
 		{
-			$rli->member->add_time(uft8_decode(trim($leaver->player)), $leaver->time, 'leave');
+			$rli->member->add_time(uft8_decode(trim($leaver->player)), strtotime($leaver->time), 'leave');
 		}
 	}
 
@@ -650,16 +590,19 @@ if(!class_exists('rli_parse'))
 	{
 		global $user, $eqdkp_root_path, $rli;
 
-		if(method_exists($this, 'parse_'.$rli->config['parser'].'_string'))
+		if(method_exists($this, 'parse_'.$rli->config('parser').'_string'))
 		{
-			$back = call_user_func(array($this, 'check_'.$rli->config['parser'].'_format'), $xml);
+			$back = call_user_func(array($this, 'check_'.$rli->config('parser').'_format'), $xml);
 			if($back[1])
 			{
-				call_user_func(array($this, 'parse_'.$rli->config['parser'].'_string'), $xml);
+				call_user_func(array($this, 'parse_'.$rli->config('parser').'_string'), $xml);
+				$rli->raid->create();
+				$rli->raid->recalc(true);
+				$rli->member->finish();
 			}
 			else
 			{
-			  message_die($user->lang['wrong_format'].' '.$user->lang[$rli->config['parser'].'_format'].'<br />'.$user->lang['rli_miss'].implode(', ', $back[2]));
+			  message_die($user->lang['wrong_format'].' '.$user->lang[$rli->config('parser').'_format'].'<br />'.$user->lang['rli_miss'].implode(', ', $back[2]));
 			}
 		}
 		else

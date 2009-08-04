@@ -27,7 +27,7 @@ class raidlogimport extends EQdkp_Admin
 {
 	public function raidlogimport()
     {
-        global $db, $eqdkp, $user, $tpl, $pm;
+        global $db, $eqdkp, $user, $tpl, $pm, $rli;
         global $SID;
 
         parent::eqdkp_admin();
@@ -67,6 +67,7 @@ class raidlogimport extends EQdkp_Admin
             	'check'	  => 'a_raidlogimport_dkp')
                 )
         );
+        $rli->init_import();
 	}
 
 	function process_raids()
@@ -90,58 +91,23 @@ class raidlogimport extends EQdkp_Admin
 		  	$rli->data['log_lang'] = $in->get('log_lang');
 		  }
 		}
-		$rli->raid->add_new($in->get('raid_add'));
-		$att_raids = $rli->get_adj_raidkeys();
-		foreach($rli->data['raids'] as $ky => $rai)
-		{
-			if(!($rli->config['attendence_raid'] AND ($ky === $att_raids['start'] OR $ky === $att_raids['end'])))
-			{
-			  if($_POST['checkraid'] == $user->lang['rli_calc_note_value'])
-			  {
-			  	$rli->raid->recalc();
-			  }
-			}
-			if(isset($rai['bosskill_add']))
-			{
-				$rli->raid->add_bosskill($ky, $rai['bosskill_add']);
-			}
-			$tpl->assign_block_vars('raids', array(
-                'COUNT'     => $ky,
-                'START_DATE'=> date('d.m.y', $rai['begin']),
-                'START_TIME'=> date('H:i:s', $rai['begin']),
-                'END_DATE'	=> date('d.m.y', $rai['end']),
-                'END_TIME'	=> date('H:i:s', $rai['end']),
-				'EVENT'		=> $myHtml->DropDown('raids['.$ky.'][event]', $rli->events['name'], $rai['event']),
-				'TIMEBONUS'	=> $rai['timebonus'],
-				'VALUE'		=> $rai['value'],
-				'NOTE'		=> $rai['note'],
-				'HEROIC'	=> ($rai['diff'] == 2) ? TRUE : FALSE
-				)
-			);
-			if(is_array($rai['bosskills']))
-			{
-              foreach($rai['bosskills'] as $xy => $bk)
-              {
-                $tpl->assign_block_vars('raids.bosskills', array(
-                    'BK_SELECT' => $rli->boss_dropdown($bk['name'], $ky, $xy),
-                    'BK_TIME'   => date('H:i:s', $bk['time']),
-                    'BK_DATE'   => date('d.m.y', $bk['time']),
-                    'BK_VALUE'  => $bk['bonus'],
-                    'BK_KEY'    => $xy)
-                );
-              }
-            }
+		$rli->raid->add_new($in->get('raid_add',0));
+		if($_POST['checkraid'] == $user->lang['rli_calc_note_value']) {
+			$rli->raid->recalc();
 		}
 
+		$rli->raid->display(true);
+
 		$tpl->assign_vars(array(
-			'DATA' =>htmlspecialchars(serialize($rli->data), ENT_QUOTES),
-			'USE_TIMEDKP' => ($rli->config['use_dkp'] & 2),
-			'USE_BOSSDKP' => ($rli->config['use_dkp'] & 1),
-			'S_NULL_SUM'  => $rli->config['null_sum'],
+			'USE_TIMEDKP' => ($rli->config('use_dkp') & 2),
+			'USE_BOSSDKP' => ($rli->config('use_dkp') & 1),
+			'S_NULL_SUM'  => $rli->config('null_sum'),
 			'L_RV_NS'	  => $user->lang['raidval_nullsum_later'])
 		);
 		//language
 		$tpl->assign_vars(lang2tpl());
+
+		$rli->destroy();
 
 		$eqdkp->set_vars(array(
         	'page_title'        => sprintf($user->lang['admin_title_prefix'], $eqdkp->config['guildtag'], $eqdkp->config['dkp_name']).': Daten prüfen',
@@ -154,106 +120,32 @@ class raidlogimport extends EQdkp_Admin
 	function process_members()
 	{
 		global $db, $eqdkp, $user, $tpl, $pm;
-		global $myHtml, $rli, $jquery;
+		global $myHtml, $rli, $jquery, $in;
 
-		$rli->parse_post();
-		if(isset($_POST['members_add']))
-		{
-            $h = max(array_keys($rli->data['members']));
-			for($i=1; $i<=$_POST['members_add']; $i++)
-			{
-				$h++;
-				$rli->data['members'][$h]['times'] = array();
-				$rli->data['members'][$h]['name'] = '';
-			}
-		}
-		$aliases = rli_get_aliases();
-		$att_raids = $rli->get_adj_raidkeys();
-		foreach($rli->data['members'] as $key => $member)
-		{
-			if($rli->config['s_member_rank'] & 1)
-			{
-				$member['rank'] = $rli->rank_suffix($member['name']);
-			}
-			if(isset($aliases[$member['name']]))
-			{
-            	$rli->data['members'][$key]['alias'] = $member['name'];
-                $member['alias'] = $member['name'];
-                $rli->data['members'][$key]['name'] = $aliases[$member['name']];
-            	$member['name'] = $aliases[$member['name']];
-            }
-         	//Ursprungsname hinter das Mitglied schreiben
-          	$alias = "";
-               if(isset($member['alias'])) {
-               $alias = "(".$member['alias'].")";
-               $alias .= '<input type="hidden" name="members['.$key.'][alias]" value="'.$member['alias'].'" />';
-            }
-            if($_POST['checkmem'] == $user->lang['rli_go_on'].' ('.$user->lang['rli_checkmem'].')')
-            {
-            	$member['raid_list'] = array();
-	           	foreach($rli->data['raids'] as $u => $ra)
-	           	{
-	           		//check events
-	           		if($rli->member_in_raid($key, $ra['begin'], $ra['end']))
-	           		{
-	           			$member['raid_list'][] = $u;
-	           		}
-		        }
-		        $begin = $rli->data['raids'][1]['begin'];
-		        $end = $rli->data['raids'][count($rli->data['raids'])]['end'];
-	            $att_dkp = $rli->calculate_attendence($member['times'], $begin, $end);
-	            $member['att_dkp_begin'] = $att_dkp['begin'];
-	            if($att_dkp['begin'] AND !in_array($att_raids['begin'], $member['raid_list'])) {
-	            	$member['raid_list'][] = $att_raids['start'];
-	            }
-	            $member['att_dkp_end'] = $att_dkp['end'];
-	            if($att_dkp['end'] AND !in_array($att_raids['end'], $member['raid_list'])) {
-	            	$member['raid_list'][] = $att_raids['end'];
-	            }
-	        }
-	        if($rli->config['member_display'] AND extension_loaded('gd'))
-	        {
-	        	$raid_list = $rli->get_checkraidlist($member['raid_list'], $key);
-	        }
-	        else
-	        {
-	        	$raid_list = '<td>'.$jquery->MultiSelect('members['.$key.'][raid_list]', $rli->raidlist(), $member['raid_list'], '200', '200', false, 'members_'.$key.'_raidlist').'</td>';
-	        }
-           	$tpl->assign_block_vars('player', array(
-               	'MITGLIED' => $member['name'],
-                'ALIAS'    => $alias,
-                'RAID_LIST'=> $raid_list,
-                'ATT_BEGIN'=> ($member['att_dkp_begin']) ? 'checked="checked"' : '',
-                'ATT_END'  => ($member['att_dkp_end']) ? 'checked="checked"' : '',
-                'ZAHL'     => $eqdkp->switch_row_class(),
-                'KEY'	   => $key,
-                'NR'	   => $key +1,
-                'RANK'	   => ($rli->config['s_member_rank'] & 1) ? $rli->rank_suffix($member['name']) : '')
-           	);
-        }//foreach members
+		$rli->member->add_new($in->get('members_add',0));
+
+		$rli->member->display(true);
 
 		//show raids
-		foreach($rli->data['raids'] as $key => $raid)
-		{
-			$tpl->assign_block_vars('raids', raids2tpl($key, $raid));
-		}
+		$rli->raid->display();
 
         //language
         $tpl->assign_vars(lang2tpl());
 
 		$tpl->assign_vars(array(
-			'DATA'			 => htmlspecialchars(serialize($rli->data), ENT_QUOTES),
-			'S_ATT_BEGIN'	 => ($rli->config['attendence_begin'] > 0 AND !$rli->config['attendence_raid']) ? TRUE : FALSE,
-			'S_ATT_END'		 => ($rli->config['attendence_end'] > 0 AND !$rli->config['attendence_raid']) ? TRUE : FALSE,
-			'MEMBER_DISPLAY' => ($rli->config['member_display']) ? $rli->th_raidlist : false,
-			'RAIDCOUNT'		 => ($rli->config['member_display']) ? count($rli->data['raids']) : 1,
-			'RAIDCOUNT3'	 => ($rli->config['member_display']) ? count($rli->data['raids']) +2 : 3)
+			'S_ATT_BEGIN'	 => ($rli->config('attendence_begin') > 0 AND !$rli->config('attendence_raid')) ? TRUE : FALSE,
+			'S_ATT_END'		 => ($rli->config('attendence_end') > 0 AND !$rli->config('attendence_raid')) ? TRUE : FALSE,
+			'MEMBER_DISPLAY' => ($rli->config('member_display') == 1) ? $rli->raid->th_raidlist : false,
+			'RAIDCOUNT'		 => ($rli->config('member_display') == 1) ? $rli->raid->count() : 1,
+			'RAIDCOUNT3'	 => ($rli->config('member_display') == 1) ? $rli->raid->count() +2 : 3)
 		);
+		
+		$rli->destroy();
 
 		$eqdkp->set_vars(array(
         	'page_title'        => sprintf($user->lang['admin_title_prefix'], $eqdkp->config['guildtag'], $eqdkp->config['dkp_name']).': Daten prüfen',
             'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
-            'template_file'     => 'rli_step2mems.html',
+            'template_file'     => ($rli->config('member_display') == 2) ? 'rli_step2dmems.html' : 'rli_step2mems.html',
             'display'           => true)
         );
 	}
