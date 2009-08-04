@@ -24,27 +24,21 @@
   if ( !defined('EQDKP_INC') ){
     header('HTTP/1.0 404 Not Found');exit;
   }
+  
+  // EQDKP PLUS 0.7.x ++
+  if(is_object($libloader)){
+    $libloader->CheckLibVersion('Libraries', false, $pm->plugins[$myPluginID]->fwversion);
+    $myHtml = $html;
+    $myHtml->SetPluginName($myPluginID);
 
-  // Do we need the Library or is it included with eqdkpPLUS 0.7++?
-  if(!function_exists('CheckLibVersion')){
-
-    $myLibraryPath  = $eqdkp_root_path . 'libraries/libraries.php5.php';
-
-    // The library Loader is not available
-    if(!file_exists($myLibraryPath)){
-      $libnothere_txt = ($user->lang['libloader_notfound']) ? $user->lang['libloader_notfound'] : 'Library Loader not available! Check if the "eqdkp/libraries/" folder is uploaded correctly';
-      message_die($libnothere_txt);
-    }
-
-    // Load the Plugin Core
-    require_once($myLibraryPath);
-
-    $jquery   = new jquery();
-    CheckLibVersion('jquery', $jquery->version, $pm->plugins[$myPluginID]->jqversion, '1.0.4');
-    $myHtml    = new myHTML($myPluginID, $myPluginIncludes);
-    $tpl->assign_vars(array('JQUERY_INCLUDES'   => $jquery->Header()));
+  // EQDKP PLUS 0.6.3.1 ++
   }else{
-    $myHtml    = new myHTML($myPluginID, $myPluginIncludes);
-    $tpl->assign_vars(array('JQUERY_INCLUDES'   => ''));
+    if(!file_exists($eqdkp_root_path . 'libraries/libraries.php')){
+      message_die((($user->lang['libloader_notfound']) ? $user->lang['libloader_notfound'] : 'Library Loader not available! Check if the "eqdkp/libraries/" folder is uploaded correctly'));
+    }
+    require_once($eqdkp_root_path . 'libraries/libraries.php');
+    $libloader  = new libraries();
+    $libloader->CheckLibVersion('Libraries',false, $pm->plugins[$myPluginID]->fwversion);
+    $jquery = $jqueryp; $myHtml = new myHTML($myPluginID);
   }
 ?>
