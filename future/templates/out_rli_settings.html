@@ -12,7 +12,9 @@
 </table>
 <!-- ENDIF -->
 <form action="{F_PARSE_LOG}" method="post">
+<table width="100%" cellpadding="2" cellspacing="1" border="0">
   {TAB_JS}
+ <tr><td width="100%">
   <div id="rli_config"><ul>
   	<!-- BEGIN holder -->
   		<li><a href="#rli_config-{holder.NUM}"><span>{holder.TITLE}</span></a></li>
@@ -29,7 +31,9 @@
       </table></div>
 	<!-- END holder -->
   </div>
+  </td></tr>
 	<tr>
-		<th colspan="2"><input type="submit" name="update" value="{L_SAVE}" class="mainoption" /></th>
+		<td width="200px" align="center"><input type="submit" name="update" value="{L_SAVE}" class="mainoption" /></th>
 	</tr>
+</table>
 </form>

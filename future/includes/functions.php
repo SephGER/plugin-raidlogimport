@@ -354,7 +354,7 @@ function lang2tpl()
 		'L_START'		=> $user->lang['rli_start'],
 		'L_T_DKP'		=> $user->lang['rli_t_dkp'],
 		'L_TIME'		=> $user->lang['time'],
-		'L_TRANSLATE_ITEMS' => ($rli->data['log_lang'] == $rli->config['item_save_lang']) ? $user->lang['get_itemid'] : $user->lang['translate_items'],
+		'L_TRANSLATE_ITEMS' => ($rli->add_data['log_lang'] == $rli->config('item_save_lang')) ? $user->lang['get_itemid'] : $user->lang['translate_items'],
 		'L_TRANSLATE_ITEMS_TIP' => $user->lang['translate_items_tip'],
 		'L_UPD'			=> $user->lang['update'],
         'L_VALUE'       => $user->lang['value']
@@ -362,28 +362,6 @@ function lang2tpl()
 	return $la_ar;
 }
 
-function raids2tpl($key, $raid, $formul = false)
-{
-	$bosskills = '';
-	$l = 2;
-	foreach($raid['bosskills'] as $bk)
-	{
-		$bosskills .= '<tr class="row'.$l.'"><td>'.$bk['name'].'</td><td colspan="2">'.date('H:i:s',$bk['time']).'</td><td>'.$bk['bonus'].'</td></tr>';
-		if($l != 1) {$l--;} else {$l++;}
-	}
-	return array(
-		'COUNT'			=> $key,
-		'START_DATE'	=> date('d.m.y', $raid['begin']),
-		'START_TIME'	=> date('H:i:s', $raid['begin']),
-		'END_DATE'		=> date('d.m.y', $raid['end']),
-		'END_TIME'		=> date('H:i:s', $raid['end']),
-		'BOSSKILLS'		=> $bosskills,
-		'EVENT'			=> $raid['event'],
-		'VALUE'			=> $raid['value'],
-		'NOTE'			=> $raid['note'],
-		'FORMUL'		=> $formul[$key]
-	);
-}
 
 function mems2tpl($key, $member, $data)
 {

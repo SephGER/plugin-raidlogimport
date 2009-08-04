@@ -36,6 +36,7 @@ if(!class_exists('rli'))
 	public $raid = false;
 	public $item = false;
 	public $adj = false;
+	public $add_data = false;
 
   	public function __construct()
   	{
@@ -55,11 +56,11 @@ if(!class_exists('rli'))
 
   	public function init_import()
   	{
-		$this->parser = new rli_parse;
+        $this->raid = new rli_raid;
 		$this->member = new rli_member;
-		$this->raid = new rli_raid;
 		$this->item = new rli_item;
 		$this->adj = new rli_adjustment;
+        $this->parser = new rli_parse;
 	}
 
 	public function get_bonus()
@@ -68,9 +69,9 @@ if(!class_exists('rli'))
 		return $this->bonus;
 	}
 
-	public function config($name)
+	public function config($name='')
 	{
-		return $this->config[$name];
+		return ($name == '') ? $this->config : $this->config[$name];
 	}
 
   	private function load_bonus()
@@ -86,14 +87,14 @@ if(!class_exists('rli'))
 			{
 				if($row['bz_type'] == 'boss')
 				{
-					$this->bonus['boss'][$row['bz_id']]['string'] = explode($this->config['bz_parse'], $row['bz_string']);
+					$this->bonus['boss'][$row['bz_id']]['string'] = explode($this->config('bz_parse'), $row['bz_string']);
 					$this->bonus['boss'][$row['bz_id']]['note'] = $row['bz_note'];
 					$this->bonus['boss'][$row['bz_id']]['bonus'] = $row['bz_bonus'];
 					$this->bonus['boss'][$row['bz_id']]['tozone'] = $row['bz_tozone'];
 				}
 				else
 				{
-					$this->bonus['zone'][$row['bz_id']]['string'] = explode($this->config['bz_parse'], $row['bz_string']);
+					$this->bonus['zone'][$row['bz_id']]['string'] = explode($this->config('bz_parse'), $row['bz_string']);
 					$this->bonus['zone'][$row['bz_id']]['note'] = $row['bz_note'];
 					$this->bonus['zone'][$row['bz_id']]['bonus'] = $row['bz_bonus'];
 				}
@@ -129,101 +130,22 @@ if(!class_exists('rli'))
 		return ($key) ? (($sec_key) ? $this->events[$key][$sec_key] : $this->events[$key]) : $this->events;
 	}
 
-	function get_member_times($member, $begin=false, $end=false)
+	public function get_cache_data($type)
 	{
-		$time = array();
-		foreach($member['join'] as $tj)
-		{
-			if(array_key_exists($tj, $time))
-			{
-				unset($time[$tj]);
-			}
-			else
-			{
-				$time[$tj] = 'join';
-			}
-		}
-		foreach($member['leave'] as $tl)
-		{
-			if(array_key_exists($tl, $time))
-			{
-				unset($time[$tl]);
-			}
-			else
-			{
-				$time[$tl] = 'leave';
-			}
-		}
-		ksort($time);
-		$times = array();
-		foreach($time as $ti => $ty)
-		{
-			$times[][$ty] = $ti;
-		}
-        return $this->check_times($times);
-    }
+		global $db, $eqdkp;
 
-    function check_times($times)
-    {
-    	global $user;
-
-		$n = count($times)-1;
-	    for($i=0; $i<$n; $i++)
-	    {
-	      $k = $i+1;
-	      if(key($times[$i]) == key($times[$k]))
-	      {
-			return array(false, '<br />Wrong Member: %1$s, '.key($times[$i]).'-times: '.date('H:i:s', $times[$i][key($times[$i])]).' and '.date('H:i:s', $times[$k][key($times[$k])]));
-	      }
-	      else
-	      {
-            if($begin AND key($times[$i]) == 'join' AND ($begin + $this->config['member_miss_time']) > $times[$i]['join'])
-            {
-                $times[$i]['join'] = $begin;
-            }
-            if($end AND key($times[$i]) == 'leave' AND ($end - $this->config['member_miss_time']) < $times[$i]['leave'])
-            {
-                $times[$i]['leave'] = $end;
-            }
-	      	if(key($times[$i]) == 'leave' AND ($times[$i]['leave'] + $this->config['member_miss_time']) > $times[$k]['join'])
-	      	{
-	      		unset($times[$i]);
-	      		unset($times[$k]);
-	      		$i++;
-	      	}
-	      }
-	    }
-	    return $times;
+		if(!$this->data[$type]) {
+			$sql = "SELECT cache_class, cache_data FROM __raidlogimport_cache;";
+			$result = $db->query($sql);
+			while ( $row = $db->fetch_record($result) ) {
+				$this->data[$row['cache_class']] = ($eqdkp->config['enable_gzip']) ? unserialize(gzuncompress($row['cache_data'])) : unserialize($row['cache_data']);
+			}
+			$db->query("TRUNCATE __raidlogimport_cache;");
+		}
+		return $this->data[$type];
 	}
 
-	function get_member_secs_inraid($times, $begin, $end)
-	{
-		$tim = 0;
-        $nu = max(array_keys($times));
-		foreach($times as $i => $time)
-		{
-		  if(key($time) == 'join')
-		  {
-			$k = $i+1;
-			$j = '';
-			for($k; $k<=$nu; $k++)
-			{
-				if(isset($times[$k]) AND key($times[$k]) == 'leave')
-				{
-					$j = $k;
-					break;
-				}
-			}
-            if($times[$j]['leave'] > $begin AND $time['join'] < $end)
-            {
-                $tim = $tim + ((($times[$j]['leave'] > $end) ? $end : $times[$j]['leave']) - (($time['join'] < $begin) ? $begin : $time['join']));
-            }
-          }
-        }
-        return $tim;
-    }
-
-	function boss_dropdown($bossname, $raid_key, $key)
+	public function boss_dropdown($bossname, $raid_key, $key)
 	{
 		global $myHtml;
 		$this->get_bonus();
@@ -246,16 +168,6 @@ if(!class_exists('rli'))
 			}
 		}
 		return $myHtml->DropDown('raids['.$raid_key.'][bosskills]['.$key.'][name]', $this->bk_list, $sel);
-	}
-
-	function raidlist()
-	{
-		$list = array();
-		foreach($this->data['raids'] as $key => $raid)
-		{
-			$list[$key] = $raid['note'];
-		}
-		return $list;
 	}
 
 	function auto_minus_ra($actualraidvalue)
@@ -478,20 +390,6 @@ if(!class_exists('rli'))
 	  $this->data['members'] = $members;
 	}
 
-	function member_in_raid($mkey, $begin, $end)
-	{
-		$time = $end - $begin;
-		$member_raidtime = $this->get_member_secs_inraid($this->data['members'][$mkey]['times'], $begin, $end);
-		if($member_raidtime > $time/2)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
 	function check_data()
 	{
 		$bools = array();
@@ -672,29 +570,6 @@ if(!class_exists('rli'))
 		return $value;
 	}
 
-	function get_member_ranks()
-	{
-		global $db;
-		if(!$this->member_ranks)
-		{
-			$sql = "SELECT m.member_name, r.rank_name FROM __members m, __member_ranks r WHERE m.member_rank_id = r.rank_id;";
-			$result = $db->query($sql);
-			while ($row = $db->fetch_record($result))
-			{
-				$this->member_ranks[$row['member_name']] = $row['rank_name'];
-			}
-			$ssql = "SELECT rank_name FROM __member_ranks WHERE rank_id = '".$this->config['new_member_rank']."';";
-			$this->member_ranks['new'] = $db->query_first($ssql);
-		}
-	}
-
-	function rank_suffix($mname)
-	{
-		$this->get_member_ranks();
-		$rank = (isset($this->member_ranks[$mname])) ? $this->member_ranks[$mname] : $this->member_ranks['new'];
-		return ' ('.$rank.')';
-	}
-
 	function check_adj_exists($memname, $adjreason)
 	{
 		if($this->config['null_sum'])
@@ -726,37 +601,32 @@ if(!class_exists('rli'))
 		return false;
 	}
 
-	function get_checkraidlist($memberraids, $mkey)
-	{
-		global $eqdkp_root_path, $pcache;
-
-		$td = '';
-		if(!$this->th_raidlist)
-		{
-			$pcache->CheckCreateFolder($pcache->CacheFolder.'raidlogimport');
-            foreach($this->data['raids'] as $rkey => $raid)
-            {
-            	$imagefile = $eqdkp_root_path.$pcache->FileLink('image'.$rkey.'.png', 'raidlogimport');
-            	$image = imagecreate(20, 150);
-            	$weiss = imagecolorallocate($image, 0xFF, 0xFF, 0xFF);
-            	$schwarz = imagecolorallocate($image, 0x00, 0x00, 0x00);
-				imagefill($image, 0, 0, $weiss);
-				imagestringup($image, 2, 2, 148, $raid['note'], $schwarz);
-				imagepng($image, $imagefile);
-				$this->th_raidlist .= '<td width="20px"><img src="'.$imagefile.'" title="'.$raid['note'].'" alt="'.$rkey.'" /></td>';
-            	imagedestroy($image);
-			}
-		}
-		foreach($this->data['raids'] as $rkey => $raid)
-		{
-		$td .= '<td><input type="checkbox" name="members['.$mkey.'][raid_list][]" value="'.$rkey.'" title="'.$raid['note'].'" '.((in_array($rkey, $memberraids)) ? 'checked="checked"' : '').' /></td>';
-		}
-		return $td;
+  	public function add_cache_data($type, $data)
+  	{
+  		$this->data[$type] = $data;
   	}
 
-  	public function __destruct()
+  	public function destroy()
   	{
-  		echo "rli";
+  		global $db, $eqdkp;
+
+  		unset($this->raid);
+  		unset($this->member);
+  		unset($this->item);
+  		unset($this->adj);
+  		unset($this->parse);
+
+  		$sql = "INSERT INTO __raidlogimport_cache
+  				 (cache_class, cache_data)
+  				VALUES ";
+  		if($this->data) {
+			foreach($this->data as $type => $data) {
+				$data = ($eqdkp->config['enable_gzip']) ? gz_compress(serialize($data)) : serialize($data);
+				$sqls[] = "('".$type."', '".$db->escape($data)."')";
+			}
+        	$sql .= implode(", ", $sqls).";";
+        	$db->query($sql);
+		}
   	}
   }//class
 }//class exist

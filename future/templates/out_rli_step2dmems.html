@@ -1,66 +1,89 @@
 {JQUERY_INCLUDES}
-<form method="post" action="{F_PARSE}" name="post">
-	<table width="100%" border="0" cellspacing="1" cellpadding="1">
-		<tr>
-			<th colspan="4">{L_RAIDS}</th>
-		</tr>
-      <!-- BEGIN raids -->
-      <tr>
-      	<th colspan="4">{raids.COUNT}. {L_RAID}: </th>
-      </tr>
-      <tr class="row1">
-      	<td colspan="2">{L_START}: {raids.START_DATE} {raids.START_TIME}</td>
-        <td colspan="2">{L_END}: {raids.END_DATE} {raids.END_TIME}</td>
-      </tr>
-      <tr class="row2">
-        <td colspan="2">{L_EVENT}: {raids.EVENT}</td>
-        <td colspan="2">{L_VALUE}: {raids.VALUE}</td>
-      </tr>
-      <tr class="row1">
-        <td colspan="4">{L_NOTE}: {raids.NOTE}</td>
-      </tr>
-      <tr class="row2">
-        <td colspan="4">{L_BOSSKILLS}:</td>
-      </tr>
-      <tr class="row1">
-      	<td width="33%">{L_NAME}</td><td colspan="2" width="33%">{L_TIME}</td><td width="33%">{L_VALUE}</td>
-      </tr>
-      {raids.BOSSKILLS}
-	  <!-- END raids -->
-	</table>
-	<table width="100%" border="0" cellspacing="1" cellpadding="1" id="member">
-	  <tr>
-        <th colspan="{RAIDCOUNT3}">{L_MEMBERS}</th>
-        <!-- IF S_ATT_BEGIN or S_ATT_END --><th <!-- IF S_ATT_BEGIN and S_ATT_END -->colspan="2"<!-- ENDIF -->>{L_ATT}</th><!-- ENDIF -->
-	  </tr>
-	  <tr>
-        <th width="45px">&nbsp;</th>
-	  	<th width="150">{L_MEMBER}</th>
-	  	<th colspan="{RAIDCOUNT}">{L_RAIDS}</th>
-	  	<!-- IF S_ATT_BEGIN --><th>{L_START}</th><!-- ENDIF -->
-	  	<!-- IF S_ATT_END --><th>{L_END}</th><!-- ENDIF -->
-	  </tr>
-	  <!-- IF MEMBER_DISPLAY -->
-	  <tr>
-	  	<td colspan="2"></td>{MEMBER_DISPLAY}<!-- IF S_ATT_BEGIN --><td></td><!-- ENDIF --><!-- IF S_ATT_END --><td></td><!-- ENDIF -->
-	  </tr>
-	  <!-- ENDIF -->
+<script type="text/javascript" language="javascript">
+function showtime(anchor) {
+	document.getElementById(anchor).className = 'time_scale';
+}
 
+function hidetime(time_id) {
+	document.getElementById(time_id).className = 'time_scale_hide';
+}
+</script>
+<style type="text/css">
+.raid {
+	position: relative;
+	height: 20px;
+	background-color: red;
+	z-index: 9;
+}
+.boss {
+	position: absolute;
+	height: 26px;
+	background-color: black;
+	width: 4px;
+	margin-top: -23px;
+	z-index: 10;
+}
+.time {
+	position: absolute;
+	background-color: green;
+	height: 8px;
+	z-index: 11;
+}
+.time_standby {
+	position: absolute;
+	background-color: yellow;
+	height: 8px;
+	z-index: 12;
+}
+.time_scale {
+	position: relative;
+	background-image: url(./../../../plugins/raidlogimport/images/time_scale.png);
+	background-repeat: repeat-x;
+	width: {PXTIME}px;
+	height: 18px;
+	margin-bottom: -18px;
+	z-index: 13;
+}
+
+.time_scale_hide {
+	display: none;
+}
+.rli_tooltip {
+	background-image: url(./../images/tooltip.png);
+	background-position: top left;
+}
+.rli_tooltip_right {
+	background-image: url(./../images/tooltip.png);
+	width: 3px;
+	background-position: top right;
+}
+.rli_tooltip_bottom {
+	background-image: url(./../images/tooltip.png);
+	height: 3px;
+	background-position: bottom left;
+}
+.rli_tooltip_bottom_right {
+	background-image: url(./../images/tooltip.png);
+	width: 3px;
+	height: 3px;
+	background-position: bottom right;
+}
+</style>
+<form method="post" action="{F_PARSE}" name="post" id="member_form">
+	<table border="0" cellspacing="1" cellpadding="1" id="member" width="200%">
+	  <tr>
+        <th colspan="3">{L_MEMBERS}</th>
+	  </tr>
+	  <tr>
+        <th width="45px" style="min-width:45px;">&nbsp;</th>
+	  	<th style="max-width:300px;">{L_MEMBER}</th>
+	  	<th width="{PXTIME}px">{L_RAIDS}</th>
+	  </tr>
 	  <!-- BEGIN player -->
       <tr class="{player.ZAHL}">
-         <td align="right">{player.NR}&nbsp;<img src="./../../../images/global/delete.png" alt="{L_DELETE}"><input type="checkbox" name="members[{player.KEY}][delete]" value="true" title="{L_DELETE}" /></td>
-	     <td width="300"><input type="text" name="members[{player.KEY}][name]" value="{player.MITGLIED}" /> {player.ALIAS} {player.RANK}</td>
+         <td align="right" style="height: 40px;">{player.NR}&nbsp;<img src="./../../../images/global/delete.png" alt="{L_DELETE}"><input type="checkbox" name="members[{player.KEY}][delete]" value="true" title="{L_DELETE}" /></td>
+	     <td><input type="text" name="members[{player.KEY}][name]" value="{player.MITGLIED}" /></td>
 	     {player.RAID_LIST}
-	     <!-- IF S_CONF_ADJ -->
-	     <td align="right"><input type="text" name="members[{player.KEY}][timedkp]" class="maininput" value="{player.ZEITDKP}" size="5" /></td>
-	     <td align="right"><input type="text" name="members[{player.KEY}][bossdkp]" class="maininput" value="{player.BOSSDKP}" size="5" /></td>
-	     <!-- ENDIF -->
-	     <!-- IF S_ATT_BEGIN -->
-	     	<td align="right"><input type="checkbox" name="members[{player.KEY}][att_begin]" class="maininput" value="true" {player.ATT_BEGIN} size="5" /></td>
-	     <!-- ENDIF -->
-	     <!-- IF S_ATT_END -->
-	     	<td align="right"><input type="checkbox" name="members[{player.KEY}][att_end]" class="maininput" value="true" {player.ATT_END} size="5" /></td>
-	     <!-- ENDIF -->
 	  </tr>
       <!-- END player -->
 	  <tr class="row2">

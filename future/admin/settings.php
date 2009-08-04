@@ -76,7 +76,7 @@ class RLI_Settings extends EQdkp_Admin
 		$messages = array();
 		$bytes = array('s_member_rank', 'ignore_dissed', 'use_dkp', 'event_boss');
 		$floats = array('member_start', 'attendence_begin', 'attendence_end', 'am_value');
-		foreach($rli->config as $old_name => $old_value)
+		foreach($rli->config() as $old_name => $old_value)
 		{
 			if(in_array($old_name, $bytes))
 			{
@@ -129,7 +129,7 @@ class RLI_Settings extends EQdkp_Admin
 		global $db, $user, $tpl, $eqdkp, $pm, $SID, $rli, $myHtml, $jquery;
 		if($messages)
 		{
-			$rli->rli();
+			$rli->__construct();
 			foreach($messages as $name)
 			{
 				System_Message($name, $user->lang['bz_save_suc'], 'green');
@@ -176,7 +176,7 @@ class RLI_Settings extends EQdkp_Admin
 		$member_start_event = $rli->get_events('name');
 
 		//select member_display
-		$member_display = array(0 => $user->lang['member_display_0'], 1 => $user->lang['member_display_1']);
+		$member_display = array(0 => $user->lang['member_display_0'], 1 => $user->lang['member_display_1'], 2 => $user->lang['member_display_2']);
 
 		//select raid_note_time
 		$raid_note_time = array(0 => $user->lang['raid_note_time_0'], 1 => $user->lang['raid_note_time_1']);

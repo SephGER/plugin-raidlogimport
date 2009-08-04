@@ -229,6 +229,7 @@
 	$lang['member_display'] = 'How should the member-list be displayed?';
 	$lang['member_display_1'] = 'Multiple Checkboxes';
 	$lang['member_display_0'] = 'Multi-Select';
+	$lang['member_display_2'] = 'Detailed Join/Leave Information';
     $lang['member_display_add'] = " <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td>If you want to use <nobr>".$lang['member_display_1']."</nobr>, you must have the GD-lib (PHP-Extension).<br /> You are running the following GD-lib version:<br />%s</td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/error.gif' alt='warn'></a>";
 	$lang['no_gd_lib'] = '<span class="negative">no GD-lib found</span>';
     $lang['title_standby'] = 'Standby-Settings';
