@@ -70,5 +70,6 @@ $bz_data  = array(
     50 => array('boss', 'Faction Champions', 'Champions (HM)', '3', '48', '2'),
     51 => array('boss', 'Twin Val\'kyr', 'Val\'kyr (HM)', '3', '48', '3'),
     52 => array('boss', 'Anub\'arak', 'Anub\'arak (HM)', '4', '48', '4'),
+    53 => array('boss', 'Koralon the Flame Watcher', 'Koralon', '2', '24', '2')
 );
 ?>
