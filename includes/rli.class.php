@@ -145,7 +145,7 @@ if(!class_exists('rli'))
       return $event.$this->suffix(true);
     }
 
-	function get_bosskills($bosskills, $begin, $end)
+	function get_bosskills($bosskills, $begin, $end, $zone_name)
 	{
 		$rbosskills = array();
 		$i = 0;
@@ -156,11 +156,21 @@ if(!class_exists('rli'))
 			{
 				if(in_array($bosskill['name'], $boss['string']) AND $bosskill['time'] >= $begin AND $bosskill['time'] < $end)
 				{
-					$rbosskills[$i]['name'] = $bosskill['name'];
-					$rbosskills[$i]['bonus'] = $boss['bonus'];
-					$rbosskills[$i]['note'] = $boss['note'];
-					$rbosskills[$i]['time'] = $bosskill['time'];
-					break;
+					if($this->config['bz_dep_match'])
+					{
+						foreach($this->bonus['zone'] as $zone_key => $zone) {
+							if(in_array($zone_name, $zone['string'])) {
+								break;
+							}
+						}
+					}
+					if(($this->config['bz_dep_match'] AND $boss['tozone'] == $zone_key) OR !$this->config['bz_dep_match']) {
+						$rbosskills[$i]['name'] = $bosskill['name'];
+						$rbosskills[$i]['bonus'] = $boss['bonus'];
+						$rbosskills[$i]['note'] = $boss['note'];
+						$rbosskills[$i]['time'] = $bosskill['time'];
+						break;
+					}
 				}
 			}
 			$i++;
@@ -178,7 +188,7 @@ if(!class_exists('rli'))
 	  }
 	}
 
-	function get_note($bosskills, $nonote=false)
+	function get_note($bosskills, $nonote=false, $event=false)
 	{
 		$bosss = array();
 		foreach($bosskills as $bosskill)
@@ -190,7 +200,16 @@ if(!class_exists('rli'))
 				{
 					if(in_array($bosskill['name'], $boss['string']))
 					{
-						$bosskill['note'] = $boss['note'];
+						if($this->config['bz_dep_match']) {
+							foreach($this->bonus['zone'] as $zkey => $zone) {
+								if($zone['note'] == $zone['event']) {
+									break;
+								}
+							}
+						}
+						if(($this->config['bz_dep_match'] AND $zkey == $boss['tozone']) OR !$this->config['bz_dep_match']) {
+							$bosskill['note'] = $boss['note'];
+						}
 					}
 				}
 			}
@@ -437,7 +456,7 @@ if(!class_exists('rli'))
 				$raids[$key]['bosskills'] = array();
 				if(is_array($this->data['bosskills']))
 				{
-					$raids[$key]['bosskills'] = $this->get_bosskills($this->data['bosskills'], $raids[$key]['begin'], $raids[$key]['end']);
+					$raids[$key]['bosskills'] = $this->get_bosskills($this->data['bosskills'], $raids[$key]['begin'], $raids[$key]['end'], $zone['name']);
 				}
 
 				//diff
@@ -468,7 +487,7 @@ if(!class_exists('rli'))
 					$raids[$key]['bosskills'] = array();
 					if(is_array($this->data['bosskills']))
 					{
-						$raids[$key]['bosskills'] = $this->get_bosskills($this->data['bosskills'], $raids[$key]['begin'], $raids[$key]['end']);
+						$raids[$key]['bosskills'] = $this->get_bosskills($this->data['bosskills'], $raids[$key]['begin'], $raids[$key]['end'], $zone['name']);
 					}
 
 					//diff
@@ -496,7 +515,7 @@ if(!class_exists('rli'))
 						$raids[$key]['end'] = $temp['end'];
 
 						//bosskills
-						$raids[$key]['bosskills'] = $this->get_bosskills($this->data['bosskills'], $raids[$key]['begin'], $raids[$key]['end']);
+						$raids[$key]['bosskills'] = $this->get_bosskills($this->data['bosskills'], $raids[$key]['begin'], $raids[$key]['end'], $zone['name']);
 
 						//diff
 						$raids[$key]['diff'] = $this->diff;
@@ -573,7 +592,7 @@ if(!class_exists('rli'))
 						$raids[$key]['end'] = $temp['end'];
 
 						//bosskills
-						$raids[$key]['bosskills'] = $this->get_bosskills($this->data['bosskills'], $raids[$key]['begin'], $raids[$key]['end']);
+						$raids[$key]['bosskills'] = $this->get_bosskills($this->data['bosskills'], $raids[$key]['begin'], $raids[$key]['end'], $zone['name']);
 
 						//diff
 						$raids[$key]['diff'] = $this->diff;

@@ -121,7 +121,7 @@ class raidlogimport extends EQdkp_Admin
 				$rai['value'] = $rli->get_raidvalue($rai['begin'], $rai['end'], $rai['bosskills'], $rai['timebonus'], $rai['event']);
 				if($rai['bosskills'] AND $rli->config['raidcount'] != 2)
 				{
-					$rai['note'] = $rli->get_note($rai['bosskills'], true);
+					$rai['note'] = $rli->get_note($rai['bosskills'], true, $rai['event']);
 				}
 			  }
 			}

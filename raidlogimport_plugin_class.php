@@ -29,7 +29,7 @@ if ( !defined('EQDKP_INC') )
 class raidlogimport_Plugin_Class extends EQdkp_Plugin
 {
 	var $vstatus = 'Stable';
-	var $version = '0.5.4.9';
+	var $version = '0.5.5';
 	var $fwversion = '1.0.3';
 	var $jqversion = '2.0.1';
 
@@ -122,7 +122,8 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 				'att_note_end'		=> $user->lang['rli_att'].' '.$user->lang['rli_end'],	//  "	"		"	 _end-raid
 				'raid_note_time'	=> '0', 	//0: exact time (20:03:43-21:03:43); 1: hour (1. hour, 2. hour)
 				'timedkp_handle'	=> '0',		//should timedkp be given exactly(0) or fully after x minutes
-				'member_display'	=> '0'		//0: multi-dropdown; 1: checkboxes
+				'member_display'	=> '0',		//0: multi-dropdown; 1: checkboxes
+				'bz_dep_match'		=> '1'		//zone-dependent bosstriggers
 			);
 			$this->insert_data($config_data);
 			//add default bz_data
