@@ -30,7 +30,7 @@ $updateDESC = array(
 	'Added Config Value: Zone-dependent Bosstriggers',
 	'Add Coliseum Triggers'
 );
-$reloadSETT = false;
+$reloadSETT = 'settings.php';
 
 $updateSQL = array(
 	"INSERT INTO __raidlogimport_config (config_name, config_value) VALUES ('bz_dep_match', '1');",
@@ -38,7 +38,7 @@ $updateSQL = array(
 			(bz_type, bz_string, bz_note, bz_bonus, bz_tozone, bz_sort)
 		VALUES
 			('zone', 'Trial of the Crusader', 'Coliseum', '5', '0', '5'),
-			('zone', 'Trial of the Grand Crusader', 'Coliseum (HM)', '5', '0', '6');",
+			('zone', 'Trial of the Grand Crusader', 'Coliseum HM', '5', '0', '6');",
 );
 
 function add_coliseum_boss_trigger()
@@ -57,15 +57,15 @@ function add_coliseum_boss_trigger()
 	$db->query("INSERT INTO __raidlogimport_bz
 					(bz_type, bz_string, bz_note, bz_bonus, bz_tozone, bz_sort)
 				VALUES
-            		('boss', 'Northrend Beasts', 'Beasts (HM)', '2', '".$hm."', '0'),
-            		('boss', 'Lord Jaraxxus', 'Jaraxxus (HM)', '2', '".$hm."', '1'),
-            		('boss', 'Faction Champions', 'Champions (HM)', '3', '".$hm."', '2'),
-            		('boss', 'Twin Val\'kyr', 'Val\'kyr (HM)', '3', '".$hm."', '3'),
-            		('boss', 'Anub\'arak', 'Anub\'arak (HM)', '4', '".$hm."', '4')
+            		('boss', 'Northrend Beasts', 'Beasts HM', '2', '".$hm."', '0'),
+            		('boss', 'Lord Jaraxxus', 'Jaraxxus HM', '2', '".$hm."', '1'),
+            		('boss', 'Faction Champions', 'Champions HM', '3', '".$hm."', '2'),
+            		('boss', 'Twin Val\'kyr', 'Twin Val\'kyr HM', '3', '".$hm."', '3'),
+            		('boss', 'Anub\'arak', 'Anub\'arak HM', '4', '".$hm."', '4'),
             		('boss', 'Northrend Beasts', 'Beasts', '2', '".$norm."', '0'),
             		('boss', 'Lord Jaraxxus', 'Jaraxxus', '2', '".$norm."', '1'),
             		('boss', 'Faction Champions', 'Champions', '3', '".$norm."', '2'),
-            		('boss', 'Twin Val\'kyr', 'Val\'kyr', '3', '".$norm."', '3'),
+            		('boss', 'Twin Val\'kyr', 'Twin Val\'kyr', '3', '".$norm."', '3'),
             		('boss', 'Anub\'arak', 'Anub\'arak', '4', '".$norm."', '4'),
             		('boss', 'Koralon the Flame Watcher', 'Koralon', '2', '".$archa."', '2');");
 }

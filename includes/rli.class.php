@@ -188,31 +188,11 @@ if(!class_exists('rli'))
 	  }
 	}
 
-	function get_note($bosskills, $nonote=false, $event=false)
+	function get_note($bosskills)
 	{
 		$bosss = array();
 		foreach($bosskills as $bosskill)
 		{
-			if($nonote)
-			{
-				$this->get_bonus();
-				foreach($this->bonus['boss'] as $boss)
-				{
-					if(in_array($bosskill['name'], $boss['string']))
-					{
-						if($this->config['bz_dep_match']) {
-							foreach($this->bonus['zone'] as $zkey => $zone) {
-								if($zone['note'] == $zone['event']) {
-									break;
-								}
-							}
-						}
-						if(($this->config['bz_dep_match'] AND $zkey == $boss['tozone']) OR !$this->config['bz_dep_match']) {
-							$bosskill['note'] = $boss['note'];
-						}
-					}
-				}
-			}
 			$bosss[] = $bosskill['note'].$this->suffix($this->config['dep_match']);
 		}
 		return implode(', ', $bosss);
@@ -648,7 +628,7 @@ if(!class_exists('rli'))
 		unset($this->data['zones']);
 	}
 
-	function boss_dropdown($bossname, $raid_key, $key)
+	function boss_dropdown($bossnote, $raid_key, $key)
 	{
 		global $myHtml;
 		$this->get_bonus();
@@ -656,21 +636,15 @@ if(!class_exists('rli'))
 		{
 		  foreach($this->bonus['boss'] as $boss)
 		  {
-			$this->bk_list[htmlspecialchars($boss['string'][0], ENT_QUOTES)] = htmlentities($boss['note'], ENT_QUOTES);
+		  	$note = htmlspecialchars($boss['note'], ENT_QUOTES);
+			$this->bk_list[$note] = htmlentities($boss['note'], ENT_QUOTES);
 			if($this->config['use_dkp'] & 1)
 			{
-				$this->bk_list[htmlspecialchars($boss['string'][0], ENT_QUOTES)] .= ' ('.$boss['bonus'].')';
+				$this->bk_list[$note] .= ' ('.$boss['bonus'].')';
 			}
 		  }
 		}
-		foreach($this->bonus['boss'] as $boss)
-		{
-			if(in_array($bossname, $boss['string']))
-			{
-				$sel = htmlspecialchars($boss['string'][0], ENT_QUOTES);
-			}
-		}
-		return $myHtml->DropDown('raids['.$raid_key.'][bosskills]['.$key.'][name]', $this->bk_list, $sel);
+		return $myHtml->DropDown('raids['.$raid_key.'][bosskills]['.$key.'][note]', $this->bk_list, $bossnote);
 	}
 
 	function calculate_attendence($times, $begin, $end)
@@ -871,7 +845,7 @@ if(!class_exists('rli'))
 	      		list($day, $month, $year) = explode('.', $bk['date']);
       			$bosskills[$u]['time'] = mktime($hour, $min, $sec, $month, $day, $year);
       			$bosskills[$u]['bonus'] = floatvalue($bk['bonus']);
-      			$bosskills[$u]['name'] = $bk['name'];
+      			$bosskills[$u]['note'] = $bk['note'];
       		}
       	  }
       	}

@@ -62,14 +62,14 @@ $bz_data  = array(
     42 => array('boss', 'Northrend Beasts', 'Beasts', '2', '42', '0'),
     43 => array('boss', 'Lord Jaraxxus', 'Jaraxxus', '2', '42', '1'),
     44 => array('boss', 'Faction Champions', 'Champions', '3', '42', '2'),
-    45 => array('boss', 'Twin Val\'kyr', 'Val\'kyr', '3', '42', '3'),
+    45 => array('boss', 'Twin Val\'kyr', 'Twin Val\'kyr', '3', '42', '3'),
     46 => array('boss', 'Anub\'arak', 'Anub\'arak', '4', '42', '4'),
-    47 => array('zone', 'Trial of the Grand Crusader', 'Coliseum (HM)', '5', '0', '6'),
-    48 => array('boss', 'Northrend Beasts', 'Beasts (HM)', '2', '48', '0'),
-    49 => array('boss', 'Lord Jaraxxus', 'Jaraxxus (HM)', '2', '48', '1'),
-    50 => array('boss', 'Faction Champions', 'Champions (HM)', '3', '48', '2'),
-    51 => array('boss', 'Twin Val\'kyr', 'Val\'kyr (HM)', '3', '48', '3'),
-    52 => array('boss', 'Anub\'arak', 'Anub\'arak (HM)', '4', '48', '4'),
+    47 => array('zone', 'Trial of the Grand Crusader', 'Coliseum HM', '5', '0', '6'),
+    48 => array('boss', 'Northrend Beasts', 'Beasts HM', '2', '48', '0'),
+    49 => array('boss', 'Lord Jaraxxus', 'Jaraxxus HM', '2', '48', '1'),
+    50 => array('boss', 'Faction Champions', 'Champions HM', '3', '48', '2'),
+    51 => array('boss', 'Twin Val\'kyr', 'Twin Val\'kyr HM', '3', '48', '3'),
+    52 => array('boss', 'Anub\'arak', 'Anub\'arak HM', '4', '48', '4'),
     53 => array('boss', 'Koralon the Flame Watcher', 'Koralon', '2', '24', '2')
 );
 ?>

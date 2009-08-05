@@ -121,7 +121,7 @@ class raidlogimport extends EQdkp_Admin
 				$rai['value'] = $rli->get_raidvalue($rai['begin'], $rai['end'], $rai['bosskills'], $rai['timebonus'], $rai['event']);
 				if($rai['bosskills'] AND $rli->config['raidcount'] != 2)
 				{
-					$rai['note'] = $rli->get_note($rai['bosskills'], true, $rai['event']);
+					$rai['note'] = $rli->get_note($rai['bosskills']);
 				}
 			  }
 			}
@@ -150,7 +150,7 @@ class raidlogimport extends EQdkp_Admin
               foreach($rai['bosskills'] as $xy => $bk)
               {
                 $tpl->assign_block_vars('raids.bosskills', array(
-                    'BK_SELECT' => $rli->boss_dropdown($bk['name'], $ky, $xy),
+                    'BK_SELECT' => $rli->boss_dropdown($bk['note'], $ky, $xy),
                     'BK_TIME'   => date('H:i:s', $bk['time']),
                     'BK_DATE'   => date('d.m.y', $bk['time']),
                     'BK_VALUE'  => $bk['bonus'],
