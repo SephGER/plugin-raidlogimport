@@ -33,7 +33,7 @@ $updateDESC = array(
 $reloadSETT = 'settings.php';
 
 $updateSQL = array(
-	"INSERT INTO __raidlogimport_config (config_name, config_value) VALUES ('bz_dep_match', '1');",
+	"INSERT INTO __raidlogimport_config (config_name, config_value) VALUES ('bz_dep_match', '0');",
 	"INSERT INTO __raidlogimport_bz
 			(bz_type, bz_string, bz_note, bz_bonus, bz_tozone, bz_sort)
 		VALUES
@@ -44,11 +44,11 @@ $updateSQL = array(
 function add_coliseum_boss_trigger()
 {
 	global $db, $eqdkp;
-	$result = $db->query("SELECT bz_id, bz_string FROM __raidlogimport_bz WHERE bz_type = 'zone';");
+	$result = $db->query("SELECT bz_id, bz_tozone FROM __raidlogimport_bz WHERE bz_string = 'Trial of the Crusader';");
 	while( $row =  $db->fetch_record($result) ) {
-		if($row['bz_string'] == 'Trial of the Crusader') {
+		if($row['bz_tozone'] == 2) {
 			$norm = $row['bz_id'];
-		} elseif($row['bz_string'] == 'Trial of the Grand Crusader') {
+		} elseif($row['bz_tozone'] == 4) {
 			$hm = $row['bz_id'];
 		} elseif($row['bz_string'] == 'Vault of Archavon') {
 			$archa = $row['bz_id'];

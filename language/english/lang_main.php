@@ -114,6 +114,7 @@
 	$lang['rli_back2item'] = 'Back to items';
     $lang['rli_checkadj'] = 'Check Adjustments';
     $lang['rli_calc_note_value'] = 'Recalculate raidvalue and raidnote';
+    $lang['rli_calc_event_boss'] = 'Recalculate everything';
 	$lang['rli_insert'] = 'Insert DKP';
 	$lang['rli_adjs'] = 'Adjustments';
 	$lang['rli_partial_raid'] = 'Partial Raidattendence';

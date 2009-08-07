@@ -103,7 +103,7 @@ if(!class_exists('rli'))
 	  $this->get_bonus();
 	  if(!$bosskill) {
         foreach ($this->bonus['zone'] as $zo) {
-            if (in_array(trim($zone), $zo['string']) AND (($this->config['bz_dep_match'] AND (($this->diff AND $this->diff == $zo['diff']) OR !$this->diff)) OR !$this->config['bz_dep_match'])) {
+            if (in_array(trim($zone), $zo['string']) AND (($this->diff AND $this->diff == $zo['diff']) OR !($this->diff AND $zo['diff']))) {
                 $retu['event'] = trim($zo['note']);
                 $retu['timebonus'] = $zo['bonus'];
                 break;
@@ -141,7 +141,7 @@ if(!class_exists('rli'))
       	}
       }
       foreach($this->bonus['zone'] as $zone) {
-      	if(count(array_intersect($this->bonus['zone'][$zkey]['string'], $zone['string'])) >= 1 AND (($this->config['bz_dep_match'] AND (($this->diff AND $this->diff == $zone['diff']) OR !$this->diff)) OR !$this->config['bz_dep_match'])) {
+      	if(count(array_intersect($this->bonus['zone'][$zkey]['string'], $zone['string'])) >= 1 AND (($this->diff AND $this->diff == $zone['diff']) OR !($this->diff AND $zone['diff']))) {
       		$r['event'] = $zone['note'].$this->suffix(true);
       		$r['timebonus'] = $zone['bonus'];
       		break;
@@ -149,7 +149,7 @@ if(!class_exists('rli'))
       }
       return $r;
     }
-    
+
     function get_diff_bosskills($bosskills)
     {
     	$this->get_bonus();
@@ -160,7 +160,7 @@ if(!class_exists('rli'))
     			}
     		}
     		foreach($this->bonus['boss'] as $boss) {
-    			if(count(array_intersect($this->bonus['boss'][$bkey]['string'], $boss['string'])) >= 1 AND (($this->config['bz_dep_match'] AND (($this->diff AND $this->diff == $this->bonus['zone'][$boss['tozone']]['diff']) OR (!$this->diff OR !$this->bonus['zone'][$boss['tozone']]['diff']))) OR !$this->config['bz_dep_match'])) {
+    			if(count(array_intersect($this->bonus['boss'][$bkey]['string'], $boss['string'])) >= 1 AND (($this->diff AND $this->diff == $this->bonus['zone'][$boss['tozone']]['diff']) OR (!$this->diff OR !$this->bonus['zone'][$boss['tozone']]['diff']))) {
     				$bosskills[$key]['note'] = $boss['note'];
     				$bosskills[$key]['bonus'] = $boss['bonus'];
     			}
@@ -187,8 +187,15 @@ if(!class_exists('rli'))
 								break;
 							}
 						}
+						if($boss['tozone'] == $zone_key AND (($this->diff AND $this->diff == $this->bonus['zone'][$boss['tozone']]['diff']) OR !$this->diff)) {
+							$rbosskills[$i]['name'] = $bosskill['name'];
+							$rbosskills[$i]['bonus'] = $boss['bonus'];
+							$rbosskills[$i]['note'] = $boss['note'];
+							$rbosskills[$i]['time'] = $bosskill['time'];
+							break;
+						}
 					}
-					if(($this->config['bz_dep_match'] AND $boss['tozone'] == $zone_key) OR !$this->config['bz_dep_match']) {
+					if(($this->diff AND $this->diff == $this->bonus['zone'][$boss['tozone']]['diff']) OR (!$this->diff OR !$this->bonus['zone'][$boss['tozone']]['diff'])) {
 						$rbosskills[$i]['name'] = $bosskill['name'];
 						$rbosskills[$i]['bonus'] = $boss['bonus'];
 						$rbosskills[$i]['note'] = $boss['note'];

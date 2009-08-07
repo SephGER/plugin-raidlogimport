@@ -114,6 +114,7 @@
 	$lang['rli_back2item'] = 'Zurück zu Items';
 	$lang['rli_checkadj'] = 'Korrekturen überprüfen';
     $lang['rli_calc_note_value'] = 'Raidwert und Raidnotiz neu berechnen';
+    $lang['rli_calc_event_boss'] = 'Alles neu berechnen';
 	$lang['rli_insert'] = 'DKP Einfügen';
 	$lang['rli_adjs'] = 'Korrekturen';
 	$lang['rli_partial_raid'] = 'Teilweise Raidteilnahme';

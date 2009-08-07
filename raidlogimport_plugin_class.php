@@ -37,7 +37,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
     {
         global $eqdkp_root_path, $user, $SID, $conf_plus, $eqdkp;
 
-        $this->build = 5563;
+        $this->build = 5568;
 
         $this->eqdkp_plugin($pm);
         $this->pm->get_language_pack('raidlogimport');
@@ -123,7 +123,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 				'raid_note_time'	=> '0', 	//0: exact time (20:03:43-21:03:43); 1: hour (1. hour, 2. hour)
 				'timedkp_handle'	=> '0',		//should timedkp be given exactly(0) or fully after x minutes
 				'member_display'	=> '0',		//0: multi-dropdown; 1: checkboxes
-				'bz_dep_match'		=> '1'		//zone-dependent bosstriggers
+				'bz_dep_match'		=> '0'		//zone-dependent bosstriggers
 			);
 			$this->insert_data($config_data);
 			//add default bz_data

@@ -284,13 +284,13 @@ class Bz extends EQdkp_Admin
 	{
 		global $db, $eqdkp, $user, $tpl, $SID, $pm, $myHtml;
 
-		$sql1 = "SELECT bz_id, bz_note FROM __raidlogimport_bz WHERE bz_type = 'zone';";
+		$sql1 = "SELECT bz_id, bz_note, bz_tozone FROM __raidlogimport_bz WHERE bz_type = 'zone';";
 		$result1 = $db->query($sql1);
 		$zones = array();
         $zones[NULL] = $user->lang['bz_no_zone'];
 		while ( $row1 = $db->fetch_record($result1) )
 		{
-			$zones[$row1['bz_id']] = $row1['bz_note'];
+			$zones[$row1['bz_id']] = $row1['bz_note'].(($eqdkp->config['default_game'] == 'WoW' AND $row1['bz_tozone']) ? ' &nbsp;&nbsp;&nbsp; ('.$user->lang['diff_'.$row1['bz_tozone']].')' : '');
 		}
 		$diffs = array(0 => $user->lang['bz_no_diff']);
 		if($eqdkp->config['default_game'] == 'WoW') {
