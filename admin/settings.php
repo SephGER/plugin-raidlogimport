@@ -202,7 +202,7 @@ class RLI_Settings extends EQdkp_Admin
 				'att'			=> array('attendence_begin', 'attendence_end', 'attendence_time', 'att_note_begin', 'att_note_end'),
 				'loot'			=> array('loottime'),
 				'adj'			=> array('adj_parse'),
-				'hnh_suffix'	=> array('hero', 'non_hero'),
+				'hnh_suffix'	=> array('diff_1_suff', 'diff_2_suff', 'diff_3_suff', 'diff_4_suff'),
 				'parse'			=> array('bz_parse')
 			),
 			'text' 		=> array(

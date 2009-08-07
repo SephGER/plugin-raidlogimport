@@ -60,6 +60,7 @@
 	$lang['bz_zone'] = 'Zones';
 	$lang['bz_zone_s'] = 'Zone';
 	$lang['bz_no_zone'] = 'no Zone';
+	$lang['bz_no_diff'] = 'no Difficulty';
 	$lang['bz_string'] = 'String';
 	$lang['bz_bnote'] = 'Note';
 	$lang['bz_bonus'] = 'Bonus-DKP / DKP/h';

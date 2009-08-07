@@ -15,10 +15,15 @@
  *
  * $Id$
  */
-$lang['hero'] = 'Suffix für Heroische Ereignisse';
-$lang['non_hero'] = 'Suffix für Nicht-Heroische Ereignisse';
+$lang['diff_1_suff'] = 'Suffix für 10-Spieler';
+$lang['diff_2_suff'] = 'Suffix für 25-Spieler';
+$lang['diff_3_suff'] = 'Suffix für 10-Spieler Hardmode';
+$lang['diff_4_suff'] = 'Suffix für 25-Spieler Hardmode';
 $lang['difficulty'] = 'Schwierigkeit';
-$lang['heroic'] = 'Heroisch';
-$lang['non_heroic'] = 'Nicht Heroisch';
+$lang['diff_1'] = '10er';
+$lang['diff_2'] = '25er';
+$lang['diff_3'] = '10er HM';
+$lang['diff_4'] = '25er HM';
 $lang['dep_match'] = 'Soll den Boss-Notizen der Suffix angehängt werden?';
+$lang['bz_diff'] = " / Schwierigkeit";
 ?>

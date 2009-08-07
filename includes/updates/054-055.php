@@ -37,13 +37,13 @@ $updateSQL = array(
 	"INSERT INTO __raidlogimport_bz
 			(bz_type, bz_string, bz_note, bz_bonus, bz_tozone, bz_sort)
 		VALUES
-			('zone', 'Trial of the Crusader', 'Coliseum', '5', '0', '5'),
-			('zone', 'Trial of the Grand Crusader', 'Coliseum HM', '5', '0', '6');",
+			('zone', 'Trial of the Crusader', 'Coliseum', '5', '2', '5'),
+			('zone', 'Trial of the Crusader', 'Coliseum', '5', '4', '6');",
 );
 
 function add_coliseum_boss_trigger()
 {
-	global $db;
+	global $db, $eqdkp;
 	$result = $db->query("SELECT bz_id, bz_string FROM __raidlogimport_bz WHERE bz_type = 'zone';");
 	while( $row =  $db->fetch_record($result) ) {
 		if($row['bz_string'] == 'Trial of the Crusader') {
@@ -68,6 +68,11 @@ function add_coliseum_boss_trigger()
             		('boss', 'Twin Val\'kyr', 'Twin Val\'kyr', '3', '".$norm."', '3'),
             		('boss', 'Anub\'arak', 'Anub\'arak', '4', '".$norm."', '4'),
             		('boss', 'Koralon the Flame Watcher', 'Koralon', '2', '".$archa."', '2');");
+	if($eqdkp->config['default_game'] == 'WoW') {
+		$db->query("UPDATE __raidlogimport_config SET config_name = 'diff_1_suff' WHERE config_name = 'non_hero';");
+		$db->query("UPDATE __raidlogimport_config SET config_name = 'diff_2_suff' WHERE config_name = 'hero';");
+		$db->query("INSERT INTO __raidlogimport_config (config_name, config_value) VALUES ('diff_3_suff', ' HM (10)'), ('diff_4_suff', ' HM (25)');");
+	}
 }
 
 ?>

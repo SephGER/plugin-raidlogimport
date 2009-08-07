@@ -37,7 +37,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
     {
         global $eqdkp_root_path, $user, $SID, $conf_plus, $eqdkp;
 
-        $this->build = 5492;
+        $this->build = 5563;
 
         $this->eqdkp_plugin($pm);
         $this->pm->get_language_pack('raidlogimport');
@@ -144,8 +144,10 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 				if(strtolower($eqdkp->config['default_game']) == 'wow')
 				{
 					$config_data = array(
-						'hero'				=> ' (25)',	//suffix for hero
-						'non_hero'			=> ' (10)',	//suffix for non-hero
+						'diff_2_suff'		=> ' (25)',	//suffix for 25er
+						'diff_1_suff'		=> ' (10)',	//suffix for 10er
+						'diff_3_suff'		=> ' HM (10)', //suffix for 10er Hardmode
+						'diff_4_suff'		=> ' HM (25)', //suffix for 25er Hardmode
 						'dep_match'			=> '0'		//also append suffix to boss-note?
 					);
 					$this->insert_data($config_data);
