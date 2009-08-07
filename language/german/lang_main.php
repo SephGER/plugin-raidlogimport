@@ -182,6 +182,7 @@
 	$lang['parser_eqdkp'] = 'MLDKP 1.1 / EQdkp Plugin';
 	$lang['parser_plus'] = 'EQdkpPlus XML Format';
 	$lang['parser_magicdkp'] = 'MagicDKP';
+	$lang['parser_eq'] = 'Everquest';
 	$lang['rli_man_db_up'] = 'DB-Update erzwingen';
 	$lang['rli_upd_check'] = 'Update-Check aktivieren?';
 	$lang['use_dkp'] = 'Welche DKP sollen verwendet werden?';

@@ -1800,6 +1800,31 @@ if(!class_exists('rli'))
 			message_die($user->lang['parse_error'].' '.$user->lang[$this->config['parser'].'_format'].'<br />'.$message);
 		}
 	}
+	
+	//dummy
+	function check_eq_format($string)
+	{
+		return array(1 => true);
+	}
+
+	function parse_eq_string($string)
+	{
+		$lines = explode('<br />', $string);
+		$k = 1;
+		foreach($lines as $line) {
+			$matches = array();
+			preg_match('#[0-9]\s+(.*?)\s+([0-9]{1,2})\s+(.*?)\s+#', $line, $matches);
+			$this->data['members'][$k]['name'] = $matches[1];
+			$this->data['members'][$k]['level'] = $matches[2];
+			$this->data['members'][$k]['class'] = $matches[3];
+			$this->data['members'][$k]['times'][0]['join'] = 1; //date in the past
+			$this->data['members'][$k]['times'][1]['leave'] = mktime();  //since the raid ist definetly over now
+			$k++;
+		}
+		//add a dummy raid
+		$this->data['zones'][1]['enter'] = (mktime() - (60*60*2));  //before 2 hours, just a default value
+		$this->data['zones'][1]['leave'] = mktime();
+	}
 
 	function parse_string($xml)
 	{
