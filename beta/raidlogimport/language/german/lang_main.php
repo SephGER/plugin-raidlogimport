@@ -60,6 +60,7 @@
 	$lang['bz_zone'] = 'Zonen';
 	$lang['bz_zone_s'] = 'Zone';
 	$lang['bz_no_zone'] = 'keine Zone';
+	$lang['bz_no_diff'] = 'keine Schwierigkeit';
 	$lang['bz_string'] = 'String';
 	$lang['bz_bnote'] = 'Notiz';
 	$lang['bz_bonus'] = 'Bonus-DKP / DKP/h';
@@ -113,6 +114,7 @@
 	$lang['rli_back2item'] = 'Zurück zu Items';
 	$lang['rli_checkadj'] = 'Korrekturen überprüfen';
     $lang['rli_calc_note_value'] = 'Raidwert und Raidnotiz neu berechnen';
+    $lang['rli_calc_event_boss'] = 'Alles neu berechnen';
 	$lang['rli_insert'] = 'DKP Einfügen';
 	$lang['rli_adjs'] = 'Korrekturen';
 	$lang['rli_partial_raid'] = 'Teilweise Raidteilnahme';
@@ -233,6 +235,7 @@
 	$lang['member_display_1'] = 'Mehrere Checkboxen';
     $lang['member_display_add'] = " <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td>Um die Ansicht \'".$lang['member_display_1']."\' zu verwenden, muss die GD-Lib vorhanden sein (PHP-Extension). Folgende GD-Lib wurde gefunden:<br />%s</td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/error.gif' alt='help'></a>";
     $lang['no_gd_lib'] = '<span class=\\\'negative\\\'>keine GD-Lib gefunden</span>';
+    $lang['bz_dep_match'] = 'Sollen die Bosstrigger zonenabhängig ausgewertet werden?';
     $lang['title_standby'] = 'Ersatzbank';
     $lang['standby_raid'] = 'Sollen Ersatzbank-Mitglieder einem Raid zugeordnet werden?';
     $lang['standby_raid_0'] = 'Nein, keinem.';

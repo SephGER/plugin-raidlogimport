@@ -60,6 +60,7 @@
 	$lang['bz_zone'] = 'Zones';
 	$lang['bz_zone_s'] = 'Zone';
 	$lang['bz_no_zone'] = 'no Zone';
+	$lang['bz_no_diff'] = 'no Difficulty';
 	$lang['bz_string'] = 'String';
 	$lang['bz_bnote'] = 'Note';
 	$lang['bz_bonus'] = 'Bonus-DKP / DKP/h';
@@ -113,6 +114,7 @@
 	$lang['rli_back2item'] = 'Back to items';
     $lang['rli_checkadj'] = 'Check Adjustments';
     $lang['rli_calc_note_value'] = 'Recalculate raidvalue and raidnote';
+    $lang['rli_calc_event_boss'] = 'Recalculate everything';
 	$lang['rli_insert'] = 'Insert DKP';
 	$lang['rli_adjs'] = 'Adjustments';
 	$lang['rli_partial_raid'] = 'Partial Raidattendence';
@@ -232,6 +234,7 @@
 	 $lang['member_display_0'] = 'Multi-Select';
     $lang['member_display_add'] = " <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td>If you want to use <nobr>".$lang['member_display_1']."</nobr>, you must have the GD-lib (PHP-Extension).<br /> You are running the following GD-lib version:<br />%s</td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/error.gif' alt='warn'></a>";
 	 $lang['no_gd_lib'] = '<span class="negative">no GD-lib found</span>';
+	 $lang['bz_dep_match'] = 'Shall the bosstriggers be evaluated dependent on their zone?';
     $lang['title_standby'] = 'Standby-Settings';
     $lang['standby_raid'] = 'Shall the standby-members be assigned to a raid?';
     $lang['standby_raid_0'] = 'No.';

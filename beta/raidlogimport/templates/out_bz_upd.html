@@ -1,5 +1,25 @@
+<script type="text/javascript" language="javascript">
+function update_select(id) {
+	if(document.getElementById('type_'+id).options[0].selected == true) {
+		document.getElementById('zone_'+id).className = 'bz_hide';
+		document.getElementById('boss_'+id).className = 'bz_show';
+	}
+ 	if(document.getElementById('type_'+id).options[1].selected == true) {
+ 		document.getElementById('boss_'+id).className = 'bz_hide';
+		document.getElementById('zone_'+id).className = 'bz_show';
+	}
+}
+</script>
+<style type="text/css">
+.bz_show {
+	position: relative;
+}
+.bz_hide {
+	display: none;
+}
+</style>
 <form method="post" action="">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <table width="100%" border="0" cellspacing="1" cellpadding="2">
       <tr>
       	<th align="center" width="100%" colspan="6">{L_BZ_UPD}</th>
       </tr>
@@ -8,7 +28,7 @@
       </tr>
       <!-- BEGIN upd_list -->
       <tr class="{upd_list.CLASS}">
-      	<td><select name="bz_type[{upd_list.BZ_ID}]">
+      	<td><select name="bz_type[{upd_list.BZ_ID}]" id="type_{upd_list.BZ_ID}" onchange="javascript:update_select('{upd_list.BZ_ID}')">
       		<option value="boss" {upd_list.B_SELECTED}>{L_BOSS}</option>
       		<option value="zone" {upd_list.Z_SELECTED}>{L_ZONE}</option>
       		</select>
@@ -16,7 +36,10 @@
       	<td><input type="text" name="bz_string[{upd_list.BZ_ID}]" value="{upd_list.BZ_STRING}" /></td>
       	<td><input type="text" name="bz_note[{upd_list.BZ_ID}]" value="{upd_list.BZ_NOTE}" /></td>
       	<td align="center"><input type="text" name="bz_bonus[{upd_list.BZ_ID}]" value="{upd_list.BZ_BONUS}" size="5" /></td>
-      	<td>{upd_list.ZONE_ARRAY}</td>
+      	<td>
+      		<div id="boss_{upd_list.BZ_ID}" class="<!-- IF upd_list.B_SELECTED -->bz_show<!-- ELSE -->bz_hide<!-- ENDIF -->">{upd_list.ZONE_ARRAY}</div>
+      		<div id="zone_{upd_list.BZ_ID}" class="<!-- IF upd_list.Z_SELECTED -->bz_show<!-- ELSE -->bz_hide<!-- ENDIF -->">{upd_list.DIFF_ARRAY}</div>
+      	</td>
       	<td align="center"><input type="text" name="bz_sort[{upd_list.BZ_ID}]" value="{upd_list.BZ_SORT}" size="5" /></td>
       </tr>
       <!-- END upd_list -->

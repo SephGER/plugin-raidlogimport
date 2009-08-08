@@ -118,14 +118,24 @@ class raidlogimport extends EQdkp_Admin
 		{
 			if(!($rli->config['attendence_raid'] AND ($ky === $att_raids['start'] OR $ky === $att_raids['end'])))
 			{
-			  if($_POST['checkraid'] == $user->lang['rli_calc_note_value'])
+			  if($_POST['checkraid'] == $user->lang['rli_calc_event_boss'])
 			  {
               	$rli->diff = $rai['diff'];
-              	$rai['event'] = $rli->get_diff_event($rai['event']);
-				$rai['value'] = $rli->get_raidvalue($rai['begin'], $rai['end'], $rai['bosskills'], $rai['timebonus'], $rai['event']);
+              	$temp = $rli->get_diff_event($rai['event']);
+              	$rai['event'] = $temp['event'];
+              	$rai['timebonus'] = $temp['timebonus'];
+				$rai['bosskills'] = $rli->get_diff_bosskills($rai['bosskills']);
+                $rai['value'] = $rli->get_raidvalue($rai['begin'], $rai['end'], $rai['bosskills'], $rai['timebonus'], $rai['event']);
 				if($rai['bosskills'] AND $rli->config['raidcount'] != 2)
 				{
-					$rai['note'] = $rli->get_note($rai['bosskills'], true);
+					$rai['note'] = $rli->get_note($rai['bosskills']);
+				}
+			  } elseif($_POST['checkraid'] == $user->lang['rli_calc_note_value']) {
+			  	$rli->diff = $rai['diff'];
+                $rai['value'] = $rli->get_raidvalue($rai['begin'], $rai['end'], $rai['bosskills'], $rai['timebonus'], $rai['event']);
+				if($rai['bosskills'] AND $rli->config['raidcount'] != 2)
+				{
+					$rai['note'] = $rli->get_note($rai['bosskills']);
 				}
 			  }
 			}
@@ -146,7 +156,7 @@ class raidlogimport extends EQdkp_Admin
 				'TIMEBONUS'	=> $rai['timebonus'],
 				'VALUE'		=> $rai['value'],
 				'NOTE'		=> $rai['note'],
-				'HEROIC'	=> ($rai['diff'] == 2) ? TRUE : FALSE
+				'DIFF'.$rai['diff'] => TRUE
 				)
 			);
 			if(is_array($rai['bosskills']))
@@ -154,7 +164,7 @@ class raidlogimport extends EQdkp_Admin
               foreach($rai['bosskills'] as $xy => $bk)
               {
                 $tpl->assign_block_vars('raids.bosskills', array(
-                    'BK_SELECT' => $rli->boss_dropdown($bk['name'], $ky, $xy),
+                    'BK_SELECT' => $rli->boss_dropdown($bk['note'], $ky, $xy),
                     'BK_TIME'   => date('H:i:s', $bk['time']),
                     'BK_DATE'   => date('d.m.y', $bk['time']),
                     'BK_VALUE'  => $bk['bonus'],
@@ -300,7 +310,7 @@ class raidlogimport extends EQdkp_Admin
 	function process_items()
 	{
 		global $db, $eqdkp, $user, $tpl, $pm;
-		global $myHtml, $rli;
+		global $myHtml, $rli, $jquery;
 
 		$rli->parse_post();
         $p = ($rli->data['loots']) ? max(array_keys($rli->data['loots'])) : 0;
@@ -423,7 +433,7 @@ class raidlogimport extends EQdkp_Admin
 			'LANGFROM'		=> $rli->data['log_lang'],
 			'LANGTO'		=> $rli->config['item_save_lang'],
 			'NEXT_BUTTON'	=> $next_button,
-			'TRANS_ITEMS'	=> ($eqdkp->config['default_game'] == 'WoW' || $eqdkp->config['default_game'] == 'RunesOfMagic') ? true : false)
+			'JBOX_RENAME_WINDOW' => $jquery->Dialog_URL('RenameItemsWindow', 'Rename Items', "renameitems.php?actual=0&langto='+langto+'&langfrom='+langfrom+'&count='+count+'", '440', '330'))
 		);
 
 		//language

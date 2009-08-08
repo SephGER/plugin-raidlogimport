@@ -71,6 +71,7 @@ if(!class_exists('rli'))
 					$this->bonus['zone'][$row['bz_id']]['string'] = explode($this->config['bz_parse'], $row['bz_string']);
 					$this->bonus['zone'][$row['bz_id']]['note'] = $row['bz_note'];
 					$this->bonus['zone'][$row['bz_id']]['bonus'] = $row['bz_bonus'];
+					$this->bonus['zone'][$row['bz_id']]['diff'] = $row['bz_tozone'];
 				}
 			}
 		  }
@@ -100,24 +101,17 @@ if(!class_exists('rli'))
 	{
 	  $retu = false;
 	  $this->get_bonus();
-	  if(!$bosskill)
-	  {
-        foreach ($this->bonus['zone'] as $zo)
-        {
-            if (in_array(trim($zone), $zo['string']))
-            {
+	  if(!$bosskill) {
+        foreach ($this->bonus['zone'] as $zo) {
+            if (in_array(trim($zone), $zo['string']) AND (($this->diff AND $this->diff == $zo['diff']) OR !($this->diff AND $zo['diff']))) {
                 $retu['event'] = trim($zo['note']);
                 $retu['timebonus'] = $zo['bonus'];
                 break;
             }
         }
-      }
-      else
-      {
-      	foreach($this->bonus['boss'] as $bo)
-      	{
-      		if(in_array(trim($zone), $bo['string']))
-      		{
+      } else {
+      	foreach($this->bonus['boss'] as $bo) {
+      		if(in_array(trim($zone), $bo['string'])) {
       			$retu['event'] = trim($bo['note']);
       			$retu['timebonus'] = $this->bonus['zone'][$bo['tozone']]['bonus'];
       			break;
@@ -131,21 +125,51 @@ if(!class_exists('rli'))
     function get_diff_event($event)
     {
       global $eqdkp;
-      if($eqdkp->config['default_game'] == 'WoW')
-      {
-    	if(strpos($event, $this->config['hero']))
-    	{
-    		$event = str_replace($this->config['hero'], '', $event);
-    	}
-    	else
-    	{
-    		$event = str_replace($this->config['non_hero'], '', $event);
-    	}
+      if($eqdkp->config['default_game'] == 'WoW') {
+      	for($i=1; $i<=4; $i++) {
+      		if(strpos($event, $this->config['diff_'.$i.'_suff'])) {
+      			$event = str_replace($this->config['diff_'.$i.'_suff'], '', $event);
+      			break;
+      		}
+      	}
       }
-      return $event.$this->suffix(true);
+      $this->get_bonus();
+      foreach($this->bonus['zone'] as $zkey => $zone) {
+      	if($zone['note'] == $event) {
+      		$temp['zone'] =  $zkey;
+      		break;
+      	}
+      }
+      foreach($this->bonus['zone'] as $zone) {
+      	if(count(array_intersect($this->bonus['zone'][$zkey]['string'], $zone['string'])) >= 1 AND (($this->diff AND $this->diff == $zone['diff']) OR !($this->diff AND $zone['diff']))) {
+      		$r['event'] = $zone['note'].$this->suffix(true);
+      		$r['timebonus'] = $zone['bonus'];
+      		break;
+      	}
+      }
+      return $r;
     }
 
-	function get_bosskills($bosskills, $begin, $end)
+    function get_diff_bosskills($bosskills)
+    {
+    	$this->get_bonus();
+    	foreach($bosskills as $key => $bosskill) {
+    		foreach($this->bonus['boss'] as $bkey => $boss) {
+    			if($bosskill['note'] == $boss['note']) {
+    				break;
+    			}
+    		}
+    		foreach($this->bonus['boss'] as $boss) {
+    			if(count(array_intersect($this->bonus['boss'][$bkey]['string'], $boss['string'])) >= 1 AND (($this->diff AND $this->diff == $this->bonus['zone'][$boss['tozone']]['diff']) OR (!$this->diff OR !$this->bonus['zone'][$boss['tozone']]['diff']))) {
+    				$bosskills[$key]['note'] = $boss['note'];
+    				$bosskills[$key]['bonus'] = $boss['bonus'];
+    			}
+    		}
+    	}
+    	return $bosskills;
+    }
+
+	function get_bosskills($bosskills, $begin, $end, $zone_name)
 	{
 		$rbosskills = array();
 		$i = 0;
@@ -156,11 +180,28 @@ if(!class_exists('rli'))
 			{
 				if(in_array($bosskill['name'], $boss['string']) AND $bosskill['time'] >= $begin AND $bosskill['time'] < $end)
 				{
-					$rbosskills[$i]['name'] = $bosskill['name'];
-					$rbosskills[$i]['bonus'] = $boss['bonus'];
-					$rbosskills[$i]['note'] = $boss['note'];
-					$rbosskills[$i]['time'] = $bosskill['time'];
-					break;
+					if($this->config['bz_dep_match'])
+					{
+						foreach($this->bonus['zone'] as $zone_key => $zone) {
+							if(in_array($zone_name, $zone['string']) AND (($this->diff AND $this->diff == $zone['diff']) OR !$this->diff)) {
+								break;
+							}
+						}
+						if($boss['tozone'] == $zone_key AND (($this->diff AND $this->diff == $this->bonus['zone'][$boss['tozone']]['diff']) OR !$this->diff)) {
+							$rbosskills[$i]['name'] = $bosskill['name'];
+							$rbosskills[$i]['bonus'] = $boss['bonus'];
+							$rbosskills[$i]['note'] = $boss['note'];
+							$rbosskills[$i]['time'] = $bosskill['time'];
+							break;
+						}
+					}
+					if(($this->diff AND $this->diff == $this->bonus['zone'][$boss['tozone']]['diff']) OR (!$this->diff OR !$this->bonus['zone'][$boss['tozone']]['diff'])) {
+						$rbosskills[$i]['name'] = $bosskill['name'];
+						$rbosskills[$i]['bonus'] = $boss['bonus'];
+						$rbosskills[$i]['note'] = $boss['note'];
+						$rbosskills[$i]['time'] = $bosskill['time'];
+						break;
+					}
 				}
 			}
 			$i++;
@@ -172,28 +213,17 @@ if(!class_exists('rli'))
 	{
 	  global $eqdkp;
 	  if($eqdkp->config['default_game'] == 'WoW' AND $append) {
-		return ($this->diff == 2) ? $this->config['hero'] : $this->config['non_hero'];
+		return $this->config['diff_'.$this->diff.'_suff'];
 	  } else {
 	  	return '';
 	  }
 	}
 
-	function get_note($bosskills, $nonote=false)
+	function get_note($bosskills)
 	{
 		$bosss = array();
 		foreach($bosskills as $bosskill)
 		{
-			if($nonote)
-			{
-				$this->get_bonus();
-				foreach($this->bonus['boss'] as $boss)
-				{
-					if(in_array($bosskill['name'], $boss['string']))
-					{
-						$bosskill['note'] = $boss['note'];
-					}
-				}
-			}
 			$bosss[] = $bosskill['note'].$this->suffix($this->config['dep_match']);
 		}
 		return implode(', ', $bosss);
@@ -445,7 +475,7 @@ if(!class_exists('rli'))
 				$raids[$key]['bosskills'] = array();
 				if(is_array($this->data['bosskills']))
 				{
-					$raids[$key]['bosskills'] = $this->get_bosskills($this->data['bosskills'], $raids[$key]['begin'], $raids[$key]['end']);
+					$raids[$key]['bosskills'] = $this->get_bosskills($this->data['bosskills'], $raids[$key]['begin'], $raids[$key]['end'], $zone['name']);
 				}
 
 				//diff
@@ -476,7 +506,7 @@ if(!class_exists('rli'))
 					$raids[$key]['bosskills'] = array();
 					if(is_array($this->data['bosskills']))
 					{
-						$raids[$key]['bosskills'] = $this->get_bosskills($this->data['bosskills'], $raids[$key]['begin'], $raids[$key]['end']);
+						$raids[$key]['bosskills'] = $this->get_bosskills($this->data['bosskills'], $raids[$key]['begin'], $raids[$key]['end'], $zone['name']);
 					}
 
 					//diff
@@ -504,7 +534,7 @@ if(!class_exists('rli'))
 						$raids[$key]['end'] = $temp['end'];
 
 						//bosskills
-						$raids[$key]['bosskills'] = $this->get_bosskills($this->data['bosskills'], $raids[$key]['begin'], $raids[$key]['end']);
+						$raids[$key]['bosskills'] = $this->get_bosskills($this->data['bosskills'], $raids[$key]['begin'], $raids[$key]['end'], $zone['name']);
 
 						//diff
 						$raids[$key]['diff'] = $this->diff;
@@ -581,7 +611,7 @@ if(!class_exists('rli'))
 						$raids[$key]['end'] = $temp['end'];
 
 						//bosskills
-						$raids[$key]['bosskills'] = $this->get_bosskills($this->data['bosskills'], $raids[$key]['begin'], $raids[$key]['end']);
+						$raids[$key]['bosskills'] = $this->get_bosskills($this->data['bosskills'], $raids[$key]['begin'], $raids[$key]['end'], $zone['name']);
 
 						//diff
 						$raids[$key]['diff'] = $this->diff;
@@ -672,7 +702,7 @@ if(!class_exists('rli'))
 		unset($this->data['zones']);
 	}
 
-	function boss_dropdown($bossname, $raid_key, $key)
+	function boss_dropdown($bossnote, $raid_key, $key)
 	{
 		global $myHtml;
 		$this->get_bonus();
@@ -680,21 +710,15 @@ if(!class_exists('rli'))
 		{
 		  foreach($this->bonus['boss'] as $boss)
 		  {
-			$this->bk_list[htmlspecialchars($boss['string'][0], ENT_QUOTES)] = htmlentities($boss['note'], ENT_QUOTES);
+		  	$note = htmlspecialchars($boss['note'], ENT_QUOTES);
+			$this->bk_list[$note] = htmlentities($boss['note'], ENT_QUOTES);
 			if($this->config['use_dkp'] & 1)
 			{
-				$this->bk_list[htmlspecialchars($boss['string'][0], ENT_QUOTES)] .= ' ('.$boss['bonus'].')';
+				$this->bk_list[$note] .= ' ('.$boss['bonus'].')';
 			}
 		  }
 		}
-		foreach($this->bonus['boss'] as $boss)
-		{
-			if(in_array($bossname, $boss['string']))
-			{
-				$sel = htmlspecialchars($boss['string'][0], ENT_QUOTES);
-			}
-		}
-		return $myHtml->DropDown('raids['.$raid_key.'][bosskills]['.$key.'][name]', $this->bk_list, $sel);
+		return $myHtml->DropDown('raids['.$raid_key.'][bosskills]['.$key.'][note]', $this->bk_list, $bossnote);
 	}
 
 	function calculate_attendence($times, $begin, $end)
@@ -908,7 +932,7 @@ if(!class_exists('rli'))
 	      		list($day, $month, $year) = explode('.', $bk['date']);
       			$bosskills[$u]['time'] = mktime($hour, $min, $sec, $month, $day, $year);
       			$bosskills[$u]['bonus'] = floatvalue($bk['bonus']);
-      			$bosskills[$u]['name'] = $bk['name'];
+      			$bosskills[$u]['note'] = $bk['note'];
       		}
       	  }
       	}
@@ -1415,7 +1439,6 @@ if(!class_exists('rli'))
 				$akey++;
 			}
 		}
-		var_dump($this->data['adjs']);
 		$key = 1;
 		foreach($xml->items->children() as $item)
 		{
@@ -1892,6 +1915,12 @@ if(!class_exists('rli'))
 		{
 			message_die($user->lang['parse_error'].' '.$user->lang[$this->config['parser'].'_format'].'<br />'.$message);
 		}
+	}
+	
+	//dummy
+	function check_eq_format($string)
+	{
+		return array(1 => true);
 	}
 
 	//dummy

@@ -43,7 +43,6 @@ class RLI_Settings extends EQdkp_Admin
 				'check'		=> 'a_raidlogimport_config')
 			)
 		);
-		$pC->InitAdmin();
 		$this->plug_upd = new PluginUpdater('raidlogimport', 'rli_', 'raidlogimport_config', 'includes');
 
 		//initialise upd_check
@@ -198,6 +197,7 @@ class RLI_Settings extends EQdkp_Admin
 				'att'		 	=> array('attendence_raid'),
 				'adj'			=> array('deactivate_adj'),
 				'am'			=> array('auto_minus', 'am_value_raids', 'am_allxraids'),
+				'parse'			=> array('bz_dep_match'),
 				'standby'		=> array('standby_absolute')
 			),
 			'normal'	=> array(
@@ -207,7 +207,7 @@ class RLI_Settings extends EQdkp_Admin
 				'att'			=> array('attendence_begin', 'attendence_end', 'attendence_time', 'att_note_begin', 'att_note_end'),
 				'loot'			=> array('loottime'),
 				'adj'			=> array('adj_parse'),
-				'hnh_suffix'	=> array('hero', 'non_hero'),
+				'hnh_suffix'	=> array('diff_1_suff', 'diff_2_suff', 'diff_3_suff', 'diff_4_suff'),
 				'parse'			=> array('bz_parse'),
 				'standby'		=> array('standby_value', 'standby_raidnote')
 			),

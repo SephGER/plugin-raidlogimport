@@ -46,7 +46,6 @@ $_REQUEST = stripslashes_array($_REQUEST);
 
 //include library
 require($eqdkp_root_path.'plugins/raidlogimport/includes/libloader.inc.php');
-$pC->pluginCore();
 
 $raidlogimport = $pm->get_plugin('raidlogimport');
 ?>

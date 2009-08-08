@@ -8,8 +8,10 @@
       	<th <!-- IF not L_DIFFICULTY -->colspan="2"<!-- ENDIF -->> {raids.COUNT}. {L_RAID}:&nbsp;&nbsp;&nbsp;
       		<img src="./../../../images/global/delete.png" alt="{L_DELETE}"><input type="checkbox" name="raids[{raids.COUNT}][delete]" value="true" title="{L_DELETE}" /></th>
         <!-- IF L_DIFFICULTY -->
-        <th>{L_DIFFICULTY}: <input type="radio" name="raids[{raids.COUNT}][diff]" value="2" <!-- IF raids.HEROIC --> checked="checked" <!-- ENDIF --> />{L_HEROIC} &nbsp;&nbsp;&nbsp;
-        				    <input type="radio" name="raids[{raids.COUNT}][diff]" value="1" <!-- IF not raids.HEROIC --> checked="checked" <!-- ENDIF --> />{L_NONHEROIC}
+        <th>{L_DIFFICULTY}: <input type="radio" name="raids[{raids.COUNT}][diff]" value="1" <!-- IF raids.DIFF1 --> checked="checked" <!-- ENDIF --> />{L_DIFF1} &nbsp;&nbsp;&nbsp;
+        				    <input type="radio" name="raids[{raids.COUNT}][diff]" value="2" <!-- IF raids.DIFF2 --> checked="checked" <!-- ENDIF --> />{L_DIFF2} &nbsp;&nbsp;&nbsp;
+        				    <input type="radio" name="raids[{raids.COUNT}][diff]" value="3" <!-- IF raids.DIFF3 --> checked="checked" <!-- ENDIF --> />{L_DIFF3} &nbsp;&nbsp;&nbsp;
+        				    <input type="radio" name="raids[{raids.COUNT}][diff]" value="4" <!-- IF raids.DIFF4 --> checked="checked" <!-- ENDIF --> />{L_DIFF4}
       	</th>
       	<!-- ENDIF -->
       </tr>
@@ -87,6 +89,7 @@
 	   	<th colspan="2"><input type="hidden" name="rest" value="{DATA}" />
             			<input type="submit" name="checkraid" value="{L_UPD}" class="mainoption" />
             			<input type="submit" name="checkraid" value="{L_RECALC_RAID}" class="mainoption" />
+                        <input type="submit" name="checkraid" value="{L_RECALC_RAIDN}" class="mainoption" />
                         <input type="submit" name="checkmem" value="{L_GO_ON} ({L_CHECKMEM})" class="mainoption" /></th>
 	</table>
 </form>
