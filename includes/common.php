@@ -15,7 +15,7 @@
  *
  * $Id$
  */
-
+ 
 if(!defined('EQDKP_INC'))
 {
 	header('HTTP/1.0 Not Found');

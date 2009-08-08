@@ -160,11 +160,13 @@ class RLI_Settings extends EQdkp_Admin
 			$raidcount[$i] = $user->lang['raidcount_'.$i];
 		}
 
-		//select null_sum
+		//select null_sum & standbyraidoptions
 		$null_sum = array();
+		$standby_raid = array();
 		for($i=0; $i<=2; $i++)
 		{
 			$null_sum[$i] = $user->lang['null_sum_'.$i];
+			$standby_raid[$i] = $user->lang['standby_raid_'.$i];
 		}
 
 		//select item_save_lang
@@ -186,7 +188,8 @@ class RLI_Settings extends EQdkp_Admin
 				'general' 		=> array('raidcount', 'null_sum', 'raid_note_time'),
 				'member'		=> array('new_member_rank', 'member_start_event', 'member_display'),
 				'parse'			=> array('parser'),
-				'loot'			=> array('item_save_lang')
+				'loot'			=> array('item_save_lang'),
+				'standby'		=> array('standby_raid')
 			),
 			'yes_no'	=> array(
 				'general'		=> array('rli_upd_check'),
@@ -194,17 +197,19 @@ class RLI_Settings extends EQdkp_Admin
 				'att'		 	=> array('attendence_raid'),
 				'adj'			=> array('deactivate_adj'),
 				'am'			=> array('auto_minus', 'am_value_raids', 'am_allxraids'),
-				'parse'			=> array('bz_dep_match')
+				'parse'			=> array('bz_dep_match'),
+				'standby'		=> array('standby_absolute')
 			),
 			'normal'	=> array(
 				'general'		=> array('timedkp_handle'),
-				'member'		=> array('member_miss_time', 'member_start'),
+				'member'		=> array('member_miss_time', 'member_start', 'member_raid'),
 				'am'			=> array('am_raidnum', 'am_value'),
 				'att'			=> array('attendence_begin', 'attendence_end', 'attendence_time', 'att_note_begin', 'att_note_end'),
 				'loot'			=> array('loottime'),
 				'adj'			=> array('adj_parse'),
 				'hnh_suffix'	=> array('diff_1_suff', 'diff_2_suff', 'diff_3_suff', 'diff_4_suff'),
-				'parse'			=> array('bz_parse')
+				'parse'			=> array('bz_parse'),
+				'standby'		=> array('standby_value', 'standby_raidnote')
 			),
 			'text' 		=> array(
 				'general'		=> array('rli_inst_version')
@@ -216,7 +221,8 @@ class RLI_Settings extends EQdkp_Admin
 				'general'		=> array('3:use_dkp'),
 				'loot'			=> array('2:ignore_dissed'),
 				'member'		=> array('3:s_member_rank'),
-				'parse'			=> array('2:event_boss')
+				'parse'			=> array('2:event_boss'),
+				'standby'		=> array('3:standby_dkptype', '2:standby_att')
 			)
 		);
 
