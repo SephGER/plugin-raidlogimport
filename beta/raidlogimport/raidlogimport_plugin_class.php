@@ -29,7 +29,7 @@ if ( !defined('EQDKP_INC') )
 class raidlogimport_Plugin_Class extends EQdkp_Plugin
 {
 	var $vstatus = 'Stable';
-	var $version = '0.5.5';
+	var $version = '0.5.6';
 	var $fwversion = '1.0.3';
 	var $jqversion = '2.0.1';
 
@@ -37,7 +37,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
     {
         global $eqdkp_root_path, $user, $SID, $conf_plus, $eqdkp;
 
-        $this->build = 5252;
+        $this->build = 5570;
 
         $this->eqdkp_plugin($pm);
         $this->pm->get_language_pack('raidlogimport');
@@ -129,7 +129,8 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 				'standby_att'		=> '0', 	//shall standbys get att start/end?
 				'standby_dkptype'	=> '0',		//which dkp shall standbys get? (1 boss, 2 time, 4 event)
 				'standby_raidnote'	=> $user->lang['standby_raid_note'],		//note for standby-raid
-				'member_raid'		=> '50'		//percent which member has to be in raid, to gain assignment to raid
+				'member_raid'		=> '50',		//percent which member has to be in raid, to gain assignment to raid
+				'bz_dep_match'		=> '0'		//zone-dependent bosstriggers
 			);
 			$this->insert_data($config_data);
 			//add default bz_data
@@ -150,8 +151,10 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 				if(strtolower($eqdkp->config['default_game']) == 'wow')
 				{
 					$config_data = array(
-						'hero'				=> ' (25)',	//suffix for hero
-						'non_hero'			=> ' (10)',	//suffix for non-hero
+						'diff_2_suff'		=> ' (25)',	//suffix for 25er
+						'diff_1_suff'		=> ' (10)',	//suffix for 10er
+						'diff_3_suff'		=> ' HM (10)', //suffix for 10er Hardmode
+						'diff_4_suff'		=> ' HM (25)', //suffix for 25er Hardmode
 						'dep_match'			=> '0'		//also append suffix to boss-note?
 					);
 					$this->insert_data($config_data);
