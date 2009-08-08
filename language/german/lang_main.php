@@ -223,7 +223,6 @@
 	$lang['member_start'] = 'Start-DKP, die ein Mitglied bekommt, wenn es automatisch erstellt wird.';
 	$lang['member_start_name'] = 'Start-DKP'; //value is used for reason of adjustment
 	$lang['member_start_event'] = 'Ereignis für die Start-DKP';
-	$lang['member_raid'] = 'Ab wie viel %Teilnahme soll das Mitglied dem Raid zugewiesen werden?';
 	$lang['att_note_begin'] = 'Raidnotiz des Anwesenheits-Start-Raids';
 	$lang['att_note_end'] = 'Raidnotiz des Anwesenheits-End-Raids';
 	$lang['raid_note_time']	= 'Raidnotiz der Raids pro Stunde';
@@ -236,22 +235,6 @@
     $lang['member_display_add'] = " <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td>Um die Ansicht \'".$lang['member_display_1']."\' zu verwenden, muss die GD-Lib vorhanden sein (PHP-Extension). Folgende GD-Lib wurde gefunden:<br />%s</td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/error.gif' alt='help'></a>";
     $lang['no_gd_lib'] = '<span class=\\\'negative\\\'>keine GD-Lib gefunden</span>';
     $lang['bz_dep_match'] = 'Sollen die Bosstrigger zonenabhängig ausgewertet werden?';
-    $lang['title_standby'] = 'Ersatzbank';
-    $lang['standby_raid'] = 'Sollen Ersatzbank-Mitglieder einem Raid zugeordnet werden?';
-    $lang['standby_raid_0'] = 'Nein, keinem.';
-    $lang['standby_raid_1'] = 'Ja, einen Extra-Raid anlegen.';
-    $lang['standby_raid_2'] = 'Ja, dem (den) normalem/n Raid(s).';
-    $lang['standby_absolute'] = 'Absolute DKP für die Ersatzbank vergeben?';
-    $lang['standby_value'] = 'Wie viel Prozent der DKP, bzw. wie viele DKP absolut, sollen Ersatzbankspieler bekommen?';
-	$lang['standby_att'] = 'Sollen Ersatzbankspieler Einlade/Ende-DKP bekommen?';
-	$lang['standby_att_1'] = 'Einlade-DKP';
-	$lang['standby_att_2'] = 'Ende-DKP';
-	$lang['standby_dkptype'] = 'Welche DKP sollen Ersatzbankspieler bekommen?';
-	$lang['standby_dkptype_1'] = $lang['use_dkp_1'];
-	$lang['standby_dkptype_2'] = $lang['use_dkp_2'];
-	$lang['standby_dkptype_4'] = $lang['use_dkp_4'];
-	$lang['standby_raidnote'] = 'Notiz des Raids für die Ersatzbank';
-	$lang['standby_raid_note'] = 'Ersatzbank';
 
     //portal
     $lang['p_rli_zone_display'] = 'Welche Zonen sollen angezeigt werden?';

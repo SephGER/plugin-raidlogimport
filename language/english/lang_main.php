@@ -222,7 +222,6 @@
 	$lang['member_start'] = 'Start-DKP a Member gains, when he is automatically created';
 	$lang['member_start_name'] = 'Start-DKP'; //value is used for reason of adjustment
 	$lang['member_start_event'] = 'Event for Start-DKP';
-	$lang['member_raid'] = 'How many % of attendance do a member need to get the particiaption in the raid?';
 	$lang['att_note_begin'] = 'raid note of the start-attendence-raid';
 	$lang['att_note_end'] = 'raid note of the end-attendence-raid';
 	$lang['raid_note_time']	= 'raid note of the raids per hour';
@@ -235,22 +234,6 @@
     $lang['member_display_add'] = " <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td>If you want to use <nobr>".$lang['member_display_1']."</nobr>, you must have the GD-lib (PHP-Extension).<br /> You are running the following GD-lib version:<br />%s</td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/error.gif' alt='warn'></a>";
 	 $lang['no_gd_lib'] = '<span class="negative">no GD-lib found</span>';
 	 $lang['bz_dep_match'] = 'Shall the bosstriggers be evaluated dependent on their zone?';
-    $lang['title_standby'] = 'Standby-Settings';
-    $lang['standby_raid'] = 'Shall the standby-members be assigned to a raid?';
-    $lang['standby_raid_0'] = 'No.';
-    $lang['standby_raid_1'] = 'Yes, create an extra raid.';
-    $lang['standby_raid_2'] = 'Yes, assign them to the normal raid(s).';
-    $lang['standby_absolute'] = 'Shall the standby DKP be absolute?';
-    $lang['standby_value'] = 'How much percent of the DKP or rather how many DKP absolute, shall the standby-members get?';
-	$lang['standby_att'] = 'Shall standby-members gain start/end-DKP?';
-	$lang['standby_att_1'] = 'Start-DKP';
-	$lang['standby_att_2'] = 'End-DKP';
-	$lang['standby_dkptype'] = 'Which DKP shall standby-members get?';
-	$lang['standby_dkptype_1'] = $lang['use_dkp_1'];
-	$lang['standby_dkptype_2'] = $lang['use_dkp_2'];
-	$lang['standby_dkptype_4'] = $lang['use_dkp_4'];
-	$lang['standby_raidnote'] = 'Note for standby-raid';
-	$lang['standby_raid_note'] = 'Standby';
 
     //portal
     $lang['p_rli_zone_display'] = 'Which zones shall be displayed?';
