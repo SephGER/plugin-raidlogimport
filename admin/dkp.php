@@ -82,9 +82,13 @@ class raidlogimport extends EQdkp_Admin
         }
         if(isset($_POST['log']))
         {
-          $_POST['log'] = trim(str_replace("&", "and", html_entity_decode($_POST['log'])));
-          $dkpstring   = utf8_encode($_POST['log']);
-          $raidxml     = simplexml_load_string($dkpstring);
+          if($rli->config['parser'] != 'eq') {
+          	$_POST['log'] = trim(str_replace("&", "and", html_entity_decode($_POST['log'])));
+          	$dkpstring   = utf8_encode($_POST['log']);
+          	$raidxml     = simplexml_load_string($dkpstring);
+          } else {
+          	$raidxml = nl2br($_POST['log']);
+          }
 		  if ($raidxml === false)
 		  {
 			  message_die($user->lang['xml_error']);
