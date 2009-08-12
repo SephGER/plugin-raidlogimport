@@ -60,7 +60,7 @@ function addUlduar()
 		$sql = "INSERT INTO __raidlogimport_bz
 				(bz_type, bz_string, bz_note, bz_bonus, bz_tozone, bz_sort)
 				VALUES
-				('".$bz[0]."', '".mysql_escape_string($bz[1])."', '".mysql_escape_string($bz[2])."', '".$bz[3]."', '".$bz[4]."', '".$bz[5]."');";
+				('".$bz[0]."', '".mysql_real_escape_string($bz[1])."', '".mysql_real_escape_string($bz[2])."', '".$bz[3]."', '".$bz[4]."', '".$bz[5]."');";
 		$db->query($sql);
 	}
 }
