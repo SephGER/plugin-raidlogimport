@@ -37,7 +37,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
     {
         global $eqdkp_root_path, $user, $SID, $conf_plus, $eqdkp;
 
-        $this->build = 5570;
+        $this->build = 5632;
 
         $this->eqdkp_plugin($pm);
         $this->pm->get_language_pack('raidlogimport');
@@ -137,7 +137,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 						$sql = "INSERT INTO __raidlogimport_bz
 								(bz_type, bz_string, bz_note, bz_bonus, bz_tozone, bz_sort)
 								VALUES
-								('".$bz[0]."', '".mysql_escape_string($bz[1])."', '".mysql_escape_string($bz[2])."', '".$bz[3]."', '".$bz[4]."', '".$bz[5]."');";
+								('".$bz[0]."', '".mysql_real_escape_string($bz[1])."', '".mysql_real_escape_string($bz[2])."', '".$bz[3]."', '".$bz[4]."', '".$bz[5]."');";
 						$this->add_sql(SQL_INSTALL, $sql);
 					}
 				}
