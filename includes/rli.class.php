@@ -663,6 +663,7 @@ if(!class_exists('rli'))
 	{
 		global $myHtml;
 		$this->get_bonus();
+		$bossnote = htmlspecialchars($bossnote, ENT_QUOTES);
 		if(!$this->bk_list)
 		{
 		  foreach($this->bonus['boss'] as $boss)
@@ -1308,9 +1309,14 @@ if(!class_exists('rli'))
 				}
 			}
             $times = $this->check_times($times);
+            $member_name = trim(utf8_decode($member->name));
+			if($times[0] === false)
+			{
+				$message .= sprintf($times[1], $member_name);
+			}
 			$note = (isset($member->note)) ? trim(utf8_decode($member->note)) : '';
 			$this->data['members'][$key] = array(
-				'name'	=> trim(utf8_decode($member->name)),
+				'name'	=> $member_name,
 				'race'	=> trim(utf8_decode($member->race)),
 				'class'	=> trim(utf8_decode($member->class)),
 				'level'	=> trim($member->level),
@@ -1336,6 +1342,9 @@ if(!class_exists('rli'))
 				'id'		=> (int) $id
 			);
 			$key++;
+		}
+		if($message) {
+			message_die($user->lang['parse_error'].'<br />'.$message);
 		}
 	}
 
@@ -1800,7 +1809,7 @@ if(!class_exists('rli'))
 			message_die($user->lang['parse_error'].' '.$user->lang[$this->config['parser'].'_format'].'<br />'.$message);
 		}
 	}
-	
+
 	//dummy
 	function check_eq_format($string)
 	{

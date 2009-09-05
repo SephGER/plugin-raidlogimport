@@ -21,6 +21,11 @@ if(!defined('EQDKP_INC'))
 	header('HTTP/1.0 404 Not Found');
 	exit;
 }
+
+$up_options = array(
+	'redirect' => 'settings.php'
+);
+
 $up_updates = array(
 	'0.4.0'	=> array(
 		'file'	=> '030-040.php',

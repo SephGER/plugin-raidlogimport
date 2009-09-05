@@ -53,14 +53,7 @@ class RLI_Settings extends EQdkp_Admin
 			'vstatus'	=> $pm->plugins['raidlogimport']->vstatus,
 			'build'		=> $pm->plugins['raidlogimport']->build
 		);
-		$cachedb = array(
-			'table'			=> 'raidlogimport_config',
-			'data'			=> $rli->config['rlic_data'],
-			'f_data'		=> 'rlic_data',
-			'lastcheck' 	=> $rli->config['rlic_lastcheck'],
-			'f_lastcheck'	=> 'rlic_lastcheck'
-		);
-		$this->upd_check = new PluginUpdCheck($pluginfo, $cachedb);
+		$this->upd_check = new PluginUpdCheck($pluginfo);
 		$this->upd_check->PerformUpdateCheck();
         $tpl->assign_vars(array(
         	'UPD_IK'	=> $this->plug_upd->OutputHTML(),
