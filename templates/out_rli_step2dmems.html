@@ -10,9 +10,10 @@ function hidetime(time_id) {
 </script>
 <style type="text/css">
 .raid {
-	position: relative;
+	position: absolute;
 	height: 20px;
 	background-color: red;
+	margin-top: -10px;
 	z-index: 9;
 }
 .boss {
@@ -20,7 +21,7 @@ function hidetime(time_id) {
 	height: 26px;
 	background-color: black;
 	width: 4px;
-	margin-top: -23px;
+	margin-top: -13px;
 	z-index: 10;
 }
 .time {
@@ -36,12 +37,12 @@ function hidetime(time_id) {
 	z-index: 12;
 }
 .time_scale {
-	position: relative;
+	position: absolute;
 	background-image: url(./../../../plugins/raidlogimport/images/time_scale.png);
 	background-repeat: repeat-x;
 	width: {PXTIME}px;
 	height: 18px;
-	margin-bottom: -18px;
+	margin-top: 10px;
 	z-index: 13;
 }
 
