@@ -203,7 +203,7 @@ if(!class_exists('rli_member'))
         	$m = ($raid['begin']-$width['begin'])/20;
         	settype($w, 'int');
         	settype($m, 'int');
-        	$this->raid_div .= "<div id='raid_".$key."_".$rkey."' class='raid' style='width: ".$w."; left: ".$m."px;'><div class='raid_left'></div><div class='raid_middle'><input type='hidden' name='members[".$key."][raid_list][]' value='".$rkey."' /></div><div class='raid_right'></div></div>";
+        	$this->raid_div .= "<div id='raid_".$key."_".$rkey."' class='raid' style='width: ".$w."px; margin-left: ".$m."px;'><div class='raid_left'></div><div class='raid_middle'><input type='hidden' name='members[".$key."][raid_list][]' value='".$rkey."' /></div><div class='raid_right'></div></div>";
         	foreach($raid['bosskills'] as $bkey => $boss) {
         		$m = ($boss['time']-$width['begin'])/20 - 4;
         		settype($m, 'int');
@@ -217,7 +217,7 @@ if(!class_exists('rli_member'))
         	$s = ($time['standby']) ? '_standby' : '';
         	$w = ($time['leave']-$time['join'])/20;
         	$ml = ($time['join']-$width['begin'])/20;
-        	$mt = 14;
+        	$mt = 4;
         	settype($w, 'int');
         	settype($ml, 'int');
         	$out .= "<div id='times_".$key."_".$tkey."' class='time".$s."' style='width: ".$w."px; margin-left: ".$ml."px; margin-top: -".$mt."px;'></div>";
