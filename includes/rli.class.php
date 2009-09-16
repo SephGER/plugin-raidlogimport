@@ -553,9 +553,17 @@ if(!class_exists('rli'))
 						//value
 						$raids[$key]['value'] = $this->get_raidvalue($raids[$key]['begin'], $raids[$key]['end'], $raids[$key]['bosskills'], $raids[$key]['timebonus'], $raids[$key]['event']);
 						$key++;
-				  }
-			}
-			break;
+					}				  	
+				} else {
+					$raids[$key]['begin'] = $zone['enter'];
+					$raids[$key]['end'] = $zone['leave'];
+					$raids[$key]['diff'] = $this->diff;
+					$temp = $this->get_event($zone['name']);
+					$raids[$key]['event'] = $temp['event'];
+					$raids[$key]['timebonus'] = $temp['timebonus'];
+					$raids[$key]['value'] = $this->get_raidvalue($raids[$key]['begin'], $raids[$key]['end'], array(), $raids[$key]['timebonus'], $raids[$key]['event']);
+				}
+				break;
 
 			}
 			case "3": //one raid per hour and one per boss
@@ -1800,7 +1808,7 @@ if(!class_exists('rli'))
 			message_die($user->lang['parse_error'].' '.$user->lang[$this->config['parser'].'_format'].'<br />'.$message);
 		}
 	}
-	
+
 	//dummy
 	function check_eq_format($string)
 	{
