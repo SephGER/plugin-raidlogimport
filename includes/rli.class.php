@@ -553,7 +553,7 @@ if(!class_exists('rli'))
 						//value
 						$raids[$key]['value'] = $this->get_raidvalue($raids[$key]['begin'], $raids[$key]['end'], $raids[$key]['bosskills'], $raids[$key]['timebonus'], $raids[$key]['event']);
 						$key++;
-					}				  	
+					}
 				} else {
 					$raids[$key]['begin'] = $zone['enter'];
 					$raids[$key]['end'] = $zone['leave'];
@@ -683,6 +683,7 @@ if(!class_exists('rli'))
 			}
 		  }
 		}
+		$bossnote = htmlentities($bossnote, ENT_QUOTES);
 		return $myHtml->DropDown('raids['.$raid_key.'][bosskills]['.$key.'][note]', $this->bk_list, $bossnote);
 	}
 
