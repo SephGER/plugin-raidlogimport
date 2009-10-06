@@ -1303,6 +1303,8 @@ if(!class_exists('rli'))
 		}
 		$key = 1;
 		$akey = 1;
+		$die = false;
+		$message = '';
 		foreach($xml->members->children() as $member)
 		{
 			$times = array();
@@ -1316,10 +1318,15 @@ if(!class_exists('rli'))
 					$times[] = array($type => $time);
 				}
 			}
+			$m_name = trim(utf8_decode($member->name));
             $times = $this->check_times($times);
+            if($times[0] === false) {
+            	$die = true;
+            	$message .= sprintf($times[1], $m_name);
+            }
 			$note = (isset($member->note)) ? trim(utf8_decode($member->note)) : '';
 			$this->data['members'][$key] = array(
-				'name'	=> trim(utf8_decode($member->name)),
+				'name'	=> $m_name,
 				'race'	=> trim(utf8_decode($member->race)),
 				'class'	=> trim(utf8_decode($member->class)),
 				'level'	=> trim($member->level),
@@ -1331,6 +1338,9 @@ if(!class_exists('rli'))
 				$this->data['adjs'][$akey]['member'] = utf8_decode($member->name);
 				$akey++;
 			}
+		}
+		if($die) {
+			message_die($message);
 		}
 		$key = 1;
 		foreach($xml->items->children() as $item)
@@ -1503,7 +1513,7 @@ if(!class_exists('rli'))
 		$i = 0;
 		foreach ($xml->BossKills->children() as $bosskill)
 		{
-			$this->data['bosskills'][$i]['name'] = trim($bosskill->name);
+			$this->data['bosskills'][$i]['name'] = trim(utf8_decode($bosskill->name));
 			$this->data['bosskills'][$i]['time'] = strtotime($bosskill->time);
 			$i++;
 		}
