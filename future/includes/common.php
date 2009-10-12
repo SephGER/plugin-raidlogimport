@@ -23,7 +23,7 @@ if(!defined('EQDKP_INC'))
 }
 
 
-global $eqdkp_root_path;
+global $eqdkp_root_path, $libloader;
 
 include_once($eqdkp_root_path.'common.php');
 if(!version_compare(phpversion(), '5.1.2', '>='))
@@ -42,10 +42,6 @@ $_FILES = stripslashes_array($_FILES);
 $_GET = stripslashes_array($_GET);
 $_POST = stripslashes_array($_POST);
 $_REQUEST = stripslashes_array($_REQUEST);
-
-//include library
-require($eqdkp_root_path.'plugins/raidlogimport/includes/libloader.inc.php');
-$pC->pluginCore();
 
 $raidlogimport = $pm->get_plugin('raidlogimport');
 ?>

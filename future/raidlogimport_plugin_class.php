@@ -28,12 +28,11 @@ if ( !defined('EQDKP_INC') )
 
 class raidlogimport_Plugin_Class extends EQdkp_Plugin
 {
-	var $vstatus = 'Stable';
-	var $version = '0.6.0.0';
-	var $fwversion = '1.0.3';
-	var $jqversion = '2.0.1';
+	private $vstatus = 'Stable';
+	private $version = '0.6.0.0';
+	private $build = 0;
 
-    function raidlogimport_plugin_class($pm)
+    public function raidlogimport_plugin_class($pm)
     {
         global $eqdkp_root_path, $user, $SID, $conf_plus, $eqdkp;
 
@@ -48,6 +47,14 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
         	include($lang_file);
         	$user->lang = (@is_array($lang)) ? array_merge($user->lang, $lang) : $user->lang;
         }
+        
+        $this->add_dependency(
+          array(
+        	'plus_version' => '0.7',
+        	'lib_version' => '2.0',
+        	'games'	=> array('wow', 'eq', 'rom')
+          )
+        );
 
         $this->add_data(array(
             'name'          => 'Raid-Log-Import',
@@ -55,15 +62,14 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
             'path'          => 'raidlogimport',
             'contact'       => 'bloodyhoof@gmx.net',
             'template_path' => 'plugins/raidlogimport/templates/',
-            'version'       => $this->version)
-        );
-
-    	$this->additional_data = array(
+            'version'       => $this->version,
         	'author'            => 'Hoofy',
 	        'description'       => $user->lang['raidlogimport_short_desc'],
 	        'long_description'  => $user->lang['raidlogimport_long_desc'],
 	        'homepage'          => 'http://www.eqdkp-plus.com',
 	        'manuallink'        => ($user->lang_name != 'german') ? false : $eqdkp_root_path . 'plugins/raidlogimport/language/'.$user->lang_name.'/Manual.pdf',
+	        'plus_version'		=> '0.7',
+	        )
 	    );
 
 		//permissions
@@ -87,7 +93,6 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
     	{
 			//set permissions for installing user
 			$perms = array('730', '731', '732', '733');
-			$this->set_perms($perms);
 
 			//insert config-data
 			$config_data = array(
@@ -269,23 +274,6 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
         return;
     }
 
-    function set_perms($perms, $perm_value='Y')
-    {
-    	global $table_prefix, $db, $user;
-		if($user->data['user_id'] != ANONYMOUS)
-		{
-			foreach ($perms as $perm)
-			{
-		    	$sql = "INSERT INTO `__auth_users` VALUES('".$user->data['user_id']."', '".$perm."', '".$perm_value."');";
-    			$this->add_sql(SQL_INSTALL, $sql);
-    			$sql = "UPDATE `".$table_prefix."auth_users`
-    					SET auth_setting='".$perm_value."'
-    					WHERE user_id='".$user->data['user_id']."' AND auth_id='".$perm."';";
-    			$this->add_sql(SQL_INSTALL, $sql);
-  			}
-		}
-	}
-
 	function insert_data($data)
 	{
 		global $db;
@@ -297,6 +285,10 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 				     ('".$config_name."', '".$config_value."');";
 			$this->add_sql(SQL_INSTALL, $sql);
 		}
+	}
+	
+	public function get_info($varname) {
+		return $this->$varname;
 	}
 }
 ?>

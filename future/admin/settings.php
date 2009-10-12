@@ -25,7 +25,7 @@ class RLI_Settings extends EQdkp_Admin
 {
 	function rli_settings()
 	{
-		global $db, $pm, $tpl, $user, $eqdkp, $SID, $pC, $rli;
+		global $db, $pm, $tpl, $user, $eqdkp, $SID, $rli;
 		parent::eqdkp_admin();
 
 		$this->assoc_buttons(array(
@@ -43,7 +43,6 @@ class RLI_Settings extends EQdkp_Admin
 				'check'		=> 'a_raidlogimport_config')
 			)
 		);
-		$pC->InitAdmin();
 		$this->plug_upd = new PluginUpdater('raidlogimport', 'rli_', 'raidlogimport_config', 'includes');
 
 		//initialise upd_check
@@ -51,8 +50,8 @@ class RLI_Settings extends EQdkp_Admin
 			'name'		=> 'raidlogimport',
 			'version'	=> $pm->get_data('raidlogimport', 'version'),
 			'enabled'	=> $rli->config('rli_upd_check'),
-			'vstatus'	=> $pm->plugins['raidlogimport']->vstatus,
-			'build'		=> $pm->plugins['raidlogimport']->build
+			'vstatus'	=> $pm->plugins['raidlogimport']->get_info('vstatus'),
+			'build'		=> $pm->plugins['raidlogimport']->get_info('build')
 		);
 		$cachedb = array(
 			'table'			=> 'raidlogimport_config',
@@ -126,7 +125,7 @@ class RLI_Settings extends EQdkp_Admin
 
 	function display_form($messages=array())
 	{
-		global $db, $user, $tpl, $eqdkp, $pm, $SID, $rli, $myHtml, $jquery;
+		global $db, $user, $tpl, $eqdkp, $pm, $SID, $rli, $html, $jquery;
 		if($messages)
 		{
 			$rli->__construct();
@@ -234,7 +233,7 @@ class RLI_Settings extends EQdkp_Admin
 					switch($display_type)
 					{
 						case 'select':
-							$holder[$holde][$k]['value'] = $myHtml->DropDown($name, $$name, $rli->config($name));
+							$holder[$holde][$k]['value'] = $html->DropDown($name, $$name, $rli->config($name));
 							$holder[$holde][$k]['name'] = $name;
 							break;
 
