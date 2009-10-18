@@ -28,9 +28,9 @@ if ( !defined('EQDKP_INC') )
 
 class raidlogimport_Plugin_Class extends EQdkp_Plugin
 {
-	private $vstatus = 'Stable';
-	private $version = '0.6.0.0';
-	private $build = 0;
+	public $vstatus = 'Stable';
+	public $version = '0.6.0.0';
+	public $build = 0;
 
     public function raidlogimport_plugin_class($pm)
     {
@@ -47,7 +47,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
         	include($lang_file);
         	$user->lang = (@is_array($lang)) ? array_merge($user->lang, $lang) : $user->lang;
         }
-        
+
         $this->add_dependency(
           array(
         	'plus_version' => '0.7',
@@ -286,7 +286,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 			$this->add_sql(SQL_INSTALL, $sql);
 		}
 	}
-	
+
 	public function get_info($varname) {
 		return $this->$varname;
 	}
