@@ -1347,7 +1347,7 @@ if(!class_exists('rli'))
 				'name'		=> trim(utf8_decode($item->name)),
 				'time'		=> (int) trim($item->time),
 				'player'	=> trim(utf8_decode($item->member)),
-				'dkp'		=> (int) $cost,
+				'dkp'		=> floatvalue($cost),
 				'id'		=> (int) $id
 			);
 			$key++;
@@ -1526,11 +1526,11 @@ if(!class_exists('rli'))
 			$this->data['loots'][$i]['time']    = strtotime($loot->Time);
 			if (array_key_exists('Costs',$loot))
 			{
-				$this->data['loots'][$i]['dkp'] = (int)$loot->Costs;
+				$this->data['loots'][$i]['dkp'] = floatvalue($loot->Costs);
 			}
 			else
 			{
-				$this->data['loots'][$i]['dkp'] = (int)$loot->Note;
+				$this->data['loots'][$i]['dkp'] = floatvalue($loot->Note);
 			}
 			if((($this->config['ignore_dissed'] == 1 OR $this->config['ignore_dissed'] == 3) AND $this->data['loots'][$i]['player'] == 'disenchanted') OR
 			   (($this->config['ignore_dissed'] == 2 OR $this->config['ignore_dissed'] == 3) AND $this->data['loots'][$i]['player'] == 'bank'))
@@ -1766,11 +1766,11 @@ if(!class_exists('rli'))
 			$this->data['loots'][$i]['time']    = strtotime($loot->Time);
 			if (array_key_exists('Costs',$loot))
 			{
-				$this->data['loots'][$i]['dkp'] = (int)$loot->Costs;
+				$this->data['loots'][$i]['dkp'] = floatvalue($loot->Costs);
 			}
 			else
 			{
-				$this->data['loots'][$i]['dkp'] = (int)$loot->Note;
+				$this->data['loots'][$i]['dkp'] = floatvalue($loot->Note);
 			}
 			if((($this->config['ignore_dissed'] == 1 OR $this->config['ignore_dissed'] == 3) AND $this->data['loots'][$i]['player'] == 'disenchanted') OR
 			   (($this->config['ignore_dissed'] == 2 OR $this->config['ignore_dissed'] == 3) AND $this->data['loots'][$i]['player'] == 'bank'))
