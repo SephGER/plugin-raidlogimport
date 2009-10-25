@@ -41,7 +41,7 @@ if(strtolower($eqdkp->config['default_game']) == 'wow')
 	{
 		$url_lang = ($lang == 'en') ? 'www' : $lang;
 		$item_xml = simplexml_load_string(itemstats_read_url('http://'.$url_lang.'.wowhead.com/?item='.$itemID.'&xml', $lang));
-		return utf8_decode(trim($item_xml->item->name));
+		return str_replace('[','',str_replace(']','',utf8_decode(trim($item_xml->item->name))));
 	}
 }
 elseif(strtolower($eqdkp->config['default_game']) == 'runesofmagic')
