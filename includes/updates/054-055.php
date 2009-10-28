@@ -44,12 +44,14 @@ $updateSQL = array(
 function add_coliseum_boss_trigger()
 {
 	global $db, $eqdkp;
-	$result = $db->query("SELECT bz_id, bz_tozone FROM __raidlogimport_bz WHERE bz_string = 'Trial of the Crusader';");
+	$result = $db->query("SELECT bz_string, bz_id, bz_tozone FROM __raidlogimport_bz WHERE bz_type = 'zone';");
 	while( $row =  $db->fetch_record($result) ) {
-		if($row['bz_tozone'] == 2) {
-			$norm = $row['bz_id'];
-		} elseif($row['bz_tozone'] == 4) {
-			$hm = $row['bz_id'];
+		if($row['bz_string'] == 'Trial of the Crusader') {
+			if($row['bz_tozone'] == 2) {
+				$norm = $row['bz_id'];
+			} elseif($row['bz_tozone'] == 4) {
+				$hm = $row['bz_id'];
+			}
 		} elseif($row['bz_string'] == 'Vault of Archavon') {
 			$archa = $row['bz_id'];
 		}
