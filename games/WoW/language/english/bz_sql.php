@@ -5,15 +5,15 @@
  * Link:		http://creativecommons.org/licenses/by-nc-sa/3.0/
  * -----------------------------------------------------------------------
  * Began:       2008
- * Date:        $Date$
+ * Date:        $Date: 2009-08-07 15:48:04 +0200 (Fr, 07 Aug 2009) $
  * -----------------------------------------------------------------------
- * @author      $Author$
+ * @author      $Author: hoofy_leon $
  * @copyright   2008-2009 hoofy_leon
  * @link        http://eqdkp-plus.com
  * @package     raidlogimport
- * @version     $Rev$
+ * @version     $Rev: 5563 $
  *
- * $Id$
+ * $Id: bz_sql.php 5563 2009-08-07 13:48:04Z hoofy_leon $
  */
 $bz_data  = array(
 #			    type  |  string   | note  |dkp|tozone|order
@@ -71,5 +71,7 @@ $bz_data  = array(
     51 => array('boss', 'Twin Val\'kyr', 'Twin Val\'kyr HM', '3', '48', '3'),
     52 => array('boss', 'Anub\'arak', 'Anub\'arak HM', '4', '48', '4'),
     53 => array('boss', 'Koralon the Flame Watcher', 'Koralon', '2', '24', '2')
+    54 => array('zone', 'Onyxia\'s Lair', 'Onyxia', '5', '0', '7'),
+    55 => array('boss', 'Onyxia', 'Onyxia', '2', '55', '0')
 );
 ?>

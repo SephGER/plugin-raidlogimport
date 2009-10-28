@@ -37,7 +37,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
     {
         global $eqdkp_root_path, $user, $SID, $conf_plus, $eqdkp;
 
-        $this->build = 6295;
+        $this->build = 6303;
 
         $this->eqdkp_plugin($pm);
         $this->pm->get_language_pack('raidlogimport');
@@ -129,7 +129,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 			//add default bz_data
 			if(strtolower($eqdkp->config['default_game']) == 'wow' or strtolower($eqdkp->config['default_game']) == 'runesofmagic')
 			{
-				include_once($eqdkp_root_path.'plugins/raidlogimport/games/'.$eqdkp->config['default_game'].'/bz_sql.php');
+				include_once($eqdkp_root_path.'plugins/raidlogimport/games/'.$eqdkp->config['default_game'].'/language/'.$user->lang_name.'/bz_sql.php');
 				if(is_array($bz_data))
 				{
 					foreach($bz_data as $bz)
