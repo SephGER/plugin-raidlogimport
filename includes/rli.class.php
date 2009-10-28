@@ -684,7 +684,6 @@ if(!class_exists('rli'))
 			}
 		  }
 		}
-		$bossnote = htmlentities($bossnote, ENT_QUOTES);
 		return $myHtml->DropDown('raids['.$raid_key.'][bosskills]['.$key.'][note]', $this->bk_list, $bossnote);
 	}
 
