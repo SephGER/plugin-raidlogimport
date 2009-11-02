@@ -402,7 +402,7 @@ if(!class_exists('rli'))
 			unset($tempattdkp);
 		}
 		$dkp = $timedkp + $bossdkp + $eventdkp + $attdkp;
-		return round($dkp,2);
+		return runden($dkp);
 	}
 
 	function get_bosskill_raidtime($begin, $end, $bosskill, $bosskill_before, $bosskill_after)
@@ -970,7 +970,7 @@ if(!class_exists('rli'))
 						{
 							$dkp = $dkp + (($mem['att_end']) ? $this->config['attendence_end'] : 0);
 						}
-						$dkp = round($dkp, 2);
+						$dkp = runden($dkp);
 						if($dkp <  $raid['value'])
 						{	//add an adjustment
                           $dkp -= $raid['value'];
@@ -1910,7 +1910,7 @@ if(!class_exists('rli'))
            	  if(!(in_array($i, $adj_ra) AND $this->config['attendence_raid']))
            	  {
            		$loot_select .= "<option value='".$i."'";
-           		if($this->loot_in_raid($ra['begin'], $ra['end'], $loot['time']))
+           		if(($this->loot_in_raid($ra['begin'], $ra['end'], $loot['time']) AND !$loot['raid']) OR $i == $loot['raid'])
            		{
            			$loot_select .= ' selected="selected"';
            		}
@@ -1927,9 +1927,9 @@ if(!class_exists('rli'))
 			$tpl->assign_block_vars('loots', array(
                 'LOOTNAME'  => $loot['name'],
                 'ITEMID'    => $loot['id'],
-                'LOOTER'    => $lm_s,#$myHtml->DropDown("loots[".$key."][player]", $members['name'], $loot['player'], '', '', true),
+                'LOOTER'    => $lm_s,
                 'RAID'      => $loot_select."</select>",
-                'LOOTDKP'   => round($loot['dkp'], 2),
+                'LOOTDKP'   => runden($loot['dkp']),
                 'KEY'       => $key,
                 'CLASS'     => $eqdkp->switch_row_class(),
                 'READONLY'	=> ($loot['name'] == $user->lang['am_name']) ? 'readonly="readonly"' : '')
@@ -1983,7 +1983,7 @@ if(!class_exists('rli'))
 			$count = ($count) ? $count : 1; //prevent zero-division
 			$pre = (float) $raid['value'];
 			$raid['value'] = $raid['value']/$count;
-			$raid['value'] = round($raid['value'], 2);
+			$raid['value'] = runden($raid['value']);
 			if($raid_key AND $key == $raid_key)
 			{
 				if($returncount)
