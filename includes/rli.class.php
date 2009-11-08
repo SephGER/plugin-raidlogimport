@@ -147,7 +147,7 @@ if(!class_exists('rli'))
 
 	public function boss_dropdown($bossname, $raid_key, $key)
 	{
-		global $myHtml;
+		global $html;
 		$this->get_bonus();
 		if(!$this->bk_list)
 		{
@@ -167,7 +167,7 @@ if(!class_exists('rli'))
 				$sel = htmlspecialchars($boss['string'][0], ENT_QUOTES);
 			}
 		}
-		return $myHtml->DropDown('raids['.$raid_key.'][bosskills]['.$key.'][name]', $this->bk_list, $sel);
+		return $html->DropDown('raids['.$raid_key.'][bosskills]['.$key.'][name]', $this->bk_list, $sel);
 	}
 
 	function auto_minus_ra($actualraidvalue)
@@ -436,7 +436,7 @@ if(!class_exists('rli'))
 
 	function iteminput2tpl($loot_cache, $start, $end, $members, $aliase)
 	{
-		global $db, $tpl, $myHtml, $eqdkp, $user;
+		global $db, $tpl, $html, $eqdkp, $user;
 
 		if($this->config['s_member_rank'] & 2)
 		{
@@ -496,7 +496,7 @@ if(!class_exists('rli'))
 			$tpl->assign_block_vars('loots', array(
                 'LOOTNAME'  => $loot['name'],
                 'ITEMID'    => $loot['id'],
-                'LOOTER'    => $lm_s,#$myHtml->DropDown("loots[".$key."][player]", $members['name'], $loot['player'], '', '', true),
+                'LOOTER'    => $lm_s,#$html->DropDown("loots[".$key."][player]", $members['name'], $loot['player'], '', '', true),
                 'RAID'      => $loot_select."</select>",
                 'LOOTDKP'   => round($loot['dkp'], 2),
                 'KEY'       => $key,

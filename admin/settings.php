@@ -131,7 +131,7 @@ class RLI_Settings extends EQdkp_Admin
 			$rli->__construct();
 			foreach($messages as $name)
 			{
-				System_Message($name, $user->lang['bz_save_suc'], 'green');
+				$eqdkp->message($name, $user->lang['bz_save_suc'], 'green');
 			}
 		}
 		//select ranks

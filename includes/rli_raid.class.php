@@ -183,7 +183,7 @@ if(!class_exists('rli_raid'))
 
 	public function display($with_form=false)
 	{
-		global $tpl, $myHtml, $eqdkp, $rli;
+		global $tpl, $html, $eqdkp, $rli;
 
 		foreach($this->raids as $ky => $rai)
 		{
@@ -204,7 +204,7 @@ if(!class_exists('rli_raid'))
                 'START_TIME'=> date('H:i:s', $rai['begin']),
                 'END_DATE'	=> date('d.m.y', $rai['end']),
                 'END_TIME'	=> date('H:i:s', $rai['end']),
-				'EVENT'		=> ($with_form) ? $myHtml->DropDown('raids['.$ky.'][event]', $rli->get_events('name'), $rai['event']) : $rai['event'],
+				'EVENT'		=> ($with_form) ? $html->DropDown('raids['.$ky.'][event]', $rli->get_events('name'), $rai['event']) : $rai['event'],
 				'TIMEBONUS'	=> $rai['timebonus'],
 				'VALUE'		=> $rai['value'],
 				'NOTE'		=> $rai['note'],

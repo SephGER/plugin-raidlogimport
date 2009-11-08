@@ -189,11 +189,14 @@ if(!class_exists('rli_member'))
     	global $rli, $tpl, $html;
 
     	$width = $rli->raid->get_start_end();
-    	$px_time = (($width['end'] - $width['begin']) / 20) + 10;
+    	$px_time = (($width['end'] - $width['begin']) / 20);
     	settype($px_time, 'int');
-    	$tpl->assign_var('PXTIME', $px_time);
+    	$tpl->assign_vars(array(
+    		'PXTIME' => $px_time,
+    		'RAIDSTART' => $width['begin'])
+    	);
 
-    	$out = '<td id="member_'.$key.'" onmouseover="javascript:showtime(\'time_scale_'.$key.'\')" onmouseout="javascript:hidetime(\'time_scale_'.$key.'\')">';
+    	$out = '<td id="member_'.$key.'" onmouseover="showtime(\'time_scale_'.$key.'\')" onmouseout="hidetime(\'time_scale_'.$key.'\')">';
         $raids = $rli->raid->get_data();
 
         if(!$this->raid_div) {
@@ -203,7 +206,7 @@ if(!class_exists('rli_member'))
         	$m = ($raid['begin']-$width['begin'])/20;
         	settype($w, 'int');
         	settype($m, 'int');
-        	$this->raid_div .= "<div id='raid_".$key."_".$rkey."' class='raid' style='width: ".$w."px; margin-left: ".$m."px;'><div class='raid_left'></div><div class='raid_middle'><input type='hidden' name='members[".$key."][raid_list][]' value='".$rkey."' /></div><div class='raid_right'></div></div>";
+        	$this->raid_div .= "<div id='raid_".$key."_".$rkey."' class='raid' style='width:".$w."px; margin-left: ".$m."px;'><div class='raid_left'></div><div class='raid_middle'><input type='hidden' name='members[".$key."][raid_list][]' value='".$rkey."' /></div><div class='raid_right'></div></div>";
         	foreach($raid['bosskills'] as $bkey => $boss) {
         		$m = ($boss['time']-$width['begin'])/20 - 4;
         		settype($m, 'int');
@@ -213,21 +216,23 @@ if(!class_exists('rli_member'))
           }
         }
         $out .= $this->raid_div;
-        foreach($this->members[$key]['times'] as $tkey => $time) {
+        $tkey = 0;
+        foreach($this->members[$key]['times'] as $time) {
         	$s = ($time['standby']) ? '_standby' : '';
         	$w = ($time['leave']-$time['join'])/20;
         	$ml = ($time['join']-$width['begin'])/20;
-        	$mt = 4;
         	settype($w, 'int');
         	settype($ml, 'int');
-        	$out .= "<div id='times_".$key."_".$tkey."' class='time".$s."' style='width: ".$w."px; margin-left: ".$ml."px; margin-top: -".$mt."px;'></div>";
-        	$out .= "<div class='time".$s."_left'></div><div class='time".$s."_middle'>";
-        	$out .= "<input type='hidden' name='members[".$key."][times][".$tkey."][join]' value='".$time['join']."' />";
-        	$out .= "<input type='hidden' name='members[".$key."][times][".$tkey."][leave]' value='".$time['leave']."' />";
+        	$out .= "<div id='times_".$key."_".$tkey."' class='time".$s."' style='width:".$w."px; margin-left: ".$ml."px;'>";
+        	$out .= "<div class='time_left' onmousedown='scale_start(\"".$key."\", \"".$tkey."\", \"left\", ".$ml.", ".$px_time.")'></div>";
+        	$out .= "<div class='time_middle' onmousedown='scale_start(\"".$key."\", \"".$tkey."\", \"middle\", ".$ml.", ".$px_time.")'>";
+        	$out .= "<input type='hidden' name='members[".$key."][times][".$tkey."][join]' value='".$time['join']."' id='times_".$key."_".$tkey."j' />";
+        	$out .= "<input type='hidden' name='members[".$key."][times][".$tkey."][leave]' value='".$time['leave']."' id='times_".$key."_".$tkey."l' />";
         	if($time['standby']) {
         		$out .= "<input type='hidden' name='members[".$key."][times][".$tkey."][extra]' value='standby' />";
         	}
-        	$out .= "</div><div class='time".$s."_right'></div></div>";
+        	$out .= "</div><div class='time_right' onmousedown='scale_start(\"".$key."\", \"".$tkey."\", \"right\", ".$ml.", ".$px_time.")'></div></div>";
+        	$tkey++;
         }
         $this->create_timebar($width['begin'], $width['end'], $px_time);
         $out .= "<div id='time_scale_".$key."' class='time_scale_hide'></div></td>";

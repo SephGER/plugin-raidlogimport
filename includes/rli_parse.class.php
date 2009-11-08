@@ -90,6 +90,11 @@ if(!class_exists('rli_parse'))
 		}
 		$rli->raid->give($raids);
 	}
+	
+	private function parse_members()
+	{
+		var_dump($_POST['members']);
+	}
 
 	private function load_members()
 	{
