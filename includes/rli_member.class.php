@@ -186,17 +186,14 @@ if(!class_exists('rli_member'))
 
     private function detailed_times_list($key)
     {
-    	global $rli, $tpl, $html;
+    	global $rli, $tpl, $html, $eqdkp_root_path, $jquery;
 
     	$width = $rli->raid->get_start_end();
     	$px_time = (($width['end'] - $width['begin']) / 20);
     	settype($px_time, 'int');
-    	$tpl->assign_vars(array(
-    		'PXTIME' => $px_time,
-    		'RAIDSTART' => $width['begin'])
-    	);
 
     	$out = '<td id="member_'.$key.'" onmouseover="showtime(\'time_scale_'.$key.'\')" onmouseout="hidetime(\'time_scale_'.$key.'\')">';
+        #$out .= $jquery->RightClickMenu('right_click_'.$key, 'member_'.$key, array('rc_'.$key.'_0' => array('name' => 'Time hinzufügen', 'jscode' => 'alert("bla")')));
         $raids = $rli->raid->get_data();
 
         if(!$this->raid_div) {
@@ -215,7 +212,7 @@ if(!class_exists('rli_member'))
         	}
           }
         }
-        $out .= $this->raid_div;
+        $out .= $this->raid_div."<div id='times_".$key."' onmouseover='set_member(\"".$key."\")' onmouseout='unset_member()'>";
         $tkey = 0;
         foreach($this->members[$key]['times'] as $time) {
         	$s = ($time['standby']) ? '_standby' : '';
@@ -224,18 +221,51 @@ if(!class_exists('rli_member'))
         	settype($w, 'int');
         	settype($ml, 'int');
         	$out .= "<div id='times_".$key."_".$tkey."' class='time".$s."' style='width:".$w."px; margin-left: ".$ml."px;'>";
-        	$out .= "<div class='time_left' onmousedown='scale_start(\"".$key."\", \"".$tkey."\", \"left\", ".$ml.", ".$px_time.")'></div>";
-        	$out .= "<div class='time_middle' onmousedown='scale_start(\"".$key."\", \"".$tkey."\", \"middle\", ".$ml.", ".$px_time.")'>";
+        	$out .= "<div class='time_left' onmousedown='scale_start(\"".$tkey."\", \"left\", ".$ml.", ".$px_time.")'></div>";
+        	$out .= "<div class='time_middle' onmousedown='scale_start(\"".$tkey."\", \"middle\", ".$ml.", ".$px_time.")'>";
+        	$out .= "<div class='die_id' style='display: none;'>times_".$key."_".$tkey."</div>";
         	$out .= "<input type='hidden' name='members[".$key."][times][".$tkey."][join]' value='".$time['join']."' id='times_".$key."_".$tkey."j' />";
         	$out .= "<input type='hidden' name='members[".$key."][times][".$tkey."][leave]' value='".$time['leave']."' id='times_".$key."_".$tkey."l' />";
         	if($time['standby']) {
-        		$out .= "<input type='hidden' name='members[".$key."][times][".$tkey."][extra]' value='standby' />";
+        		$out .= "<input type='hidden' name='members[".$key."][times][".$tkey."][extra]' value='standby' id='times_".key."_".$tkey."s' />";
         	}
-        	$out .= "</div><div class='time_right' onmousedown='scale_start(\"".$key."\", \"".$tkey."\", \"right\", ".$ml.", ".$px_time.")'></div></div>";
+        	$out .= "</div><div class='time_right' onmousedown='scale_start(\"".$tkey."\", \"right\", ".$ml.", ".$px_time.")'></div></div>";
         	$tkey++;
         }
         $this->create_timebar($width['begin'], $width['end'], $px_time);
-        $out .= "<div id='time_scale_".$key."' class='time_scale_hide'></div></td>";
+        $out .= "<div id='time_scale_".$key."' class='time_scale_hide'></div></div></td>";
+
+    	//only do this once
+    	if(!$this->tpl_assignments) {
+    		$tpl->assign_var('PXTIME', $px_time);
+    		$tpl->add_css(".time_scale {
+								position: absolute;
+								background-image: url(./../../../plugins/raidlogimport/images/time_scale.png);
+								background-repeat: repeat-x;
+								width: ".$px_time."px;
+								height: 18px;
+								margin-top: 10px;
+								z-index: 13;
+							}");
+    		$tpl->add_js("$(document).ready(function() {
+							$('#member_form').data('raid_start', ".$width['begin'].");
+							$('.time_middle').click(function (row) {
+								if(row) {
+        							//var id = $('.die_id', blibla).text();
+        							alert(row.html());
+									/*var change_id = $('#' + id + ' ~ div');
+									$('#' + id).remove();
+									for(var i=0; i < change_id.length; i++) {
+        								change_id_of_input(change_id[i].id, (parseInt(change_id[i].id.substr(-1)) -1));
+										change_id[i].id = \"times_\" + member_id + \"_\" + (parseInt(change_id[i].id.substr(-1)) -1);
+									}*/
+								}
+							});
+                        });");
+    		$tpl->js_file($eqdkp_root_path.'plugins/raidlogimport/templates/dmem.js');
+    		$tpl->css_file($eqdkp_root_path.'plugins/raidlogimport/templates/dmem.css');
+    		$this->tpl_assignments = true;
+    	}
     	return $out;
     }
 
