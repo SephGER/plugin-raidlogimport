@@ -192,7 +192,7 @@ if(!class_exists('rli_member'))
     	$px_time = (($width['end'] - $width['begin']) / 20);
     	settype($px_time, 'int');
 
-    	$out = '<td id="member_'.$key.'" onmouseover="showtime(\'time_scale_'.$key.'\')" onmouseout="hidetime(\'time_scale_'.$key.'\')">';
+    	$out = "<td id='member_".$key."' class='add_time' onmouseover='set_member(\"".$key."\", \"".$px_time."\")'>";
         #$out .= $jquery->RightClickMenu('right_click_'.$key, 'member_'.$key, array('rc_'.$key.'_0' => array('name' => 'Time hinzufügen', 'jscode' => 'alert("bla")')));
         $raids = $rli->raid->get_data();
 
@@ -212,7 +212,7 @@ if(!class_exists('rli_member'))
         	}
           }
         }
-        $out .= $this->raid_div."<div id='times_".$key."' onmouseover='set_member(\"".$key."\")' onmouseout='unset_member()'>";
+        $out .= $this->raid_div."<div id='times_".$key."'>";
         $tkey = 0;
         foreach($this->members[$key]['times'] as $time) {
         	$s = ($time['standby']) ? '_standby' : '';
@@ -220,20 +220,26 @@ if(!class_exists('rli_member'))
         	$ml = ($time['join']-$width['begin'])/20;
         	settype($w, 'int');
         	settype($ml, 'int');
-        	$out .= "<div id='times_".$key."_".$tkey."' class='time".$s."' style='width:".$w."px; margin-left: ".$ml."px;'>";
-        	$out .= "<div class='time_left' onmousedown='scale_start(\"".$tkey."\", \"left\", ".$ml.", ".$px_time.")'></div>";
-        	$out .= "<div class='time_middle' onmousedown='scale_start(\"".$tkey."\", \"middle\", ".$ml.", ".$px_time.")'>";
-        	$out .= "<div class='die_id' style='display: none;'>times_".$key."_".$tkey."</div>";
+        	$out .= "<div id='times_".$key."_".$tkey."' class='time".$s."' style='width:".$w."px; margin-left: ".$ml."px;' onmouseover='set_time_key(this.id)'>";
+        	$out .= "<div class='time_left' onmousedown='scale_start(\"left\")'></div>";
+        	$out .= "<div class='time_middle' onmousedown='scale_start(\"middle\")'>";
         	$out .= "<input type='hidden' name='members[".$key."][times][".$tkey."][join]' value='".$time['join']."' id='times_".$key."_".$tkey."j' />";
         	$out .= "<input type='hidden' name='members[".$key."][times][".$tkey."][leave]' value='".$time['leave']."' id='times_".$key."_".$tkey."l' />";
         	if($time['standby']) {
         		$out .= "<input type='hidden' name='members[".$key."][times][".$tkey."][extra]' value='standby' id='times_".key."_".$tkey."s' />";
         	}
-        	$out .= "</div><div class='time_right' onmousedown='scale_start(\"".$tkey."\", \"right\", ".$ml.", ".$px_time.")'></div></div>";
+        	$out .= "</div><div class='time_right' onmousedown='scale_start(\"right\")'></div></div>";
         	$tkey++;
         }
+        $out .= "<div style='display:none;'><div id='times_".$key."_99' class='time' style='width:0px; margin-left:0px;' onmouseover='set_time_key(this.id)'>";
+        $out .= "<div class='time_left' onmousedown='scale_start(\"left\")'></div>";
+        $out .= "<div class='time_middle' onmousedown='scale_start(\"middle\")'>";
+        $out .= "<input type='hidden' name='members[".$key."][times][99][join]' value='0' id='times_".$key."_99j' />";
+        $out .= "<input type='hidden' name='members[".$key."][times][99][leave]' value='0' id='times_".$key."_99l' />";
+        $out .= "</div><div class='time_right' onmousedown='scale_start(\"right\")'></div></div></div>";
+
         $this->create_timebar($width['begin'], $width['end'], $px_time);
-        $out .= "<div id='time_scale_".$key."' class='time_scale_hide'></div></div></td>";
+        $out .= "<div><div id='time_scale_".$key."' class='time_scale_hide'></div></div></div></td>";
 
     	//only do this once
     	if(!$this->tpl_assignments) {
@@ -248,18 +254,86 @@ if(!class_exists('rli_member'))
 								z-index: 13;
 							}");
     		$tpl->add_js("$(document).ready(function() {
-							$('#member_form').data('raid_start', ".$width['begin'].");
-							$('.time_middle').click(function (row) {
-								if(row) {
-        							//var id = $('.die_id', blibla).text();
-        							alert(row.html());
-									/*var change_id = $('#' + id + ' ~ div');
-									$('#' + id).remove();
-									for(var i=0; i < change_id.length; i++) {
-        								change_id_of_input(change_id[i].id, (parseInt(change_id[i].id.substr(-1)) -1));
-										change_id[i].id = \"times_\" + member_id + \"_\" + (parseInt(change_id[i].id.substr(-1)) -1);
-									}*/
+                            $('#member_form').data('raid_start', ".$width['begin'].");
+                            $('.time_middle').dblclick(function() {
+								var change_id = $('#times_' + member_id + '_' + time_id + ' ~ div');
+								$('#times_' + member_id + '_' + time_id).remove();
+								var lgth = 'times_' + member_id + '_';
+								for(var i=0; i < change_id.length; i++) {
+									if(!isNaN(parseInt(change_id[i].id.substr(lgth.length)))) {
+    									change_id_of_input(change_id[i].id, (parseInt(change_id[i].id.substr(lgth.length)) -1));
+										change_id[i].id = \"times_\" + member_id + \"_\" + (parseInt(change_id[i].id.substr(lgth.length)) -1);
+									}
 								}
+							});
+							$('.time,time_standby').mouseout(function() {
+								time_id = null;
+							});
+							$('.add_time').mouseover(function() {
+								$('#time_scale_' + member_id).attr('class', 'time_scale');
+							});
+							$('.add_time').mouseout(function() {
+								$('#time_scale_' + member_id).attr('class', 'time_scale_hide');
+								member_id = null;
+							});
+							$('.add_time').dblclick(function() {
+								//between which times did the user click?
+								var all_times = $('#times_' + member_id + ' > div');
+								var left = new Array(0,0);
+								var right = new Array(0,0);
+								for(var i=0; i < all_times.length; i++) {
+									var current = new Array();
+									current.offset = $(all_times[i]).offset();
+									current.right_edge = (current.offset.left + $(all_times[i]).width());
+									if(current.right_edge < posx && current.right_edge >left[1]) {
+										left[0] = all_times[i].id;
+										left[1] = current.right_edge;
+									}
+									if(current.offset.left > posx && current.offset.left < right[1]) {
+										right[0] = all_times[i].id;
+										right[1] = current.offset.left;
+									}
+								}
+								var change_id = '';
+                                var lgth = 'times_' + member_id + '_';
+                                var object_to_add = $('#times_' + member_id + '_99').clone(true);
+                                var selector = '';
+                                var type = 'after';
+                                var new_time_key = 0;
+								//is there an element left of mouse?
+								if(left[0]) {
+                                    new_time_key = parseInt(left[0].substr(lgth.length)) + 1;
+                                	object_to_add.attr('id', 'times_' + member_id + '_' + new_time_key);
+									change_id = $('#' + left[0] + ' ~ div');
+									selector = '#' + left[0];
+                                } else { //its not so change all elements
+                                	object_to_add.attr('id', 'times_' + member_id + '_0');
+                                    change_id = $('#times_' + member_id + '_0, #times_' + member_id + '_0 ~ div');
+                                    selector = '#times_' + member_id + '_1';
+                                    type = 'before';
+                                }
+								for(i=(change_id.length -1); i>=0; i--) {
+									if(!isNaN(parseInt(change_id[i].id.substr(lgth.length)))) {
+										change_id_of_input(change_id[i].id, (parseInt(change_id[i].id.substr(lgth.length)) + 1));
+        								change_id[i].id = 'times_' + member_id + '_' + (parseInt(change_id[i].id.substr(lgth.length)) + 1);
+        							}
+								}
+								if(type == 'before') {
+									$(selector).before(object_to_add);
+								} else {
+									$(selector).after(object_to_add);
+								}
+								if(left[1]) {
+									left[1] = left[1] - posi_null;
+								}
+								object_to_add.css('margin-left', (left[1] + 2) + 'px');
+								if(!right[1]) {
+									right[1] = 12;
+								}
+								object_to_add.css('width', (right[1] - 2) + 'px');
+								change_id_of_input('times_' + member_id + '_99', new_time_key);                             
+                                $('#times_' + member_id + '_' + new_time_key + 'j').attr('value', $('#member_form').data('raid_start') + (left[1]+2)*20);
+                                $('#times_' + member_id + '_' + new_time_key + 'l').attr('value', $('#member_form').data('raid_start') + (left[1] + right[1])*20);
 							});
                         });");
     		$tpl->js_file($eqdkp_root_path.'plugins/raidlogimport/templates/dmem.js');
