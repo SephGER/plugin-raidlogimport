@@ -73,5 +73,29 @@ $bz_data  = array(
     53 => array('boss', 'Koralon the Flame Watcher', 'Koralon', '2', '24', '2'),
     54 => array('zone', 'Onyxia\'s Lair', 'Onyxia', '5', '0', '7'),
     55 => array('boss', 'Onyxia', 'Onyxia', '2', '55', '0')
+    /*
+Lady Deathwhisper 30893 8 
+The Deathbringer
+Gunship Battle
+Lord Marrowgar 31119 8
+
+Sindragosa 27971&modelType=8
+Rescue Valithiria Dreamwalker
+	http://ptr.wowhead.com/?npc=36789#modelviewer:1:30318:0
+
+Professor Putricide 30993 8
+Rotface 31005 8
+Festergut 31001 8
+
+Queen Lana'thel 31093
+Blood Price Council
+	http://www.wowhead.com/?npc=29308#modelviewer:1:27406:0
+	http://www.wowhead.com/?npc=23953#modelviewer:1:25338:0
+	http://www.wowhead.com/?npc=25601#modelviewer:1:25514:0
+
+The Lich King 24213&modelType=8
+
+
+Toravon the Ice Watcher*/
 );
 ?>

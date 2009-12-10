@@ -72,6 +72,20 @@ $bz_data  = array(
     52 => array('boss', 'Anub\'arak', 'Anub\'arak HM', '4', '48', '4'),
     53 => array('boss', 'Koralon the Flame Watcher', 'Koralon', '2', '24', '2'),
     54 => array('zone', 'Onyxia\'s Lair', 'Onyxia', '5', '0', '7'),
-    55 => array('boss', 'Onyxia', 'Onyxia', '2', '55', '0')
+    55 => array('boss', 'Onyxia', 'Onyxia', '2', '55', '0'),
+    56 => array('zone', 'Icecrown Citadel', 'Icecrown', '5', '2', '8'),
+    57 => array('boss', 'Lord Marrowgar', 'Marrowgar', '2', '57', '0'),
+    58 => array('boss', 'Lady Deathwhisper', 'Deathwhisper', '2', '57', '1'),
+    59 => array('boss', 'Gunship Battle', 'Gunship', '2', '57', '2'),
+    60 => array('boss', 'Deathbringer Saurfang', 'Saurfang', '2', '57', '3'),
+    61 => array('boss', 'Festergut', 'Festergut', '2', '57', '4'),
+    62 => array('boss', 'Rotface', 'Rotface', '2', '57', '5'),
+    63 => array('boss', 'Professor Putricide', 'Putricide', '2', '57', '6'),
+    64 => array('boss', 'Blood Prince Council', 'Blood Council', '2', '57', '7'),
+    65 => array('boss', 'Queen Lana\'thel', 'Lana\'thel', '2', '57', '8'),
+    66 => array('boss', 'Valithiria Dreamwalker', 'Dreamwalker', '2', '57', '9'),
+    67 => array('boss', 'Sindragosa', 'Sindragosa', '2', '57', '10'),
+    68 => array('boss', 'The Lich King', 'Arthas', '2', '57', '11'),
+    69 => array('boss', 'Toravon the Ice Watcher', 'Toralon', '2', '24', '3'),
 );
 ?>
