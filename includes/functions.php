@@ -367,7 +367,7 @@ function raids2tpl($key, $raid, $formul = false)
 	$l = 2;
 	foreach($raid['bosskills'] as $bk)
 	{
-		$bosskills .= '<tr class="row'.$l.'"><td>'.$bk['name'].'</td><td colspan="2">'.date('H:i:s',$bk['time']).'</td><td>'.$bk['bonus'].'</td></tr>';
+		$bosskills .= '<tr class="row'.$l.'"><td>'.$bk['note'].'</td><td colspan="2">'.date('H:i:s',$bk['time']).'</td><td>'.$bk['bonus'].'</td></tr>';
 		if($l != 1) {$l--;} else {$l++;}
 	}
 	return array(
