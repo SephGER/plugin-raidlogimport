@@ -29,7 +29,7 @@ if ( !defined('EQDKP_INC') )
 class raidlogimport_Plugin_Class extends EQdkp_Plugin
 {
 	var $vstatus = 'Stable';
-	var $version = '0.5.5.4';
+	var $version = '0.5.5.5';
 	var $fwversion = '1.0.3';
 	var $jqversion = '2.0.1';
 
@@ -137,7 +137,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 						$sql = "INSERT INTO __raidlogimport_bz
 								(bz_type, bz_string, bz_note, bz_bonus, bz_tozone, bz_sort)
 								VALUES
-								('".$bz[0]."', '".mysql_real_escape_string($bz[1])."', '".mysql_real_escape_string($bz[2])."', '".$bz[3]."', '".$bz[4]."', '".$bz[5]."');";
+								('".$bz[0]."', '".$db->escape($bz[1])."', '".$db->escape($bz[2])."', '".$bz[3]."', '".$bz[4]."', '".$bz[5]."');";
 						$this->add_sql(SQL_INSTALL, $sql);
 					}
 				}

@@ -121,7 +121,7 @@ class Bz extends EQdkp_Admin
                         $sql = "INSERT INTO __raidlogimport_bz
                                     (bz_string, bz_note, bz_bonus, bz_type, bz_sort, bz_tozone)
                                 VALUES
-                                    ('".mysql_real_escape_string($vs['string'])."', '".mysql_real_escape_string($vs['note'])."', '".$vs['bonus']."', '".$vs['type']."', '".$vs['sort']."', '".$vs['tozone']."');";
+                                    ('".$db->escape($vs['string'])."', '".$db->escape($vs['note'])."', '".$vs['bonus']."', '".$vs['type']."', '".$vs['sort']."', '".$vs['tozone']."');";
 						$log_action = array(
 							'header'		=> '{L_ACTION_RAIDLOGIMPORT_BZ_ADD}',
 	                        '{L_BZ_TYPE}'   => $vs['type'],
@@ -135,8 +135,8 @@ class Bz extends EQdkp_Admin
 					else
 					{
 						$sql = "UPDATE __raidlogimport_bz SET
-								bz_string = '".mysql_real_escape_string($vs['string'])."',
-								bz_note = '".mysql_real_escape_string($vs['note'])."',
+								bz_string = '".$db->escape($vs['string'])."',
+								bz_note = '".$db->escape($vs['note'])."',
 								bz_bonus = '".$vs['bonus']."',
 								bz_type = '".$vs['type']."',
 								bz_sort = '".$vs['sort']."',
