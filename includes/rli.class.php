@@ -1895,7 +1895,7 @@ if(!class_exists('rli'))
         		}
         		if(!$bla)
         		{
-        			$sql = "INSERT INTO item_rename (id, item_name, item_id) VALUES ('".$key."', '".mysql_real_escape_string($loot['name'])."', '".$loot['id']."');";
+        			$sql = "INSERT INTO item_rename (id, item_name, item_id) VALUES ('".$key."', '".$db->escape($loot['name'])."', '".$loot['id']."');";
         			$db->query($sql);
         		}
         	}

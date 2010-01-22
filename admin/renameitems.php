@@ -114,7 +114,7 @@ if($_GET['actual'] <= $_GET['count'])
 		$renamed = $items[$_GET['actual']]['name'];
 	}
 	$output .= 'new itemname: '.$renamed;
-	$sql = "UPDATE item_rename SET item_id = '".$items[$_GET['actual']]['itemID']."', item_name_trans = '".mysql_real_escape_string($renamed)."' WHERE id = '".$items[$_GET['actual']]['id']."';";
+	$sql = "UPDATE item_rename SET item_id = '".$items[$_GET['actual']]['itemID']."', item_name_trans = '".$db->escape($renamed)."' WHERE id = '".$items[$_GET['actual']]['id']."';";
 	$db->query($sql);
 	echo $output;
 
