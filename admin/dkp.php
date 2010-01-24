@@ -682,7 +682,7 @@ class raidlogimport extends EQdkp_Admin
 			$sql = "INSERT INTO __raids
         		      (`raid_id`, `raid_name`, `raid_date`, `raid_note`, `raid_value`, `raid_added_by`)
         		    VALUES
-        		      ('".$newraidid."', '".$db->escape($raid['event'])."', '".$raid['begin']."', '".$db->escpae($raid['note'])."', '".number_format($raid['value'], 2, '.','')."', 'Raid-Log-Import (by ".$user->data['username'].")');";
+        		      ('".$newraidid."', '".$db->escape($raid['event'])."', '".$raid['begin']."', '".$db->escape($raid['note'])."', '".number_format($raid['value'], 2, '.','')."', 'Raid-Log-Import (by ".$user->data['username'].")');";
         	if(!$db->query($sql))
         	{
         		echo "raids_table: <br />".$sql."<br />";
