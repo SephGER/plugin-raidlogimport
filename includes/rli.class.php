@@ -1225,11 +1225,14 @@ if(!class_exists('rli'))
 					}
 				}
 			}
-			if(strpos($val, 'function:') !== false)
-			{
-				$func = str_replace('function:', '', $val);
-				$back = call_user_func($func, $xml->name, $back);
-			}
+			/* currently not in use 
+			foreach($val as $kval => $nval) {
+				if(strpos($kval, 'function:') !== false)
+				{
+					$func = str_replace('function:', '', $kval);
+					$back = call_user_func($func, $xml->name, $back);
+				}
+			}*/
 		}
 		return $back;
 	}
