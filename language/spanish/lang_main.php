@@ -63,7 +63,8 @@
 	$lang['bz_no_diff'] = 'sin Dificultad';
 	$lang['bz_string'] = 'Cadena';
 	$lang['bz_bnote'] = 'Nota';
-	$lang['bz_bonus'] = 'Bonus DKP / DKP/h';
+	$lang['bz_bonus'] = 'Bonus DKP';
+	$lang['bz_bonus'] = 'DKP/h';
 	$lang['bz_zevent'] = 'Evento';
 	$lang['bz_update'] = 'Añadir nuevo / Editar marcado';
 	$lang['bz_delete'] = 'Borrar marcado';

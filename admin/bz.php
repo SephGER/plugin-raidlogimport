@@ -76,20 +76,15 @@ class Bz extends EQdkp_Admin
                     $data[$id]['string'] = $_POST['bz_string'][$id];
                     $data[$id]['note'] = $_POST['bz_note'][$id];
                     $data[$id]['bonus'] = number_format(floatvalue($_POST['bz_bonus'][$id]), 2, '.', '');
-                    $data[$id]['sort'] = $_POST['bz_sort'][$id];
-                    if($type == 'boss')
-                    {
-                        $data[$id]['tozone'] = $_POST['bz_tozone'][$id];
-                    }
-                    if($type == 'zone') {
-                    	$data[$id]['tozone'] = $_POST['bz_diff'][$id];
-                    }
+                    $data[$id]['bonusph'] = number_format(floatvalue($_POST['bz_bonusph'][$id]), 2, '.', '');
+                    $data[$id]['sort'] = ($_POST['bz_tozone'][$id]) ? $_POST['bz_tozone'][$id].".".$_POST['bz_sort'][$id] : $_POST['bz_sort'][$id];
+                    $data[$id]['diff'] = $_POST['bz_diff'][$id];
 				}
 				//get old data
 				$old_data = array();
 				if(($selected = count($ids)-1)>=0)
 				{
-					$sql = "SELECT bz_id, bz_string, bz_note, bz_bonus, bz_type, bz_tozone, bz_sort FROM __raidlogimport_bz WHERE ";
+					$sql = "SELECT bz_id, bz_string, bz_note, bz_bonus, bz_type, bz_bonusph, bz_diff, bz_sort FROM __raidlogimport_bz WHERE ";
 					for($i=0; $i<$selected; $i++)
 					{
 						$sql .= "bz_id = '".$ids[$i]."' OR ";
@@ -104,7 +99,8 @@ class Bz extends EQdkp_Admin
 							$old_data[$row['bz_id']]['string'] = $row['bz_string'];
 							$old_data[$row['bz_id']]['note'] = $row['bz_note'];
 							$old_data[$row['bz_id']]['bonus'] = $row['bz_bonus'];
-							$old_data[$row['bz_id']]['tozone'] = $row['bz_tozone'];
+							$old_data[$row['bz_id']]['bonusph'] = $row['bz_bonusph'];
+							$old_data[$row['bz_id']]['diff'] = $row['bz_diff'];
 							$old_data[$row['bz_id']]['sort'] = $row['bz_sort'];
 						}
 					}
@@ -119,16 +115,17 @@ class Bz extends EQdkp_Admin
                     if($id == "neu")
                     {
                         $sql = "INSERT INTO __raidlogimport_bz
-                                    (bz_string, bz_note, bz_bonus, bz_type, bz_sort, bz_tozone)
+                                    (bz_string, bz_note, bz_bonus, bz_type, bz_sort, bz_bonusph, bz_diff)
                                 VALUES
-                                    ('".$db->escape($vs['string'])."', '".$db->escape($vs['note'])."', '".$vs['bonus']."', '".$vs['type']."', '".$vs['sort']."', '".$vs['tozone']."');";
+                                    ('".$db->escape($vs['string'])."', '".$db->escape($vs['note'])."', '".$vs['bonus']."', '".$vs['type']."', '".$vs['sort']."', '".$vs['bonusph']."', '".$vs['diff']."');";
 						$log_action = array(
 							'header'		=> '{L_ACTION_RAIDLOGIMPORT_BZ_ADD}',
 	                        '{L_BZ_TYPE}'   => $vs['type'],
 							'{L_BZ_STRING}'	=> $vs['string'],
 							'{L_BZ_BNOTE}'	=> $vs['note'],
 							'{L_BZ_BONUS}'	=> $vs['bonus'],
-							'{L_BZ_TOZONE}' => $vs['tozone'],
+							'{L_BZ_BONUSPH}' => $vs['bonusph'],
+							'{L_BZ_DIFF}' 	=> $vs['diff'],
 							'{L_BZ_SORT}'	=> $vs['sort']
 						);
                     }
@@ -140,7 +137,8 @@ class Bz extends EQdkp_Admin
 								bz_bonus = '".$vs['bonus']."',
 								bz_type = '".$vs['type']."',
 								bz_sort = '".$vs['sort']."',
-								bz_tozone = '".$vs['tozone']."'
+								bz_bonusph = '".$vs['bonusph']."',
+								bz_diff = '".$vs['diff']."'
 								WHERE bz_id = '".$id."';";
 						$log_action = array(
 							'header'		=> '{L_ACTION_RAIDLOGIMPORT_BZ_UPD}',
@@ -148,8 +146,9 @@ class Bz extends EQdkp_Admin
 							'{L_BZ_STRING}'	=> $old_data[$id]['string']." => ".$vs['string'],
 							'{L_BZ_BNOTE}'	=> $old_data[$id]['note']." => ".$vs['note'],
 							'{L_BZ_BONUS}'	=> $old_data[$id]['bonus']." => ".$vs['bonus'],
-							'{L_BZ_BONUS}'	=> $old_data[$id]['sort']." => ".$vs['sort'],
-							'{L_BZ_TOZONE}' => $old_data[$id]['tozone']." => ".$vs['tozone']
+							'{L_BZ_SORT}'	=> $old_data[$id]['sort']." => ".$vs['sort'],
+							'{L_BZ_BONUSPH}' => $old_data[$id]['bonusph']." => ".$vs['bonusph'],
+							'{L_BZ_DIFF}' => $old_data[$id]['diff']." => ".$vs['diff'],
 						);
 					}
 					$send = $db->query($sql);
@@ -174,7 +173,7 @@ class Bz extends EQdkp_Admin
 		}
 		elseif($_POST['save'] == $user->lang['bz_yes'] AND isset($_POST['del']))
 		{
-			$sel = "SELECT bz_id, bz_string, bz_note, bz_bonus, bz_type, bz_tozone FROM __raidlogimport_bz WHERE ";
+			$sel = "SELECT bz_id, bz_string, bz_note, bz_bonus, bz_type, bz_bonusph, bz_diff FROM __raidlogimport_bz WHERE ";
 			$sql = "DELETE FROM __raidlogimport_bz WHERE ";
             $selected = count($_POST['del'])-1;
 			for($i=0; $i<$selected; $i++)
@@ -195,8 +194,9 @@ class Bz extends EQdkp_Admin
 					$data[$row['bz_id']]['note'] = $row['bz_note'];
 					$data[$row['bz_id']]['bonus'] = $row['bz_bonus'];
 					$data[$row['bz_id']]['type'] = $row['bz_type'];
-					$data[$row['bz_id']]['tozone'] = $row['bz_tozone'];
+					$data[$row['bz_id']]['bonusph'] = $row['bz_bonusph'];
 					$data[$row['bz_id']]['sort'] = $row['bz_sort'];
+					$data[$row['bz_id']]['diff'] = $row['bz_diff'];
 				}
 				$result = $db->query($sql);
                 if($result)
@@ -211,8 +211,9 @@ class Bz extends EQdkp_Admin
 							'{L_BZ_STRING}'	=> $data[$id]['string'],
 							'{L_BZ_NOTE}'	=> $data[$id]['note'],
 							'{L_BZ_BONUS}'	=> $data[$id]['bonus'],
-							'{L_BZ_TOZONE}' => $data[$id]['tozone'],
-							'{L_BZ_SORT}'	=> $data[$id]['sort']
+							'{L_BZ_BONUSPH}' => $data[$id]['bonusph'],
+							'{L_BZ_SORT}'	=> $data[$id]['sort'],
+							'{L_BZ_DIFF}'	=> $data[$id]['diff']
 						);
 						$this->log_insert(array(
 							'log_type'	 => $log_action['header'],
@@ -284,13 +285,13 @@ class Bz extends EQdkp_Admin
 	{
 		global $db, $eqdkp, $user, $tpl, $SID, $pm, $myHtml;
 
-		$sql1 = "SELECT bz_id, bz_note, bz_tozone FROM __raidlogimport_bz WHERE bz_type = 'zone';";
+		$sql1 = "SELECT bz_id, bz_note, bz_diff FROM __raidlogimport_bz WHERE bz_type = 'zone';";
 		$result1 = $db->query($sql1);
 		$zones = array();
         $zones[NULL] = $user->lang['bz_no_zone'];
 		while ( $row1 = $db->fetch_record($result1) )
 		{
-			$zones[$row1['bz_id']] = $row1['bz_note'].(($eqdkp->config['default_game'] == 'WoW' AND $row1['bz_tozone']) ? ' &nbsp;&nbsp;&nbsp; ('.$user->lang['diff_'.$row1['bz_tozone']].')' : '');
+			$zones[$row1['bz_id']] = $row1['bz_note'].(($eqdkp->config['default_game'] == 'WoW' AND $row1['bz_diff']) ? ' &nbsp;&nbsp;&nbsp; ('.$user->lang['diff_'.$row1['bz_diff']].')' : '');
 		}
 		$diffs = array(0 => $user->lang['bz_no_diff']);
 		if($eqdkp->config['default_game'] == 'WoW') {
@@ -300,7 +301,7 @@ class Bz extends EQdkp_Admin
 		}
 		if(isset($_POST['bz_id']))
 		{
-			$sql = "SELECT bz_id, bz_string, bz_bonus, bz_note, bz_type, bz_tozone, bz_sort FROM __raidlogimport_bz WHERE ";
+			$sql = "SELECT bz_id, bz_string, bz_bonus, bz_note, bz_type, bz_bonusph, bz_sort, bz_diff FROM __raidlogimport_bz WHERE ";
 			$selected = count($_POST['bz_id'])-1;
 			for($i=0; $i<$selected; $i++)
 			{
@@ -308,28 +309,23 @@ class Bz extends EQdkp_Admin
 			}
 			$sql .= "bz_id = '".$_POST['bz_id'][$selected]."';";
 			$result = $db->query($sql);
-			while ( $row = $db->fetch_record($result) )
-			{
-				if($row['bz_type'] == 'boss')
-				{
-					$b_selected = 'selected="selected"';
-					$z_selected = '';
-				}
-				else
-				{
-					$b_selected = '';
-					$z_selected = 'selected="selected"';
+			while ( $row = $db->fetch_record($result) ) {
+				if(strpos($row['bz_sort'], '.')) {
+					list($tozone, $sort) = explode('.', $row['bz_sort']);
+				} else {
+					$sort = $row['bz_sort'];
 				}
 				$tpl->assign_block_vars('upd_list', array(
 					'BZ_ID' 	 => $row['bz_id'],
 					'BZ_STRING'  => $row['bz_string'],
 					'BZ_BONUS'	 => $row['bz_bonus'],
+					'BZ_BONUSPH' => $row['bz_bonusph'],
 					'BZ_NOTE'	 => $row['bz_note'],
-					'BZ_SORT'	 => $row['bz_sort'],
-					'B_SELECTED' => $b_selected,
-					'Z_SELECTED' => $z_selected,
-					'ZONE_ARRAY' => $myHtml->DropDown("bz_tozone[".$row['bz_id']."]", $zones, $row['bz_tozone'],'','',true),
-					'DIFF_ARRAY' => $myHtml->DropDown("bz_diff[".$row['bz_id']."]", $diffs, $row['bz_tozone'],'','',true),
+					'BZ_SORT'	 => $sort,
+					'B_SELECTED' => ($row['bz_type'] == 'boss') ? 'selected0"selected"' : '',
+					'Z_SELECTED' => ($row['bz_type'] == 'zone') ? 'selected="selected"' : '',
+					'ZONE_ARRAY' => $myHtml->DropDown("bz_tozone[".$row['bz_id']."]", $zones, $tozone,'','',true),
+					'DIFF_ARRAY' => $myHtml->DropDown("bz_diff[".$row['bz_id']."]", $diffs, $row['bz_diff'],'','',true),
 					'CLASS'		 => $eqdkp->switch_row_class())
 				);
 			}
@@ -340,9 +336,9 @@ class Bz extends EQdkp_Admin
 				'BZ_ID' 	 => 'neu',
 				'BZ_STRING'  => '',
 				'BZ_BONUS'	 => '',
+				'BZ_BONUSPH' => '',
 				'BZ_NOTE'	 => '',
 				'BZ_SORT'	 => '',
-				'B_SELECTED' => true,
 				'Z_SELECTED' => false,
 				'ZONE_ARRAY' => $myHtml->DropDown("bz_tozone[neu]", $zones, 0,'','',true),
 				'DIFF_ARRAY' => $myHtml->DropDown("bz_diff[neu]", $diffs, 0,'','',true),
@@ -359,8 +355,10 @@ class Bz extends EQdkp_Admin
 			'L_SAVE'	   => $user->lang['bz_save'],
 			'L_ZONE'	   => $user->lang['bz_zone_s'],
 			'L_BOSS'	   => $user->lang['bz_boss_s'],
-			'L_TOZONE'	   => $user->lang['bz_tozone'].$user->lang['bz_diff'],
-			'L_SORT'	   => $user->lang['bz_sort'])
+			'L_TOZONE'	   => $user->lang['bz_tozone'],
+			'L_DIFF'	   => $user->lang['difficulty'],
+			'L_SORT'	   => $user->lang['bz_sort'],
+			'L_BONUSPH'	   => $user->lang['bz_bonusph'])
 		);
 		$eqdkp->set_vars(array(
             'page_title'        => sprintf($user->lang['admin_title_prefix'], $eqdkp->config['guildtag'], $eqdkp->config['dkp_name']).': '.$user->lang['rli_bz_bz'],
@@ -391,45 +389,68 @@ class Bz extends EQdkp_Admin
 			}
 		}
 
-		$sql = "SELECT bz_id, bz_string, bz_bonus, bz_note, bz_type, bz_tozone FROM __raidlogimport_bz ORDER BY bz_sort ASC;";
+		$sql = "SELECT bz_id, bz_string, bz_bonus, bz_note, bz_type, bz_bonusph, bz_diff, bz_sort FROM __raidlogimport_bz;";
 		$result = $db->query($sql);
 
 		$data = array();
-		while ( $row = $db->fetch_record($result) )
-		{
-			if($row['bz_type'] == 'zone')
-			{
+		while ( $row = $db->fetch_record($result) ) {
+			if(strpos($row['bz_sort'], '.') !== false) {
+				list($tozone, $sort) = explode('.', $row['bz_sort']);
+			} else {
+				$sort = $row['bz_sort'];
+				$tozone = false;
+			}
+			if($row['bz_type'] == 'zone') {
 				$data['zone'][$row['bz_id']]['string'] = $row['bz_string'];
 				$data['zone'][$row['bz_id']]['bonus'] = $row['bz_bonus'];
+				$data['zone'][$row['bz_id']]['bonusph'] = $row['bz_bonusph'];
 				$data['zone'][$row['bz_id']]['note'] = $row['bz_note'];
-				$data['zone'][$row['bz_id']]['diff'] = $row['bz_tozone'];
-			}
-			else
-			{
+				$data['zone'][$row['bz_id']]['diff'] = $row['bz_diff'];
+				$data['zone'][$row['bz_id']]['sort'] = $sort;
+			} else {
+				if($tozone !== false) {
+					$data['tozone'][$tozone][] = array('id' => $row['bz_id'], 'sort' => $sort);
+				}
 				$data['boss'][$row['bz_id']]['string'] = $row['bz_string'];
 				$data['boss'][$row['bz_id']]['bonus'] = $row['bz_bonus'];
+				$data['boss'][$row['bz_id']]['bonusph'] = $row['bz_bonusph'];
 				$data['boss'][$row['bz_id']]['note'] = $row['bz_note'];
-				$data['tozone'][$row['bz_tozone']][] = $row['bz_id'];
-			}
+				$data['boss'][$row['bz_id']]['diff'] = $row['bz_diff'];
+				$data['boss'][$row['bz_id']]['sort'] = $sort;
+			}				
 		}
         $bidsiz = array();
+        function sort_my_bzs($a, $b) {
+        	if($a['sort'] == $b['sort']) { return 0; }
+        	return ($a['sort'] < $b['sort']) ? -1 : 1;
+        }
+        function sort_my_bzsa($a, $b) {
+            if($a['sor'] == $b) { return 0; }
+        	return ($a < $b) ? -1 : 1;
+        }
+        uasort($data['zone'], 'sort_my_bzs');
+        uasort($data['boss'], 'sort_my_bzs');
 		foreach($data['zone'] as $id => $values)
 		{
 			$bosses = '';
+        	usort($data['tozone'][$id], 'sort_my_bzs');
             foreach($data['tozone'][$id] as $b_id)
             {
+            	$b_id = $b_id['id'];
             	$bidsiz[] = $b_id;
 				$bosses .= '<tr class="'.$eqdkp->switch_row_class().'">
 					<td><input type="checkbox" name="bz_id[]" value="'.$b_id.'" /></td>
-					<td>'.$data['boss'][$b_id]['string'].'</td>
+					<td>'.$data['boss'][$b_id]['string'].(($eqdkp->config['default_game'] == 'WoW' AND $values['diff']) ? ' &nbsp;&nbsp;&nbsp; ('.$user->lang['diff_'.$values['diff']].')' : '').'</td>
 					<td>'.$data['boss'][$b_id]['note'].'</td>
 					<td>'.$data['boss'][$b_id]['bonus'].'</td>
+					<td>'.$data['boss'][$b_id]['bonusph'].'</td>
 				</tr>';
             }
 			$tpl->assign_block_vars('zone_list', array(
             	'Z_ID'      => $id,
 	            'Z_STRING'  => $values['string'].(($eqdkp->config['default_game'] == 'WoW' AND $values['diff']) ? ' &nbsp;&nbsp;&nbsp; ('.$user->lang['diff_'.$values['diff']].')' : ''),
                 'Z_BONUS'   => $values['bonus'],
+                'Z_BONUSPH' => $values['bonusph'],
                 'Z_NOTE'    => $values['note'],
                 'BOSSES'	=> $bosses)
             );
@@ -442,8 +463,9 @@ class Bz extends EQdkp_Admin
             	$boss = true;
 	        	$tpl->assign_block_vars('boss_list', array(
 	            	'B_ID'      => $id,
-		            'B_STRING'  => $values['string'],
+		            'B_STRING'  => $values['string'].(($eqdkp->config['default_game'] == 'WoW' AND $values['diff']) ? ' &nbsp;&nbsp;&nbsp; ('.$user->lang['diff_'.$values['diff']].')' : ''),
 	                'B_BONUS'   => $values['bonus'],
+	                'B_BONUSPH'	=> $values['bonusph'],
 	                'B_NOTE'    => $values['note'],
 	                'CLASS'     => $eqdkp->switch_row_class())
 	            );
@@ -458,6 +480,7 @@ class Bz extends EQdkp_Admin
 			'L_STRING'		=> $user->lang['bz_string'].(($eqdkp->config['default_game'] == 'WoW') ? ' &nbsp;&nbsp;&nbsp; ('.$user->lang['difficulty'].')' : ''),
 			'L_BNOTE'		=> $user->lang['bz_note_event'],
 			'L_BONUS'		=> $user->lang['bz_bonus'],
+			'L_BONUSPH'		=> $user->lang['bz_bonusph'],
 			'L_UPDATE'		=> $user->lang['bz_update'],
 			'L_DELETE'		=> $user->lang['bz_delete'],
 			'BOSS'			=> $boss)

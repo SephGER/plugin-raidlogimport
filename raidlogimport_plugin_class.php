@@ -29,7 +29,7 @@ if ( !defined('EQDKP_INC') )
 class raidlogimport_Plugin_Class extends EQdkp_Plugin
 {
 	var $vstatus = 'Stable';
-	var $version = '0.5.5.6';
+	var $version = '0.5.6.0';
 	var $fwversion = '1.0.3';
 	var $jqversion = '2.0.1';
 
@@ -135,9 +135,9 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 					foreach($bz_data as $bz)
 					{
 						$sql = "INSERT INTO __raidlogimport_bz
-								(bz_type, bz_string, bz_note, bz_bonus, bz_tozone, bz_sort)
+								(bz_type, bz_string, bz_note, bz_bonus, bz_bonusph, bz_diff, bz_sort)
 								VALUES
-								('".$bz[0]."', '".$db->escape($bz[1])."', '".$db->escape($bz[2])."', '".$bz[3]."', '".$bz[4]."', '".$bz[5]."');";
+								('".$bz[0]."', '".$db->escape($bz[1])."', '".$db->escape($bz[2])."', '".$bz[3]."', '".$bz[4]."', '".$bz[5]."', '".$bz[6]."');";
 						$this->add_sql(SQL_INSTALL, $sql);
 					}
 				}
@@ -198,8 +198,9 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 						`bz_bonus` INT NOT NULL,
 						`bz_note` VARCHAR(255) NOT NULL,
 						`bz_type` ENUM ('boss', 'zone') NOT NULL,
-						`bz_tozone` INT NULL,
-						`bz_sort` INT NOT NULL
+						`bz_bonusph` INT NULL,
+						`bz_diff` INT NULL,
+						`bz_sort` VARCHAR(6) NULL DEFAULT '0.0'
 						);";
 				break;
 
