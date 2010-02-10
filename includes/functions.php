@@ -328,6 +328,7 @@ function lang2tpl()
         'L_DIFF3'		=> $user->lang['diff_3'],
         'L_DIFF4'		=> $user->lang['diff_4'],
         'L_DIFFICULTY' 	=> ($eqdkp->config['default_game'] == 'WoW') ? $user->lang['difficulty'] : false,
+        'L_DKPH'		=> $user->lang['bz_bonusph'],
         'L_END'         => $user->lang['rli_end'],
         'L_EVENT'       => $user->lang['event'],
         'L_GO_ON'		=> $user->lang['rli_go_on'],
@@ -367,7 +368,7 @@ function raids2tpl($key, $raid, $formul = false)
 	$l = 2;
 	foreach($raid['bosskills'] as $bk)
 	{
-		$bosskills .= '<tr class="row'.$l.'"><td>'.$bk['note'].'</td><td colspan="2">'.date('H:i:s',$bk['time']).'</td><td>'.$bk['bonus'].'</td></tr>';
+		$bosskills .= '<tr class="row'.$l.'"><td>'.$bk['note'].'</td><td colspan="2">'.date('H:i:s',$bk['time']).'</td><td>'.$bk['bonus'].' ('.$bk['bonusph'].'/h)</td></tr>';
 		if($l != 1) {$l--;} else {$l++;}
 	}
 	return array(

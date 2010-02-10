@@ -26,7 +26,7 @@
         </td>
 
         <td>{L_EVENT}: {raids.EVENT}
-        	<!-- IF USE_TIMEDKP --> &nbsp;&nbsp;&nbsp; DKP/h: <input type="text" name="raids[{raids.COUNT}][timebonus]" value="{raids.TIMEBONUS}" class="maininput" size="5" /><!-- ENDIF -->
+        	<!-- IF USE_TIMEDKP --> &nbsp;&nbsp;&nbsp; {L_DKPH}: <input type="text" name="raids[{raids.COUNT}][timebonus]" value="{raids.TIMEBONUS}" class="maininput" size="5" /><!-- ENDIF -->
         </td>
       </tr>
       <tr class="row2">
@@ -49,14 +49,21 @@
 	  <tr class="row1">
 		<td colspan="2">
 		<!-- BEGIN bosskills -->
+            <img src="./../../../images/global/delete.png" alt="{L_DELETE}">
+                <input type="checkbox" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][delete]" value="true" title="{L_DELETE}" />
 			{raids.bosskills.BK_SELECT}
 			&nbsp;&nbsp;&nbsp;&nbsp;{L_TIME}: <input type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][time]" value="{raids.bosskills.BK_TIME}" size="9" />
 			&nbsp;&nbsp;&nbsp;&nbsp;{L_DATE}: <input type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][date]" value="{raids.bosskills.BK_DATE}" size="9" />
 			<!-- IF USE_BOSSDKP -->
 				&nbsp;&nbsp;&nbsp;&nbsp;{L_VALUE}: <input type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][bonus]" value="{raids.bosskills.BK_VALUE}" size="5" />
 			<!-- ENDIF -->
-			&nbsp;&nbsp;&nbsp;&nbsp;<img src="./../../../images/global/delete.png" alt="{L_DELETE}">
-				<input type="checkbox" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][delete]" value="true" title="{L_DELETE}" /><br />
+			<!-- IF USE_TIMEDKP -->
+				&nbsp;&nbsp;&nbsp;&nbsp;{L_DKPH}: <input type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][bonusph]" value="{raids.bosskills.BK_VALUEPH}" size="5" />
+			<!-- ENDIF -->
+			<!-- IF L_DIFFICULTY -->
+				&nbsp;&nbsp;&nbsp;&nbsp;{L_DIFFICULTY}: {raids.bosskills.BK_DIFF_SEL}
+			<!-- ENDIF -->
+			<br />
 		<!-- END bosskills -->
 		</td>
 	  </tr>

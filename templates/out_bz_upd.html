@@ -2,9 +2,11 @@
 function update_select(id) {
 	if(document.getElementById('type_'+id).options[0].selected == true) {
 		document.getElementById('boss_'+id).className = 'bz_hide';
+		document.getElementById('zone_'+id).className = 'bz_hide';
 	}
  	if(document.getElementById('type_'+id).options[1].selected == true) {
  		document.getElementById('boss_'+id).className = 'bz_show';
+ 		document.getElementById('zone_'+id).className = 'bz_show';
 	}
 }
 </script>
@@ -33,7 +35,11 @@ function update_select(id) {
       	</td>
       	<td><input type="text" name="bz_string[{upd_list.BZ_ID}]" value="{upd_list.BZ_STRING}" /></td>
       	<td><input type="text" name="bz_note[{upd_list.BZ_ID}]" value="{upd_list.BZ_NOTE}" /></td>
-      	<td align="center"><input type="text" name="bz_bonus[{upd_list.BZ_ID}]" value="{upd_list.BZ_BONUS}" size="5" /></td>
+      	<td align="center">
+      		<div id="zone_{upd_list.BZ_ID}" class="<!-- IF upd_list.Z_SELECTED -->bz_hide<!-- ELSE -->bz_show<!-- ENDIF -->">
+      			<input type="text" name="bz_bonus[{upd_list.BZ_ID}]" value="{upd_list.BZ_BONUS}" size="5" />
+      		</div>
+      	</td>
       	<td align="center"><input type="text" name="bz_bonusph[{upd_list.BZ_ID}]" value="{upd_list.BZ_BONUSPH}" size="5" /></td>
         <td>{upd_list.DIFF_ARRAY}</td>
       	<td>

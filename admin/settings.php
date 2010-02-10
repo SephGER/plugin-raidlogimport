@@ -186,8 +186,7 @@ class RLI_Settings extends EQdkp_Admin
 				'hnh_suffix' 	=> array('dep_match'),
 				'att'		 	=> array('attendence_raid'),
 				'adj'			=> array('deactivate_adj'),
-				'am'			=> array('auto_minus', 'am_value_raids', 'am_allxraids'),
-				'parse'			=> array('bz_dep_match')
+				'am'			=> array('auto_minus', 'am_value_raids', 'am_allxraids')
 			),
 			'normal'	=> array(
 				'general'		=> array('timedkp_handle'),

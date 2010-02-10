@@ -125,14 +125,15 @@ class raidlogimport extends EQdkp_Admin
               	$rai['event'] = $temp['event'];
               	$rai['timebonus'] = $temp['timebonus'];
 				$rai['bosskills'] = $rli->get_diff_bosskills($rai['bosskills']);
-                $rai['value'] = $rli->get_raidvalue($rai['begin'], $rai['end'], $rai['bosskills'], $rai['timebonus'], $rai['event']);
+                $rai['value'] = $rli->get_raidvalue($rai['begin'], $rai['end'], $rai['bosskills'], $rai['timebonus'], $rai['event'], true);
 				if($rai['bosskills'] AND $rli->config['raidcount'] != 2)
 				{
 					$rai['note'] = $rli->get_note($rai['bosskills']);
 				}
 			  } elseif($_POST['checkraid'] == $user->lang['rli_calc_note_value']) {
 			  	$rli->diff = $rai['diff'];
-                $rai['value'] = $rli->get_raidvalue($rai['begin'], $rai['end'], $rai['bosskills'], $rai['timebonus'], $rai['event']);
+              	$temp = $rli->get_diff_event($rai['event']);
+                $rai['value'] = $rli->get_raidvalue($rai['begin'], $rai['end'], $rai['bosskills'], $rai['timebonus'], $rai['event'], true);
 				if($rai['bosskills'] AND $rli->config['raidcount'] != 2)
 				{
 					$rai['note'] = $rli->get_note($rai['bosskills']);
@@ -161,6 +162,7 @@ class raidlogimport extends EQdkp_Admin
 			);
 			if(is_array($rai['bosskills']))
 			{
+			  $diff_array = array($user->lang['bz_no_diff'], $user->lang['diff_1'], $user->lang['diff_2'], $user->lang['diff_3'], $user->lang['diff_4']);
               foreach($rai['bosskills'] as $xy => $bk)
               {
                 $tpl->assign_block_vars('raids.bosskills', array(
@@ -168,7 +170,9 @@ class raidlogimport extends EQdkp_Admin
                     'BK_TIME'   => date('H:i:s', $bk['time']),
                     'BK_DATE'   => date('d.m.y', $bk['time']),
                     'BK_VALUE'  => $bk['bonus'],
-                    'BK_KEY'    => $xy)
+                    'BK_VALUEPH'=> $bk['bonusph'],
+                    'BK_KEY'    => $xy,
+                    'BK_DIFF_SEL' => $myHtml->DropDown('raids['.$ky.'][bosskills]['.$xy.'][diff]', $diff_array, $bk['diff']))
                 );
               }
             }
