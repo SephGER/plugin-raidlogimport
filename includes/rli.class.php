@@ -652,7 +652,7 @@ if(!class_exists('rli'))
 		} else {
 			$att_ra = $this->get_adj_raidkeys($raids);
 			if($this->config['attendence_begin'] > 0) {
-				$raids[$att_ra['begin']]['value'] += $this->config['attendence_begin'];
+				$raids[$att_ra['start']]['value'] += $this->config['attendence_begin'];
 			}
 			if($this->config['attendence_end'] > 0) {
 				$raids[$att_ra['end']]['value'] += $this->config['attendence_end'];

@@ -126,6 +126,11 @@ class raidlogimport extends EQdkp_Admin
               	$rai['timebonus'] = $temp['timebonus'];
 				$rai['bosskills'] = $rli->get_diff_bosskills($rai['bosskills']);
                 $rai['value'] = $rli->get_raidvalue($rai['begin'], $rai['end'], $rai['bosskills'], $rai['timebonus'], $rai['event'], true);
+                if($ky === $att_raids['start']) {
+                	$rai['value'] += $rli->config['attendence_begin'];
+                } elseif($ky === $att_raids['end']) {
+                	$rai['value'] += $rli->config['attendence_end'];
+                }
 				if($rai['bosskills'] AND $rli->config['raidcount'] != 2)
 				{
 					$rai['note'] = $rli->get_note($rai['bosskills']);
@@ -134,6 +139,11 @@ class raidlogimport extends EQdkp_Admin
 			  	$rli->diff = $rai['diff'];
               	$temp = $rli->get_diff_event($rai['event']);
                 $rai['value'] = $rli->get_raidvalue($rai['begin'], $rai['end'], $rai['bosskills'], $rai['timebonus'], $rai['event'], true);
+                if($ky === $att_raids['start']) {
+                	$rai['value'] += $rli->config['attendence_begin'];
+                } elseif($ky === $att_raids['end']) {
+                	$rai['value'] += $rli->config['attendence_end'];
+                }
 				if($rai['bosskills'] AND $rli->config['raidcount'] != 2)
 				{
 					$rai['note'] = $rli->get_note($rai['bosskills']);
