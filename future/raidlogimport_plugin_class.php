@@ -164,15 +164,6 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 			}
 		}
 
-        //log actions
-        $this->add_log_action('{L_ACTION_RAIDLOGIMPORT_DKP}', $user->lang['action_raidlogimport_dkp']);
-        $this->add_log_action('{L_ACTION_RAIDLOGIMPORT_BZ_UPD}', $user->lang['action_raidlogimport_bz_upd']);
-        $this->add_log_action('{L_ACTION_RAIDLOGIMPORT_BZ_ADD}', $user->lang['action_raidlogimport_bz_add']);
-        $this->add_log_action('{L_ACTION_RAIDLOGIMPORT_BZ_DEL}', $user->lang['action_raidlogimport_bz_del']);
-        $this->add_log_action('{L_ACTION_RAIDLOGIMPORT_ALIAS_UPD}', $user->lang['action_raidlogimport_alias_upd']);
-        $this->add_log_action('{L_ACTION_RAIDLOGIMPORT_ALIAS_DEL}', $user->lang['action_raidlogimport_alias_del']);
-        $this->add_log_action('{L_ACTION_RAIDLOGIMPORT_ALIAS_ADD}', $user->lang['action_raidlogimport_alias_add']);
-        $this->add_log_action('{L_ACTION_RAIDLOGIMPORT_CONFIG}', $user->lang['action_raidlogimport_config']);
 
 		//menu
         $this->add_menu('admin_menu', $this->gen_admin_menu());
