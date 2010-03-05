@@ -86,7 +86,7 @@ if(!class_exists('rli'))
 		  }
 		  else
 		  {
-			message_die('SQL-Error! Query:<br />'.$sql);
+			#message_die('SQL-Error! Query:<br />'.$sql);
 		  }
 		}
 	}
