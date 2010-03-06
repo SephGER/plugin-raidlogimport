@@ -8,7 +8,7 @@
  * Date:        $Date$
  * -----------------------------------------------------------------------
  * @author      $Author$
- * @copyright   2008-2009 hoofy_leon
+ * @copyright   2008-2010 hoofy_leon
  * @link        http://eqdkp-plus.com
  * @package     raidlogimport
  * @version     $Rev$
@@ -54,7 +54,7 @@ if(!class_exists('rli'))
 
   		if(!$this->bonus)
   		{
-  		  $sql = "SELECT bz_id, bz_string, bz_note, bz_bonus, bz_type, bz_bonusph, bz_diff FROM __raidlogimport_bz;";
+  		  $sql = "SELECT bz_id, bz_string, bz_note, bz_bonus, bz_type, bz_bonusph, bz_diff, bz_sort FROM __raidlogimport_bz;";
 		  if($result = $db->query($sql))
 		  {
 			while($row = $db->fetch_record($result))
@@ -189,7 +189,7 @@ if(!class_exists('rli'))
 		{
 			foreach($this->bonus['boss'] as $boss)
 			{
-				if(in_array($bosskill['name'], $boss['string']) AND $bosskill['time'] >= $begin AND $bosskill['time'] < $end
+				if(in_array($bosskill['name'], $boss['string']) AND $bosskill['time'] >= $begin AND $bosskill['time'] <= $end
 				   AND (($boss['diff'] AND $bosskill['diff'] == $boss['diff']) OR !$boss['diff'])) {
 					$rbosskills[$i]['name'] = $bosskill['name'];
 					$rbosskills[$i]['bonus'] = $boss['bonus'];
@@ -1504,13 +1504,13 @@ if(!class_exists('rli'))
 		$this->data['zones'][1]['enter'] = strtotime($xml->start);
 		$this->data['zones'][1]['leave'] = strtotime($xml->end);
 		$this->data['zones'][1]['name']  = trim($xml->zone);
-		$this->data['zones'][1]['diff'] = trim($xml->difficulty);
+		$this->data['zones'][1]['diff'] = trim($xml->instance->difficulty);
 		$i = 0;
 		foreach ($xml->BossKills->children() as $bosskill)
 		{
 			$this->data['bosskills'][$i]['name'] = trim(utf8_decode($bosskill->name));
 			$this->data['bosskills'][$i]['time'] = strtotime($bosskill->time);
-			$this->data['bosskills'][$i]['diff'] = trim($bosskill->difficulty);
+			$this->data['bosskills'][$i]['diff'] = trim($bosskill->instance->difficulty);
 			$i++;
 		}
 		$i = 0;

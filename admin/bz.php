@@ -8,7 +8,7 @@
  * Date:        $Date$
  * -----------------------------------------------------------------------
  * @author      $Author$
- * @copyright   2008-2009 hoofy_leon
+ * @copyright   2008-2010 hoofy_leon
  * @link        http://eqdkp-plus.com
  * @package     raidlogimport
  * @version     $Rev$
@@ -417,7 +417,7 @@ class Bz extends EQdkp_Admin
 				$data['boss'][$row['bz_id']]['note'] = $row['bz_note'];
 				$data['boss'][$row['bz_id']]['diff'] = $row['bz_diff'];
 				$data['boss'][$row['bz_id']]['sort'] = $sort;
-			}				
+			}
 		}
         $bidsiz = array();
         function sort_my_bzs($a, $b) {
@@ -440,7 +440,7 @@ class Bz extends EQdkp_Admin
             	$bidsiz[] = $b_id;
 				$bosses .= '<tr class="'.$eqdkp->switch_row_class().'">
 					<td><input type="checkbox" name="bz_id[]" value="'.$b_id.'" /></td>
-					<td>'.$data['boss'][$b_id]['string'].(($eqdkp->config['default_game'] == 'WoW' AND $values['diff']) ? ' &nbsp;&nbsp;&nbsp; ('.$user->lang['diff_'.$values['diff']].')' : '').'</td>
+					<td>'.$data['boss'][$b_id]['string'].(($eqdkp->config['default_game'] == 'WoW' AND $data['boss'][$b_id]['diff']) ? ' &nbsp;&nbsp;&nbsp; ('.$user->lang['diff_'.$data['boss'][$b_id]['diff']].')' : '').'</td>
 					<td>'.$data['boss'][$b_id]['note'].'</td>
 					<td>'.$data['boss'][$b_id]['bonus'].'</td>
 					<td>'.$data['boss'][$b_id]['bonusph'].'</td>
