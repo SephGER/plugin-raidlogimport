@@ -1496,7 +1496,7 @@ if(!class_exists('rli'))
 		return $back;
 	}
 
-	function parse_eqdkp_string($xml)
+	function parse_eqdkp_string($xml, $headcount=false)
 	{
 		global $user;
 
@@ -1504,13 +1504,13 @@ if(!class_exists('rli'))
 		$this->data['zones'][1]['enter'] = strtotime($xml->start);
 		$this->data['zones'][1]['leave'] = strtotime($xml->end);
 		$this->data['zones'][1]['name']  = trim($xml->zone);
-		$this->data['zones'][1]['diff'] = trim($xml->instance->difficulty);
+		$this->data['zones'][1]['diff'] = ($headcount) ? trim($xml->instance->difficulty) : trim($xml->difficulty);
 		$i = 0;
 		foreach ($xml->BossKills->children() as $bosskill)
 		{
 			$this->data['bosskills'][$i]['name'] = trim(utf8_decode($bosskill->name));
 			$this->data['bosskills'][$i]['time'] = strtotime($bosskill->time);
-			$this->data['bosskills'][$i]['diff'] = trim($bosskill->instance->difficulty);
+			$this->data['bosskills'][$i]['diff'] = ($headcount) ? trim($bosskill->instance->difficulty) : trim($bosskill->difficulty);
 			$i++;
 		}
 		$i = 0;
@@ -1839,6 +1839,14 @@ if(!class_exists('rli'))
 		//add a dummy raid
 		$this->data['zones'][1]['enter'] = (mktime() - (60*60*2));  //before 2 hours, just a default value
 		$this->data['zones'][1]['leave'] = mktime();
+	}
+	
+	function check_headcount_format($string) {
+		return $this->check_eqdkp_format($string);
+	}
+	
+	function parse_headcount_string($xml) {
+		return $this->parse_eqdkp_string($xml, true);
 	}
 
 	function parse_string($xml)

@@ -184,6 +184,7 @@
 	$lang['parser_plus'] = 'EQdkpPlus XML Format';
 	$lang['parser_magicdkp'] = 'MagicDKP';
 	$lang['parser_eq'] = 'Everquest';
+	$lang['parser_headcount'] = 'Headcount-EQdkp';
 	$lang['rli_man_db_up'] = 'Force DB-Update';
 	$lang['rli_upd_check'] = 'Enable Update Check?';
 	$lang['use_dkp'] = 'Which DKP shall be used?';
