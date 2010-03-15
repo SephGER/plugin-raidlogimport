@@ -144,7 +144,7 @@ class RLI_Settings extends EQdkp_Admin
 			'plus' => $user->lang['parser_plus'],
 			'magicdkp' => $user->lang['parser_magicdkp'],
 			'eq' => $user->lang['parser_eq'],
-			'headcount' => $user->lang['parser_headcount']
+			'ka_rt' => $user->lang['parser_ka_rt']
 		);
 
 		//select raidcount
