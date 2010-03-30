@@ -37,7 +37,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
     {
         global $eqdkp_root_path, $user, $SID, $conf_plus, $eqdkp, $db;
 
-        $this->build = 7489;
+        $this->build = 7541;
 
         $this->eqdkp_plugin($pm);
         $this->pm->get_language_pack('raidlogimport');
