@@ -33,14 +33,14 @@ if(strtolower($eqdkp->config['default_game']) == 'wow')
 		$encoded_name = urlencode(utf8_encode($itemname));
 		$encoded_name = str_replace('+' , '%20' , $encoded_name);
     	$encoded_name = str_replace(' ' , '%20' , $encoded_name);
-		$item_xml = simplexml_load_string(itemstats_read_url('http://'.$url_lang.'.wowhead.com/?item='.$encoded_name.'&xml', $lang));
+		$item_xml = simplexml_load_string(itemstats_read_url('http://'.$url_lang.'.wowhead.com/item='.$encoded_name.'&xml', $lang));
 		return trim($item_xml->item['id']);
 	}
 
 	function get_itemname($itemID, $lang)
 	{
 		$url_lang = ($lang == 'en') ? 'www' : $lang;
-		$item_xml = simplexml_load_string(itemstats_read_url('http://'.$url_lang.'.wowhead.com/?item='.$itemID.'&xml', $lang));
+		$item_xml = simplexml_load_string(itemstats_read_url('http://'.$url_lang.'.wowhead.com/item='.$itemID.'&xml', $lang));
 		return str_replace('[','',str_replace(']','',utf8_decode(trim($item_xml->item->name))));
 	}
 }
