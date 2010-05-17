@@ -251,6 +251,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 		            	'link' => $url_prefix . 'plugins/' . $this->get_data('path') . '/admin/settings.php',
 		            	'text' => $user->lang['settings'],
 		            	'check' => 'a_raidlogimport_config'),
+						'icon' => '', #http://www.famfamfam.com/lab/icons/silk/
 		            2 => array(
 		            	'link' => $url_prefix . 'plugins/' . $this->get_data('path') . '/admin/bz.php',
 		            	'text' => $user->lang['raidlogimport_bz'],
