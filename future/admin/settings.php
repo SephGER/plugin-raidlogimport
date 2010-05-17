@@ -36,41 +36,14 @@ class RLI_Settings extends EQdkp_Admin
 			'submit' => array(
 				'name'		=> 'update',
 				'process'	=> 'save_config',
-				'check'		=> 'a_raidlogimport_config'),
-			'man_db_up' => array(
-				'name'		=> 'man_db_up',
-				'process'	=> 'manual_db_update',
 				'check'		=> 'a_raidlogimport_config')
 			)
 		);
-		$this->plug_upd = new PluginUpdater('raidlogimport', 'rli_', 'raidlogimport_config', 'includes');
-
-		//initialise upd_check
-		$pluginfo = array(
-			'name'		=> 'raidlogimport',
-			'version'	=> $pm->get_data('raidlogimport', 'version'),
-			'enabled'	=> $rli->config('rli_upd_check'),
-			'vstatus'	=> $pm->plugins['raidlogimport']->get_info('vstatus'),
-			'build'		=> $pm->plugins['raidlogimport']->get_info('build')
-		);
-		$cachedb = array(
-			'table'			=> 'raidlogimport_config',
-			'data'			=> $rli->config('rlic_data'),
-			'f_data'		=> 'rlic_data',
-			'lastcheck' 	=> $rli->config('rlic_lastcheck'),
-			'f_lastcheck'	=> 'rlic_lastcheck'
-		);
-		$this->upd_check = new PluginUpdCheck($pluginfo, $cachedb);
-		$this->upd_check->PerformUpdateCheck();
-        $tpl->assign_vars(array(
-        	'UPD_IK'	=> $this->plug_upd->OutputHTML(),
-        	'UPD_CHECK'	=> $this->upd_check->OutputHTML())
-        );
 	}
 
 	function save_config()
 	{
-		global $db, $user, $tpl, $eqdkp, $pm, $SID, $rli;
+		global $db, $user, $tpl, $eqdkp, $pm, $SID, $rli, $logs;
 
 		$messages = array();
 		$bytes = array('s_member_rank', 'ignore_dissed', 'use_dkp', 'event_boss');
@@ -96,7 +69,7 @@ class RLI_Settings extends EQdkp_Admin
 			if(isset($_POST[$old_name]) AND $_POST[$old_name] != $old_value)  //update
 			{
 				$sql = "UPDATE __raidlogimport_config
-						SET config_value = '".$_POST[$old_name]."'
+						SET config_value = '".$db->escape($_POST[$old_name])."'
 						WHERE config_name = '".$old_name."';";
 				$result = $db->query($sql);
 				if(!$result)
@@ -110,12 +83,9 @@ class RLI_Settings extends EQdkp_Admin
 						'header' 		 => '{L_ACTION_RAIDLOGIMPORT_CONFIG}',
 						'{L_CONFIGNAME}' => $old_name,
 						'{L_CONFIG_OLD}' => $old_value,
-						'{L_CONFIG_NEW}' => $_POST[$old_name]
+						'{L_CONFIG_NEW}' => $_POST[$old_name],
 					);
-					$this->log_insert(array(
-						'log_type'	 => $log_action['header'],
-						'log_action' => $log_action)
-					);
+					$logs->add($log_action['header'], $log_action, true, 'raidlogimport');
 				}
 			}
 		}

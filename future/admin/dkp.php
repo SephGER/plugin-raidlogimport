@@ -77,7 +77,7 @@ class raidlogimport extends EQdkp_Admin
 
         if(isset($_POST['log']))
         {
-          $log = simplexml_load_string(utf8_encode(trim(str_replace("&", "and", html_entity_decode($in->get('log'))))));
+          $log = simplexml_load_string(utf8_encode(trim(str_replace("&", "and", html_entity_decode($_POST['log'])))));
 		  if ($log === false)
 		  {
 			  message_die($user->lang['xml_error']);
@@ -139,7 +139,7 @@ class raidlogimport extends EQdkp_Admin
 			'RAIDCOUNT'		 => ($rli->config('member_display') == 1) ? $rli->raid->count() : 1,
 			'RAIDCOUNT3'	 => ($rli->config('member_display') == 1) ? $rli->raid->count() +2 : 3)
 		);
-		
+
 		$rli->destroy();
 
 		$eqdkp->set_vars(array(

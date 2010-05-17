@@ -15,22 +15,6 @@
  *
  * $Id: dkpvals.php 4989 2009-05-31 21:38:22Z hoofy_leon $
  */
- /*
- * Project:     EQdkp-Plus Raidlogimport
- * License:     Creative Commons - Attribution-Noncommercial-Share Alike 3.0 Unported
- * Link:		http://creativecommons.org/licenses/by-nc-sa/3.0/
- * -----------------------------------------------------------------------
- * Began:       2008
- * Date:        $Date: 2009-05-31 23:38:22 +0200 (So, 31 Mai 2009) $
- * -----------------------------------------------------------------------
- * @author      $Author: hoofy_leon $
- * @copyright   2008-2009 hoofy_leon
- * @link        http://eqdkp-plus.com
- * @package     raidlogimport
- * @version     $Rev: 4989 $
- *
- * $Id: dkpvals.php 4989 2009-05-31 21:38:22Z hoofy_leon $
- */
 
 if ( !defined('EQDKP_INC') ) {
 	header('HTTP/1.0 404 Not Found');exit;
