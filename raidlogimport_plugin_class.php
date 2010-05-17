@@ -73,10 +73,10 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 	    );
 
 		//permissions
-		$this->add_permission('730', 'a_raidlogimport_config', 'N', $user->lang['configuration']);
-		$this->add_permission('731', 'a_raidlogimport_dkp', 'N', $user->lang['raidlogimport_dkp']);
-		$this->add_permission('732', 'a_raidlogimport_alias', 'N', $user->lang['raidlogimport_alias']);
-		$this->add_permission('733', 'a_raidlogimport_bz', 'N', $user->lang['raidlogimport_bz']);
+		$this->add_permission('a', 'config', 'N', $user->lang['configuration'], array(2,3));
+		$this->add_permission('a', 'dkp', 'N', $user->lang['raidlogimport_dkp'], array(2,3));
+		$this->add_permission('a', 'alias', 'N', $user->lang['raidlogimport_alias'], array(2,3));
+		$this->add_permission('a', 'bz', 'N', $user->lang['raidlogimport_bz'], array(2,3));
 
         //installation
         $steps = 4;
@@ -91,9 +91,6 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 		//further installation
     	if (!($this->pm->check(PLUGIN_INSTALLED, 'raidlogimport')))
     	{
-			//set permissions for installing user
-			$perms = array('730', '731', '732', '733');
-
 			//insert config-data
 			$config_data = array(
 				'rli_inst_version'	=> $this->get_data('version'),
@@ -164,6 +161,15 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 			}
 		}
 
+        //log actions
+     /*   $this->add_log_action('{L_ACTION_RAIDLOGIMPORT_DKP}', $user->lang['action_raidlogimport_dkp']);
+        $this->add_log_action('{L_ACTION_RAIDLOGIMPORT_BZ_UPD}', $user->lang['action_raidlogimport_bz_upd']);
+        $this->add_log_action('{L_ACTION_RAIDLOGIMPORT_BZ_ADD}', $user->lang['action_raidlogimport_bz_add']);
+        $this->add_log_action('{L_ACTION_RAIDLOGIMPORT_BZ_DEL}', $user->lang['action_raidlogimport_bz_del']);
+        $this->add_log_action('{L_ACTION_RAIDLOGIMPORT_ALIAS_UPD}', $user->lang['action_raidlogimport_alias_upd']);
+        $this->add_log_action('{L_ACTION_RAIDLOGIMPORT_ALIAS_DEL}', $user->lang['action_raidlogimport_alias_del']);
+        $this->add_log_action('{L_ACTION_RAIDLOGIMPORT_ALIAS_ADD}', $user->lang['action_raidlogimport_alias_add']);
+        $this->add_log_action('{L_ACTION_RAIDLOGIMPORT_CONFIG}', $user->lang['action_raidlogimport_config']);*/
 
 		//menu
         $this->add_menu('admin_menu', $this->gen_admin_menu());
@@ -239,8 +245,8 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
              $url_prefix = ( EQDKP_VERSION < '1.3.2' ) ? $eqdkp_root_path : '';
 		     $admin_menu = array(
 		    		'raidlogimport' => array(
-		    		99 => './../../plugins/raidlogimport/images/rli_logo.png',
-		            0 => $user->lang['raidlogimport'],
+		            'name' => $user->lang['raidlogimport'],
+                    'icon' => './../../plugins/raidlogimport/images/rli_logo.png',
 		            1 => array(
 		            	'link' => $url_prefix . 'plugins/' . $this->get_data('path') . '/admin/settings.php',
 		            	'text' => $user->lang['settings'],
