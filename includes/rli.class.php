@@ -1136,7 +1136,7 @@ if(!class_exists('rli'))
 	 *					if prefix is "optional:", the node is only checked for completion
 	 *					if prefix is "multiple:", all occuring nodes are checked
 	 */
-	function check_xml_format($xml, $xml_form, $back=array(1 => true), $pre='')
+	function check_xml_format($xml, $xml_form, $back=array(1 => true), $pre='', $suf='')
 	{
 		foreach($xml_form as $name => $val)
 		{
@@ -1157,6 +1157,9 @@ if(!class_exists('rli'))
 				$pre .= $name.'->';
 				foreach($val as $nname => $vval)
 				{
+                	if($vval) {
+						$suf = (string) $xml->$name->$nname;
+					}
                 	$optional = false;
                     if(strpos($nname, 'optional:') !== false)
                     {
@@ -1166,7 +1169,7 @@ if(!class_exists('rli'))
                     if((!isset($xml->$name->$nname)) AND !$optional)
                     {
                     	$back[1] = false;
-                    	$back[2][] = $pre.$nname;
+                    	$back[2][] = $pre.$nname.' ('.$suf.')';
                     }
                     else
                     {
@@ -1176,7 +1179,7 @@ if(!class_exists('rli'))
 					    {
 						  foreach($xml->$name->children() as $child)
 						  {
-							$back = $this->check_xml_format($child, $vval, $back, $pre);
+							$back = $this->check_xml_format($child, $vval, $back, $pre, $suf);
 						  }
                     	  $pre = substr($pre, 0, -(strlen($nname)+2));
 					    }
@@ -1187,7 +1190,7 @@ if(!class_exists('rli'))
                         	if((!isset($child) OR trim($child) == '') AND !$optional)
                         	{
                             	$back[1] = false;
-                            	$back[2][] = $pre.$name;
+                            	$back[2][] = $pre.$name.' ('.$suf.')';
                         	}
                     	  }
                         }
@@ -1195,18 +1198,22 @@ if(!class_exists('rli'))
                       else
                       {
                           $back[1] = false;
-                          $back[2][] = $name;
+                          $back[2][] = $name.' ('.$suf.')';
                       }
 					}
 					$pre = '';
+					$suf = '';
 				}
 			}
 			else
 			{
+            	if($val AND !is_array($val)) {
+					$suf = (string) $xml->$name;
+				}
 				if((!isset($xml->$name) OR (trim($xml->$name) == '') AND !is_array($val)) AND !$optional)
 				{
 					$back[1] = false;
-					$back[2][] = $pre.$name;
+					$back[2][] = $pre.$name.' ('.$suf.')';
 				}
 				else
 				{
@@ -1249,7 +1256,7 @@ if(!class_exists('rli'))
 			),
 			'multiple:members' => array(
 				'member' => array(
-					'name'	=> '',
+					'name'	=> true,
 					'multiple:times' => array('time' => '')
 				)
 			),
