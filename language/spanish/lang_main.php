@@ -1,243 +1,226 @@
 <?php
- /*
- * Project:     EQdkp-Plus Raidlogimport
- * License:     Creative Commons - Attribution-Noncommercial-Share Alike 3.0 Unported
- * Link:		http://creativecommons.org/licenses/by-nc-sa/3.0/
- * -----------------------------------------------------------------------
- * Began:       2008
- * Date:        $Date: 2009-08-08 01:02:35 +0200 (sÃ¡b, 08 ago 2009) $
- * -----------------------------------------------------------------------
- * @author      $Author: hoofy_leon $
- * @copyright   2008-2009 hoofy_leon
- * @link        http://eqdkp-plus.com
- * @package     raidlogimport
- * @version     $Rev: 5570 $
- *
- * $Id: lang_main.php 5570 2009-08-07 23:02:35Z hoofy_leon $
- */
-	$lang['raidlogimport'] = 'Importador de registros de banda';
-	$lang['action_raidlogimport_dkp'] = 'DKP';
-	$lang['action_raidlogimport_bz_upd'] = 'Jefe / Zona editado/a';
-	$lang['action_raidlogimport_bz_add'] = 'Jefe / Zona aÃ±adido/a';
-	$lang['action_raidlogimport_bz_del'] = 'Jefe / Zona borrado/a';
-	$lang['action_raidlogimport_alias_upd'] = 'Alias editado';
-	$lang['action_raidlogimport_alias_add'] = 'Alias aÃ±adido';
-	$lang['action_raidlogimport_alias_del'] = 'Alias borrado';
-	$lang['action_raidlogimport_config'] = 'Ajustes del Importador de DKP';
-	$lang['raidlogimport_long_desc'] = '';
-	$lang['raidlogimport_short_desc'] = 'Importar cadenas DKP';
-    $lang['links'] = 'Enlaces';
 
-	//permissions
-	$lang['raidlogimport_bz'] = 'GestiÃ³n de Jefe/Zona';
-	$lang['raidlogimport_dkp'] = 'Importar DKP';
-	$lang['raidlogimport_alias'] = 'GestiÃ³n de alias';
+if (!defined('EQDKP_INC')) {
+	die('You cannot access this file directly.');
+}
 
-	//Aliase
-	$lang['rli_addalias'] = 'AÃ±adir alias';
-	$lang['rli_showalias'] = 'Mostrar, editar o borrar alias';
-	$lang['rli_earner'] = 'Miembros, que obtiene DKP';
-	$lang['rli_replace'] = 'Nombre, que serÃ¡ reemplazado en bandas.';
-	$lang['rli_alias_exists'] = 'Â¡El alias ya existe!';
-	$lang['rli_of'] = 'Los DKP de';
-	$lang['rli_get'] = 'consigue';
-	$lang['rli_edit'] = 'Editar alias';
-	$lang['rli_alias_no_delete'] = 'Â¡El Alias no pudo ser borrado!';
-	$lang['rli_alias_delete'] = 'Alias eliminado.';
-	$lang['rli_alias_no_update'] = 'Â¡No se pudo guardar el alias!';
-	$lang['rli_alias_update'] = 'Alias guardado.';
-	$lang['rli_del']	= 'Borrar alias';
-	$lang['rli_upd'] = 'Actualizar alias';
-	$lang['rli_menu_alias'] = 'Administrar alias';
-	$lang['rli_suc'] = 'Alias guardado';
+//Language: Spanish	
+//Created by EQdkp Plus Translation Tool on  2010-07-09 15:10
+//File: plugin_raidlogimport
+//Source-Language: english
 
-
-	//Bz
-	$lang['rli_bz_bz'] = 'Jefes / Zonas';
-	$lang['bz_boss'] = 'Jefes';
-	$lang['bz_boss_s'] = 'Jefe';
-	$lang['bz_boss_oz'] = 'Jefes sin Zona';
-	$lang['bz_zone'] = 'Zonas';
-	$lang['bz_zone_s'] = 'Zona';
-	$lang['bz_no_zone'] = 'sin Zona';
-	$lang['bz_no_diff'] = 'sin Dificultad';
-	$lang['bz_string'] = 'Cadena';
-	$lang['bz_bnote'] = 'Nota';
-	$lang['bz_bonus'] = 'Bonus DKP';
-	$lang['bz_bonus'] = 'DKP/h';
-	$lang['bz_zevent'] = 'Evento';
-	$lang['bz_update'] = 'AÃ±adir nuevo / Editar marcado';
-	$lang['bz_delete'] = 'Borrar marcado';
-	$lang['bz_upd'] = 'Editar Jefes / Zonas';
-	$lang['bz_type'] = 'Tipo';
-	$lang['bz_note_event'] = 'Nota / Evento';
-	$lang['bz_save'] = 'Guardar';
-	$lang['bz_yes'] = 'Â¡Si!';
-	$lang['bz_no'] = 'Â¡No!';
-	$lang['bz_del'] = 'Borrar Jefes / Zonas';
-	$lang['bz_confirm_del'] = 'Â¿Realmente quieres borrarlo?';
-	$lang['bz_no_del'] = 'Los datos no se borraron';
-	$lang['bz_del_suc'] = 'Datos correctamente borrados.';
-	$lang['bz_tozone'] = 'En zono';
-	$lang['bz_no_save'] = 'Â¡Los datos no se guardaron!';
-	$lang['bz_save_suc'] = 'Datos guardados correctamente.';
-	$lang['bz_suc'] = 'Jefes / Zonas guardados';
-	$lang['bz_missing_values'] = 'Todos los campos deben ser completados.';
-	$lang['bz_sort'] = 'Orden';
-
-	//dkp
-	$lang['rli_dkp_insert'] = 'Insertar cadena DKP';
-	$lang['rli_send'] = 'Enviar';
-	$lang['rli_raidinfo'] = 'Informaciones de Banda';
-	$lang['rli_start'] = 'Inicio';
-	$lang['rli_end'] = 'Fin';
-	$lang['rli_bosskills'] = 'Muertes de Jefes';
-	$lang['rli_cost'] = 'Coste';
-	$lang['rli_success'] = 'Ã‰xito';
-	$lang['rli_error'] = 'Los datos no se guardaron debido a un error';
-	$lang['rli_no_mem_create'] = ' no se pudo crear. Por favor, aÃ±Ã¡delo manualmente.';
-	$lang['rli_mem_auto'] = ' fue creado automÃ¡ticamente.';
-	$lang['rli_raid_to'] = 'Banda a %1$s en %2$s';
-	$lang['rli_t_dkp'] = 'DKP por tiempo';
-	$lang['rli_b_dkp'] = 'DKP por jefe';
-	$lang['rli_looter'] = 'Despojador';
-	$lang['xml_error'] = 'Error XML. Â¡Por favor, revisa el registro!';
-	$lang['parse_error'] = 'Â¡Error de anÃ¡lisis!';
-	$lang['rli_clock'] = '';
-	$lang['rli_hour'] = 'hora';
-	$lang['rli_att'] = 'Asistencia';
-	$lang['rli_checkmem'] = 'Revisar datos de miembro';
-	$lang['rli_back2raid'] = 'Volver a bandas';
-	$lang['rli_checkraid'] = 'Revisar bandas';
-	$lang['rli_checkitem'] = 'Revisar objetos';
-	$lang['rli_itempage'] = 'PÃ¡gina de objeto ';
-	$lang['rli_back2mem'] = 'Volver a miembros';
-	$lang['rli_back2item'] = 'Volver a objetos';
-    $lang['rli_checkadj'] = 'Revisar ajustes';
-    $lang['rli_calc_note_value'] = 'Recalcular valor de banda y nota de banda';
-    $lang['rli_calc_event_boss'] = 'Recalcular todo';
-	$lang['rli_insert'] = 'Insertar DKP';
-	$lang['rli_adjs'] = 'Ajustes';
-	$lang['rli_partial_raid'] = 'Asistencia parcial a la banda';
-	$lang['rli_add_raid'] = 'AÃ±adir banda';
-	$lang['rli_add_raids'] = 'AÃ±adir bandas';
-	$lang['rli_add_mem'] = 'AÃ±adir miembro';
-	$lang['rli_add_mems'] = 'AÃ±adir miembros';
-	$lang['rli_add_item'] = 'AÃ±adir objeto';
-	$lang['rli_add_items'] = 'AÃ±adir objetos';
-	$lang['rli_item_id'] = 'ID de objeto';
-	$lang['rli_add_adj'] = 'AÃ±adir ajuste';
-	$lang['rli_add_adjs'] = 'AÃ±adir ajustes';
-	$lang['rli_add_bk'] = 'AÃ±adir derrota de jefe';
-	$lang['rli_add_bks'] = 'AÃ±adir derrotas de jefes';
-	$lang['rli_imp_no_suc'] = 'ImportaciÃ³n fallida';
-	$lang['rli_imp_suc'] = 'ImportaciÃ³n con Ã©xito';
-	$lang['rli_members_needed'] = 'No se han introducido miembros.';
-	$lang['rli_raids_needed'] = 'No se han introducido bandas.';
-	$lang['rli_missing_values'] = 'Faltan algunos valores. Por favor: ';
-	$lang['rli_miss'] = 'Faltan los siguientes nodo: ';
-	$lang['rli_lgaobk'] = 'Los registros de asistencia de la hermandad en las muertes de jefes deben ser desactivados antes del seguimiento. Si quieres importar el registro de todas maneras, deberÃ¡s borrar todas las inclusiones que han tenido lugar a la vez que las muertes de los jefes.';
-	$lang['wrong_format'] = 'El formato del registro de la banda no coincide con el analizador.';
-	$lang['eqdkp_format'] = 'Por favor, ajusta las opciones de CT-Raidtracker para <img src="'.$eqdkp_root_path.'plugins/raidlogimport/images/eqdkp_options.png">';
-	$lang['plus_format'] = 'Por favor establece la exportaciÃ³n de tu addon al formato EQdkpPlus XML';
-	$lang['magicdkp_format'] = 'OcurriÃ³ un error.';
-	$lang['wrong_game'] = 'Â¡El juego del que has exportado el registro y el que has especificado en la configuraciÃ³n no coinciden!';
-	$lang['wrong_settings'] = '<img src="$eqdkp_root_path'.'images/error.png" alt="error"> Â¡Ajustes errÃ³neos!';
-	$lang['wrong_settings_1'] = $lang['wrong_settings'].' No puedes combinar '.$lang['raidcount_1'].' sin DKP por Tiempo.';
-	$lang['wrong_settings_2'] = $lang['wrong_settings'].' No puedes combinar '.$lang['raidcount_2'].' sin DKP por Jefe.';
-	$lang['wrong_settings_3'] = $lang['wrong_settings'].' No puedes combinar '.$lang['raidcount_3'].' sin DKP por jefe y/o DKP por Tiempo.';
-	$lang['rli_process'] = 'Procesar';
-	$lang['translate_items'] = 'Traducir objetos';
-	$lang['get_itemid'] = 'Cagar ID de objeto';
-	$lang['translate_items_tip'] = 'Tras la traducciÃ³n, pulsa en "Actualizar" para rellenar los nuevos datos de objeto en el formulario.';
-	$lang['raidval_nullsum_later'] = 'Con el sistema de suma nula el valor de la banda se introducirÃ¡ despuÃ©s.';
-	$lang['check_raidval'] = 'Revisar valores de banda';
-	$lang['rli_log_lang'] = 'Â¿En quÃ© idioma estÃ¡n los objetos del registro?';
-	$lang['form_null_sum'] = 'FÃ³rmula: Costes de objetos / NÃºmero de miembros ';
-	$lang['form_null_sum_1'] = $lang['form_null_sum'].'en la Banda';
-	$lang['form_null_sum_2'] = $lang['form_null_sum'].'en el Sistema';
-	$lang['rli_choose_mem'] = 'Elige un miembro ...';
-	$lang['rli_go_on'] = 'Siguiente';
-
-	//config
-	$lang['multidkp_need'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                    Â¡Activar para funcionalidad con MultiDKP!                  </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='help'></a>";
-	$lang['new_member_rank'] = 'Rango por defecto para los miembros creados automÃ¡ticamente.';
-	$lang['raidcount'] = 'Â¿CÃ³mo deberÃ­an crearse las bandas?';
-	$lang['raidcount_0'] = 'Una banda para todo';
-	$lang['raidcount_1'] = 'Una banda por hora';
-	$lang['raidcount_2'] = 'Una banda por jefe';
-	$lang['raidcount_3'] = 'Una banda por jefe y hora';
-	$lang['attendence_begin'] = 'Bonus por asistencia durante el inicio de la banda';
-	$lang['attendence_end'] = 'Bonus por permanencia en la banda hasta el final';
-	$lang['config_success'] = 'ConfiguraciÃ³n correcta';
-	$lang['event_boss'] = 'Â¿Existe un evento para cada jefe?';
-	$lang['event_boss_1'] = 'Si';
-	$lang['event_boss_2'] = 'Usa el nombre del jefe como nota de banda';
-	$lang['attendence_raid'] = 'Â¿Crear una banda extra para asistencia?';
-	$lang['loottime'] = 'Tiempo en segundos que se tarda en repartir el botÃ­n.';
-	$lang['attendence_time'] = 'Tiempo en segundos que duran las invitaciones / fin de la banda.';
-	$lang['rli_inst_version'] = 'VersiÃ³n instalada';
-	$lang['adj_parse'] = 'Delimitador entre el motivo y el valor de un ajuste';
-	$lang['bz_parse'] = 'Delimitador entre las Cadenas que pertenecen a un "evento".';
-	$lang['parser'] = 'Â¿En quÃ© formato XML estÃ¡ la cadena?';
-	$lang['parser_eqdkp'] = 'MLDKP 1.1 / Plugin EQdkp';
-	$lang['parser_plus'] = 'Formato XML EQdkpPlus XML';
-	$lang['parser_magicdkp'] = 'MagicDKP';
-	$lang['parser_eq'] = 'Everquest';
-	$lang['parser_ka_rt'] = 'KA-Raidtracker-EQdkp';
-	$lang['rli_man_db_up'] = 'Forzar actualizaciÃ³n de la BD';
-	$lang['rli_upd_check'] = 'Â¿Activar revisiÃ³n de actualizaciones?';
-	$lang['use_dkp'] = 'Â¿QuÃ© DKP se debe usar?';
-	$lang['use_dkp_1'] = 'DKP por Jefes';
-	$lang['use_dkp_2'] = 'DKP por Tiempo';
-	$lang['use_dkp_4'] = 'DKP por Evento';
-	$lang['null_sum'] = 'Â¿Usar sistema de suma nula?';
-	$lang['null_sum_0'] = 'No';
-	$lang['null_sum_1'] = 'Cada miembro en la banda consigue los DKP';
-	$lang['null_sum_2'] = 'Cada miembro en el sistema consigue los DKP';
-	$lang['item_save_lang'] = 'Â¿En quÃ© idioma deberÃ­an guardarse los objetos en la BD?';
-	$lang['deactivate_adj'] = "Â¿Desactivar ajustes? <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                   Â¡Esto elimina la ganancia parcial de DKP por miembro! Todo el mundo consigue todo o nada                 </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/error.gif' alt='warn'></a>";
-	$lang['addinfo_am'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                   Este ajuste permite restas de DKP si el miembro no ha participado en el nÃºmero de bandas indicado. Si usas un sistema de suma nula, los DKP se restarÃ¡n por un objeto.                </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/error.gif' alt='warn'></a>";
-	$lang['auto_minus'] = 'Â¿Activar resta automÃ¡tica?'.$lang['addinfo_am'];
-	$lang['am_raidnum'] = 'NÃºmero de bandas para resta automÃ¡tica';
-	$lang['am_value'] = 'Cantidad de DKP restados';
-	$lang['am_value_raids'] = 'Valor DKP = DKP del Ãºltimo nÃºmero de bandas';
-	$lang['am_allxraids'] = "Â¿Restaurar contador de bandas en Resta de DKP? <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td>Ejemplo: Un miembro pierde DKP tras no asistir a 3 bandas. En la 4Âª banda tampoco aparece. Si esta opciÃ³n se desactiva el miembro volverÃ¡ a perder DKP. Si estÃ¡ activa perderÃ¡ DKP cuando se cumplan 6 Bandas sin asistir. </td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='help'></a>";
-	$lang['addinfo_am'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td> Cuando se usa, un miembro, que no haya participado en las Ãºltimas X bandas pierde una cantidad de DKP. Si se usa el sistema de suma negativa, se le concederÃ¡ un objeto al miembro, si no recibirÃ¡ un ajuste. <td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='help'></a>";
-	$lang['am_name'] = 'falta de participaciÃ³n';
-	$lang['title_am'] = 'Resta automÃ¡tica';
-	$lang['title_adj'] = 'Ajustes';
-	$lang['title_att'] = 'Asistencia';
-	$lang['title_general'] = 'General';
-	$lang['title_loot'] = 'BotÃ­n / Objetos';
-	$lang['title_parse'] = 'Ajustes de anÃ¡lisis';
-	$lang['title_hnh_suffix'] = 'HerÃ³ico / No HerÃ³ico';
-	$lang['title_member'] = 'Ajustes de miembro';
-	$lang['ignore_dissed'] = 'Â¿Ignorar desencantados y botÃ­n de banco?';
-	$lang['ignore_dissed_1'] = 'Ignorar desencantado';
-	$lang['ignore_dissed_2'] = 'Ignorar banco';
-	$lang['member_miss_time'] = 'Tiempo en segundos que un miembro puede perder sin ser registrado.';
-	$lang['s_member_rank'] = 'Â¿Mostrar rango de miembro?';
-	$lang['s_member_rank_1'] = 'Vista de miembros';
-	$lang['s_member_rank_2'] = 'Vista de botÃ­n';
-	$lang['s_member_rank_4'] = 'Vista de ajustes';
-	$lang['member_start'] = 'DKP iniciales que gana un miembro cuando se crea automÃ¡ticamente';
-	$lang['member_start_name'] = 'DKP iniciales'; //value is used for reason of adjustment
-	$lang['member_start_event'] = 'Evento para DKP iniciales';
-	$lang['att_note_begin'] = 'nota de banda para la asistencia inicial a la banda';
-	$lang['att_note_end'] = 'nota de banda para la asistencia final a la banda';
-	$lang['raid_note_time']	= 'nota de banda de las bandas por hora';
-	$lang['raid_note_time_0'] = '20:00-21:00, 21:00-22:00, etc.';
-	$lang['raid_note_time_1'] = '1.Hora, 2.Hora, etc.';
-	$lang['timedkp_handle']	= "CÃ¡lculo de los DKP por tiempo <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td> 0: Ã¡lculo exacto por minuto <br /> >0: minutos, despuÃ©s el miembro gana DPS completo de la hora </td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='help'></a>";
-	 $lang['member_display'] = 'Â¿CÃ³mo mostrar la lista de miembros?';
-	 $lang['member_display_1'] = 'MÃºltiples casillas de selecciÃ³n';
-	 $lang['member_display_0'] = 'SelecciÃ³n mÃºltiple';
-    $lang['member_display_add'] = " <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td>Si quieres usar <nobr>".$lang['member_display_1']."</nobr>, tienes que tener la librerÃ­a GD (ExtensiÃ³n PHP).<br /> EstÃ¡s usando la siguiente versiÃ³n de la librerÃ­a GD:<br />%s</td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/error.gif' alt='warn'></a>";
-	 $lang['no_gd_lib'] = '<span class="negative">no GD-lib found</span>';
-	 $lang['bz_dep_match'] = 'Â¿Se deberÃ­an evaluar los activadores de jefe dependiendo de su zona?';
-
-    //portal
-    $lang['p_rli_zone_display'] = 'Â¿QuÃ© zonas deberÃ­an ser mostradas?';
-    $lang['dkpvals'] = 'Valores DKP';
+$alang = array( 
+"raidlogimport" => "Importador de registros de banda",
+"action_raidlogimport_dkp" => "DKP",
+"action_raidlogimport_bz_upd" => "Jefe / Zona editado/a",
+"action_raidlogimport_bz_add" => "Jefe / Zona añadido/a",
+"action_raidlogimport_bz_del" => "Jefe / Zona borrado/a",
+"action_raidlogimport_alias_upd" => "Alias editado",
+"action_raidlogimport_alias_add" => "Alias añadido",
+"action_raidlogimport_alias_del" => "Alias borrado",
+"action_raidlogimport_config" => "Ajustes del Importador de DKP",
+"raidlogimport_long_desc" => "",
+"raidlogimport_short_desc" => "Importar cadenas DKP",
+"links" => "Enlaces",
+"raidlogimport_bz" => "Gestión de Jefe/Zona",
+"raidlogimport_dkp" => "Importar DKP",
+"raidlogimport_alias" => "Gestión de alias",
+"rli_addalias" => "Añadir alias",
+"rli_showalias" => "Mostrar, editar o borrar alias",
+"rli_earner" => "Miembros, que obtiene DKP",
+"rli_replace" => "Nombre, que será reemplazado en bandas.",
+"rli_alias_exists" => "¡El alias ya existe!",
+"rli_of" => "Los DKP de",
+"rli_get" => "consigue",
+"rli_edit" => "Editar alias",
+"rli_alias_no_delete" => "¡El Alias no pudo ser borrado!",
+"rli_alias_delete" => "Alias eliminado.",
+"rli_alias_no_update" => "¡No se pudo guardar el alias!",
+"rli_alias_update" => "Alias guardado.",
+"rli_del" => "Borrar alias",
+"rli_upd" => "Actualizar alias",
+"rli_menu_alias" => "Administrar alias",
+"rli_suc" => "Alias guardado",
+"rli_bz_bz" => "Jefes / Zonas",
+"bz_boss" => "Jefes",
+"bz_boss_s" => "Jefe",
+"bz_boss_oz" => "Jefes sin Zona",
+"bz_zone" => "Zonas",
+"bz_zone_s" => "Zona",
+"bz_no_zone" => "sin Zona",
+"bz_no_diff" => "sin Dificultad",
+"bz_string" => "Cadena",
+"bz_bnote" => "Nota",
+"bz_bonus" => "Bonos-DKP",
+"bz_bonusph" => "DKP / h",
+"bz_zevent" => "Evento",
+"bz_update" => "Añadir nuevo / Editar marcado",
+"bz_delete" => "Borrar marcado",
+"bz_upd" => "Editar Jefes / Zonas",
+"bz_type" => "Tipo",
+"bz_note_event" => "Nota / Evento",
+"bz_save" => "Guardar",
+"bz_yes" => "¡Si!",
+"bz_no" => "¡No!",
+"bz_del" => "Borrar Jefes / Zonas",
+"bz_confirm_del" => "¿Realmente quieres borrarlo?",
+"bz_no_del" => "Los datos no se borraron",
+"bz_del_suc" => "Datos correctamente borrados.",
+"bz_tozone" => "En zono",
+"bz_no_save" => "¡Los datos no se guardaron!",
+"bz_save_suc" => "Datos guardados correctamente.",
+"bz_suc" => "Jefes / Zonas guardados",
+"bz_missing_values" => "Todos los campos deben ser completados.",
+"bz_sort" => "Orden",
+"rli_dkp_insert" => "Insertar cadena DKP",
+"rli_send" => "Enviar",
+"rli_raidinfo" => "Informaciones de Banda",
+"rli_start" => "Inicio",
+"rli_end" => "Fin",
+"rli_bosskills" => "Muertes de Jefes",
+"rli_cost" => "Coste",
+"rli_success" => "Éxito",
+"rli_error" => "Los datos no se guardaron debido a un error",
+"rli_no_mem_create" => " no se pudo crear. Por favor, añádelo manualmente.",
+"rli_mem_auto" => " fue creado automáticamente.",
+"rli_raid_to" => "Banda a %1$s en %2$s",
+"rli_t_dkp" => "DKP por tiempo",
+"rli_b_dkp" => "DKP por jefe",
+"rli_looter" => "Despojador",
+"xml_error" => "Error XML. ¡Por favor, revisa el registro!",
+"parse_error" => "¡Error de análisis!",
+"rli_clock" => "",
+"rli_hour" => "hora",
+"rli_att" => "Asistencia",
+"rli_checkmem" => "Revisar datos de miembro",
+"rli_back2raid" => "Volver a bandas",
+"rli_checkraid" => "Revisar bandas",
+"rli_checkitem" => "Revisar objetos",
+"rli_itempage" => "Página de objeto ",
+"rli_back2mem" => "Volver a miembros",
+"rli_back2item" => "Volver a objetos",
+"rli_checkadj" => "Revisar ajustes",
+"rli_calc_note_value" => "Recalcular valor de banda y nota de banda",
+"rli_calc_event_boss" => "Recalcular todo",
+"rli_insert" => "Insertar DKP",
+"rli_adjs" => "Ajustes",
+"rli_partial_raid" => "Asistencia parcial a la banda",
+"rli_add_raid" => "Añadir banda",
+"rli_add_raids" => "Añadir bandas",
+"rli_add_mem" => "Añadir miembro",
+"rli_add_mems" => "Añadir miembros",
+"rli_add_item" => "Añadir objeto",
+"rli_add_items" => "Añadir objetos",
+"rli_item_id" => "ID de objeto",
+"rli_add_adj" => "Añadir ajuste",
+"rli_add_adjs" => "Añadir ajustes",
+"rli_add_bk" => "Añadir derrota de jefe",
+"rli_add_bks" => "Añadir derrotas de jefes",
+"rli_imp_no_suc" => "Importación fallida",
+"rli_imp_suc" => "Importación con éxito",
+"rli_members_needed" => "No se han introducido miembros.",
+"rli_raids_needed" => "No se han introducido bandas.",
+"rli_missing_values" => "Faltan algunos valores. Por favor: ",
+"rli_miss" => "Faltan los siguientes nodo: ",
+"rli_lgaobk" => "Los registros de asistencia de la hermandad en las muertes de jefes deben ser desactivados antes del seguimiento. Si quieres importar el registro de todas maneras, deberás borrar todas las inclusiones que han tenido lugar a la vez que las muertes de los jefes.",
+"wrong_format" => "El formato del registro de la banda no coincide con el analizador.",
+"eqdkp_format" => "Por favor, ajusta las opciones de CT-Raidtracker para <img src=\"./../plugins/raidlogimport/images/eqdkp_options.png\">",
+"plus_format" => "Por favor establece la exportación de tu addon al formato EQdkpPlus XML",
+"magicdkp_format" => "Ocurrió un error.",
+"wrong_game" => "¡El juego del que has exportado el registro y el que has especificado en la configuración no coinciden!",
+"wrong_settings" => "<img src=\"$eqdkp_root_pathimages/error.png\" alt=\"error\"> ¡Ajustes erróneos!",
+"wrong_settings_1" => "<img src=\"$eqdkp_root_pathimages/error.png\" alt=\"error\"> ¡Ajustes erróneos! No puedes combinar  sin DKP por Tiempo.",
+"wrong_settings_2" => "<img src=\"$eqdkp_root_pathimages/error.png\" alt=\"error\"> ¡Ajustes erróneos! No puedes combinar  sin DKP por Jefe.",
+"wrong_settings_3" => "<img src=\"$eqdkp_root_pathimages/error.png\" alt=\"error\"> ¡Ajustes erróneos! No puedes combinar  sin DKP por jefe y/o DKP por Tiempo.",
+"rli_process" => "Procesar",
+"translate_items" => "Traducir objetos",
+"get_itemid" => "Cagar ID de objeto",
+"translate_items_tip" => "Tras la traducción, pulsa en \"Actualizar\" para rellenar los nuevos datos de objeto en el formulario.",
+"raidval_nullsum_later" => "Con el sistema de suma nula el valor de la banda se introducirá después.",
+"check_raidval" => "Revisar valores de banda",
+"rli_log_lang" => "¿En qué idioma están los objetos del registro?",
+"form_null_sum" => "Fórmula: Costes de objetos / Número de miembros ",
+"form_null_sum_1" => "Fórmula: Costes de objetos / Número de miembros en la Banda",
+"form_null_sum_2" => "Fórmula: Costes de objetos / Número de miembros en el Sistema",
+"rli_choose_mem" => "Elige un miembro ...",
+"rli_go_on" => "Siguiente",
+"multidkp_need" => "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                    ¡Activar para funcionalidad con MultiDKP!                  </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='./../images/info.png' alt='help'></a>",
+"new_member_rank" => "Rango por defecto para los miembros creados automáticamente.",
+"raidcount" => "¿Cómo deberían crearse las bandas?",
+"raidcount_0" => "Una banda para todo",
+"raidcount_1" => "Una banda por hora",
+"raidcount_2" => "Una banda por jefe",
+"raidcount_3" => "Una banda por jefe y hora",
+"attendence_begin" => "Bonus por asistencia durante el inicio de la banda",
+"attendence_end" => "Bonus por permanencia en la banda hasta el final",
+"config_success" => "Configuración correcta",
+"event_boss" => "¿Existe un evento para cada jefe?",
+"event_boss_1" => "Si",
+"event_boss_2" => "Usa el nombre del jefe como nota de banda",
+"attendence_raid" => "¿Crear una banda extra para asistencia?",
+"loottime" => "Tiempo en segundos que se tarda en repartir el botín.",
+"attendence_time" => "Tiempo en segundos que duran las invitaciones / fin de la banda.",
+"rli_inst_version" => "Versión instalada",
+"adj_parse" => "Delimitador entre el motivo y el valor de un ajuste",
+"bz_parse" => "Delimitador entre las Cadenas que pertenecen a un \"evento\".",
+"parser" => "¿En qué formato XML está la cadena?",
+"parser_eqdkp" => "MLDKP 1.1 / Plugin EQdkp",
+"parser_plus" => "Formato XML EQdkpPlus XML",
+"parser_magicdkp" => "MagicDKP",
+"parser_eq" => "Everquest",
+"rli_man_db_up" => "Forzar actualización de la BD",
+"rli_upd_check" => "¿Activar revisión de actualizaciones?",
+"use_dkp" => "¿Qué DKP se debe usar?",
+"use_dkp_1" => "DKP por Jefes",
+"use_dkp_2" => "DKP por Tiempo",
+"use_dkp_4" => "DKP por Evento",
+"null_sum" => "¿Usar sistema de suma nula?",
+"null_sum_0" => "No",
+"null_sum_1" => "Cada miembro en la banda consigue los DKP",
+"null_sum_2" => "Cada miembro en el sistema consigue los DKP",
+"item_save_lang" => "¿En qué idioma deberían guardarse los objetos en la BD?",
+"deactivate_adj" => "¿Desactivar ajustes? <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                   ¡Esto elimina la ganancia parcial de DKP por miembro! Todo el mundo consigue todo o nada                 </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='./../images/error.gif' alt='warn'></a>",
+"addinfo_am" => "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td> Cuando se usa, un miembro, que no haya participado en las últimas X bandas pierde una cantidad de DKP. Si se usa el sistema de suma negativa, se le concederá un objeto al miembro, si no recibirá un ajuste. <td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='./../images/info.png' alt='help'></a>",
+"auto_minus" => "¿Activar resta automática?<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                   Este ajuste permite restas de DKP si el miembro no ha participado en el número de bandas indicado. Si usas un sistema de suma nula, los DKP se restarán por un objeto.                </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='./../images/error.gif' alt='warn'></a>",
+"am_raidnum" => "Número de bandas para resta automática",
+"am_value" => "Cantidad de DKP restados",
+"am_value_raids" => "Valor DKP = DKP del último número de bandas",
+"am_allxraids" => "¿Restaurar contador de bandas en Resta de DKP? <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td>Ejemplo: Un miembro pierde DKP tras no asistir a 3 bandas. En la 4ª banda tampoco aparece. Si esta opción se desactiva el miembro volverá a perder DKP. Si está activa perderá DKP cuando se cumplan 6 Bandas sin asistir. </td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='./../images/info.png' alt='help'></a>",
+"am_name" => "falta de participación",
+"title_am" => "Resta automática",
+"title_adj" => "Ajustes",
+"title_att" => "Asistencia",
+"title_general" => "General",
+"title_loot" => "Botín / Objetos",
+"title_parse" => "Ajustes de análisis",
+"title_hnh_suffix" => "Heróico / No Heróico",
+"title_member" => "Ajustes de miembro",
+"ignore_dissed" => "¿Ignorar desencantados y botín de banco?",
+"ignore_dissed_1" => "Ignorar desencantado",
+"ignore_dissed_2" => "Ignorar banco",
+"member_miss_time" => "Tiempo en segundos que un miembro puede perder sin ser registrado.",
+"s_member_rank" => "¿Mostrar rango de miembro?",
+"s_member_rank_1" => "Vista de miembros",
+"s_member_rank_2" => "Vista de botín",
+"s_member_rank_4" => "Vista de ajustes",
+"member_start" => "DKP iniciales que gana un miembro cuando se crea automáticamente",
+"member_start_name" => "DKP iniciales",
+"member_start_event" => "Evento para DKP iniciales",
+"att_note_begin" => "nota de banda para la asistencia inicial a la banda",
+"att_note_end" => "nota de banda para la asistencia final a la banda",
+"raid_note_time" => "nota de banda de las bandas por hora",
+"raid_note_time_0" => "20:00-21:00, 21:00-22:00, etc.",
+"raid_note_time_1" => "1.Hora, 2.Hora, etc.",
+"timedkp_handle" => "Cálculo de los DKP por tiempo <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td> 0: álculo exacto por minuto <br /> >0: minutos, después el miembro gana DPS completo de la hora </td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='./../images/info.png' alt='help'></a>",
+"member_display" => "¿Cómo mostrar la lista de miembros?",
+"member_display_1" => "Múltiples casillas de selección",
+"member_display_0" => "Selección múltiple",
+"member_display_add" => " <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td>Si quieres usar <nobr>Múltiples casillas de selección</nobr>, tienes que tener la librería GD (Extensión PHP).<br /> Estás usando la siguiente versión de la librería GD:<br />%s</td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='./../images/error.gif' alt='warn'></a>",
+"no_gd_lib" => "<span class=\"negative\">no GD-lib found</span>",
+"bz_dep_match" => "¿Se deberían evaluar los activadores de jefe dependiendo de su zona?",
+"p_rli_zone_display" => "¿Qué zonas deberían ser mostradas?",
+"dkpvals" => "Valores DKP",
+ );
+$lang = (is_array($lang))? $lang : array();
+$lang = array_merge($lang, $alang);
 ?>
