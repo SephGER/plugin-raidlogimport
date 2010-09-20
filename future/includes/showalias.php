@@ -26,7 +26,7 @@ class Show_Alias extends EQdkp_Admin
 {
 	function Show_Alias()
 	{
-        global $db, $eqdkp, $user, $tpl, $pm;
+        global $db, $core, $user, $tpl, $pm;
         global $SID;
 
         parent::eqdkp_admin();
@@ -41,7 +41,7 @@ class Show_Alias extends EQdkp_Admin
 	}
 	function display_form()
 	{
-        global $db, $eqdkp, $user, $tpl, $pm;
+        global $db, $core, $user, $tpl, $pm;
         global $SID, $table_prefix;
 
         if(isset($_POST['submit']) AND $_POST['submit'] == $user->lang['rli_edit']) {
@@ -81,8 +81,8 @@ class Show_Alias extends EQdkp_Admin
 	        	'RLI_EDIT'	  => $user->lang['rli_edit'])
 	        );
 
-			$eqdkp->set_vars(array(
-	            'page_title'        => sprintf($user->lang['admin_title_prefix'], $eqdkp->config['guildtag'], $eqdkp->config['dkp_name']).': '.$user->lang['rli_edit'],
+			$core->set_vars(array(
+	            'page_title'        => sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang['rli_edit'],
 	            'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
 	            'template_file'     => 'editalias.html',
 	            'display'           => true,
@@ -100,7 +100,7 @@ class Show_Alias extends EQdkp_Admin
         	}
         	$tpl->assign_block_vars('sucs', array(
 	        	'PART1'	=> $success,
-	        	'CLASS'	=> $eqdkp->switch_row_class())
+	        	'CLASS'	=> $core->switch_row_class())
 	        );
 	        $links = array(
 	        	'alias.php' . $SID . '&amp;mode=addalias' => $user->lang['rli_addalias'],
@@ -111,15 +111,15 @@ class Show_Alias extends EQdkp_Admin
 	        	$tpl->assign_block_vars('links', array(
 	        		'SUC_LINK'	=> $link,
 	        		'SUC_PAGE'	=> $page,
-	        		'CLASS'		=> $eqdkp->switch_row_class())
+	        		'CLASS'		=> $core->switch_row_class())
 	        	);
 	        }
 	        $tpl->assign_vars(array(
 	        	'L_SUCCESS'	=> $user->lang['rli_suc'],
 	        	'L_LINKS'	=> $user->lang['links'])
 	        );
-        	$eqdkp->set_vars(array(
-        		'page_title'        => sprintf($user->lang['admin_title_prefix'], $eqdkp->config['guildtag'], $eqdkp->config['dkp_name']).': '."Alias Erfolg",
+        	$core->set_vars(array(
+        		'page_title'        => sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '."Alias Erfolg",
 	            'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
 	            'template_file'     => 'success.html',
 	            'display'           => true,
@@ -139,7 +139,7 @@ class Show_Alias extends EQdkp_Admin
         	}
 	        $tpl->assign_block_vars('sucs', array(
 	        	'PART1'	=> $success,
-	        	'CLASS'	=> $eqdkp->switch_row_class())
+	        	'CLASS'	=> $core->switch_row_class())
 	        );
 	        $links = array(
 	        	'alias.php' . $SID . '&amp;mode=addalias' => $user->lang['rli_addalias'],
@@ -150,15 +150,15 @@ class Show_Alias extends EQdkp_Admin
 	        	$tpl->assign_block_vars('links', array(
 	        		'SUC_LINK'	=> $link,
 	        		'SUC_PAGE'	=> $page,
-	        		'CLASS'		=> $eqdkp->switch_row_class())
+	        		'CLASS'		=> $core->switch_row_class())
 	        	);
 	        }
 	        $tpl->assign_vars(array(
 	        	'L_SUCCESS'	=> $user->lang['alias_suc'],
 	        	'L_LINKS'	=> $user->lang['links'])
 	        );
-        	$eqdkp->set_vars(array(
-        		'page_title'		=> sprintf($user->lang['admin_title_prefix'], $eqdkp->config['guildtag'], $eqdkp->config['dkp_name']).': '."Alias Erfolg",
+        	$core->set_vars(array(
+        		'page_title'		=> sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '."Alias Erfolg",
         		'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
 	            'template_file'     => 'success.html',
 	            'display'           => true,
@@ -202,8 +202,8 @@ class Show_Alias extends EQdkp_Admin
 	        	'RLI_SHOWALIAS' => $user->lang['rli_showalias'])
 	        );
 
-			$eqdkp->set_vars(array(
-	            'page_title'        => sprintf($user->lang['admin_title_prefix'], $eqdkp->config['guildtag'], $eqdkp->config['dkp_name']).': '.$user->lang['rli_showalias'],
+			$core->set_vars(array(
+	            'page_title'        => sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang['rli_showalias'],
 	            'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
 	            'template_file'     => 'showalias.html',
 	            'display'           => true,

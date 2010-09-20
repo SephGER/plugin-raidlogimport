@@ -27,7 +27,7 @@ class raidlogimport extends EQdkp_Admin
 {
 	public function raidlogimport()
     {
-        global $db, $eqdkp, $user, $tpl, $pm, $rli;
+        global $db, $core, $user, $tpl, $pm, $rli;
         global $SID;
 
         parent::eqdkp_admin();
@@ -72,7 +72,7 @@ class raidlogimport extends EQdkp_Admin
 
 	function process_raids()
 	{
-		global $db, $eqdkp, $user, $tpl, $pm;
+		global $db, $core, $user, $tpl, $pm;
 		global $myHtml, $rli, $eqdkp_root_path, $in;
 
         if(isset($_POST['log']))
@@ -109,8 +109,8 @@ class raidlogimport extends EQdkp_Admin
 
 		$rli->destroy();
 
-		$eqdkp->set_vars(array(
-        	'page_title'        => sprintf($user->lang['admin_title_prefix'], $eqdkp->config['guildtag'], $eqdkp->config['dkp_name']).': Daten prüfen',
+		$core->set_vars(array(
+        	'page_title'        => sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang['rli_check_data'],
             'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
             'template_file'     => 'rli_step2raids.html',
             'display'           => true)
@@ -119,11 +119,12 @@ class raidlogimport extends EQdkp_Admin
 
 	function process_members()
 	{
-		global $db, $eqdkp, $user, $tpl, $pm;
+		global $db, $core, $user, $tpl, $pm;
 		global $myHtml, $rli, $jquery, $in;
 
 		$rli->member->add_new($in->get('members_add',0));
 
+		//display members
 		$rli->member->display(true);
 
 		//show raids
@@ -142,8 +143,8 @@ class raidlogimport extends EQdkp_Admin
 
 		$rli->destroy();
 
-		$eqdkp->set_vars(array(
-        	'page_title'        => sprintf($user->lang['admin_title_prefix'], $eqdkp->config['guildtag'], $eqdkp->config['dkp_name']).': Daten prüfen',
+		$core->set_vars(array(
+        	'page_title'        => sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang['rli_check_data'],
             'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
             'template_file'     => ($rli->config('member_display') == 2) ? 'rli_step2dmems.html' : 'rli_step2mems.html',
             'display'           => true)
@@ -152,7 +153,7 @@ class raidlogimport extends EQdkp_Admin
 
 	function process_items()
 	{
-		global $db, $eqdkp, $user, $tpl, $pm;
+		global $db, $core, $user, $tpl, $pm;
 		global $myHtml, $rli;
 
 		$rli->parse_post();
@@ -280,8 +281,8 @@ class raidlogimport extends EQdkp_Admin
 
 		//language
 		$tpl->assign_vars(lang2tpl());
-		$eqdkp->set_vars(array(
-        	'page_title'        => sprintf($user->lang['admin_title_prefix'], $eqdkp->config['guildtag'], $eqdkp->config['dkp_name']).': Daten prüfen',
+		$core->set_vars(array(
+        	'page_title'        => sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang['rli_check_data'],
             'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
             'template_file'     => 'rli_step2items.html',
             'display'           => true)
@@ -290,7 +291,7 @@ class raidlogimport extends EQdkp_Admin
 
 	function process_adjustments()
 	{
-		global $db, $eqdkp, $tpl, $user, $pm;
+		global $db, $core, $tpl, $user, $pm;
 		global $myHtml, $rli;
 
 		$db->query("DROP TABLE IF EXISTS item_rename;");
@@ -361,7 +362,7 @@ class raidlogimport extends EQdkp_Admin
 					'EVENT'		=> $myHtml->DropDown('adjs['.$a.'][event]', $rli->events['name'], $ev_sel, '', '', true),
 					'NOTE'		=> $adj['reason'],
 					'VALUE'		=> round($adj['value'], 2),
-					'CLASS'		=> $eqdkp->switch_row_class(),
+					'CLASS'		=> $core->switch_row_class(),
 					'KEY'		=> $a,
 					'READONLY'	=> ($adj['reason'] == $user->lang['am_name']) ? "readonly='readonly'" : "")
 				  );
@@ -377,8 +378,8 @@ class raidlogimport extends EQdkp_Admin
 
 		//language
 		$tpl->assign_vars(lang2tpl());
-		$eqdkp->set_vars(array(
-        	'page_title'        => sprintf($user->lang['admin_title_prefix'], $eqdkp->config['guildtag'], $eqdkp->config['dkp_name']).': Daten prüfen',
+		$core->set_vars(array(
+        	'page_title'        => sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang['rli_check_data'],
             'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
             'template_file'     => 'rli_step2adj.html',
             'display'           => true)
@@ -387,7 +388,7 @@ class raidlogimport extends EQdkp_Admin
 
 	function process_null_sum()
 	{
-		global $db, $eqdkp, $user, $tpl, $pm, $SID, $rli, $myHtml;
+		global $db, $core, $user, $tpl, $pm, $SID, $rli, $myHtml;
 
 		$db->query("DROP TABLE IF EXISTS item_rename");
 
@@ -475,7 +476,7 @@ class raidlogimport extends EQdkp_Admin
 					'EVENT'		=> $myHtml->DropDown('adjs['.$a.'][event]', $rli->events['name'], $ev_sel, '', '', true),
 					'NOTE'		=> $adj['reason'],
 					'VALUE'		=> $adj['value'],
-					'CLASS'		=> $eqdkp->switch_row_class(),
+					'CLASS'		=> $core->switch_row_class(),
 					'KEY'		=> $a)
 				  );
 				}
@@ -492,8 +493,8 @@ class raidlogimport extends EQdkp_Admin
 
 		//language
 		$tpl->assign_vars(lang2tpl());
-		$eqdkp->set_vars(array(
-        	'page_title'        => sprintf($user->lang['admin_title_prefix'], $eqdkp->config['guildtag'], $eqdkp->config['dkp_name']).': Daten prüfen',
+		$core->set_vars(array(
+        	'page_title'        => sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang['rli_check_data'],
             'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
             'template_file'     => 'rli_step2ns.html',
             'display'           => true)
@@ -502,7 +503,7 @@ class raidlogimport extends EQdkp_Admin
 
 	function insert_log()
 	{
-		global $db, $eqdkp, $user, $tpl, $pm;
+		global $db, $core, $user, $tpl, $pm;
 		global $SID, $rli, $conf_plus, $eqdkp_root_path, $pdc;
 
 		$rli->parse_post();
@@ -700,7 +701,7 @@ class raidlogimport extends EQdkp_Admin
                     if($member['status'] AND !isset($member['raid_list']))
                     {
                         $now = time();
-                        if(($now - $eqdkp->config['inactive_period']*24*3600) > $member['lastraid'] AND $member['lastraid'])
+                        if(($now - $core->config['inactive_period']*24*3600) > $member['lastraid'] AND $member['lastraid'])
                         { //move member to inactive
                         	$sql[] = "member_status = '0'";
                         }
@@ -827,7 +828,7 @@ class raidlogimport extends EQdkp_Admin
 		  {
 			$tpl->assign_block_vars('sucs', array(
 				'PART1'	=> $answer,
-				'CLASS'	=> $eqdkp->switch_row_class())
+				'CLASS'	=> $core->switch_row_class())
 			);
 		  }
           $tpl->assign_vars(array(
@@ -835,8 +836,8 @@ class raidlogimport extends EQdkp_Admin
             'L_LINKS'	=> $user->lang['links'])
           );
 
-		  $eqdkp->set_vars(array(
-            'page_title'        => sprintf($user->lang['admin_title_prefix'], $eqdkp->config['guildtag'], $eqdkp->config['dkp_name']).': '.$user->lang['rli_imp_suc'],
+		  $core->set_vars(array(
+            'page_title'        => sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang['rli_imp_suc'],
             'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
             'template_file'     => 'success.html',
             'display'           => true,
@@ -860,8 +861,8 @@ class raidlogimport extends EQdkp_Admin
 		  	'CHECK'			=> $check,
 		  	'DATA'			=> htmlspecialchars(serialize($rli->data), ENT_QUOTES))
 		  );
-    	  $eqdkp->set_vars(array(
-    	  	'page_title'		=> sprintf($user->lang['admin_title_prefix'], $eqdkp->config['guildtag'], $eqdkp->config['dkp_name']).': '.$user->lang['rli_imp_no_suc'],
+    	  $core->set_vars(array(
+    	  	'page_title'		=> sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang['rli_imp_no_suc'],
     	  	'template_path'		=> $pm->get_data('raidlogimport', 'template_path'),
     	  	'template_file'		=> 'check_input.html',
     	  	'display'			=> true,
@@ -872,7 +873,7 @@ class raidlogimport extends EQdkp_Admin
 
 	function display_form($messages=array())
     {
-        global $db, $eqdkp, $user, $tpl, $pm;
+        global $db, $core, $user, $tpl, $pm;
         global $SID, $myHtml, $rli;
 
         $rli->init_import();
@@ -911,8 +912,8 @@ class raidlogimport extends EQdkp_Admin
             'LANG_SELECT'	 => ($rli->config('parser') == 'plus') ? '' : $myHtml->DropDown('log_lang', $lang_array, $sel_lang))
         );
 
-        $eqdkp->set_vars(array(
-            'page_title'        => sprintf($user->lang['admin_title_prefix'], $eqdkp->config['guildtag'], $eqdkp->config['dkp_name']).': '."DKP String",
+        $core->set_vars(array(
+            'page_title'        => sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '."DKP String",
             'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
             'template_file'     => 'rli_step1.html',
             'display'           => true,

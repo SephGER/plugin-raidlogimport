@@ -139,7 +139,7 @@ if(!class_exists('rli_member'))
 
   	public function display($with_form=false)
   	{
-  		global $tpl, $jquery, $rli, $eqdkp, $user;
+  		global $tpl, $jquery, $rli, $core, $user;
 
 		foreach($this->members as $key => $member) {
 			if($this->config['s_member_rank'] & 1) {
@@ -155,6 +155,7 @@ if(!class_exists('rli_member'))
             		$mraids[] = $rli->add_data['att_end_raid'];
             	}
 	        }
+			var_dump($this->config('member_display'));
 	        if($this->config('member_display') == 1 AND extension_loaded('gd')) {
 	        	$raid_list = $this->get_checkraidlist($mraids, $key);
 	        }
@@ -169,7 +170,7 @@ if(!class_exists('rli_member'))
                 'RAID_LIST'=> $raid_list,
                 'ATT_BEGIN'=> ($a['att_dkp_begin']) ? 'checked="checked"' : '',
                 'ATT_END'  => ($a['att_dkp_end']) ? 'checked="checked"' : '',
-                'ZAHL'     => $eqdkp->switch_row_class(),
+                'ZAHL'     => $core->switch_row_class(),
                 'KEY'	   => $key,
                 'NR'	   => $key +1,
                 'RANK'	   => ($this->config['s_member_rank'] & 1) ? $this->rank_suffix($member['name']) : '')

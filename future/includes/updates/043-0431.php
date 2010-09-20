@@ -27,9 +27,9 @@ $updateFunction = false;
 
 $updateDESC = array();
 
-global $eqdkp;
+global $core;
 $updateSQL = array();
-if($eqdkp->config['default_game'] == 'WoW')
+if($core->config['default_game'] == 'WoW')
 {
 	$updateDESC = array(
 		'',

@@ -90,43 +90,23 @@ function fktMultiArraySearch($arrInArray,$varSearchValue){
     }
 }
 
-function deep_in_array($search, $array)
-{
-	foreach($array as $value)
-	{
-		if(!is_array($value))
-		{
+function deep_in_array($search, $array) {
+	foreach($array as $value) {
+		if(!is_array($value)) {
 			if($search === $value) return true;
-		}
-		else
-		{
+		} else {
 			if(deep_in_array($search, $value)) return true;
 		}
 	}
 	return false;
 }
 
-function rli_get_aliases()
-{
-	global $db;
-	$aliases = array();
-	//load aliase
-	$sql = "SELECT m.member_name, a.alias_name FROM __raidlogimport_aliases a, __members m WHERE a.alias_member_id = m.member_id;";
-	$result = $db->query($sql);
-	$aliases = array();
-	while ( $row = $db->fetch_record($result))
-	{
-		$aliases[$row['alias_name']] = $row['member_name'];
-	}
-	return $aliases;
-}
-
 function create_member($member, $rank)
 {
-	global $db, $user, $eqdkp, $tpl, $rli, $raidlogimport, $pconvertion;
-	if(strtolower($eqdkp->config['default_game']) == 'wow')
+	global $db, $user, $core, $tpl, $rli, $raidlogimport, $pconvertion;
+	if(strtolower($core->config['default_game']) == 'wow')
 	{
-	  if($eqdkp->config['game_language'] == "en")
+	  if($core->config['game_language'] == "en")
 	  {
 		switch($member['class'])
 		{
@@ -162,7 +142,7 @@ function create_member($member, $rank)
 			case "NightElf":	$member['race'] = "Night Elf";
 		}
 	  }
-	  elseif($eqdkp->config['game_language'] == "de")
+	  elseif($core->config['game_language'] == "de")
 	  {
 		switch($member['class'])
 		{
@@ -214,9 +194,9 @@ function create_member($member, $rank)
 	}
 	else
 	{
-        if($eqdkp->config['game_language'] != $rli->data['log_lang'])
+        if($core->config['game_language'] != $rli->data['log_lang'])
         {
-			if($eqdkp->config['game_language'] == 'de')
+			if($core->config['game_language'] == 'de')
 			{
 				$tolang = 'german';
 			}
@@ -307,7 +287,7 @@ function create_member($member, $rank)
 
 function lang2tpl()
 {
-	global $tpl, $user, $rli, $eqdkp;
+	global $tpl, $user, $rli, $core;
 	$la_ar = array(
 		'L_ADJ_ADD'		=> $user->lang['rli_add_adj'],
 		'L_ADJS_ADD'	=> $user->lang['rli_add_adjs'],
@@ -327,7 +307,7 @@ function lang2tpl()
         'L_COST'		=> $user->lang['rli_cost'],
         'L_DATE'		=> $user->lang['date'],
         'L_DELETE'		=> $user->lang['delete'],
-        'L_DIFFICULTY' 	=> ($eqdkp->config['default_game'] == 'WoW') ? $user->lang['difficulty'] : false,
+        'L_DIFFICULTY' 	=> ($core->config['default_game'] == 'WoW') ? $user->lang['difficulty'] : false,
         'L_END'         => $user->lang['rli_end'],
         'L_EVENT'       => $user->lang['event'],
         'L_GO_ON'		=> $user->lang['rli_go_on'],
@@ -365,7 +345,7 @@ function lang2tpl()
 
 function mems2tpl($key, $member, $data)
 {
-    global $eqdkp, $user;
+    global $core, $user;
     $rali = array();
     if(is_array($member['raid_list']))
     {
@@ -384,21 +364,21 @@ function mems2tpl($key, $member, $data)
         'RAID_LIST'=> implode(';&nbsp;', $rali),
         'ATT_BEGIN'=> (($member['att_dkp_begin']) ? $user->lang['yes'] : $user->lang['no']),
         'ATT_END'  => (($member['att_dkp_end']) ? $user->lang['yes'] : $user->lang['no']),
-        'ZAHL'     => $eqdkp->switch_row_class(),
+        'ZAHL'     => $core->switch_row_class(),
         'KEY'	   => $key
    	);
 }
 
 function items2tpl($item)
 {
-	global $eqdkp;
+	global $core;
 	return array(
 		'LOOTNAME'	=> $item['name'],
 		'LOOTER'	=> $item['player'],
 		'RAID'		=> $item['raid'],
 		'LOOTDKP'	=> $item['dkp'],
 		'ITEMID'	=> $item['id'],
-		'CLASS'		=> $eqdkp->switch_row_class()
+		'CLASS'		=> $core->switch_row_class()
 	);
 }
 

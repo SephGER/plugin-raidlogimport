@@ -25,7 +25,7 @@ include_once($eqdkp_root_path . 'itemstats/includes/urlreader.php');
 $user->check_auth('a_raidlogimport_dkp');
 My_ob_start();
 
-if(strtolower($eqdkp->config['default_game']) == 'wow')
+if(strtolower($core->config['default_game']) == 'wow')
 {
 	function get_itemID($itemname, $lang)
 	{
@@ -44,7 +44,7 @@ if(strtolower($eqdkp->config['default_game']) == 'wow')
 		return utf8_decode(trim($item_xml->item->name));
 	}
 }
-elseif(strtolower($eqdkp->config['default_game']) == 'runesofmagic')
+elseif(strtolower($core->config['default_game']) == 'runesofmagic')
 {
 	include_once($eqdkp_root_path . 'itemstats/includes/rom_blasc.php');
 	$parseblasc = new ParseBlasc;

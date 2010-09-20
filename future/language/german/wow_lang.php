@@ -15,10 +15,10 @@
  *
  * $Id: lang_game.php 5040 2009-06-09 15:20:27Z hoofy_leon $
  */
-$lang['hero'] = 'Suffix für Heroische Ereignisse';
-$lang['non_hero'] = 'Suffix für Nicht-Heroische Ereignisse';
+$lang['hero'] = 'Suffix fÃ¼r Heroische Ereignisse';
+$lang['non_hero'] = 'Suffix fÃ¼r Nicht-Heroische Ereignisse';
 $lang['difficulty'] = 'Schwierigkeit';
 $lang['heroic'] = 'Heroisch';
 $lang['non_heroic'] = 'Nicht Heroisch';
-$lang['dep_match'] = 'Soll den Boss-Notizen der Suffix angehängt werden?';
+$lang['dep_match'] = 'Soll den Boss-Notizen der Suffix angehÃ¤ngt werden?';
 ?>

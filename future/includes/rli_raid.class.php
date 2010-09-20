@@ -183,7 +183,7 @@ if(!class_exists('rli_raid'))
 
 	public function display($with_form=false)
 	{
-		global $tpl, $html, $eqdkp, $rli;
+		global $tpl, $html, $core, $rli;
 
 		foreach($this->raids as $ky => $rai)
 		{
@@ -191,7 +191,7 @@ if(!class_exists('rli_raid'))
             if(!$with_form) {
                 foreach($rai['bosskills'] as $bk)
                 {
-                    $bosskills .= '<tr class="'.$eqdkp->switch_row_class().'"><td>'.$bk['name'].'</td><td colspan="2">'.date('H:i:s',$bk['time']).'</td><td>'.$bk['bonus'].'</td></tr>';
+                    $bosskills .= '<tr class="'.$core->switch_row_class().'"><td>'.$bk['name'].'</td><td colspan="2">'.date('H:i:s',$bk['time']).'</td><td>'.$bk['bonus'].'</td></tr>';
                 }
             }
 			if(isset($rai['bosskill_add']))
@@ -535,8 +535,8 @@ if(!class_exists('rli_raid'))
 
     private function suffix($string, $append, $recalc=false)
     {
-    	global $eqdkp;
-      	if($eqdkp->config['default_game'] == 'WoW') {
+    	global $core;
+      	if($core->config['default_game'] == 'WoW') {
       		if($recalc) {
     			$string = str_replace($this->config('hero'), '', $string);
     			$string = str_replace($this->config('non_hero'), '', $string);

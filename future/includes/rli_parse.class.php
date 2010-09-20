@@ -98,10 +98,10 @@ if(!class_exists('rli_parse'))
 
 	private function load_members()
 	{
-	  global $db, $rli, $user, $eqdkp;
+	  global $db, $rli, $user, $core;
       $members = array();
       $sql = "SELECT cache_data FROM __raidlogimport_cache WHERE cache_class = 'member';";
-      $member_data = ($eqdkp->config['enable_gzip']) ? unserialize(gzuncompress($db->query_first($sql))) : unserialize($db->query_first($sql));
+      $member_data = ($core->config['enable_gzip']) ? unserialize(gzuncompress($db->query_first($sql))) : unserialize($db->query_first($sql));
 
 	  foreach($_POST['members'] as $k => $mem)
 	  {
@@ -361,10 +361,10 @@ if(!class_exists('rli_parse'))
 
 	private function parse_plus_string($xml)
 	{
-		global $eqdkp, $user, $rli;
+		global $core, $user, $rli;
 
-		if((trim($xml->head->gameinfo->game) == 'Runes of Magic' AND strtolower($eqdkp->config['default_game']) != 'runesofmagic') OR
-		   (trim($xml->head->gameinfo->game) == 'World of Warcraft' AND strtolower($eqdkp->config['default_game']) != 'wow'))
+		if((trim($xml->head->gameinfo->game) == 'Runes of Magic' AND strtolower($core->config['default_game']) != 'runesofmagic') OR
+		   (trim($xml->head->gameinfo->game) == 'World of Warcraft' AND strtolower($core->config['default_game']) != 'wow'))
 		{
 			message_die($user->lang['wrong_game']);
 		}
