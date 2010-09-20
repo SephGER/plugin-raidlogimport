@@ -1,20 +1,20 @@
 <?php
- /*
- * Project:     EQdkp-Plus Raidlogimport
- * License:     Creative Commons - Attribution-Noncommercial-Share Alike 3.0 Unported
- * Link:		http://creativecommons.org/licenses/by-nc-sa/3.0/
- * -----------------------------------------------------------------------
- * Began:       2008
- * Date:        $Date: 2009-05-07 17:52:03 +0200 (Do, 07 Mai 2009) $
- * -----------------------------------------------------------------------
- * @author      $Author: hoofy_leon $
- * @copyright   2008-2009 hoofy_leon
- * @link        http://eqdkp-plus.com
- * @package     raidlogimport
- * @version     $Rev: 4786 $
- *
- * $Id: settings.php 4786 2009-05-07 15:52:03Z hoofy_leon $
- */
+/*
+* Project:     EQdkp-Plus Raidlogimport
+* License:     Creative Commons - Attribution-Noncommercial-Share Alike 3.0 Unported
+* Link:		http://creativecommons.org/licenses/by-nc-sa/3.0/
+* -----------------------------------------------------------------------
+* Began:       2008
+* Date:        $Date: 2009-05-07 17:52:03 +0200 (Do, 07 Mai 2009) $
+* -----------------------------------------------------------------------
+* @author      $Author: hoofy_leon $
+* @copyright   2008-2009 hoofy_leon
+* @link        http://eqdkp-plus.com
+* @package     raidlogimport
+* @version     $Rev: 4786 $
+*
+* $Id: settings.php 4786 2009-05-07 15:52:03Z hoofy_leon $
+*/
 define('EQDKP_INC', true);
 define('IN_ADMIN', true);
 
@@ -23,9 +23,8 @@ include_once('./../includes/common.php');
 
 class RLI_Settings extends EQdkp_Admin
 {
-	function rli_settings()
-	{
-		global $db, $pm, $tpl, $user, $eqdkp, $SID, $rli;
+	public function __construct() {
+		global $db, $pm, $tpl, $user, $core, $SID, $rli;
 		parent::eqdkp_admin();
 
 		$this->assoc_buttons(array(
@@ -41,78 +40,47 @@ class RLI_Settings extends EQdkp_Admin
 		);
 	}
 
-	function save_config()
-	{
-		global $db, $user, $tpl, $eqdkp, $pm, $SID, $rli, $logs;
+	public function save_config() {
+		global $db, $user, $tpl, $core, $pm, $SID, $rli, $logs, $in;
 
 		$messages = array();
 		$bytes = array('s_member_rank', 'ignore_dissed', 'use_dkp', 'event_boss');
 		$floats = array('member_start', 'attendence_begin', 'attendence_end', 'am_value');
-		foreach($rli->config() as $old_name => $old_value)
-		{
-			if(in_array($old_name, $bytes))
-			{
+		foreach($rli->config() as $old_name => $old_value) {
+			if(in_array($old_name, $bytes)) {
 				$val = 0;
-				if(is_array($_POST[$old_name]))
-				{
-				  foreach($_POST[$old_name] as $pos)
-				  {
-					$val += $pos;
-				  }
+				if(is_array($_POST[$old_name])) {
+					foreach($_POST[$old_name] as $pos) {
+						$val += $pos;
+					}
 				}
 				$_POST[$old_name] = $val;
-			}
-			elseif(in_array($old_name, $floats))
-			{
+			} elseif(in_array($old_name, $floats)) {
 				$_POST[$old_name] = number_format(floatvalue($_POST[$old_name]), 2, '.', '');
 			}
-			if(isset($_POST[$old_name]) AND $_POST[$old_name] != $old_value)  //update
-			{
-				$sql = "UPDATE __raidlogimport_config
-						SET config_value = '".$db->escape($_POST[$old_name])."'
-						WHERE config_name = '".$old_name."';";
-				$result = $db->query($sql);
-				if(!$result)
-				{
-					message_die("Error! Query: ".$sql);
-				}
-				else
-				{
-					$messages[] = $old_name;
-					$log_action = array(
-						'header' 		 => '{L_ACTION_RAIDLOGIMPORT_CONFIG}',
-						'{L_CONFIGNAME}' => $old_name,
-						'{L_CONFIG_OLD}' => $old_value,
-						'{L_CONFIG_NEW}' => $_POST[$old_name],
-					);
-					$logs->add($log_action['header'], $log_action, true, 'raidlogimport');
-				}
+			if(isset($_POST[$old_name]) AND $_POST[$old_name] != $old_value) { //Update
+				$core->config_set($old_name, $in->get($old_name, '0'), 'raidlogimport');
+				$messages[] = $old_name;
 			}
 		}
-
 		$this->display_form($messages);
 	}
 
-	function display_form($messages=array())
-	{
-		global $db, $user, $tpl, $eqdkp, $pm, $SID, $rli, $html, $jquery;
-		if($messages)
-		{
+	public function display_form($messages=array()) {
+		global $db, $user, $tpl, $core, $pm, $SID, $rli, $html, $jquery;
+		if($messages) {
 			$rli->__construct();
-			foreach($messages as $name)
-			{
-				$eqdkp->message($name, $user->lang['bz_save_suc'], 'green');
+			foreach($messages as $name) {
+				$core->message($name, $user->lang['bz_save_suc'], 'green');
 			}
 		}
 		//select ranks
 		$sql = "SELECT rank_name, rank_id FROM __member_ranks ORDER BY rank_name DESC;";
 		$result = $db->query($sql);
-		while ($row = $db->fetch_record($result))
-		{
-		  if($row['rank_id'])
-		  {
-			$new_member_rank[$row['rank_id']] = $row['rank_name'];
-		  }
+		while ($row = $db->fetch_record($result)) {
+			if($row['rank_id']) {
+				$new_member_rank[$row['rank_id']] = $row['rank_name'];
+			}
 		}
 
 		//select parsers
@@ -123,17 +91,15 @@ class RLI_Settings extends EQdkp_Admin
 		);
 
 		//select raidcount
-        $raidcount = array();
-		for($i=0; $i<=3; $i++)
-		{
+		$raidcount = array();
+		for($i=0; $i<=3; $i++) {
 			$raidcount[$i] = $user->lang['raidcount_'.$i];
 		}
 
 		//select null_sum & standbyraidoptions
 		$null_sum = array();
 		$standby_raid = array();
-		for($i=0; $i<=2; $i++)
-		{
+		for($i=0; $i<=2; $i++) {
 			$null_sum[$i] = $user->lang['null_sum_'.$i];
 			$standby_raid[$i] = $user->lang['standby_raid_'.$i];
 		}
@@ -194,14 +160,10 @@ class RLI_Settings extends EQdkp_Admin
 		);
 
 		$holder = array();
-		foreach($configs as $display_type => $hold)
-		{
-			foreach($hold as $holde => $names)
-			{
-				foreach($names as $name)
-				{
-					switch($display_type)
-					{
+		foreach($configs as $display_type => $hold) {
+			foreach($hold as $holde => $names) {
+				foreach($names as $name) {
+					switch($display_type) {
 						case 'select':
 							$holder[$holde][$k]['value'] = $html->DropDown($name, $$name, $rli->config($name));
 							$holder[$holde][$k]['name'] = $name;
@@ -209,18 +171,14 @@ class RLI_Settings extends EQdkp_Admin
 
 						case 'yes_no':
 							$a = $k;
-							if($name == 'rli_upd_check')
-							{
+							if($name == 'rli_upd_check') {
 								$k = 1;
 							}
 							$check_1 = '';
 							$check_0 = '';
-							if($rli->config($name))
-							{
+							if($rli->config($name)) {
 								$check_1 = "checked='checked'";
-							}
-							else
-							{
+							} else {
 								$check_0 = "checked='checked'";
 							}
 							$holder[$holde][$k]['value'] = "<input type='radio' name='".$name."' value='1' ".$check_1." />".$user->lang['yes']."&nbsp;&nbsp;&nbsp;";
@@ -231,8 +189,7 @@ class RLI_Settings extends EQdkp_Admin
 
 						case 'text':
 							$a = $k;
-							if($name == 'rli_inst_version')
-							{
+							if($name == 'rli_inst_version') {
 								$k = 0;
 							}
 							$holder[$holde][$k]['value'] = $rli->config($name);
@@ -246,16 +203,15 @@ class RLI_Settings extends EQdkp_Admin
 							break;
 
 						case 'special':
-						  list($num_of_opt, $name) = explode(':', $name);
-						  $value = $rli->config($name);
-						  $pv = array(0,1,2,4,8,16,32);
-						  for($i=1; $i<=$num_of_opt; $i++)
-						  {
-							  $checked = ($value & $pv[$i]) ? 'checked="checked"' : '';
-                              $holder[$holde][$k]['value'] .= "<nobr><input type='checkbox' name='".$name."[]' value='".$pv[$i]."' ".$checked." />".$user->lang[$name.'_'.$pv[$i]]."</nobr>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-                          }
-                          $holder[$holde][$k]['name'] = $name;
-						  break;
+							list($num_of_opt, $name) = explode(':', $name);
+							$value = $rli->config($name);
+							$pv = array(0,1,2,4,8,16,32);
+							for($i=1; $i<=$num_of_opt; $i++) {
+								$checked = ($value & $pv[$i]) ? 'checked="checked"' : '';
+								$holder[$holde][$k]['value'] .= "<nobr><input type='checkbox' name='".$name."[]' value='".$pv[$i]."' ".$checked." />".$user->lang[$name.'_'.$pv[$i]]."</nobr>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+							}
+							$holder[$holde][$k]['name'] = $name;
+							break;
 
 						default:
 							//do nothing
@@ -264,40 +220,33 @@ class RLI_Settings extends EQdkp_Admin
 					$k++;
 				}
 			}
-        }
-        $num = 1;
-        foreach($holder as $type => $hold)
-        {
-        	ksort($hold);
-        	if($type == 'hnh_suffix' AND $eqdkp->config['default_game'] != 'WoW')
-        	{
-        		continue;
-        	}
+		}
+		$num = 1;
+		foreach($holder as $type => $hold) {
+			ksort($hold);
+			if($type == 'hnh_suffix' AND $core->config['default_game'] != 'wow') {
+				continue;
+			}
 			$tpl->assign_block_vars('holder', array(
 				'TITLE'	=> $user->lang['title_'.$type],
 				'NUM'	=> $num)
 			);
 			#$tpl->assign_block_vars('holder', array('TITLE'	=> $user->lang['title_'.$type])); //only needet to add <table>
 			$num++;
-			foreach($hold as $nava)
-			{
+			foreach($hold as $nava) {
 				$add = '';
-				if($nava['name'] == 'member_display')
-				{
-				  	if(extension_loaded('gd'))
-				  	{
+				if($nava['name'] == 'member_display') {
+					if(extension_loaded('gd')) {
 						$info = gd_info();
 						$add = sprintf($user->lang['member_display_add'], '<span class=\\\'positive\\\'>'.$info['GD Version'].'</span>');
-				  	}
-				  	else
-				  	{
-				 		$add = sprintf($user->lang['member_display_add'], $user->lang['no_gd_lib']);
-				  	}
+					} else {
+						$add = sprintf($user->lang['member_display_add'], $user->lang['no_gd_lib']);
+					}
 				}
 				$tpl->assign_block_vars('holder.config', array(
 					'NAME'	=> $user->lang[$nava['name']].$add,
 					'VALUE' => $nava['value'],
-					'CLASS'	=> $eqdkp->switch_row_class())
+					'CLASS'	=> $core->switch_row_class())
 				);
 			}
 		}
@@ -309,13 +258,13 @@ class RLI_Settings extends EQdkp_Admin
 			'TAB_JS'	=> $jquery->Tab_header('rli_config'))
 		);
 
-		$eqdkp->set_vars(array(
-        	'page_title' 		=> sprintf($user->lang['admin_title_prefix'], $eqdkp->config['guildtag'], $eqdkp->config['dkp_name']).': '.$user->lang['configuration'],
-            'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
-            'template_file'     => 'rli_settings.html',
-            'display'           => true,
-            )
-        );
+		$core->set_vars(array(
+			'page_title' 		=> sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang['configuration'],
+			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
+			'template_file'     => 'rli_settings.html',
+			'display'           => true,
+			)
+		);
 	}
 }
 $rli_settings = new RLI_Settings;

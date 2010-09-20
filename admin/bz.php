@@ -29,7 +29,7 @@ class Bz extends EQdkp_Admin
 
 	function bz()
     {
-        global $db, $eqdkp, $user, $tpl, $pm;
+        global $db, $core, $user, $tpl, $pm;
         global $SID;
 
         parent::eqdkp_admin();
@@ -57,7 +57,7 @@ class Bz extends EQdkp_Admin
 
 	function bz_save()
 	{
-		global $db, $eqdkp, $user, $tpl, $SID, $pm;
+		global $db, $core, $user, $tpl, $SID, $pm;
 
 		$message = "";
 		if($_POST['save'] == $user->lang['bz_save'])
@@ -247,7 +247,7 @@ class Bz extends EQdkp_Admin
 
 	function bz_del()
 	{
-		global $db, $eqdkp, $user, $tpl, $SID, $pm;
+		global $db, $core, $user, $tpl, $SID, $pm;
 
 		if(isset($_POST['bz_id']))
 		{
@@ -279,8 +279,8 @@ class Bz extends EQdkp_Admin
 			'L_NO'			=> $user->lang['bz_no'])
 		);
 
-		$eqdkp->set_vars(array(
-            'page_title'        => sprintf($user->lang['admin_title_prefix'], $eqdkp->config['guildtag'], $eqdkp->config['dkp_name']).': '.$user->lang['rli_bz_bz'],
+		$core->set_vars(array(
+            'page_title'        => sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang['rli_bz_bz'],
             'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
             'template_file'     => 'bz_del.html',
             'display'           => true,
@@ -290,7 +290,7 @@ class Bz extends EQdkp_Admin
 
 	function bz_upd()
 	{
-		global $db, $eqdkp, $user, $tpl, $SID, $pm, $myHtml;
+		global $db, $core, $user, $tpl, $SID, $pm, $myHtml;
 
 		$sql1 = "SELECT bz_id, bz_note FROM __raidlogimport_bz WHERE bz_type = 'zone';";
 		$result1 = $db->query($sql1);
@@ -331,7 +331,7 @@ class Bz extends EQdkp_Admin
 					'B_SELECTED' => $b_selected,
 					'Z_SELECTED' => $z_selected,
 					'ZONE_ARRAY' => $myHtml->DropDown("bz_tozone[".$row['bz_id']."]", $zones, $row['bz_tozone'],'','',true),
-					'CLASS'		 => $eqdkp->switch_row_class())
+					'CLASS'		 => $core->switch_row_class())
 				);
 			}
 		}
@@ -346,7 +346,7 @@ class Bz extends EQdkp_Admin
 				'B_SELECTED' => '',
 				'Z_SELECTED' => '',
 				'ZONE_ARRAY' => $myHtml->DropDown("bz_tozone[neu]", $zones, $row['bz_tozone'],'','',true),
-				'CLASS'		 => $eqdkp->switch_row_class())
+				'CLASS'		 => $core->switch_row_class())
 			);
 		}
 
@@ -362,8 +362,8 @@ class Bz extends EQdkp_Admin
 			'L_TOZONE'	   => $user->lang['bz_tozone'],
 			'L_SORT'	   => $user->lang['bz_sort'])
 		);
-		$eqdkp->set_vars(array(
-            'page_title'        => sprintf($user->lang['admin_title_prefix'], $eqdkp->config['guildtag'], $eqdkp->config['dkp_name']).': '.$user->lang['rli_bz_bz'],
+		$core->set_vars(array(
+            'page_title'        => sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang['rli_bz_bz'],
             'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
             'template_file'     => 'bz_upd.html',
             'display'           => true,
@@ -373,7 +373,7 @@ class Bz extends EQdkp_Admin
 
 	function display_form($messages=array())
 	{
-		global $tpl, $eqdkp, $pm, $db, $user, $SID;
+		global $tpl, $core, $pm, $db, $user, $SID;
 
 		if($messages)
 		{
@@ -418,7 +418,7 @@ class Bz extends EQdkp_Admin
             foreach($data['tozone'][$id] as $b_id)
             {
             	$bidsiz[] = $b_id;
-				$bosses .= '<tr class="'.$eqdkp->switch_row_class().'">
+				$bosses .= '<tr class="'.$core->switch_row_class().'">
 					<td><input type="checkbox" name="bz_id[]" value="'.$b_id.'" /></td>
 					<td>'.$data['boss'][$b_id]['string'].'</td>
 					<td>'.$data['boss'][$b_id]['note'].'</td>
@@ -444,7 +444,7 @@ class Bz extends EQdkp_Admin
 		            'B_STRING'  => $values['string'],
 	                'B_BONUS'   => $values['bonus'],
 	                'B_NOTE'    => $values['note'],
-	                'CLASS'     => $eqdkp->switch_row_class())
+	                'CLASS'     => $core->switch_row_class())
 	            );
 	        }
 	    }
@@ -462,8 +462,8 @@ class Bz extends EQdkp_Admin
 			'BOSS'			=> $boss)
 		);
 
-		$eqdkp->set_vars(array(
-            'page_title'        => sprintf($user->lang['admin_title_prefix'], $eqdkp->config['guildtag'], $eqdkp->config['dkp_name']).': '.$user->lang['rli_bz_bz'],
+		$core->set_vars(array(
+            'page_title'        => sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang['rli_bz_bz'],
             'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
             'template_file'     => 'bz.html',
             'display'           => true,

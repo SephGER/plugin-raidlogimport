@@ -27,7 +27,7 @@ $updateFunction = false;
 
 $updateDESC = array();
 
-global $eqdkp;
+global $core;
 $updateDESC = array(
 	'',
 	'Added Config Values: use_timedkp, use_bossdkp',
