@@ -155,7 +155,6 @@ if(!class_exists('rli_member'))
             		$mraids[] = $rli->add_data['att_end_raid'];
             	}
 	        }
-			var_dump($this->config('member_display'));
 	        if($this->config('member_display') == 1 AND extension_loaded('gd')) {
 	        	$raid_list = $this->get_checkraidlist($mraids, $key);
 	        }
