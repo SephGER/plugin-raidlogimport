@@ -91,29 +91,24 @@ class rli
 		}
 	}
 
-	private function load_events()
-	{
+	private function load_events() {
 		global $db;
-		if(!$this->events)
-		{
+		if(!$this->events) {
 			$sql = "SELECT event_name, event_value FROM __events;";
 			$result = $db->query($sql);
-			while ( $row = $db->fetch_record($result) )
-			{
+			while ( $row = $db->fetch_record($result) ) {
 				$this->events['name'][$row['event_name']] = $row['event_name'];
 				$this->events['value'][$row['event_name']] = $row['event_value'];
 			}
 		}
 	}
 
-	public function get_events($key=false, $sec_key=false)
-	{
+	public function get_events($key=false, $sec_key=false) {
 		$this->load_events();
 		return ($key) ? (($sec_key) ? $this->events[$key][$sec_key] : $this->events[$key]) : $this->events;
 	}
 
-	public function get_cache_data($type)
-	{
+	public function get_cache_data($type) {
 		global $db, $core;
 
 		if(!$this->data[$type]) {
@@ -127,20 +122,16 @@ class rli
 		return $this->data[$type];
 	}
 
-	public function boss_dropdown($bossname, $raid_key, $key)
-	{
+	public function boss_dropdown($bossname, $raid_key, $key) {
 		global $html;
 		$this->get_bonus();
-		if(!$this->bk_list)
-		{
-		foreach($this->bonus['boss'] as $boss)
-		{
-			$this->bk_list[htmlspecialchars($boss['string'][0], ENT_QUOTES)] = htmlentities($boss['note'], ENT_QUOTES);
-			if($this->config['use_dkp'] & 1)
-			{
-				$this->bk_list[htmlspecialchars($boss['string'][0], ENT_QUOTES)] .= ' ('.$boss['bonus'].')';
+		if(!$this->bk_list) {
+			foreach($this->bonus['boss'] as $boss) {
+				$this->bk_list[htmlspecialchars($boss['string'][0], ENT_QUOTES)] = htmlentities($boss['note'], ENT_QUOTES);
+				if($this->config['use_dkp'] & 1) {
+					$this->bk_list[htmlspecialchars($boss['string'][0], ENT_QUOTES)] .= ' ('.$boss['bonus'].')';
+				}
 			}
-		}
 		}
 		foreach($this->bonus['boss'] as $boss)
 		{

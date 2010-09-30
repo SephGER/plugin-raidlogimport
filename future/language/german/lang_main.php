@@ -99,6 +99,12 @@
 	$lang['rli_add_raids'] = 'Raids hinzufügen';
 	$lang['rli_add_mem'] = 'Mitglied hinzufügen';
 	$lang['rli_add_mems'] = 'Mitglieder hinzufügen';
+	$lang['rli_add_time'] = 'Zeitbalken hinzufügen';
+	$lang['rli_standby_switch'] = 'Ersatzbank umschalten';
+	$lang['rli_del_time'] = 'Zeitbalken löschen';
+	$lang['rli_bossname'] = 'Name des Bosses:';
+	$lang['rli_bosstime'] = 'Killzeitpunkt:';
+	$lang['rli_bossvalue'] = 'Wert / Bonus:';
 	$lang['rli_add_item'] = 'Item hinzufügen';
 	$lang['rli_add_items'] = 'Items hinzufügen';
 	$lang['rli_item_id'] = 'Item-ID';

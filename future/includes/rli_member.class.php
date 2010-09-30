@@ -22,33 +22,26 @@ if(!defined('EQDKP_INC'))
 	exit;
 }
 
-if(!class_exists('rli_member'))
-{
-  class rli_member
-  {
+if(!class_exists('rli_member')) {
+  class rli_member {
   	private $members = array();
   	private $timebar_created = false;
-  	private $raid_div = '';
 
-	public function __construct()
-	{
+	public function __construct() {
 		global $rli;
 		$this->members = $rli->get_cache_data('member');
 	}
 
-	private function config($name)
-	{
+	private function config($name) {
 		global $rli;
 		return $rli->config($name);
 	}
 
-	public function add($name, $class=0, $race=0, $lvl=0, $note='')
-	{
+	public function add($name, $class=0, $race=0, $lvl=0, $note='') {
 		$this->members[] = array('name' => $name, 'class' => $class, 'race' => $race, 'level' => $lvl, 'note' => $note);
 	}
 
-	public function add_time($name, $time, $type, $extra=0)
-	{
+	public function add_time($name, $time, $type, $extra=0) {
 		settype($time, 'int');
 		foreach($this->members as $key => &$mem) {
 			if($mem['name'] == $name) {
@@ -64,9 +57,12 @@ if(!class_exists('rli_member'))
 			}
 		}
 	}
+	
+	public function give($data) {
+		$this->members = $data;
+	}
 
-	public function finish()
-	{
+	public function finish() {
 		global $rli;
 		$begin = $rli->raid->get_start_end();
 		$end = $begin['end'];
@@ -78,26 +74,22 @@ if(!class_exists('rli_member'))
 			$size =  count($times);
         	$lasttype = false;
         	$lasttime = false;
-			foreach($times as $time => $type)
-	    	{
+			foreach($times as $time => $type) {
   				if($type == $lasttype) {
 					$error .= '<br />Wrong Member: '.$this->members[$key]['name'].', '.$type.'-times: '.date('H:i:s', $time).' and '.date('H:i:s', $lasttime);
 				} elseif($type == 'join' AND $lasttype == 'join_standby') {
 					$new_time = $time-1;
 					$times[$new_time] = 'leave_standby';
 	      		} else {
-        	  	  	if($begin AND $type == 'join' AND ($begin + $this->config('member_miss_time')) > $time AND $count == 1)
-         	 	  	{
+        	  	  	if($begin AND $type == 'join' AND ($begin + $this->config('member_miss_time')) > $time AND $count == 1) {
           		      	unset($times[$time]);
           		      	$times[$begin] = 'join';
          		   	}
-         		   	if($end AND $type == 'leave' AND ($end - $this->config('member_miss_time')) < $time AND $count == $size)
-         		   	{
+         		   	if($end AND $type == 'leave' AND ($end - $this->config('member_miss_time')) < $time AND $count == $size) {
          		       	unset($times[$time]);
          		       	$times[$end] = 'leave';
          		   	}
-	     	 		if($type == 'join' AND ($time - $this->config('member_miss_time')) < $lasttime)
-	     	 		{
+	     	 		if($type == 'join' AND ($time - $this->config('member_miss_time')) < $lasttime) {
 	     	 			unset($times[$time]);
 	     	 			unset($times[$lasttime]);
 	    	  		}
@@ -130,15 +122,13 @@ if(!class_exists('rli_member'))
 	    }
   	}
 
-  	public function add_new($num)
-  	{
+  	public function add_new($num) {
   		for($i=1; $i<=$num; $i++) {
   			$this->members[] = array('name' => '', 'times' => array());
   		}
   	}
 
-  	public function display($with_form=false)
-  	{
+  	public function display($with_form=false) {
   		global $tpl, $jquery, $rli, $core, $user;
 
 		foreach($this->members as $key => $member) {
@@ -156,9 +146,9 @@ if(!class_exists('rli_member'))
             	}
 	        }
 	        if($this->config('member_display') == 1 AND extension_loaded('gd')) {
-	        	$raid_list = $this->get_checkraidlist($mraids, $key);
+	        	$raid_list = $rli->raid->get_checkraidlist($mraids, $key);
 	        }
-	        elseif($this->config('member_display') == 2) {
+	        elseif($this->config('member_display') == 2 AND extension_loaded('gd')) {
 	        	$raid_list = $this->detailed_times_list($key, $mraids);
 	        } else {
 	        	$raid_list = '<td>'.$jquery->MultiSelect('members['.$key.'][raid_list]', $rli->raid->raidlist(), $mraids, '200', '200', false, 'members_'.$key.'_raidlist').'</td>';
@@ -177,45 +167,41 @@ if(!class_exists('rli_member'))
         }//foreach members
   	}
 
-    public function rank_suffix($mname)
-    {
+    public function rank_suffix($mname) {
         $this->get_member_ranks();
         $rank = (isset($this->member_ranks[$mname])) ? $this->member_ranks[$mname] : $this->member_ranks['new'];
         return ' ('.$rank.')';
     }
 
-    private function detailed_times_list($key)
-    {
-    	global $rli, $tpl, $html, $eqdkp_root_path, $jquery;
+    private function detailed_times_list($key, $mraids) {
+    	global $rli, $tpl, $html, $eqdkp_root_path, $jquery, $user;
 
     	$width = $rli->raid->get_start_end();
     	$px_time = (($width['end'] - $width['begin']) / 20);
     	settype($px_time, 'int');
 
     	$out = "<td id='member_".$key."' class='add_time' onmouseover='set_member(\"".$key."\", \"".$px_time."\")'>";
-        #$out .= $jquery->RightClickMenu('right_click_'.$key, 'member_'.$key, array('rc_'.$key.'_0' => array('name' => 'Time hinzufügen', 'jscode' => 'alert("bla")')));
         $raids = $rli->raid->get_data();
 
-        if(!$this->raid_div) {
-          $this->raid_div = '';
-          foreach($raids as $rkey => $raid) {
+        $this->raid_div = '';
+        foreach($raids as $rkey => $raid) {
         	$w = ($raid['end']-$raid['begin'])/20;
         	$m = ($raid['begin']-$width['begin'])/20;
         	settype($w, 'int');
         	settype($m, 'int');
-        	$this->raid_div .= "<div id='raid_".$key."_".$rkey."' class='raid' style='width:".$w."px; margin-left: ".$m."px;'><div class='raid_left'></div><div class='raid_middle'><input type='hidden' name='members[".$key."][raid_list][]' value='".$rkey."' /></div><div class='raid_right'></div></div>";
+        	$out .= "<div id='raid_".$key."_".$rkey."' class='raid' style='width:".$w."px; margin-left: ".$m."px;'><div class='raid_left'></div><div class='raid_middle'><input type='hidden' name='members[".$key."][raid_list][]' value='".$rkey."' /></div><div class='raid_right'></div></div>";
         	foreach($raid['bosskills'] as $bkey => $boss) {
         		$m = ($boss['time']-$width['begin'])/20 - 4;
         		settype($m, 'int');
-        		$bossinfo = "<table><tr><td style='width:80px;'>bossname:</td><td>".$boss['name']."</td></tr><tr><td>killtime:</td><td>".date('H:i:s', $boss['time'])."</td></tr><tr><td>bossvalue:</td><td>".$boss['bonus']."</td></tr></table>";
-        		$this->raid_div .= "<div id='boss_".$key."_".$bkey."' class='boss' style='margin-left: ".$m."px;' ".substr($html->Tooltip($bossinfo,''),5,-8)."></div>";
+        		$bossinfo = "<table><tr><td>".$user->lang['rli_bossname']." </td><td>".$boss['name']."</td></tr><tr><td>".$user->lang['rli_bosstime']."</td><td>".date('H:i:s', $boss['time'])."</td></tr><tr><td>".$user->lang['rli_bossvalue']."</td><td>".$boss['bonus']."</td></tr></table>";
+				$tt_out = $jquery->tooltip('#boss_'.$key.'_'.$bkey.'_'.$key, 'boss', $bossinfo);
+        		$out .= "<div id='boss_".$key."_".$bkey."_".$key."' ".$tt_out." style='margin-left: ".$m."px;'></div>";
         	}
-          }
         }
-        $out .= $this->raid_div."<div id='times_".$key."'>";
+        $out .= "<div id='times_".$key."'>";
         $tkey = 0;
         foreach($this->members[$key]['times'] as $time) {
-        	$s = ($time['standby']) ? '_standby' : '';
+        	$s = ($time['standby']) ? 'standby' : '';
         	$w = ($time['leave']-$time['join'])/20;
         	$ml = ($time['join']-$width['begin'])/20;
         	settype($w, 'int');
@@ -225,9 +211,7 @@ if(!class_exists('rli_member'))
         	$out .= "<div class='time_middle' onmousedown='scale_start(\"middle\")'>";
         	$out .= "<input type='hidden' name='members[".$key."][times][".$tkey."][join]' value='".$time['join']."' id='times_".$key."_".$tkey."j' />";
         	$out .= "<input type='hidden' name='members[".$key."][times][".$tkey."][leave]' value='".$time['leave']."' id='times_".$key."_".$tkey."l' />";
-        	if($time['standby']) {
-        		$out .= "<input type='hidden' name='members[".$key."][times][".$tkey."][extra]' value='standby' id='times_".key."_".$tkey."s' />";
-        	}
+        	$out .= "<input type='hidden' name='members[".$key."][times][".$tkey."][extra]' value='".$s."' id='times_".$key."_".$tkey."s' />";
         	$out .= "</div><div class='time_right' onmousedown='scale_start(\"right\")'></div></div>";
         	$tkey++;
         }
@@ -236,6 +220,7 @@ if(!class_exists('rli_member'))
         $out .= "<div class='time_middle' onmousedown='scale_start(\"middle\")'>";
         $out .= "<input type='hidden' name='members[".$key."][times][99][join]' value='0' id='times_".$key."_99j' />";
         $out .= "<input type='hidden' name='members[".$key."][times][99][leave]' value='0' id='times_".$key."_99l' />";
+        $out .= "<input type='hidden' name='members[".$key."][times][99][extra]' value='' id='times_".$key."_99s' />";
         $out .= "</div><div class='time_right' onmousedown='scale_start(\"right\")'></div></div></div>";
 
         $this->create_timebar($width['begin'], $width['end'], $px_time);
@@ -243,7 +228,17 @@ if(!class_exists('rli_member'))
 
     	//only do this once
     	if(!$this->tpl_assignments) {
-    		$tpl->assign_var('PXTIME', $px_time);
+			$rightc_menu = array(
+				'rli_add_dmem' => array('image' => $eqdkp_root_path.'images/menues/add.png', 'name' => $user->lang['rli_add_time'], 'jscode' => 'add_timeframe();'),
+				'rli_del_dmem' => array('image' => $eqdkp_root_path.'images/menues/delete.png', 'name' => $user->lang['rli_del_time'], 'jscode' => 'remove_timeframe();'),
+				'rli_swi_dmem' => array('image' => $eqdkp_root_path.'images/menues/update.png', 'name' => $user->lang['rli_standby_switch'], 'jscode' => 'change_standby();')
+			);
+			$tpl->assign_vars(array(
+				'CONTEXT_MENU' => $jquery->RightClickMenu('_rli_dmem', '.add_time', $rightc_menu),
+				'PXTIME' => $px_time)
+			);
+    		$tpl->js_file($eqdkp_root_path.'plugins/raidlogimport/templates/dmem.js');
+    		$tpl->css_file($eqdkp_root_path.'plugins/raidlogimport/templates/dmem.css');
     		$tpl->add_css(".time_scale {
 								position: absolute;
 								background-image: url(./../../../plugins/raidlogimport/images/time_scale.png);
@@ -251,100 +246,23 @@ if(!class_exists('rli_member'))
 								width: ".$px_time."px;
 								height: 18px;
 								margin-top: 10px;
-								z-index: 13;
+								z-index: 16;
 							}");
     		$tpl->add_js("$(document).ready(function() {
                             $('#member_form').data('raid_start', ".$width['begin'].");
-                            $('.time_middle').dblclick(function() {
-								var change_id = $('#times_' + member_id + '_' + time_id + ' ~ div');
-								$('#times_' + member_id + '_' + time_id).remove();
-								var lgth = 'times_' + member_id + '_';
-								for(var i=0; i < change_id.length; i++) {
-									if(!isNaN(parseInt(change_id[i].id.substr(lgth.length)))) {
-    									change_id_of_input(change_id[i].id, (parseInt(change_id[i].id.substr(lgth.length)) -1));
-										change_id[i].id = \"times_\" + member_id + \"_\" + (parseInt(change_id[i].id.substr(lgth.length)) -1);
-									}
-								}
-							});
-							$('.time,time_standby').mouseout(function() {
-								time_id = null;
-							});
 							$('.add_time').mouseover(function() {
 								$('#time_scale_' + member_id).attr('class', 'time_scale');
 							});
 							$('.add_time').mouseout(function() {
 								$('#time_scale_' + member_id).attr('class', 'time_scale_hide');
-								member_id = null;
-							});
-							$('.add_time').dblclick(function() {
-								//between which times did the user click?
-								var all_times = $('#times_' + member_id + ' > div');
-								var left = new Array(0,0);
-								var right = new Array(0,0);
-								for(var i=0; i < all_times.length; i++) {
-									var current = new Array();
-									current.offset = $(all_times[i]).offset();
-									current.right_edge = (current.offset.left + $(all_times[i]).width());
-									if(current.right_edge < posx && current.right_edge >left[1]) {
-										left[0] = all_times[i].id;
-										left[1] = current.right_edge;
-									}
-									if(current.offset.left > posx && current.offset.left < right[1]) {
-										right[0] = all_times[i].id;
-										right[1] = current.offset.left;
-									}
-								}
-								var change_id = '';
-                                var lgth = 'times_' + member_id + '_';
-                                var object_to_add = $('#times_' + member_id + '_99').clone(true);
-                                var selector = '';
-                                var type = 'after';
-                                var new_time_key = 0;
-								//is there an element left of mouse?
-								if(left[0]) {
-                                    new_time_key = parseInt(left[0].substr(lgth.length)) + 1;
-                                	object_to_add.attr('id', 'times_' + member_id + '_' + new_time_key);
-									change_id = $('#' + left[0] + ' ~ div');
-									selector = '#' + left[0];
-                                } else { //its not so change all elements
-                                	object_to_add.attr('id', 'times_' + member_id + '_0');
-                                    change_id = $('#times_' + member_id + '_0, #times_' + member_id + '_0 ~ div');
-                                    selector = '#times_' + member_id + '_1';
-                                    type = 'before';
-                                }
-								for(i=(change_id.length -1); i>=0; i--) {
-									if(!isNaN(parseInt(change_id[i].id.substr(lgth.length)))) {
-										change_id_of_input(change_id[i].id, (parseInt(change_id[i].id.substr(lgth.length)) + 1));
-        								change_id[i].id = 'times_' + member_id + '_' + (parseInt(change_id[i].id.substr(lgth.length)) + 1);
-        							}
-								}
-								if(type == 'before') {
-									$(selector).before(object_to_add);
-								} else {
-									$(selector).after(object_to_add);
-								}
-								if(left[1]) {
-									left[1] = left[1] - posi_null;
-								}
-								object_to_add.css('margin-left', (left[1] + 2) + 'px');
-								if(!right[1]) {
-									right[1] = 12;
-								}
-								object_to_add.css('width', (right[1] - 2) + 'px');
-								change_id_of_input('times_' + member_id + '_99', new_time_key);                             
-                                $('#times_' + member_id + '_' + new_time_key + 'j').attr('value', $('#member_form').data('raid_start') + (left[1]+2)*20);
-                                $('#times_' + member_id + '_' + new_time_key + 'l').attr('value', $('#member_form').data('raid_start') + (left[1] + right[1])*20);
 							});
                         });");
-    		$tpl->js_file($eqdkp_root_path.'plugins/raidlogimport/templates/dmem.js');
-    		$tpl->css_file($eqdkp_root_path.'plugins/raidlogimport/templates/dmem.css');
     		$this->tpl_assignments = true;
     	}
     	return $out;
     }
 
-	private function create_timebar($start, $end, $px_time)
-	{
+	private function create_timebar($start, $end, $px_time) {
 		if(!$this->timebar_created) {
 			$im = imagecreate($px_time, 18);
 			$black = imagecolorallocate($im, 0,0,0);
@@ -377,28 +295,18 @@ if(!class_exists('rli_member'))
 		}
 	}
 
-	private function get_member_ranks()
-	{
-		global $db;
-		if(!$this->member_ranks)
-		{
-			$sql = "SELECT m.member_name, r.rank_name FROM __members m, __member_ranks r WHERE m.member_rank_id = r.rank_id;";
-			$result = $db->query($sql);
-			while ($row = $db->fetch_record($result))
-			{
-				$this->member_ranks[$row['member_name']] = $row['rank_name'];
+	private function get_member_ranks() {
+		global $pdh;
+		if(!$this->member_ranks) {
+			$member_id_rank = $pdh->aget('member', 'rank_name', 0, array($pdh->get('member', 'id_list')));
+			foreach($member_id_rank as $id => $rank) {
+				$this->member_ranks[$pdh->get('member', 'name', array($id))] = $rank;
 			}
-			$ssql = "SELECT rank_name FROM __member_ranks WHERE rank_id = '".$this->config['new_member_rank']."';";
-			$this->member_ranks['new'] = $db->query_first($ssql);
+			$this->member_ranks['new'] = $pdh->get('rank', 'name', array($this->config('new_member_rank')));
 		}
 	}
 
-	public function delete($key)
-	{
-	}
-
-	public function __destruct()
-	{
+	public function __destruct() {
 		global $rli;
 		$rli->add_cache_data('member', $this->members);
 	}
