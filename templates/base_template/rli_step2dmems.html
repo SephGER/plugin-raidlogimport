@@ -1,4 +1,32 @@
 <form method="post" action="{F_PARSE}" name="post" id="member_form">
+	<table width="100%" border="0" cellspacing="1" cellpadding="1">
+		<tr>
+			<th colspan="4">{L_RAIDS}</th>
+		</tr>
+      <!-- BEGIN raids -->
+      <tr>
+      	<th colspan="4">{raids.COUNT}. {L_RAID}: </th>
+      </tr>
+      <tr class="row1">
+      	<td colspan="2">{L_START}: {raids.START_DATE} {raids.START_TIME}</td>
+        <td colspan="2">{L_END}: {raids.END_DATE} {raids.END_TIME}</td>
+      </tr>
+      <tr class="row2">
+        <td colspan="2">{L_EVENT}: {raids.EVENT}</td>
+        <td colspan="2">{L_VALUE}: {raids.VALUE}</td>
+      </tr>
+      <tr class="row1">
+        <td colspan="4">{L_NOTE}: {raids.NOTE}</td>
+      </tr>
+      <tr class="row2">
+        <td colspan="4">{L_BOSSKILLS}:</td>
+      </tr>
+      <tr class="row1">
+      	<td width="33%">{L_NAME}</td><td colspan="2" width="33%">{L_TIME}</td><td width="33%">{L_VALUE}</td>
+      </tr>
+      {raids.BOSSKILLS}
+	  <!-- END raids -->
+	</table>
 	<table border="0" cellspacing="1" cellpadding="1" id="member" width="200%">
 	  <tr>
         <th colspan="3">{L_MEMBERS}</th>
@@ -10,7 +38,7 @@
 	  </tr>
 	  <!-- BEGIN player -->
       <tr class="{player.ZAHL}">
-         <td align="right" style="height: 40px;">{player.NR}&nbsp;<img src="./../../../images/global/delete.png" alt="{L_DELETE}"><input type="checkbox" name="members[{player.KEY}][delete]" value="true" title="{L_DELETE}" /></td>
+         <td align="right" style="height: 30px;">{player.NR}&nbsp;<img src="./../../../images/global/delete.png" alt="{L_DELETE}"><input type="checkbox" name="members[{player.KEY}][delete]" value="true" title="{L_DELETE}" /></td>
 	     <td><input type="text" name="members[{player.KEY}][name]" value="{player.MITGLIED}" /></td>
 	     {player.RAID_LIST}
 	  </tr>
@@ -37,4 +65,4 @@
 		   <input type="submit" name="checkitem" value="{L_GO_ON} ({L_CHECKITEMS})" class="mainoption" /></th>
       </tr>
 	</table>
-</form>
+</form> {CONTEXT_MENU}

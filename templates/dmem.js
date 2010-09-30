@@ -7,6 +7,8 @@ time_id = null;
 //Mouse Position
 posx = 0;
 startx = 0;
+clickx1 = 0;
+clickx2 = 0;
 //Object data
 oldx = 0;
 max_right = 0;
@@ -21,6 +23,7 @@ joiner = null;
 leaver = null;
 
 document.onmousemove = scale;
+document.onmousedown = set_clickx;
 document.onmouseup = stop_scale;
 
 function set_member(member_key, px_time) {
@@ -87,6 +90,12 @@ function scale(ereignis) {
 	}
 }
 
+function set_clickx(ereignis) {
+	//record last two clicks
+	clickx1 = clickx2;
+	clickx2 = document.all ? window.event.clientX : ereignis.pageX;
+}
+
 function set_width(w, nostopper) {
 	var stopper = false;
 	if(w > 0) {
@@ -122,6 +131,90 @@ function set_left(l, nostopper) {
     leaver.value = $('#member_form').data('raid_start') + (l + parseInt(scale_object.style.width))*20;
 	if(stopper && !nostopper) {
 		stop_scale();
+	}
+}
+
+function add_timeframe() {
+	posx = clickx1;
+	//between which times did the user click?
+	var all_times = $('#times_' + member_id + ' > div');
+	var left = new Array(0,0);
+	var right = new Array(0,9999);
+	for(var i=0; i < all_times.length; i++) {
+		var current = new Array();
+		current.offset = $(all_times[i]).offset();
+		current.right_edge = (current.offset.left + $(all_times[i]).width());
+		if(current.right_edge < posx && current.right_edge > left[1]) {
+			left[0] = all_times[i].id;
+			left[1] = current.right_edge;
+		}
+		if(current.offset.left > posx && current.offset.left < right[1]) {
+			right[0] = all_times[i].id;
+			right[1] = current.offset.left;
+		}
+	}
+	var change_id = '';
+	var lgth = 'times_' + member_id + '_';
+	var object_to_add = $('#times_' + member_id + '_99').clone(true);
+	var selector = '';
+	var type = 'after';
+	var new_time_key = 0;
+	//is there an element left of mouse?
+	if(left[0]) {
+		new_time_key = parseInt(left[0].substr(lgth.length)) + 1;
+		object_to_add.attr('id', 'times_' + member_id + '_' + new_time_key);
+		change_id = $('#' + left[0] + ' ~ div');
+		selector = '#' + left[0];
+	} else { //its not so change all elements
+		object_to_add.attr('id', 'times_' + member_id + '_0');
+		change_id = $('#times_' + member_id + '_0, #times_' + member_id + '_0 ~ div');
+		selector = '#times_' + member_id + '_1';
+		type = 'before';
+	}
+	for(i=(change_id.length -1); i>=0; i--) {
+		if(!isNaN(parseInt(change_id[i].id.substr(lgth.length)))) {
+			change_id_of_input(change_id[i].id, (parseInt(change_id[i].id.substr(lgth.length)) + 1));
+			change_id[i].id = 'times_' + member_id + '_' + (parseInt(change_id[i].id.substr(lgth.length)) + 1);
+		}
+	}
+	if(type == 'before') {
+		$(selector).before(object_to_add);
+	} else {
+		$(selector).after(object_to_add);
+	}
+	if(left[1]) {
+		left[1] = left[1] - posi_null;
+	}
+	object_to_add.css('margin-left', (left[1] + 2) + 'px');
+	if(!right[1]) {
+		right[1] = 12;
+	}
+	object_to_add.css('width', (right[1] - left[1] - posi_null - 4) + 'px');
+	change_id_of_input('times_' + member_id + '_99', new_time_key);                             
+    $('#times_' + member_id + '_' + new_time_key + 'j').attr('value', $('#member_form').data('raid_start') + (left[1]+2)*20);
+	$('#times_' + member_id + '_' + new_time_key + 'l').attr('value', $('#member_form').data('raid_start') + (left[1] + right[1])*20);
+}
+
+function remove_timeframe() {
+	var change_id = $('#times_' + member_id + '_' + time_id + ' ~ div');
+	$('#times_' + member_id + '_' + time_id).remove();
+	var lgth = 'times_' + member_id + '_';
+	for(var i=0; i < change_id.length; i++) {
+		if(!isNaN(parseInt(change_id[i].id.substr(lgth.length)))) {
+			change_id_of_input(change_id[i].id, (parseInt(change_id[i].id.substr(lgth.length)) -1));
+			change_id[i].id = "times_" + member_id + "_" + (parseInt(change_id[i].id.substr(lgth.length)) -1);
+		}
+	}
+}
+
+function change_standby() {
+	var input_id = 'times_' + member_id + '_' + time_id;
+	if($('#' + input_id + 's').attr('value') == 'standby') {
+		$('#' + input_id + 's').attr('value', '');
+		$('#' + input_id).attr('class', 'time');
+	} else {
+		$('#' + input_id + 's').attr('value', 'standby');
+		$('#' + input_id).attr('class', 'timestandby');
 	}
 }
 
