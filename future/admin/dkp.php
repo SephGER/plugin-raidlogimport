@@ -83,7 +83,7 @@ class raidlogimport extends EQdkp_Admin {
 				$rli->data['log_lang'] = $in->get('log_lang');
 			}
 		}
-		$rli->raid->add_new($in->get('raid_add',0));
+		$rli->raid->add_new($in->get('raid_add', 0));
 		if($_POST['checkraid'] == $user->lang['rli_calc_note_value']) {
 			$rli->raid->recalc();
 		}
@@ -111,10 +111,9 @@ class raidlogimport extends EQdkp_Admin {
 
 	function process_members()
 	{
-		global $db, $core, $user, $tpl, $pm;
-		global $myHtml, $rli, $jquery, $in;
+		global $db, $core, $user, $tpl, $pm, $rli;
 
-		$rli->member->add_new($in->get('members_add',0));
+		$rli->member->add_new($in->get('members_add', 0));
 
 		//display members
 		$rli->member->display(true);
@@ -145,121 +144,13 @@ class raidlogimport extends EQdkp_Admin {
 
 	function process_items()
 	{
-		global $db, $core, $user, $tpl, $pm;
-		global $myHtml, $rli;
-
-		$rli->parse_post();
-		$p = ($rli->data['loots']) ? max(array_keys($rli->data['loots'])) : 0;
-		if(isset($_POST['items_add']))
-		{
-			for($i=1; $i<=$_POST['items_add']; $i++)
-			{
-				$p++;
-				$rli->data['loots'][$p] = array();
-			}
-		}
-
-		//show raids&members
-		foreach($rli->data['raids'] as $key => $raid)
-		{
-			if($rli->config['null_sum'])
-			{
-				$raid['value'] = $rli->get_nsr_value($key, false, true);
-			}
-			$tpl->assign_block_vars('raids', raids2tpl($key, $raid));
-		}
-
-		$members = array(); //for select in loots
-		foreach($rli->data['members'] as $key => $member)
-		{
-			$tpl->assign_block_vars('player', mems2tpl($key, $member, $rli->data));
-			$members['name'][$member['name']] = $member['name'];
-			if(isset($member['alias']))
-			{
-				$aliase[$member['alias']] = $member['name'];
-			}
-		}
-		if($rli->config['null_sum'] AND $rli->config['auto_minus'])
-		{
-			$sql = "SELECT member_name FROM __members ORDER BY member_name ASC;";
-			$mem_res = $db->query($sql);
-			while ( $mrow = $db->fetch_record($mem_res) )
-			{
-				$members['name'][$mrow['member_name']] = $mrow['member_name'];
-			}
-		}
-
-		//add disenchanted and bank
-		$members['name']['disenchanted'] = 'disenchanted';
-		$members['name']['bank'] = 'bank';
-		$maxkey = 0;
-
-		//create rename_table
-		$sql = "CREATE TABLE IF NOT EXISTS item_rename (
-				`id` INT NOT NULL PRIMARY KEY,
-				`item_name` VARCHAR(255) NOT NULL,
-				`item_id` INT NOT NULL,
-				`item_name_trans` VARCHAR(255) NOT NULL);";
-		$db->query($sql);
-
-		$sql = "SELECT * FROM item_rename;";
-		$result = $db->query($sql);
-		while($row = $db->fetch_record($result))
-		{
-			$loot_cache[$row['id']]['name'] = $row['item_name'];
-			$loot_cache[$row['id']]['trans'] = $row['item_name_trans'];
-			$loot_cache[$row['id']]['itemid'] = $row['item_id'];
-		}
-
-		if(is_array($rli->data['loots']))
-		{
-		$start = 0;
-		$end = $p+1;
-		if($vars = ini_get('suhosin.post.max_vars'))
-		{
-			$vars = $vars - 5;
-			$dic = $vars/6;
-			settype($dic, 'int');
-			$page = 1;
-
-			if(!(strpos($_POST['checkitem'], $user->lang['rli_itempage']) === FALSE))
-			{
-				$page = str_replace($user->lang['rli_itempage'], '', $_POST['checkitem']);
-			}
-			if($page >= 1)
-			{
-				$start = ($page-1)*$dic;
-				$page++;
-			}
-			$end = $start+$dic;
-		}
-		$rli->iteminput2tpl($loot_cache, $start, $end, $members, $aliase);
-		}
-
-		if($rli->config['null_sum'])
-		{
-			$next_button = '<input type="submit" name="nullsum" value="'.$user->lang['rli_go_on'].' ('.$user->lang['check_raidval'].')" class="mainoption" />';
-		}
-		else
-		{
-			if($rli->config['deactivate_adj'])
-			{
-				$next_button = '<input type="submit" name="insert" value="'.$user->lang['rli_go_on'].' ('.$user->lang['rli_insert'].')" class="mainoption" />';
-			}
-			else
-			{
-				$next_button = '<input type="submit" name="checkadj" value="'.$user->lang['rli_go_on'].' ('.$user->lang['rli_checkadj'].')" class="mainoption" />';
-			}
-		}
-
-		if($end <= $p AND $end)
-		{
-			$next_button = '<input type="submit" name="checkitem" value="'.$user->lang['rli_itempage'].(($page) ? $page : 2).'" class="mainoption" />';
-		}
-		elseif($end+$dic >= $p AND $dic)
-		{
-			$next_button .= ' <input type="submit" name="checkitem" value="'.$user->lang['rli_itempage'].(($page) ? $page : 2).'" class="mainoption" />';
-		}
+		global $db, $core, $user, $tpl, $pm, $rli;
+		
+		$rli->item->add_new($in->get('items_add', 0));
+		$rli->member->display();
+		$rli->raid->display();
+		$rli->item->display(true);
+		
 		$tpl->assign_vars(array(
 			'DATA'			=> htmlspecialchars(serialize($rli->data), ENT_QUOTES),
 			'S_ATT_BEGIN'	=> ($rli->config['attendence_begin'] > 0 AND !$rli->config['attendence_raid']) ? TRUE : FALSE,
