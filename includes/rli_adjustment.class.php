@@ -22,20 +22,32 @@ if(!defined('EQDKP_INC'))
 	exit;
 }
 
-if(!class_exists('rli_adjustment'))
-{
-  class rli_adjustment
-  {
-	public function __construct()
-	{
+if(!class_exists('rli_adjustment')) {
+  class rli_adjustment {
+	public function __construct() {
+		global $rli;
+		$this->adjs = $rli->get_cache_data('adj');
+	}
+
+	private function config($name) {
+		global $rli;
+		return $rli->config($name);
 	}
 	
-	public function add($member, $reason, $event, $value)
-	{
+	public function load_adjs() {
+		$this->adjs = array();
+		foreach($_POST['adjs'] as $f => $adj) {
+			if(!$adj['delete']) {
+				$adjs[$f] = $adj;
+				$adjs[$f]['value'] = floatvalue($adj['value']);
+			}
+		}
+		$this->data['adjs'] = $adjs;
 	}
 	
-	public function __destruct()
-	{
+	public function __destruct() {
+		global $rli;
+		$rli->add_cache_data('adj', $this->adjs);
 	}
   }
 }

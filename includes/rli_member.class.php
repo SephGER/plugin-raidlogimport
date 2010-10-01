@@ -57,9 +57,55 @@ if(!class_exists('rli_member')) {
 			}
 		}
 	}
-	
-	public function give($data) {
-		$this->members = $data;
+		
+	public function load_members() {
+		global $rli, $in;
+		$member_data = $this->members;
+		$this->members = array();
+
+		foreach($_POST['members'] as $k => $mem) {
+			foreach($member_data as $key => $member) {
+				if($k == $key AND !$mem['delete']) {
+					$this->members[$key] = $member;
+					$this->members[$key]['name'] = $in->get('members:'.$key.':name', '');
+					if($rli->config('member_display') == 2) {
+						$this->members[$key]['times'] = $in->getArray('members:'.$key.':times', 'int');
+						$this->members[$key]['raid_list'] = $rli->raid->get_memberraids($this->members[$key]['times']);
+						$a = $rli->raid->get_attendance($this->members[$key]['times']);
+						$this->members[$key]['att_begin'] = $a['begin'];
+						$this->members[$key]['att_end'] = $a['end'];
+						unset($a);
+					} else {
+						$this->members[$key]['raid_list'] = $in->getArray('members:'.$key.':raid_list', 'int');
+						$this->members[$key]['att_begin'] = (isset($mem['att_begin'])) ? true : false;
+						$this->members[$key]['att_end'] = (isset($mem['att_end'])) ? true : false;
+					}
+					if($this->members[$key]['raid_list']) {
+						#$raid_attendees[$mem['name']] = true;
+						foreach($this->members[$key]['raid_list'] as $raid_id) {
+							if(($raid_id != $rli->add_data['att_begin_raid'] AND $raid_id != $rli->add_data['att_end_raid']) OR !$rli->config('attendence_raid')) {
+								$dkp = $rli->raid->get_value($raid_id, $this->members[$key]['times'], array($this->members[$key]['att_begin'], $this->members[$key]['att_end']));
+								$dkp = runden($dkp, 2);
+								if($dkp <  $raid['value']) {
+									/*add an adjustment
+									$dkp -= $raid['value'];
+									if($tempkey = $this->check_adj_exists($mem['name'], $user->lang['rli_partial_raid']." ".date('d.m.y H:i:s', $raid['begin']))) {
+										$this->data['adjs'][$tempkey]['value'] = $dkp;
+									} else {
+										$this->data['adjs'][$i]['member'] = $mem['name'];
+										$this->data['adjs'][$i]['reason'] = $user->lang['rli_partial_raid']." ".date('d.m.y H:i:s', $raid['begin']);
+										$this->data['adjs'][$i]['value'] = $dkp;
+										$this->data['adjs'][$i]['event'] = $raid['event'];
+										$i++;
+									}*/
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		#$this->auto_minus($raid_attendees);
 	}
 
 	public function finish() {
@@ -137,7 +183,7 @@ if(!class_exists('rli_member')) {
 			}
             if($_POST['checkmem'] == $user->lang['rli_go_on'].' ('.$user->lang['rli_checkmem'].')') {
             	$mraids = $rli->raid->get_memberraids($member['times']);
-            	$a = $rli->raid->calc_att($member['times']);
+            	$a = $rli->raid->get_attendance($member['times']);
             	if($a['att_dkp_begin'] AND !in_array($this->add_data['att_begin_raid'], $mraids)) {
             		$mraids[] = $rli->add_data['att_begin_raid'];
             	}
