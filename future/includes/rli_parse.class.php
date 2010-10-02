@@ -170,7 +170,7 @@ class rli_parse {
 		foreach($xml->items->children() as $xitem) {
 			$cost = (isset($xitem->cost)) ? trim($xitem->cost) : '';
 			$id = (isset($xitem->itemid)) ? trim($xitem->itemid) : '';
-			$rli->item->add(trim(utf8_decode($xitem->name)), trim(utf8_decode($xitem->member)), $cost, $id, (int) trim($xitem->time));
+			$rli->item->add(trim(utf8_decode($xitem->name)), trim(utf8_decode($xitem->member)), $cost, (int) $id, (int) trim($xitem->time));
 		}
 	}
 

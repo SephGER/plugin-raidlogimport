@@ -16,8 +16,7 @@
 * $Id: rli.class.php 5040 2009-06-09 15:20:27Z hoofy_leon $
 */
 
-if(!defined('EQDKP_INC'))
-{
+if(!defined('EQDKP_INC')) {
 	header('HTTP/1.0 Not Found');
 	exit;
 }
@@ -40,116 +39,130 @@ class rli_item {
 		$this->items[] = array('name' => $name, 'member' => $member, 'value' => $value, 'game_id' => $id, 'time' => $time, 'raid' => $raid);
 	}
 	
+	public function add_new($num) {
+		while($num > 0) {
+			$this->items[] = array('name' => '');
+			$num--;
+		}
+	}
+	
 	public function load_items() {
-		$this->items = array();
+		global $in;
 		foreach($_POST['loots'] as $k => $loot) {
-			if(is_array($this->data['loots'])) {
-				foreach($this->data['loots'] as $key => $item) {
+			if(is_array($this->items)) {
+				foreach($this->items as $key => $item) {
 					if($k == $key) {
-						if(!$loot['delete']) {
-							$this->data['loots'][$key] = $loot;
-							$this->data['loots'][$key]['dkp'] = floatvalue($loot['dkp']);
-							$this->data['loots'][$key]['time'] = $item['time'];
-						} else {
-							unset($this->data['loots'][$key]);
+						if($loot['delete']) {
+							unset($this->items[$key]);
+							continue;
 						}
+						$this->items[$key] = $in->getArray('loots:'.$key, '');
+						$this->items[$key]['value'] = floatvalue($in->get('loots:'.$key.':value', 0.0));
+						$this->items[$key]['time'] = $item['time'];
 					}
 				}
+			} else {
+				$this->items[$k] = $in->getArray('loots:'.$k, '');
+				$this->items[$k]['value'] = floatvalue($in->get('loots:'.$k.':value', 0.0));
 			}
 		}
 	}
 	
-	public function display($with_form=false) {$members = array(); //for select in loots
-		foreach($rli->data['members'] as $key => $member)
-		{
-			$tpl->assign_block_vars('player', mems2tpl($key, $member, $rli->data));
-			$members['name'][$member['name']] = $member['name'];
-			if(isset($member['alias']))
-			{
-				$aliase[$member['alias']] = $member['name'];
+	public function display($with_form=false) {
+		global $rli, $html, $pdh, $tpl, $user, $core;
+		if(is_array($this->items)) {
+			$p = count($this->items);
+			$start = 0;
+			$end = $p+1;
+			if($vars = ini_get('suhosin.post.max_vars')) {
+				$vars = $vars - 5;
+				$dic = $vars/6;
+				settype($dic, 'int');
+				$page = 1;
+
+				if(!(strpos($_POST['checkitem'], $user->lang['rli_itempage']) === false)) {
+					$page = str_replace($user->lang['rli_itempage'], '', $_POST['checkitem']);
+				}
+				if($page >= 1) {
+					$start = ($page-1)*$dic;
+					$page++;
+				}
+				$end = $start+$dic;
+			}
+			$members = $rli->member->get_for_dropdown(2);
+			//add disenchanted and bank
+			$members['disenchanted'] = 'disenchanted';
+			$members['bank'] = 'bank';
+			ksort($members);
+			$itempools = $pdh->aget('itempool', 'name', 0, array($pdh->get('itempool', 'id_list')));
+			//maybe add "saving" for itempool
+			foreach($this->items as $key => $item) {
+				if(($start <= $key AND $key < $end) OR !$with_form) {
+					if($with_form) {
+						$member_select = "<select size='1' name='loots[".$key."][member]'>";
+						$member_select .= "<option disabled ".((in_array($item['member'], $members)) ? "" : "selected='selected'").">".$user->lang['rli_choose_mem']."</option>";
+						foreach($members as $mn => $mem) {
+							$member_select .= "<option value='".$mn."' ".(($mn == $item['member']) ? "selected='selected'" : "").">".$mem."</option>";
+						}
+						
+						$raid_select = "<select size='1' name='loots[".$key."][raid]'>";
+						$att_raids = $rli->raid->get_attendance_raids();
+						$rli->raid->raidlist();
+						foreach($rli->raid->raidlist as $i => $note) {
+							if(!(in_array($i, $att_raids) AND $this->config['attendence_raid'])) {
+								$raid_select .= "<option value='".$i."'";
+								if($rli->raid->item_in_raid($i, $item['time'])) {
+									$raid_select .= ' selected="selected"';
+								}
+								$raid_select .= ">".$i."</option>";
+							}
+						}
+					}
+					$tpl->assign_block_vars('loots', array(
+						'LOOTNAME'  => $item['name'],
+						'ITEMID'    => $item['game_id'],
+						'LOOTER'    => ($with_form) ? $member_select."</select>" : $item['member'],
+						'RAID'      => ($with_form) ? $raid_select."</select>" : $item['raid'],
+						'ITEMPOOL'	=> ($with_form) ? $html->DropDown('loots['.$key.'][itempool]', $itempools, $item['itempool']) : $pdh->get('itempool', 'name', array($item['itempool'])),
+						'LOOTDKP'   => runden($item['value']),
+						'KEY'       => $key,
+						'CLASS'     => $core->switch_row_class())
+					);
+				}
 			}
 		}
-		if($rli->config['null_sum'] AND $rli->config['auto_minus'])
-		{
-			$sql = "SELECT member_name FROM __members ORDER BY member_name ASC;";
-			$mem_res = $db->query($sql);
-			while ( $mrow = $db->fetch_record($mem_res) )
-			{
-				$members['name'][$mrow['member_name']] = $mrow['member_name'];
-			}
-		}
-
-		//add disenchanted and bank
-		$members['name']['disenchanted'] = 'disenchanted';
-		$members['name']['bank'] = 'bank';
-		$maxkey = 0;
-
-		//create rename_table
-		$sql = "CREATE TABLE IF NOT EXISTS item_rename (
-				`id` INT NOT NULL PRIMARY KEY,
-				`item_name` VARCHAR(255) NOT NULL,
-				`item_id` INT NOT NULL,
-				`item_name_trans` VARCHAR(255) NOT NULL);";
-		$db->query($sql);
-
-		$sql = "SELECT * FROM item_rename;";
-		$result = $db->query($sql);
-		while($row = $db->fetch_record($result))
-		{
-			$loot_cache[$row['id']]['name'] = $row['item_name'];
-			$loot_cache[$row['id']]['trans'] = $row['item_name_trans'];
-			$loot_cache[$row['id']]['itemid'] = $row['item_id'];
-		}
-
-		if(is_array($rli->data['loots']))
-		{
-		$start = 0;
-		$end = $p+1;
-		if($vars = ini_get('suhosin.post.max_vars'))
-		{
-			$vars = $vars - 5;
-			$dic = $vars/6;
-			settype($dic, 'int');
-			$page = 1;
-
-			if(!(strpos($_POST['checkitem'], $user->lang['rli_itempage']) === FALSE))
-			{
-				$page = str_replace($user->lang['rli_itempage'], '', $_POST['checkitem']);
-			}
-			if($page >= 1)
-			{
-				$start = ($page-1)*$dic;
-				$page++;
-			}
-			$end = $start+$dic;
-		}
-		$rli->iteminput2tpl($loot_cache, $start, $end, $members, $aliase);
-		}
-
-		if($rli->config['null_sum'])
-		{
-			$next_button = '<input type="submit" name="nullsum" value="'.$user->lang['rli_go_on'].' ('.$user->lang['check_raidval'].')" class="mainoption" />';
-		}
-		else
-		{
-			if($rli->config['deactivate_adj'])
-			{
-				$next_button = '<input type="submit" name="insert" value="'.$user->lang['rli_go_on'].' ('.$user->lang['rli_insert'].')" class="mainoption" />';
-			}
-			else
-			{
-				$next_button = '<input type="submit" name="checkadj" value="'.$user->lang['rli_go_on'].' ('.$user->lang['rli_checkadj'].')" class="mainoption" />';
-			}
-		}
-
-		if($end <= $p AND $end)
-		{
+		if($end <= $p AND $end) {
 			$next_button = '<input type="submit" name="checkitem" value="'.$user->lang['rli_itempage'].(($page) ? $page : 2).'" class="mainoption" />';
-		}
-		elseif($end+$dic >= $p AND $dic)
-		{
+		} elseif($end+$dic >= $p AND $dic) {
 			$next_button .= ' <input type="submit" name="checkitem" value="'.$user->lang['rli_itempage'].(($page) ? $page : 2).'" class="mainoption" />';
+		} elseif($rli->config('deactivate_adj')) {
+			$next_button = '<input type="submit" name="insert" value="'.$user->lang['rli_go_on'].' ('.$user->lang['rli_insert'].')" class="mainoption" />';
+		} else {
+			$next_button = '<input type="submit" name="checkadj" value="'.$user->lang['rli_go_on'].' ('.$user->lang['rli_checkadj'].')" class="mainoption" />';
 		}
+		$tpl->assign_var('NEXT_BUTTON', $next_button);
+	}
+
+	public function check($bools) {
+		if(is_array($this->items)) {
+			foreach($this->items as $key => $item) {
+				if(!$item['name'] OR !$item['raid'] OR !$item['itempool']) {
+					$bools['false']['item'] = false;
+				}
+			}
+		} else {
+			$bools['false']['item'] = 'miss';
+		}
+	}
+	
+	public function insert() {
+		global $pdh, $rli;
+		foreach($this->items as $item) {
+			if(!$pdh->put('item', 'add_item', array($item['name'], array($rli->member->name_ids[$item['member']]), $rli->raid->real_ids[$item['raid']], $item['game_id'], $item['value'], $item['itempool'], $item['time']))) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	public function __destruct() {
