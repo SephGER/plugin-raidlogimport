@@ -16,8 +16,7 @@
 * $Id: rli.class.php 5040 2009-06-09 15:20:27Z hoofy_leon $
 */
 
-if(!defined('EQDKP_INC'))
-{
+if(!defined('EQDKP_INC')) {
 	header('HTTP/1.0 Not Found');
 	exit;
 }
@@ -28,6 +27,7 @@ class rli_raid {
 	private $raids = array();
 	private $hour_count = 0;
 	private $add_data = array();
+	public $real_ids = array();
 
 	public function __construct() {
 		global $rli;
@@ -55,7 +55,7 @@ class rli_raid {
 			if(!isset($raid['delete'])) {
 				list($day, $month, $year) = explode('.', $in->get('raids:'.$key.':start_date','1.1.1970'), 3);
 				list($hour, $min, $sec) = explode(':', $in->get('raids:'.$key.':start_time','00:00:00'), 3);
-				$raids[$key]['begin'] = mktime($hour, $min, $sec, $month, $day, $year);
+				$this->raids[$key]['begin'] = mktime($hour, $min, $sec, $month, $day, $year);
 				list($day, $month, $year) = explode('.', $in->get('raids:'.$key.':end_date','1.1.1970'), 3);
 				list($hour, $min, $sec) = explode(':', $in->get('raids:'.$key.':end_time','00:00:00'), 3);
 				$this->raids[$key]['end'] = mktime($hour, $min, $sec, $month, $day, $year);
@@ -91,6 +91,7 @@ class rli_raid {
 				$this->raids[$key]['end'] = $zone['leave'];
 				$this->raids[$key]['zone'] = $zone['name'];
 				$this->raids[$key]['diff'] = $zone['diff'];
+				$key++;
 			}
 			if( $this->config('raidcount') & 1 ) {
 				for($i = $zone['enter']; $i<=$zone['leave']; $i+=3600)
@@ -193,7 +194,7 @@ class rli_raid {
 		global $tpl, $html, $core, $rli;
 
 		foreach($this->raids as $ky => $rai) {
-			if($ky == $this->add_data['standby_raid'] AND $this->config('standby_raid') != 1) {
+			if($ky == $this->add_data['standby_raid'] AND $this->config('standby_raid') <= 1) {
 				continue;
 			}
 			$bosskills = '';
@@ -245,6 +246,39 @@ class rli_raid {
 		return $this->raids;
 	}
 	
+	public function get($raid_key) {
+		return $this->raids[$raid_key];
+	}
+
+	public function check($bools) {
+		if(is_array($this->raids)) {
+			foreach($this->raids as $key => $raid) {
+				if(!$raid['begin'] OR !$raid['event'] OR !$raid['note']) {
+					$bools['false']['raid'] = false;
+				}
+			}
+		} else {
+			$bools['false']['raid'] = 'miss';
+		}
+	}
+	
+	public function insert() {
+		global $rli, $pdh;
+		$raid_attendees = array();
+		foreach($rli->raid_members as $member_id => $raid_keys) {
+			foreach($raid_keys as $raid_key) {
+				$raid_attendees[$raid_key] = $member_id;
+			}
+		}
+		foreach($this->raids as $key => $raid) {
+			$real_ids[$key] = $pdh->put('raid', 'add_raid', array($raid['begin'], $raid_attendees, $raid['event'], $raid['note'], $raid['value']));
+		}
+		if(in_array(false, $real_ids)) {
+			return false;
+		}
+		return true;
+	}
+	
 	/*
 	 * get seconds the member was in the raid
 	 * @int $key: key of the raid
@@ -272,14 +306,19 @@ class rli_raid {
 		foreach($this->raids as $key => $rdata) {
 			if($key == $att_raids['begin']) {
 				$att = $this->get_attendance($times);
-				if($att['begin'])
+				if($att['begin']) {
 					$raid_list[] = $key;
-				continue;
+					continue;
+				}
 			}
 			if($key == $att_raids['end']) {
 				$att = $this->get_attendance($times);
-				if($att['end'])
+				if($att['end']) {
 					$raid_list[] = $key;
+					continue;
+				}
+			}
+			if($this->config('attendance_raids') AND in_array($key, $att_raids)) {
 				continue;
 			}
 			$standby = 1;
@@ -345,6 +384,25 @@ class rli_raid {
 				break;
 		}
 		return $attendance;
+	}
+	
+	public function item_in_raid($key, $time) {
+		if($this->raids[$key]['begin'] < $time AND $this->raids[$key]['end'] > $time) {
+			return true;
+		}
+		return false;
+	}
+
+	public function get_attendance_raids($strict=false) {
+		$att_ra = array();
+		if($this->config('attendance_raid')) {
+			$att_ra['begin'] = $this->add_data['att_begin_raid'];
+			$att_ra['end'] = $this->add_data['att_end_raid'];
+		} elseif(!$strict) {
+			$att_ra['begin'] = ($this->config('attendance_begin')) ? $this->add_data['att_begin_raid'] : 0;
+			$att_ra['end'] = ($this->config('attendance_end')) ? $this->add_data['att_end_raid'] : 0;
+		}
+		return $att_ra;
 	}
 	
 	private function calc_timedkp($key, $in_raid) {
@@ -502,18 +560,6 @@ class rli_raid {
 			$r['end'] = $end;
 		}
 		return $r;
-	}
-
-	private function get_attendance_raids($strict=false) {
-		$att_ra = array();
-		if($this->config('attendance_raid')) {
-			$att_ra['begin'] = $this->add_data['att_begin_raid'];
-			$att_ra['end'] = $this->add_data['att_end_raid'];
-		} elseif(!$strict) {
-			$att_ra['begin'] = ($this->config('attendance_begin')) ? $this->add_data['att_begin_raid'] : 0;
-			$att_ra['end'] = ($this->config('attendance_end')) ? $this->add_data['att_end_raid'] : 0;
-		}
-		return $att_ra;
 	}
 
 	private function get_event($key, $nokey=false) {

@@ -41,7 +41,7 @@ class RLI_Settings extends EQdkp_Admin
 	}
 
 	public function save_config() {
-		global $db, $user, $tpl, $core, $pm, $SID, $rli, $logs, $in;
+		global $core, $rli, $in;
 
 		$messages = array();
 		$bytes = array('s_member_rank', 'ignore_dissed', 'use_dkp', 'event_boss');
@@ -49,21 +49,23 @@ class RLI_Settings extends EQdkp_Admin
 		foreach($rli->config() as $old_name => $old_value) {
 			if(in_array($old_name, $bytes)) {
 				$val = 0;
-				if(is_array($_POST[$old_name])) {
-					foreach($_POST[$old_name] as $pos) {
+				if(is_array($data[$old_name])) {
+					foreach($in->getArray($old_name, 0) as $pos) {
 						$val += $pos;
 					}
 				}
-				$_POST[$old_name] = $val;
+				$data[$old_name] = $val;
 			} elseif(in_array($old_name, $floats)) {
-				$_POST[$old_name] = number_format(floatvalue($_POST[$old_name]), 2, '.', '');
+				$data[$old_name] = number_format(floatvalue($in->get($old_name)), 2, '.', '');
+			} else {
+				$data[$old_name] = $in->get($old_name, '0');
 			}
-			if(isset($_POST[$old_name]) AND $_POST[$old_name] != $old_value) { //Update
-				$core->config_set($old_name, $in->get($old_name, '0'), 'raidlogimport');
+			if(isset($data[$old_name]) AND $data[$old_name] != $old_value) { //Update
+				$core->config_set($old_name, $data[$old_name], 'raidlogimport');
 				$messages[] = $old_name;
 			}
 		}
-		$this->display_form($messages);
+		$this->display_form(array(implode(', ', $messages)));
 	}
 
 	public function display_form($messages=array()) {

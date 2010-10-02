@@ -1,11 +1,3 @@
-<script language="JavaScript" type="text/javascript">
-
-function closeWindow(){jBox.close2('UCCacheWindow');}
-
-function RenameItems(langto, langfrom, count){
-  var boxUCCacheWindow = jBox.open('UCCacheWindow','iframe','renameitems.php?actual=0&langto='+langto+'&langfrom='+langfrom+'&count='+count,'Rename Items','width=440,height=330,center=true,minimizable=true,resize=true,draggable=true,model=false,scrolling=true');
-}
-</script>
 <form method="post" action="{F_PARSE}" name="post">
 	<table width="100%" border="0" cellspacing="1" cellpadding="2">
 		<tr>
@@ -73,6 +65,7 @@ function RenameItems(langto, langfrom, count){
       	<th>{L_ITEM_ID}</th>
       	<th>{L_LOOTER}</th>
         <th>{L_RAID}</th>
+		<th>{L_ITEMPOOL}</th>
       	<th>{L_COST}</th>
       </tr>
       <!-- BEGIN loots -->
@@ -82,15 +75,10 @@ function RenameItems(langto, langfrom, count){
       	<td><input type="text" name="loots[{loots.KEY}][id]" class="maininput" value="{loots.ITEMID}" /></td>
       	<td>{loots.LOOTER}</td>
       	<td>{loots.RAID}</td>
-      	<td><input type="text" name="loots[{loots.KEY}][dkp]" value="{loots.LOOTDKP}" class="maininput" size="7" /></td>
+		<td>{loots.ITEMPOOL}</td>
+      	<td><input type="text" name="loots[{loots.KEY}][value]" value="{loots.LOOTDKP}" class="maininput" size="7" /></td>
       </tr>
       <!-- END loots -->
-      <tr class="row2">
-      	<td colspan="6">
-      		&nbsp;<input type="button" size="20" name="rename" value="{L_TRANSLATE_ITEMS}" class="mainoption" onclick="javascript:RenameItems('{LANGTO}', '{LANGFROM}', '{MAXCOUNT}')" />
-      		({LANGFROM} => {LANGTO})&nbsp;&nbsp;{L_TRANSLATE_ITEMS_TIP}
-      	</td>
-      </tr>
 	  <tr class="row1">
 	  	<td colspan="2"><select name="items_add">
 	  		  <option value="0">0..{L_ITEMS_ADD}</option>
@@ -104,7 +92,7 @@ function RenameItems(langto, langfrom, count){
 	  	<td colspan="5">&nbsp;</td>
 	  </tr>
       <tr>
-      	<th colspan="6"><input type="hidden" name="rest" value="{DATA}" />
+      	<th colspan="7"><input type="hidden" name="rest" value="{DATA}" />
       					<input type="hidden" name="add_item_data" value='{ADD_ITEM_DATA}' />
       					<input type="submit" name="checkraid" value="{L_BACK2RAID}" class="mainoption" />
       					<input type="submit" name="checkmem" value="{L_BACK2MEM}" class="mainoption" />

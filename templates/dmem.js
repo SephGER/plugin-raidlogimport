@@ -156,6 +156,7 @@ function add_timeframe() {
 	var change_id = '';
 	var lgth = 'times_' + member_id + '_';
 	var object_to_add = $('#times_' + member_id + '_99').clone(true);
+	object_to_add.removeAttr('disabled');
 	var selector = '';
 	var type = 'after';
 	var new_time_key = 0;
