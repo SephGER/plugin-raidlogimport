@@ -57,13 +57,13 @@ class rli_item {
 							continue;
 						}
 						$this->items[$key] = $in->getArray('loots:'.$key, '');
-						$this->items[$key]['value'] = floatvalue($in->get('loots:'.$key.':value', 0.0));
+						$this->items[$key]['value'] = floatvalue($in->get('loots:'.$key.':value', '0.0'));
 						$this->items[$key]['time'] = $item['time'];
 					}
 				}
 			} else {
 				$this->items[$k] = $in->getArray('loots:'.$k, '');
-				$this->items[$k]['value'] = floatvalue($in->get('loots:'.$k.':value', 0.0));
+				$this->items[$k]['value'] = floatvalue($in->get('loots:'.$k.':value', '0.0'));
 			}
 		}
 	}

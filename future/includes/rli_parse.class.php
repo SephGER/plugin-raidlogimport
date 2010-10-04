@@ -159,7 +159,7 @@ class rli_parse {
 		foreach($xml->members->children() as $xmember) {
 			$name = trim(utf8_decode($xmember->name));
 			$note = (isset($xmember->note)) ? trim(utf8_decode($xmember->note)) : '';
-			$rli->member->add($name, trim(utf8_decode($xmember->race)), trim(utf8_decode($xmember->class)), trim($xmember->level), $note);
+			$rli->member->add($name, trim(utf8_decode($xmember->class)), trim(utf8_decode($xmember->race)), trim($xmember->level), $note);
 			foreach($xmember->times->children() as $time) {
 				$attrs = $time->attributes();
 				$type = $attrs['type'];

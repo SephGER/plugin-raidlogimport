@@ -60,7 +60,7 @@ class rli_raid {
 				list($hour, $min, $sec) = explode(':', $in->get('raids:'.$key.':end_time','00:00:00'), 3);
 				$this->raids[$key]['end'] = mktime($hour, $min, $sec, $month, $day, $year);
 				$this->raids[$key]['note'] = $in->get('raids:'.$key.':note');
-				$this->raids[$key]['value'] = floatvalue($in->get('raids:'.$key.':value', 0.0));
+				$this->raids[$key]['value'] = runden(floatvalue($in->get('raids:'.$key.':value', '0.0')));
 				$this->raids[$key]['event'] = $in->get('raids:'.$key.':event');
 				$this->raids[$key]['bosskill_add'] = $in->get('raids:'.$key.':bosskill_add', 0);
 				$this->raids[$key]['diff'] = $in->get('raids:'.$key.':diff', 0);
@@ -71,14 +71,14 @@ class rli_raid {
 							list($hour, $min, $sec) = explode(':', $in->get('raids:'.$key.':bosskills:'.$u.':time', '00:00:00'), 3);
 							list($day, $month, $year) = explode('.', $in->get('raids:'.$key.':bosskills:'.$u.':date', '1.1.1970'), 3);
 							$bosskills[$u]['time'] = mktime($hour, $min, $sec, $month, $day, $year);
-							$bosskills[$u]['bonus'] = floatvalue($in->get('raids:'.$key.':bosskills:'.$u.':bonus', 0.0));
+							$bosskills[$u]['bonus'] = runden(floatvalue($in->get('raids:'.$key.':bosskills:'.$u.':bonus', '0.0')));
 							$bosskills[$u]['name'] = $in->get('raids:'.$key.':bosskills:'.$u.':name');
 							$bosskills[$u]['diff'] = $in->get('raids:'.$key.':bosskills:'.$u.':diff');
 						}
 					}
 				}
 				$this->raids[$key]['bosskills'] = $bosskills;
-				$this->raids[$key]['timebonus'] = floatvalue($in->get('raids:'.$key.':timebonus', 0.0));
+				$this->raids[$key]['timebonus'] = floatvalue($in->get('raids:'.$key.':timebonus', '0.0'));
 			}
 		}
 	}
@@ -169,7 +169,7 @@ class rli_raid {
 					$this->raids[$key]['bosskills'] = $bosskills;
 				}
 				$this->raids[$key]['note'] = ($key == $this->add_data['standby_raid']) ? $this->config('standby_raidnote') : $this->get_note($key);
-				$this->raids[$key]['value'] = $this->get_value($key, false);
+				$this->raids[$key]['value'] = runden($this->get_value($key, false));
 			}
 		}
 	}
@@ -265,15 +265,15 @@ class rli_raid {
 	public function insert() {
 		global $rli, $pdh;
 		$raid_attendees = array();
-		foreach($rli->raid_members as $member_id => $raid_keys) {
+		foreach($rli->member->raid_members as $member_id => $raid_keys) {
 			foreach($raid_keys as $raid_key) {
-				$raid_attendees[$raid_key] = $member_id;
+				$raid_attendees[$raid_key][] = $member_id;
 			}
 		}
 		foreach($this->raids as $key => $raid) {
-			$real_ids[$key] = $pdh->put('raid', 'add_raid', array($raid['begin'], $raid_attendees, $raid['event'], $raid['note'], $raid['value']));
+			$this->real_ids[$key] = $pdh->put('raid', 'add_raid', array($raid['begin'], $raid_attendees[$key], $raid['event'], $raid['note'], $raid['value']));
 		}
-		if(in_array(false, $real_ids)) {
+		if(in_array(false, $this->real_ids)) {
 			return false;
 		}
 		return true;

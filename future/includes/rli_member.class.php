@@ -39,6 +39,15 @@ if(!class_exists('rli_member')) {
 	}
 
 	public function add($name, $class=0, $race=0, $lvl=0, $note='') {
+		if($race == 'Scourge' || $race == 'SCOURGE') {
+			$race = 'Undead';
+		}
+		if($race == 'BloodElf' || $race == 'BLOODELF') {
+			$race = 'Blood Elf';
+		}
+		if($race == 'DEATHKNIGHT' || $race == 'DeathKnight') {
+			$race = 'Death Knight';
+		}
 		$this->members[] = array('name' => $name, 'class' => $class, 'race' => $race, 'level' => $lvl, 'note' => $note);
 	}
 
@@ -93,7 +102,7 @@ if(!class_exists('rli_member')) {
 									if($akey = $rli->adj->check_adj_exists($member['name'], $user->lang['rli_partial_raid'], $raid_id)) {
 										$rli->adj->update($akey, array('value' => $dkp));
 									} else {
-										$rli->adj->add($user->lang['partial_raid'], $member['name'], $dkp, $raid['event'], $raid['begin'], $raid_id);
+										$rli->adj->add($user->lang['rli_partial_raid'], $member['name'], $dkp, $raid['event'], $raid['begin'], $raid_id);
 									}
 								}
 							}
