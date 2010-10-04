@@ -49,7 +49,7 @@ class RLI_Settings extends EQdkp_Admin
 		foreach($rli->config() as $old_name => $old_value) {
 			if(in_array($old_name, $bytes)) {
 				$val = 0;
-				if(is_array($data[$old_name])) {
+				if(is_array($_POST[$old_name])) {
 					foreach($in->getArray($old_name, 0) as $pos) {
 						$val += $pos;
 					}
@@ -135,7 +135,7 @@ class RLI_Settings extends EQdkp_Admin
 				'am'			=> array('auto_minus', 'am_value_raids', 'am_allxraids'),
 				'standby'		=> array('standby_absolute', 'standby_att')
 			),
-			'normal'	=> array(
+			'text'		=> array(
 				'general'		=> array('timedkp_handle'),
 				'member'		=> array('member_miss_time', 'member_start', 'member_raid'),
 				'am'			=> array('am_raidnum', 'am_value'),
@@ -146,7 +146,7 @@ class RLI_Settings extends EQdkp_Admin
 				'parse'			=> array('bz_parse'),
 				'standby'		=> array('standby_value', 'standby_raidnote')
 			),
-			'text' 		=> array(
+			'normal' 	=> array(
 				'general'		=> array('rli_inst_version')
 			),
 			'ignore'	=> array(
@@ -189,17 +189,19 @@ class RLI_Settings extends EQdkp_Admin
 							$k = $a;
 							break;
 
-						case 'text':
+						case 'normal':
 							$a = $k;
 							if($name == 'rli_inst_version') {
 								$k = 0;
+								$holder[$holde][$k]['value'] = $pm->get_data('raidlogimport', 'version');
+							} else {
+								$holder[$holde][$k]['value'] = $rli->config($name);
 							}
-							$holder[$holde][$k]['value'] = $rli->config($name);
 							$holder[$holde][$k]['name'] = $name;
 							$k = $a;
 							break;
 
-						case 'normal':
+						case 'text':
 							$holder[$holde][$k]['value'] = "<input type='text' name='".$name."' value='".$rli->config($name)."' class='maininput' />";
 							$holder[$holde][$k]['name'] = $name;
 							break;
@@ -233,7 +235,6 @@ class RLI_Settings extends EQdkp_Admin
 				'TITLE'	=> $user->lang['title_'.$type],
 				'NUM'	=> $num)
 			);
-			#$tpl->assign_block_vars('holder', array('TITLE'	=> $user->lang['title_'.$type])); //only needet to add <table>
 			$num++;
 			foreach($hold as $nava) {
 				$add = '';

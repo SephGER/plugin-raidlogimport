@@ -197,7 +197,7 @@ class raidlogimport extends EQdkp_Admin {
 
 	function insert_log()
 	{
-		global $db, $core, $user, $tpl, $pm, $rli, $pdc;
+		global $db, $core, $user, $tpl, $pm, $rli, $pdh;
 		
 		$message = array();
 		$bools = $rli->check_data();
@@ -210,7 +210,7 @@ class raidlogimport extends EQdkp_Admin {
 			if($isok) {
 				$db->query("COMMIT;");
 				$pm->do_hooks('/plugins/raidlogimport/admin/dkp.php');
-				$pdc->del_suffix('dkp');
+				$pdh->process_hook_queue();
 				$rli->flush_cache();
 				$message[] = $user->lang['bz_save_suc'];
 			} else {

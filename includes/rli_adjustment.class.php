@@ -34,7 +34,7 @@ if(!class_exists('rli_adjustment')) {
 	}
 	
 	public function add($reason, $member, $value, $event, $date=0, $raid=0) {
-		$this->adjs[] = array('reason' => $reason, 'member' => $member, 'value' => $value, 'date' => $date, 'raid' => $raid);
+		$this->adjs[] = array('reason' => $reason, 'member' => $member, 'value' => runden($value), 'date' => $date, 'raid' => $raid);
 	}
 
 	public function add_new($num) {
@@ -55,24 +55,25 @@ if(!class_exists('rli_adjustment')) {
 	}
 	
 	public function load_adjs() {
+		global $in;
 		$this->adjs = array();
 		foreach($_POST['adjs'] as $a => $adj) {
 			if(!$adj['delete']) {
 				$this->adjs[$a] = $in->getArray('adjs:'.$a, '');
-				$this->adjs[$f]['value'] = floatvalue($adj['value']);
+				$this->adjs[$a]['value'] = runden(floatvalue($adj['value']));
 			}
 		}
 	}
 	
 	public function display($with_form=false) {
-		global $rli, $core, $html;
+		global $rli, $core, $html, $tpl;
 		if(is_array($this->adjs)) {
 			$members = $rli->member->get_for_dropdown(4);
 			$events = $rli->get_events('name');
 			$rli->raid->raidlist();
 			foreach($this->adjs as $a => $adj) {
 				$ev_sel = (isset($adj['event'])) ? $adj['event'] : 0;
-				if(runden($adj['value']) === 0) {
+				if(runden($adj['value']) == '0' || runden($adj['value']) == '-0') {
 					unset($data['adjs'][$a]);
 					continue;
 				}
@@ -80,7 +81,7 @@ if(!class_exists('rli_adjustment')) {
 					'MEMBER'	=> $html->DropDown('adjs['.$a.'][member]', $members, $adj['member'], '', '', true),
 					'EVENT'		=> $html->DropDown('adjs['.$a.'][event]', $events, $ev_sel, '', '', true),
 					'NOTE'		=> $adj['reason'],
-					'VALUE'		=> runden($adj['value'], 2),
+					'VALUE'		=> $adj['value'],
 					'RAID'		=> $html->DropDown('adjs['.$a.'][raid]', $rli->raid->raidlist, $adj['raid'], '', '', true),
 					'CLASS'		=> $core->switch_row_class(),
 					'KEY'		=> $a)
@@ -90,9 +91,11 @@ if(!class_exists('rli_adjustment')) {
 	}
 	
 	public function check_adj_exists($member, $reason, $raid_id=0) {
-		foreach($this->adjs as $key => $adj) {
-			if($adj['member'] == $member AND $adj['reason'] == $reason AND ($adj['raid'] == $raid_id OR !$raid_id)) {
-				return $key;
+		if(is_array($this->adjs)) {
+			foreach($this->adjs as $key => $adj) {
+				if($adj['member'] == $member AND $adj['reason'] == $reason AND ($adj['raid'] == $raid_id OR !$raid_id)) {
+					return $key;
+				}
 			}
 		}
 		return false;
