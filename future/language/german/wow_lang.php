@@ -18,7 +18,10 @@
 $lang['hero'] = 'Suffix für Heroische Ereignisse';
 $lang['non_hero'] = 'Suffix für Nicht-Heroische Ereignisse';
 $lang['difficulty'] = 'Schwierigkeit';
-$lang['heroic'] = 'Heroisch';
-$lang['non_heroic'] = 'Nicht Heroisch';
+$lang['diff_0'] = 'beliebig';
+$lang['diff_1'] = '10 Spieler normal';
+$lang['diff_2'] = '25 Spieler normal';
+$lang['diff_3'] = '10 Spieler heroisch';
+$lang['diff_4'] = '25 Spieler heroisch';
 $lang['dep_match'] = 'Soll den Boss-Notizen der Suffix angehängt werden?';
 ?>

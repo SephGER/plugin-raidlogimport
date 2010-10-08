@@ -16,18 +16,11 @@
 * $Id: raidlogimport_plugin_class.php 5173 2009-07-05 16:49:25Z hoofy_leon $
 */
 
-if ( !defined('EQDKP_INC') )
-{
+if ( !defined('EQDKP_INC') ) {
 	die('You cannot access this file directly.');
 }
 
-/**
-* EqDkp Plugin definition class.
-*
-*/
-
-class raidlogimport_Plugin_Class extends EQdkp_Plugin
-{
+class raidlogimport_Plugin_Class extends EQdkp_Plugin {
 	public $vstatus = 'Stable';
 	public $version = '0.6.0.0';
 	public $build = 0;
@@ -92,22 +85,12 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 		$this->add_permission('a', 'dkp', 'N', $user->lang['raidlogimport_dkp'], array(2,3));
 		$this->add_permission('a', 'alias', 'N', $user->lang['raidlogimport_alias'], array(2,3));
 		$this->add_permission('a', 'bz', 'N', $user->lang['raidlogimport_bz'], array(2,3));
-
-
-		//further installation
-		if (!($this->pm->check(PLUGIN_INSTALLED, 'raidlogimport')))
-		{
-		}
-
-		//log actions
-	/*   $this->add_log_action('{L_ACTION_RAIDLOGIMPORT_DKP}', $user->lang['action_raidlogimport_dkp']);
-		$this->add_log_action('{L_ACTION_RAIDLOGIMPORT_BZ_UPD}', $user->lang['action_raidlogimport_bz_upd']);
-		$this->add_log_action('{L_ACTION_RAIDLOGIMPORT_BZ_ADD}', $user->lang['action_raidlogimport_bz_add']);
-		$this->add_log_action('{L_ACTION_RAIDLOGIMPORT_BZ_DEL}', $user->lang['action_raidlogimport_bz_del']);
-		$this->add_log_action('{L_ACTION_RAIDLOGIMPORT_ALIAS_UPD}', $user->lang['action_raidlogimport_alias_upd']);
-		$this->add_log_action('{L_ACTION_RAIDLOGIMPORT_ALIAS_DEL}', $user->lang['action_raidlogimport_alias_del']);
-		$this->add_log_action('{L_ACTION_RAIDLOGIMPORT_ALIAS_ADD}', $user->lang['action_raidlogimport_alias_add']);
-		$this->add_log_action('{L_ACTION_RAIDLOGIMPORT_CONFIG}', $user->lang['action_raidlogimport_config']);*/
+		
+		//pdh-modules
+		$this->add_pdh_read_module('rli_zone');
+		$this->add_pdh_read_module('rli_boss');
+		$this->add_pdh_write_module('rli_zone');
+		$this->add_pdh_write_module('rli_boss');
 
 		//menu
 		$this->add_menu('admin_menu', $this->gen_admin_menu());
@@ -159,9 +142,11 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 		);
 		if(strtolower($core->config['default_game']) == 'wow') {
 			$config_data = array_merge($config_data, array(
-				'hero'			=> ' (25)',	//suffix for hero
-				'non_hero'		=> ' (10)',	//suffix for non-hero
-				'dep_match'		=> '0'		//also append suffix to boss-note?
+				'diff_1'	=> ' (10)',		//suffix for 10-player normal
+				'diff_2'	=> ' (25)', 	//suffix for 25-player normal
+				'diff_3'	=> ' HM (10)',	//suffix for 10-player heroic
+				'diff_4'	=> ' HM (25)',	//suffix for 25-player heroic
+				'dep_match'	=> '0'			//also append suffix to boss-note?
 			));
 		}
 		return $config_data;
@@ -170,14 +155,23 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 	private function create_install_sqls() {
 		global $core, $db, $eqdkp_root_path;
 		$install_sqls = array(
-			"CREATE TABLE IF NOT EXISTS __raidlogimport_bz (
-				`bz_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-				`bz_string` VARCHAR(255) NOT NULL,
-				`bz_bonus` INT NOT NULL,
-				`bz_note` VARCHAR(255) NOT NULL,
-				`bz_type` ENUM ('boss', 'zone') NOT NULL,
-				`bz_tozone` INT NULL,
-				`bz_sort` INT NOT NULL
+			"CREATE TABLE IF NOT EXISTS __raidlogimport_boss (
+				`boss_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				`boss_string` VARCHAR(255) NOT NULL,
+				`boss_note` VARCHAR(255) NOT NULL,
+				`boss_bonus` FLOAT(5,2) NOT NULL DEFAULT 0,
+				`boss_timebonus` FLOAT(5,2) NOT NULL DEFAULT 0,
+				`boss_diff` INT NOT NULL DEFAULT 0,
+				`boss_tozone` INT NOT NULL DEFAULT 0,
+				`boss_sort` INT NOT NULL DEFAULT 0
+			);",
+			"CREATE TABLE IF NOT EXISTS __raidlogimport_zone (
+				`zone_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				`zone_string` VARCHAR(255) NOT NULL,
+				`zone_note` VARCHAR(255) NOT NULL,
+				`zone_timebonus` FLOAT(5,2) NOT NULL DEFAULT 0,
+				`zone_diff` INT NOT NULL DEFAULT 0,
+				`zone_sort` INT NOT NULL DEFAULT 0
 			);",
 			"CREATE TABLE IF NOT EXISTS __raidlogimport_cache (
 				`cache_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -189,12 +183,20 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 		$file = $eqdkp_root_path.'plugins/raidlogimport/games/'.$core->config['default_game'].'/bz_sql.php';
 		if(is_file($file)) {
 			include_once($file);
-			if(is_array($bz_data)) {
-				foreach($bz_data as $bz) {
-					$install_sqls[] = 	"INSERT INTO __raidlogimport_bz
-											(bz_type, bz_string, bz_note, bz_bonus, bz_tozone, bz_sort)
-										VALUES
-											('".$bz[0]."', '".$db->escape($bz[1])."', '".$db->escape($bz[2])."', '".$bz[3]."', '".$bz[4]."', '".$bz[5]."');";
+			$data = (is_array(${$user->lang_name})) ? ${$user->lang_name} : $english;
+			if (is_array($data)) {
+				foreach($data as $bz) {
+					if($bz[0] == 'zone') {
+						$install_sqls[] = 	"INSERT INTO __raidlogimport_zone
+												(zone_string, zone_note, zone_timebonus, zone_diff, zone_sort)
+											VALUES
+												('".$db->escape($bz[1])."', '".$db->escape($bz[2])."', '".$bz[4]."', '".$bz[5]."', '".$bz[7]."');";
+					} else {
+						$install_sqls[] = 	"INSERT INTO __raidlogimport_boss
+												(boss_string, boss_note, boss_bonus, boss_timebonus, boss_diff, boss_tozone, boss_sort)
+											VALUES
+												('".$db->escape($bz[1])."', '".$db->escape($bz[2])."', '".$bz[3]."', '".$bz[4]."', '".$bz[5]."', '".$bz[6]."', '".$bz[7]."');";
+					}
 				}
 			}
 		}
@@ -203,7 +205,8 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin
 	
 	private function create_uninstall_sqls() {
 		$uninstall_sqls = array(
-			"DROP TABLE IF EXISTS __raidlogimport_bz;",
+			"DROP TABLE IF EXISTS __raidlogimport_boss;",
+			"DROP TABLE IF EXISTS __raidlogimport_zone;",
 			"DROP TABLE IF EXISTS __raidlogimport_cache;");
 		return $uninstall_sqls;
 	}

@@ -18,7 +18,9 @@
 $lang['hero'] = 'Suffix for Heroic Events';
 $lang['non_hero'] = 'Suffix for Non-Heroic Events';
 $lang['difficulty'] = 'Difficulty';
-$lang['heroic'] = 'Heroic';
-$lang['non_heroic'] = 'Non Heroic';
+$lang['diff_1'] = '10 player normal';
+$lang['diff_2'] = '25 player normal';
+$lang['diff_3'] = '10 player heroic';
+$lang['diff_4'] = '25 player heroic';
 $lang['dep_match'] = 'Shall the suffix be applied to boss-note, too?';
 ?>
