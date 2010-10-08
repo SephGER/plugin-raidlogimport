@@ -40,7 +40,8 @@
 	$lang['bz_no_zone'] = 'keine Zone';
 	$lang['bz_string'] = 'String';
 	$lang['bz_bnote'] = 'Notiz';
-	$lang['bz_bonus'] = 'Bonus-DKP / DKP/h';
+	$lang['bz_bonus'] = 'Bonus-Punkte';
+	$lang['bz_timebonus'] = 'Punkte pro Stunde';
 	$lang['bz_zevent'] = 'Event';
 	$lang['bz_update'] = 'Hinzufügen / Markierte bearbeiten';
 	$lang['bz_delete'] = 'Markierte löschen';
@@ -50,6 +51,7 @@
 	$lang['bz_save'] = 'Speichern';
 	$lang['bz_yes'] = 'Ja!';
 	$lang['bz_no'] = 'Nein!';
+	$lang['bz_no_id'] = 'Nichts ausgewählt.';
 	$lang['bz_del'] = 'Bosse / Zonen löschen';
 	$lang['bz_confirm_del'] = 'Wollen Sie wirklich Folgendes löschen?';
 	$lang['bz_no_del'] = 'Daten nicht gelöscht!';
