@@ -25,10 +25,6 @@ class pdh_r_rli_boss extends pdh_r_generic {
 	private $data = array();
 	public $hooks = array('rli_boss_update');
 	
-	public function get_hooks() {
-		return $this->hooks;
-	}
-	
 	public function init() {
 		global $pdc, $db, $core;
 		$data = $pdc->get('pdh_rli_bz');
@@ -100,6 +96,16 @@ class pdh_r_rli_boss extends pdh_r_generic {
 	
 	public function get_sort($id) {
 		return $this->data[$id]['sort'];
+	}
+	
+	public function get_bosses2zone($zone_id) {
+		$bosses = array();
+		foreach($this->data as $id => $data) {
+			if(intval($data['tozone']) === intval($zone_id)) {
+				$bosses[] = $id;
+			}
+		}
+		return $bosses;
 	}
 }
 }

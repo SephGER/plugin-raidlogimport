@@ -24,11 +24,9 @@ $eqdkp_root_path = './../../../';
 
 include_once('./../includes/common.php');
 
-class Bz extends EQdkp_Admin
-{
+class Bz extends EQdkp_Admin {
 
-	function bz()
-    {
+	public function __construct() {
         global $db, $core, $user, $tpl, $pm;
         global $SID;
 
@@ -50,202 +48,120 @@ class Bz extends EQdkp_Admin
             'update' => array(
             	'name' 	  => 'update',
             	'process' => 'bz_upd',
-            	'check'	  => 'a_raidlogimport_bz')
+            	'check'	  => 'a_raidlogimport_bz'),
+			'copy' => array(
+				'name'	  => 'copy',
+				'process' => 'bz_copy',
+				'check'	  => 'a_raidlogimport_bz')
                 )
         );
 	}
-
-	function bz_save()
-	{
-		global $db, $core, $user, $tpl, $SID, $pm;
-
-		$message = "";
-		if($_POST['save'] == $user->lang['bz_save'])
-		{
-        	if(isset($_POST['bz_string']) AND isset($_POST['bz_note']) AND isset($_POST['bz_bonus']) AND isset($_POST['bz_sort']))
-            {
-            	$data = array();
-            	$ids = array();
-				foreach($_POST['bz_type'] as $id => $type)
-				{
-                    if($id != 'neu')
-                    {
-                    	$ids[] = $id;
-                    }
-                    $data[$id]['type'] = $type;
-                    $data[$id]['string'] = $_POST['bz_string'][$id];
-                    $data[$id]['note'] = $_POST['bz_note'][$id];
-                    $data[$id]['bonus'] = number_format(floatvalue($_POST['bz_bonus'][$id]), 2, '.', '');
-                    $data[$id]['sort'] = $_POST['bz_sort'][$id];
-                    if($type == 'boss')
-                    {
-                        $data[$id]['tozone'] = $_POST['bz_tozone'][$id];
-                    }
-				}
-				//get old data
-				$old_data = array();
-				if(($selected = count($ids)-1)>=0)
-				{
-					$sql = "SELECT bz_id, bz_string, bz_note, bz_bonus, bz_type, bz_tozone, bz_sort FROM __raidlogimport_bz WHERE ";
-					for($i=0; $i<$selected; $i++)
-					{
-						$sql .= "bz_id = '".$ids[$i]."' OR ";
-					}
-					$sql .= "bz_id = '".$ids[$selected]."';";
-					$result = $db->query($sql);
-					if($result)
-					{
-						while( $row = $db->fetch_record($result) )
-						{
-							$old_data[$row['bz_id']]['type'] = $row['bz_type'];
-							$old_data[$row['bz_id']]['string'] = $row['bz_string'];
-							$old_data[$row['bz_id']]['note'] = $row['bz_note'];
-							$old_data[$row['bz_id']]['bonus'] = $row['bz_bonus'];
-							$old_data[$row['bz_id']]['tozone'] = $row['bz_tozone'];
-							$old_data[$row['bz_id']]['sort'] = $row['bz_sort'];
-						}
-					}
-					else
-					{
-						message_die('SQL-Error! Query: '.$sql);
-					}
-				}
-
-				foreach($data as $id => $vs)
-				{
-                    if($id == "neu")
-                    {
-                        $sql = "INSERT INTO __raidlogimport_bz
-                                    (bz_string, bz_note, bz_bonus, bz_type, bz_sort, bz_tozone)
-                                VALUES
-                                    ('".mysql_real_escape_string($vs['string'])."', '".mysql_real_escape_string($vs['note'])."', '".$vs['bonus']."', '".$vs['type']."', '".$vs['sort']."'";
-                        if($vs['type'] == "boss")
-                        {
-                            $sql .= ", '".$vs['tozone']."');";
-                        }
-                        else
-                        {
-                            $sql .= ", '');";
-                        }
-						$log_action = array(
-							'header'		=> '{L_ACTION_RAIDLOGIMPORT_BZ_ADD}',
-	                        '{L_BZ_TYPE}'   => $vs['type'],
-							'{L_BZ_STRING}'	=> $vs['string'],
-							'{L_BZ_BNOTE}'	=> $vs['note'],
-							'{L_BZ_BONUS}'	=> $vs['bonus'],
-							'{L_BZ_TOZONE}' => $vs['tozone'],
-							'{L_BZ_SORT}'	=> $vs['sort']
-						);
-                    }
-					else
-					{
-						$sql = "UPDATE __raidlogimport_bz SET
-								bz_string = '".mysql_real_escape_string($vs['string'])."',
-								bz_note = '".mysql_real_escape_string($vs['note'])."',
-								bz_bonus = '".$vs['bonus']."',
-								bz_type = '".$vs['type']."',
-								bz_sort = '".$vs['sort']."'";
-						if($vs['type'] == 'boss')
-						{
-							$sql .= ", bz_tozone = '".$vs['tozone']."'";
-						}
-						$sql .= " WHERE bz_id = '".$id."';";
-						$log_action = array(
-							'header'		=> '{L_ACTION_RAIDLOGIMPORT_BZ_UPD}',
-	                        '{L_BZ_TYPE}'   => $old_data[$id]['type']." => ".$vs['type'],
-							'{L_BZ_STRING}'	=> $old_data[$id]['string']." => ".$vs['string'],
-							'{L_BZ_BNOTE}'	=> $old_data[$id]['note']." => ".$vs['note'],
-							'{L_BZ_BONUS}'	=> $old_data[$id]['bonus']." => ".$vs['bonus'],
-							'{L_BZ_BONUS}'	=> $old_data[$id]['sort']." => ".$vs['sort'],
-							'{L_BZ_TOZONE}' => $old_data[$id]['tozone']." => ".$vs['tozone']
-						);
-					}
-					$send = $db->query($sql);
-					if($send)
-					{
-						$message['bz_save_suc'][] = $vs['note'];
-						$this->log_insert(array(
-							'log_type'	 => $log_action['header'],
-							'log_action' => $log_action)
-						);
-					}
-					else
-					{
-						$message['bz_no_save'][] = $vs['note'].": SQL-Error! Query: <br />".$sql;
-					}
-				}
-			}
-			else
-			{
-				message_die($user->lang['bz_missing_values']);
-			}
+	
+	private function prepare_data($type, $id, $method='add') {
+		global $in;
+		$data = array();
+		if($type == 'zone') {
+			$data = array(
+				$in->get('string:'.$id, ''),
+				$in->get('note:'.$id, ''),
+				runden(floatvalue($in->get('timebonus:'.$id, '0.0'))),
+				$in->get('diff:'.$id, 0),
+				$in->get('sort:'.$id, 0));
+		} else {
+			$data = array(
+				$in->get('string:'.$id, ''),
+				$in->get('note:'.$id, ''),
+				runden(floatvalue($in->get('bonus:'.$id, '0.0'))),
+				runden(floatvalue($in->get('timebonus:'.$id, '0.0'))),
+				$in->get('diff:'.$id, 0),
+				$in->get('tozone:'.$id, 0),
+				$in->get('sort:'.$id, 0));
 		}
-		elseif($_POST['save'] == $user->lang['bz_yes'] AND isset($_POST['del']))
-		{
-			$sel = "SELECT bz_id, bz_string, bz_note, bz_bonus, bz_type, bz_tozone FROM __raidlogimport_bz WHERE ";
-			$sql = "DELETE FROM __raidlogimport_bz WHERE ";
-            $selected = count($_POST['del'])-1;
-			for($i=0; $i<$selected; $i++)
-			{
-				$sql .= "bz_id = '".$_POST['del'][$i]."' OR ";
-				$sel .= "bz_id = '".$_POST['del'][$i]."' OR ";
-			}
-			$sql .= "bz_id = '".$_POST['del'][$selected]."';";
-			$sel .= "bz_id = '".$_POST['del'][$selected]."';";
-
-			$selres = $db->query($sel);
-			if($selres)
-			{
-				$data = array();
-				while ( $row = $db->fetch_record($selres) )
-				{
-					$data[$row['bz_id']]['string'] = $row['bz_string'];
-					$data[$row['bz_id']]['note'] = $row['bz_note'];
-					$data[$row['bz_id']]['bonus'] = $row['bz_bonus'];
-					$data[$row['bz_id']]['type'] = $row['bz_type'];
-					$data[$row['bz_id']]['tozone'] = $row['bz_tozone'];
-					$data[$row['bz_id']]['sort'] = $row['bz_sort'];
-				}
-				$result = $db->query($sql);
-                if($result)
-	            {
-                    foreach($_POST['del'] as $id)
-                    {
-                    	$message['bz_del_suc'][] = $data[$id]['note'];
-						//logging
-						$log_action = array(
-							'header'		=> '{L_ACTION_RAIDLOGIMPORT_BZ_DEL}',
-                            '{L_BZ_TYPE}'   => $data[$id]['type'],
-							'{L_BZ_STRING}'	=> $data[$id]['string'],
-							'{L_BZ_NOTE}'	=> $data[$id]['note'],
-							'{L_BZ_BONUS}'	=> $data[$id]['bonus'],
-							'{L_BZ_TOZONE}' => $data[$id]['tozone'],
-							'{L_BZ_SORT}'	=> $data[$id]['sort']
-						);
-						$this->log_insert(array(
-							'log_type'	 => $log_action['header'],
-							'log_action' => $log_action)
-						);
-					}
-				}
-                else
-            	{
-                    $message['bz_no_del'][] = "SQL-Error! Query: <br />".$sql;
-                }
-			}
-			else
-			{
-				$message['bz_no_del'][] = "SQL-Error! Query: <br />".$sql;
-			}
+		if($method == 'update') {
+			list($type, $id) = explode('_', $id);
+			$data = array_merge(array($id), $data);
 		}
-		else
-		{
+		return $data;
+	}
+
+	public function bz_save() {
+		global $user, $pdh, $in;
+		$message = array('bz_no_save' => array(), 'bz_save_suc' => array());
+		if($_POST['save'] == $user->lang['bz_save']) {
+			$data = $in->getArray('type', 'string');
+			foreach($data as $id => $type) {
+				$method = ($id == 'neu') ? 'add' : 'update';
+				list($old_type, $iid) = explode('_', $id);
+				if($old_type == $type OR $method == 'add') {
+					$save = $pdh->put('rli_'.$type, $method, $this->prepare_data($type, $id, $method));
+				} else {
+					//type changed: remove and add
+					$save = $pdh->put('rli_'.$old_type, 'del', array($iid));
+					if($save) $save = $pdh->put('rli_'.$type, 'add', $this->prepare_data($type, $id, 'add'));
+				}
+				if($save) {
+					$message['bz_save_suc'][] = $in->get('note:'.$id, '');
+				} else {
+					$message['bz_no_save'][] = $in->get('note:'.$id, '');
+				}
+			}
+		} elseif($_POST['save'] == $user->lang['bz_yes'] AND (isset($_POST['bdel']) OR isset($_POST['zdel']))) {
+			foreach($in->getArray('bdel', 'int') as $id) {
+				if($pdh->put('rli_boss', 'del', array($id))) {
+					$message['bz_save_suc'][] = $pdh->get('rli_boss', 'note', array($id));
+				} else {
+					$message['bz_no_save'][] = $pdh->get('rli_boss', 'note', array($id));
+				}
+			}
+			foreach($in->getArray('zdel', 'int') as $id) {
+				if($pdh->put('rli_zone', 'del', array($id))) {
+					$message['bz_save_suc'][] = $pdh->get('rli_zone', 'note', array($id));
+				} else {
+					$message['bz_no_save'][] = $pdh->get('rli_zone', 'note', array($id));
+				}
+			}
+		} else {
 			redirect('plugins/raidlogimport/admin/bz.php');
 		}
+		$pdh->process_hook_queue();
+		$this->display_form($message);
+	}
+	
+	public function bz_copy() {
+		global $user, $pdh, $in, $core;
+		$zones = $in->getArray('zone_id', 'int');
+		foreach($zones as $id) {
+			$data = array(
+				implode($core->config['raidlogimport']['bz_parse'], $pdh->get('rli_zone', 'string', array($id))),
+				$pdh->get('rli_zone', 'note', array($id)),
+				$pdh->get('rli_zone', 'timebonus', array($id)),
+				$in->get('diff', 0),
+				$pdh->get('rli_zone', 'sort', array($id)));
+			$new_id = $pdh->put('rli_zone', 'add', $data);
+			if($new_id) {
+				$bosses = $pdh->get('rli_boss', 'bosses2zone', array($id));
+				foreach($bosses as $bid) {
+					$boss_diff = $pdh->get('rli_boss', 'diff', array($bid));
+					$data = array(
+						implode($core->config['raidlogimport']['bz_parse'], $pdh->get('rli_boss', 'string', array($bid))),
+						$pdh->get('rli_boss', 'note', array($bid)),
+						$pdh->get('rli_boss', 'bonus', array($bid)),
+						$pdh->get('rli_boss', 'timebonus', array($bid)),
+						($boss_diff) ? $in->get('diff', 0) : 0,
+						$new_id,
+						$pdh->get('rli_boss', 'sort', array($bid)));
+					$pdh->put('rli_boss', 'add', $data);
+				}
+				$message['bz_copy_suc'][] = $pdh->get('rli_zone', 'note', array($id));
+			} else {
+				$message['bz_no_copy'][] = $pdh->get('rli_zone', 'note', array($id));
+			}
+		}
+		$pdh->process_hook_queue();
 		$this->display_form($message);
 	}
 
-	function bz_del() {
+	public function bz_del() {
 		global $core, $user, $tpl, $pm, $in, $pdh;
 
 		if(isset($_POST['zone_id'])) {
@@ -289,7 +205,7 @@ class Bz extends EQdkp_Admin
 	private function get_upd_data($type, $id) {
 		global $html, $pdh, $core;
 		return array(
-				'ID'			=> $id,
+				'ID'			=> $type.'_'.$id,
 				'STRING'		=> implode($core->config['raidlogimport']['bz_parse'], $pdh->get('rli_'.$type, 'string', array($id))),
 				'NOTE'			=> $pdh->get('rli_'.$type, 'note', array($id)),
 				'BONUS'			=> ($type == 'boss') ? $pdh->get('rli_boss', 'bonus', array($id)) : '',
@@ -298,15 +214,24 @@ class Bz extends EQdkp_Admin
 				'SORT'			=> $pdh->get('rli_'.$type, 'sort', array($id)),
 				'BSELECTED'		=> ($type == 'boss') ? 'selected="selected"' : '',
 				'ZSELECTED'		=> ($type == 'zone') ? 'selected="selected"' : '',
-				'DIFF_ARRAY'	=> $html->DropDown("diff[".$id."]", $this->diff_drop, $pdh->get('rli_'.$type, 'diff', array($id)), '', '', true),
-				'ZONE_ARRAY'	=> $html->DropDown("tozone[".$id."]", $this->zone_drop, (($type == 'boss') ? $pdh->get('rli_boss', 'tozone', array($id)) : $id), '', '', true),
+				'DIFF_ARRAY'	=> $html->DropDown("diff[".$type."_".$id."]", $this->diff_drop, $pdh->get('rli_'.$type, 'diff', array($id)), '', '', true),
+				'ZONE_ARRAY'	=> $html->DropDown("tozone[".$type."_".$id."]", $this->zone_drop, (($type == 'boss') ? $pdh->get('rli_boss', 'tozone', array($id)) : $id), '', '', true),
 				'CLASS'			=> $core->switch_row_class());
 	}
-
+	
+	private function prepare_diff_drop() {
+		global $user;
+		if(!$this->diff_drop) $this->diff_drop = array($user->lang['diff_0'], $user->lang['diff_1'], $user->lang['diff_2'], $user->lang['diff_3'], $user->lang['diff_4']);
+	}
+	
 	public function bz_upd() {
 		global $db, $core, $user, $tpl, $pm, $html, $in, $pdh, $game;
-		if(!$this->zone_drop) $this->zone_drop = $pdh->aget('rli_zone', 'html_string', 0, array($pdh->get('rli_zone', 'id_list')));
-		if(!$this->diff_drop) $this->diff_drop = array($user->lang['diff_0'], $user->lang['diff_1'], $user->lang['diff_2'], $user->lang['diff_3'], $user->lang['diff_4']);
+		if(!$this->zone_drop) {
+			$this->zone_drop = $pdh->aget('rli_zone', 'html_string', 0, array($pdh->get('rli_zone', 'id_list')));
+			$this->zone_drop[0] = $user->lang['bz_no_zone'];
+			ksort($this->zone_drop);
+		}
+		$this->prepare_diff_drop();
 		if(isset($_POST['boss_id'])) {
 			$bids = $in->getArray('boss_id', 'int');
 			foreach($bids as $id) {
@@ -360,61 +285,67 @@ class Bz extends EQdkp_Admin
 	}
 
 	public function display_form($messages=array()) {
-		global $tpl, $core, $pm, $user, $pdh;
+		global $tpl, $core, $pm, $user, $pdh, $html;
 
 		if($messages) {
 			$type = 'green';
 			foreach($messages as $title => $mess) {
-				if(preg_match('#_no_#', $title)) {
+				if(strpos('_no_', $title) !== false) {
 					$type = 'red';
 				}
-				foreach($mess as $message) {
-					System_Message($message, $user->lang[$title], $type);
+				if($mess) {
+					$core->message(implode(', ', $mess), $user->lang[$title], $type);
 				}
 			}
 		}
 		$bosses = $pdh->get('rli_boss', 'id_list');
 		$tozone = array();
+		$sorting = array();
+		$zones = $pdh->get('rli_zone', 'id_list');
 		foreach($bosses as $boss_id) {
+			$sorting['boss'][$boss_id] = $pdh->get('rli_boss', 'sort', array($boss_id));
 			$tozone[$pdh->get('rli_boss', 'tozone', array($boss_id))][] = $boss_id;
 		}
-		$data = array();
-		foreach($tozone as $zone_id => $boss_ids) {
-			$data[$pdh->get('rli_zone', 'sort', array($zone_id))] = array(
+		foreach($zones as $id) {
+			$sorting['zone'][$id] = $pdh->get('rli_zone', 'sort', array($id));
+			if(!in_array($id, array_keys($tozone))) {
+				$tozone[$id] = array();
+			}
+		}
+		asort($sorting['boss']);
+		asort($sorting['zone']);
+		foreach($sorting['zone'] as $zone_id => $zsort) {
+			$tpl->assign_block_vars('zone_list', array(
             	'ZID'		=> $zone_id,
 	            'ZSTRING'	=> ($zone_id) ? $pdh->geth('rli_zone', 'string', array($zone_id)) : $user->lang['bz_boss_oz'],
                 'ZTIMEBONUS'=> ($zone_id) ? $pdh->get('rli_zone', 'timebonus', array($zone_id)) : '',
-                'ZNOTE'		=> ($zone_id) ? $pdh->get('rli_zone', 'note', array($zone_id)) : '',
-				'bosses'	=> array()
+                'ZNOTE'		=> ($zone_id) ? $pdh->get('rli_zone', 'note', array($zone_id)) : '')
             );
-			foreach($boss_ids as $boss_id) {
-				$data[$pdh->get('rli_zone', 'sort', array($zone_id))]['bosses'][$pdh->get('rli_boss', 'sort', array($boss_id))] = array(
-					'BID'		=> $boss_id,
-					'BSTRING'	=> $pdh->geth('rli_boss', 'string', array($boss_id)),
-					'BNOTE'		=> $pdh->get('rli_boss', 'note', array($boss_id)),
-					'BBONUS'	=> $pdh->get('rli_boss', 'bonus', array($boss_id)),
-					'BTIMEBONUS'=> $pdh->get('rli_boss', 'timebonus', array($boss_id))
-				);
+			foreach($sorting['boss'] as $boss_id => $bsort) {
+				if(in_array($boss_id, $tozone[$zone_id])) {
+					$tpl->assign_block_vars('zone_list.boss_list', array(
+						'BID'		=> $boss_id,
+						'BSTRING'	=> $pdh->geth('rli_boss', 'string', array($boss_id)),
+						'BNOTE'		=> $pdh->get('rli_boss', 'note', array($boss_id)),
+						'BBONUS'	=> $pdh->get('rli_boss', 'bonus', array($boss_id)),
+						'BTIMEBONUS'=> $pdh->get('rli_boss', 'timebonus', array($boss_id)),
+						'CLASS' 	=> $core->switch_row_class())
+					);
+				}
 			}
         }
-		ksort($data);
-		foreach($data as $zone) {
-			$bosses = $zone['bosses'];
-			ksort($bosses);
-			unset($zone['bosses']);
-			$tpl->assign_block_vars('zone_list', $zone);
-			foreach($bosses as $boss) {
-				$tpl->assign_block_vars('zone_list.boss_list', array_merge($boss, array('CLASS' => $core->switch_row_class())));
-			}
-		}
+		$this->prepare_diff_drop();
 		$tpl->assign_vars(array(
+			'S_DIFF'		=> ($core->config['default_game'] == 'wow') ? true : false,
+			'DIFF_DROP'		=> $html->DropDown('diff', $this->diff_drop, ''),
 			'L_BZ'			=> $user->lang['rli_bz_bz'],
 			'L_STRING'		=> $user->lang['bz_string'],
 			'L_NOTE'		=> $user->lang['bz_note_event'],
 			'L_BONUS'		=> $user->lang['bz_bonus'],
 			'L_TIMEBONUS'	=> $user->lang['bz_timebonus'],
 			'L_UPDATE'		=> $user->lang['bz_update'],
-			'L_DELETE'		=> $user->lang['bz_delete'])
+			'L_DELETE'		=> $user->lang['bz_delete'],
+			'L_COPY_ZONE'	=> $user->lang['bz_copy_zone'])
 		);
 
 		$core->set_vars(array(

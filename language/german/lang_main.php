@@ -42,6 +42,7 @@
 	$lang['bz_bnote'] = 'Notiz';
 	$lang['bz_bonus'] = 'Bonus-Punkte';
 	$lang['bz_timebonus'] = 'Punkte pro Stunde';
+	$lang['bz_diff'] = 'Schwierigkeit';
 	$lang['bz_zevent'] = 'Event';
 	$lang['bz_update'] = 'Hinzufügen / Markierte bearbeiten';
 	$lang['bz_delete'] = 'Markierte löschen';
@@ -62,6 +63,9 @@
 	$lang['bz_suc'] = 'Bosse / Zonen Erfolg';
 	$lang['bz_missing_values'] = 'Es müssen alle Felder ausgefüllt sein.';
 	$lang['bz_sort'] = 'Reihenfolge';
+	$lang['bz_copy_zone'] = 'Kopiere markierte Zone (samt Bossen) zu Schwierigkeit: ';
+	$lang['bz_copy_suc'] = 'Kopieren erfolgreich.';
+	$lang['bz_no_copy'] = 'Kopieren fehlgeschlagen!';
 
 	//dkp
 	$lang['rli_dkp_insert'] = 'DKP String einfügen';

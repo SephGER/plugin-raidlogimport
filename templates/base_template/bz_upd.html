@@ -24,7 +24,7 @@ function update_select(id) {
       	<th align="center" width="100%" colspan="8">{L_BZ_UPD}</th>
       </tr>
       <tr>
-      	<th>{L_TYPE}</th><th>{L_STRING}</th><th>{L_NOTE_EVENT}</th><th>{L_TIMEBONUS}</th><th>{L_BONUS}</th><th>{L_DIFF}</th><th>{L_TOZONE}</th><th>{L_SORT}</th>
+      	<th>{L_TYPE}</th><th>{L_STRING}</th><th>{L_NOTE_EVENT}</th><th>{L_TIMEBONUS}</th><th>{L_BONUS}</th><!-- IF S_DIFF --><th>{L_DIFF}</th><!-- ENDIF --><th>{L_TOZONE}</th><th>{L_SORT}</th>
       </tr>
       <!-- BEGIN upd_list -->
       <tr class="{upd_list.CLASS}">
@@ -35,13 +35,13 @@ function update_select(id) {
       	</td>
       	<td><input type="text" name="string[{upd_list.ID}]" value="{upd_list.STRING}" /></td>
       	<td><input type="text" name="note[{upd_list.ID}]" value="{upd_list.NOTE}" /></td>
-      	<td align="center"><input type="text" name="timebonus[{upd_list.ID}]" value="{upd_list.BONUS}" size="5" /></td>
+      	<td align="center"><input type="text" name="timebonus[{upd_list.ID}]" value="{upd_list.TIMEBONUS}" size="5" /></td>
 		<td>
 			<div id="bonus_{upd_list.ID}" class="<!-- IF upd_list.ZSELECTED -->bz_hide<!-- ELSE -->bz_show<!-- ENDIF -->">
 				<input type="text" name="bonus[{upd_list.ID}]" value="{upd_list.BONUS}" size="5" />
 			</div>
 		</td>
-		<td>{upd_list.DIFF_ARRAY}</td>
+		<!-- IF S_DIFF --><td>{upd_list.DIFF_ARRAY}</td><!-- ENDIF -->
       	<td>
 			<div id="tozone_{upd_list.ID}" class="<!-- IF upd_list.ZSELECTED -->bz_hide<!-- ELSE -->bz_show<!-- ENDIF -->">
 				{upd_list.ZONE_ARRAY}
