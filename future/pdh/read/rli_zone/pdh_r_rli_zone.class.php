@@ -29,18 +29,17 @@ class pdh_r_rli_zone extends pdh_r_generic {
 		global $pdc, $db, $core;
 		$this->data = $pdc->get('pdh_rli_zone');
 		if(!$this->data) {
-			$sql = "SELECT zone_id, zone_string, zone_note, zone_timebonus, zone_diff, zone_sort FROM __raidlogimport_zone;";
+			$sql = "SELECT zone_id, zone_string, zone_event, zone_timebonus, zone_diff, zone_sort FROM __raidlogimport_zone;";
 			if($result = $db->query($sql)) {
 				while($row = $db->fetch_record($result)) {
 					$this->data[$row['zone_id']]['string'] = explode($core->config['raidlogimport']['bz_parse'], $row['zone_string']);
-					$this->data[$row['zone_id']]['note'] = $row['zone_note'];
+					$this->data[$row['zone_id']]['event'] = $row['zone_event'];
 					$this->data[$row['zone_id']]['timebonus'] = $row['zone_timebonus'];
 					$this->data[$row['zone_id']]['diff'] = $row['zone_diff'];
 					$this->data[$row['zone_id']]['sort'] = $row['zone_sort'];
 				}
 			} else {
 				$this->data = array();
-		var_dump($this->data);
 				return false;
 			}
 			$db->free_result($result);
@@ -60,6 +59,15 @@ class pdh_r_rli_zone extends pdh_r_generic {
 		return array_keys($this->data);
 	}
 	
+	public function get_id_string($string, $diff) {
+		foreach($this->data as $id => $data) {
+			if(in_array($string, $data['string']) AND ($diff == 0 OR $data['diff'] == 0 OR $diff == $data['diff'])) {
+				return $id;
+			}
+		}
+		return false;
+	}
+	
 	public function get_string($id) {
 		return $this->data[$id]['string'];
 	}
@@ -68,8 +76,23 @@ class pdh_r_rli_zone extends pdh_r_generic {
 		return implode(', ', $this->data[$id]['string']).$this->get_html_diff($id);
 	}
 	
-	public function get_note($id) {
-		return $this->data[$id]['note'];
+	public function get_event($id) {
+		return $this->data[$id]['event'];
+	}
+	
+	public function get_html_event($id, $with_icon=true) {
+		global $pdh, $game;
+		$icon = ($with_icon) ? $game->decorate('events', array($this->get_event($id))) : '';
+		return $icon.$pdh->get('event', 'name', array($this->get_event($id)));
+	}
+	
+	public function get_eventbystring($string) {
+		foreach($this->data as $id => $data) {
+			if(in_array($string, $data['string'])) {
+				return $this->get_event($id);
+			}
+		}
+		return false;
 	}
 	
 	public function get_timebonus($id) {

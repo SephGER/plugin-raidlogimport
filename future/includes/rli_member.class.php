@@ -79,7 +79,14 @@ if(!class_exists('rli_member')) {
 					}
 					$member['name'] = $in->get('members:'.$key.':name', '');
 					if($rli->config('member_display') == 2) {
-						$member['times'] = $in->getArray('members:'.$key.':times', 'int');
+						$times = array();
+						foreach($mem['times'] as $tk => $time) {
+							$times[$tk]['join'] = $in->get('members:'.$key.':times:'.$tk.':join', 0);
+							$times[$tk]['leave'] = $in->get('members:'.$key.':times:'.$tk.':leave', 0);
+							$extra = $in->get('members:'.$key.':times:'.$tk.':extra', '');
+							if($extra) $times[$tk][$extra] = 1;
+						}
+						$member['times'] = $times;
 						$member['raid_list'] = $rli->raid->get_memberraids($member['times']);
 						$a = $rli->raid->get_attendance($member['times']);
 						$member['att_begin'] = $a['begin'];
@@ -302,6 +309,7 @@ if(!class_exists('rli_member')) {
         $tkey = 0;
         foreach($this->members[$key]['times'] as $time) {
         	$s = ($time['standby']) ? 'standby' : '';
+			$ev = ($time['standby']) ? 'standby' : '0';
         	$w = ($time['leave']-$time['join'])/20;
         	$ml = ($time['join']-$width['begin'])/20;
         	settype($w, 'int');
@@ -311,7 +319,7 @@ if(!class_exists('rli_member')) {
         	$out .= "<div class='time_middle' onmousedown='scale_start(\"middle\")'>";
         	$out .= "<input type='hidden' name='members[".$key."][times][".$tkey."][join]' value='".$time['join']."' id='times_".$key."_".$tkey."j' />";
         	$out .= "<input type='hidden' name='members[".$key."][times][".$tkey."][leave]' value='".$time['leave']."' id='times_".$key."_".$tkey."l' />";
-        	$out .= "<input type='hidden' name='members[".$key."][times][".$tkey."][extra]' value='".$s."' id='times_".$key."_".$tkey."s' />";
+        	$out .= "<input type='hidden' name='members[".$key."][times][".$tkey."][extra]' value='".$ev."' id='times_".$key."_".$tkey."s' />";
         	$out .= "</div><div class='time_right' onmousedown='scale_start(\"right\")'></div></div>";
         	$tkey++;
         }
@@ -320,7 +328,7 @@ if(!class_exists('rli_member')) {
         $out .= "<div class='time_middle' onmousedown='scale_start(\"middle\")'>";
         $out .= "<input type='hidden' name='members[".$key."][times][99][join]' value='0' id='times_".$key."_99j' disabled='disabled' />";
         $out .= "<input type='hidden' name='members[".$key."][times][99][leave]' value='0' id='times_".$key."_99l' disabled='disabled' />";
-        $out .= "<input type='hidden' name='members[".$key."][times][99][extra]' value='' id='times_".$key."_99s' disabled='disabled' />";
+        $out .= "<input type='hidden' name='members[".$key."][times][99][extra]' value='0' id='times_".$key."_99s' disabled='disabled' />";
         $out .= "</div><div class='time_right' onmousedown='scale_start(\"right\")'></div></div></div>";
 
         $this->create_timebar($width['begin'], $width['end'], $px_time);

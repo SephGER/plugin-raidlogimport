@@ -146,14 +146,14 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin {
 				'diff_2'	=> ' (25)', 	//suffix for 25-player normal
 				'diff_3'	=> ' HM (10)',	//suffix for 10-player heroic
 				'diff_4'	=> ' HM (25)',	//suffix for 25-player heroic
-				'dep_match'	=> '0'			//also append suffix to boss-note?
+				'dep_match'	=> '1'			//also append suffix to boss-note?
 			));
 		}
 		return $config_data;
 	}
 
 	private function create_install_sqls() {
-		global $core, $db, $eqdkp_root_path;
+		global $core, $db, $eqdkp_root_path, $pdh;
 		$install_sqls = array(
 			"CREATE TABLE IF NOT EXISTS __raidlogimport_boss (
 				`boss_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -168,7 +168,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin {
 			"CREATE TABLE IF NOT EXISTS __raidlogimport_zone (
 				`zone_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 				`zone_string` VARCHAR(255) NOT NULL,
-				`zone_note` VARCHAR(255) NOT NULL,
+				`zone_event` INT NOT NULL,
 				`zone_timebonus` FLOAT(5,2) NOT NULL DEFAULT 0,
 				`zone_diff` INT NOT NULL DEFAULT 0,
 				`zone_sort` INT NOT NULL DEFAULT 0
@@ -185,12 +185,20 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin {
 			include_once($file);
 			$data = (is_array(${$user->lang_name})) ? ${$user->lang_name} : $english;
 			if (is_array($data)) {
+				$zones = $pdh->aget('event', 'name', 0, array($pdh->get('event', 'id_list')));
 				foreach($data as $bz) {
 					if($bz[0] == 'zone') {
+						$id = 1;
+						foreach($zones as $zid => $zone) {
+							if(strpos($zone, $bz[2]) !== false) {
+								$id = $zid;
+								break;
+							}
+						}							
 						$install_sqls[] = 	"INSERT INTO __raidlogimport_zone
-												(zone_string, zone_note, zone_timebonus, zone_diff, zone_sort)
+												(zone_string, zone_event, zone_timebonus, zone_diff, zone_sort)
 											VALUES
-												('".$db->escape($bz[1])."', '".$db->escape($bz[2])."', '".$bz[4]."', '".$bz[5]."', '".$bz[7]."');";
+												('".$db->escape($bz[1])."', '".$id."', '".$bz[4]."', '".$bz[5]."', '".$bz[7]."');";
 					} else {
 						$install_sqls[] = 	"INSERT INTO __raidlogimport_boss
 												(boss_string, boss_note, boss_bonus, boss_timebonus, boss_diff, boss_tozone, boss_sort)

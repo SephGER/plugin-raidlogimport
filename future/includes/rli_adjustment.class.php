@@ -66,10 +66,10 @@ if(!class_exists('rli_adjustment')) {
 	}
 	
 	public function display($with_form=false) {
-		global $rli, $core, $html, $tpl;
+		global $rli, $core, $html, $tpl, $pdh;
 		if(is_array($this->adjs)) {
 			$members = $rli->member->get_for_dropdown(4);
-			$events = $rli->get_events('name');
+			$events = $pdh->aget('event', 'name', 0, array($pdh->get('event', 'id_list')));
 			$rli->raid->raidlist();
 			foreach($this->adjs as $a => $adj) {
 				$ev_sel = (isset($adj['event'])) ? $adj['event'] : 0;

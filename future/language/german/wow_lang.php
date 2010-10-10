@@ -15,9 +15,8 @@
  *
  * $Id: lang_game.php 5040 2009-06-09 15:20:27Z hoofy_leon $
  */
-$lang['hero'] = 'Suffix für Heroische Ereignisse';
-$lang['non_hero'] = 'Suffix für Nicht-Heroische Ereignisse';
 $lang['difficulty'] = 'Schwierigkeit';
+$lang['title_difficulty'] = 'Schwierigkeits-Einstellungen';
 $lang['diff_0'] = 'beliebig';
 $lang['diff_1'] = '10 Spieler normal';
 $lang['diff_2'] = '25 Spieler normal';

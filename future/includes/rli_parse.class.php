@@ -319,6 +319,7 @@ class rli_parse {
 		if(method_exists($this, 'parse_'.$rli->config('parser').'_string')) {
 			$back = call_user_func(array($this, 'check_'.$rli->config('parser').'_format'), $xml);
 			if($back[1]) {
+				$rli->raid->flush_data();
 				call_user_func(array($this, 'parse_'.$rli->config('parser').'_string'), $xml);
 				$rli->raid->create();
 				$rli->raid->recalc(true);
