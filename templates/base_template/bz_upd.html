@@ -4,9 +4,17 @@ function update_select(id) {
 		document.getElementById('bonus_'+id).className = 'bz_hide';
 		document.getElementById('tozone_'+id).className = 'bz_hide';
 	}
+	if(<!-- IF S_BOSSEVENT -->false<!-- ELSE -->true<!-- ENDIF -->) {
+		document.getElementById('event_'+id).className = 'bz_show';
+		document.getElementById('note_'+id).className = 'bz_hide';
+	}
  	if(document.getElementById('type_'+id).options[0].selected == true) {
  		document.getElementById('bonus_'+id).className = 'bz_show';
  		document.getElementById('tozone_'+id).className = 'bz_show';
+	}
+	if(<!-- IF S_BOSSEVENT -->false<!-- ELSE -->true<!-- ENDIF -->) {
+ 		document.getElementById('event_'+id).className = 'bz_hide';
+ 		document.getElementById('note_'+id).className = 'bz_show';
 	}
 }
 </script>
@@ -34,7 +42,13 @@ function update_select(id) {
       		</select>
       	</td>
       	<td><input type="text" name="string[{upd_list.ID}]" value="{upd_list.STRING}" /></td>
-      	<td><input type="text" name="note[{upd_list.ID}]" value="{upd_list.NOTE}" /></td>
+      	<td><!-- IF S_BOSSEVENT -->{upd_list.EVENTS}<!-- ELSE -->
+				<div id="event_{upd_list.ID}" class="<!-- IF upd_list.ZSELECTED -->bz_show<!-- ELSE -->bz_hide<!-- ENDIF -->">{upd_list.EVENTS}</div>
+				<div id="note_{upd_list.ID}" class="<!-- IF upd_list.BSELECTED -->bz_show<!-- ELSE -->bz_hide<!-- ENDIF -->">
+					<input type="text" name="note[{upd_list.ID}]" value="{upd_list.NOTE}" />
+				</div>
+			<!-- ENDIF -->
+		</td>
       	<td align="center"><input type="text" name="timebonus[{upd_list.ID}]" value="{upd_list.TIMEBONUS}" size="5" /></td>
 		<td>
 			<div id="bonus_{upd_list.ID}" class="<!-- IF upd_list.ZSELECTED -->bz_hide<!-- ELSE -->bz_show<!-- ENDIF -->">

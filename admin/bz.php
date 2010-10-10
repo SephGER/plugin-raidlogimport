@@ -58,19 +58,19 @@ class Bz extends EQdkp_Admin {
 	}
 	
 	private function prepare_data($type, $id, $method='add') {
-		global $in;
+		global $in, $core;
 		$data = array();
 		if($type == 'zone') {
 			$data = array(
 				$in->get('string:'.$id, ''),
-				$in->get('note:'.$id, ''),
+				$in->get('event:'.$id, 0),
 				runden(floatvalue($in->get('timebonus:'.$id, '0.0'))),
 				$in->get('diff:'.$id, 0),
 				$in->get('sort:'.$id, 0));
 		} else {
 			$data = array(
 				$in->get('string:'.$id, ''),
-				$in->get('note:'.$id, ''),
+				(($core->config['raidlogimport']['event_boss']) ? $in->get('event:'.$id, 0) : $in->get('note:'.$id, '')),
 				runden(floatvalue($in->get('bonus:'.$id, '0.0'))),
 				runden(floatvalue($in->get('timebonus:'.$id, '0.0'))),
 				$in->get('diff:'.$id, 0),
@@ -100,24 +100,24 @@ class Bz extends EQdkp_Admin {
 					if($save) $save = $pdh->put('rli_'.$type, 'add', $this->prepare_data($type, $id, 'add'));
 				}
 				if($save) {
-					$message['bz_save_suc'][] = $in->get('note:'.$id, '');
+					$message['bz_save_suc'][] = $in->get('string:'.$id, '');
 				} else {
-					$message['bz_no_save'][] = $in->get('note:'.$id, '');
+					$message['bz_no_save'][] = $in->get('string:'.$id, '');
 				}
 			}
 		} elseif($_POST['save'] == $user->lang['bz_yes'] AND (isset($_POST['bdel']) OR isset($_POST['zdel']))) {
 			foreach($in->getArray('bdel', 'int') as $id) {
 				if($pdh->put('rli_boss', 'del', array($id))) {
-					$message['bz_save_suc'][] = $pdh->get('rli_boss', 'note', array($id));
+					$message['bz_save_suc'][] = $pdh->geth('rli_boss', 'note', array($id));
 				} else {
-					$message['bz_no_save'][] = $pdh->get('rli_boss', 'note', array($id));
+					$message['bz_no_save'][] = $pdh->geth('rli_boss', 'note', array($id));
 				}
 			}
 			foreach($in->getArray('zdel', 'int') as $id) {
 				if($pdh->put('rli_zone', 'del', array($id))) {
-					$message['bz_save_suc'][] = $pdh->get('rli_zone', 'note', array($id));
+					$message['bz_save_suc'][] = $pdh->geth('rli_zone', 'event', array($id, false));
 				} else {
-					$message['bz_no_save'][] = $pdh->get('rli_zone', 'note', array($id));
+					$message['bz_no_save'][] = $pdh->geth('rli_zone', 'event', array($id, false));
 				}
 			}
 		} else {
@@ -133,7 +133,7 @@ class Bz extends EQdkp_Admin {
 		foreach($zones as $id) {
 			$data = array(
 				implode($core->config['raidlogimport']['bz_parse'], $pdh->get('rli_zone', 'string', array($id))),
-				$pdh->get('rli_zone', 'note', array($id)),
+				$pdh->get('rli_zone', 'event', array($id)),
 				$pdh->get('rli_zone', 'timebonus', array($id)),
 				$in->get('diff', 0),
 				$pdh->get('rli_zone', 'sort', array($id)));
@@ -152,9 +152,9 @@ class Bz extends EQdkp_Admin {
 						$pdh->get('rli_boss', 'sort', array($bid)));
 					$pdh->put('rli_boss', 'add', $data);
 				}
-				$message['bz_copy_suc'][] = $pdh->get('rli_zone', 'note', array($id));
+				$message['bz_copy_suc'][] = $pdh->geth('rli_zone', 'event', array($id, false));
 			} else {
-				$message['bz_no_copy'][] = $pdh->get('rli_zone', 'note', array($id));
+				$message['bz_no_copy'][] = $pdh->geth('rli_zone', 'event', array($id, false));
 			}
 		}
 		$pdh->process_hook_queue();
@@ -207,15 +207,16 @@ class Bz extends EQdkp_Admin {
 		return array(
 				'ID'			=> $type.'_'.$id,
 				'STRING'		=> implode($core->config['raidlogimport']['bz_parse'], $pdh->get('rli_'.$type, 'string', array($id))),
-				'NOTE'			=> $pdh->get('rli_'.$type, 'note', array($id)),
+				'NOTE'			=> ($type == 'boss') ? $pdh->get('rli_boss', 'note', array($id)) : '',
 				'BONUS'			=> ($type == 'boss') ? $pdh->get('rli_boss', 'bonus', array($id)) : '',
 				'TIMEBONUS'		=> $pdh->get('rli_'.$type, 'timebonus', array($id)),
 				'DIFF'			=> $pdh->get('rli_'.$type, 'diff', array($id)),
 				'SORT'			=> $pdh->get('rli_'.$type, 'sort', array($id)),
 				'BSELECTED'		=> ($type == 'boss') ? 'selected="selected"' : '',
 				'ZSELECTED'		=> ($type == 'zone') ? 'selected="selected"' : '',
-				'DIFF_ARRAY'	=> $html->DropDown("diff[".$type."_".$id."]", $this->diff_drop, $pdh->get('rli_'.$type, 'diff', array($id)), '', '', true),
-				'ZONE_ARRAY'	=> $html->DropDown("tozone[".$type."_".$id."]", $this->zone_drop, (($type == 'boss') ? $pdh->get('rli_boss', 'tozone', array($id)) : $id), '', '', true),
+				'DIFF_ARRAY'	=> $html->DropDown("diff[".$type."_".$id."]", $this->diff_drop, $pdh->get('rli_'.$type, 'diff', array($id))),
+				'ZONE_ARRAY'	=> $html->DropDown("tozone[".$type."_".$id."]", $this->zone_drop, (($type == 'boss') ? $pdh->get('rli_boss', 'tozone', array($id)) : $id)),
+				'EVENTS'		=> $html->DropDown("event[".$type."_".$id."]", $this->event_drop, (($type == 'zone') ? $pdh->get('rli_zone', 'event', array($id)) : $pdh->get('rli_boss', 'note', array($id)))),
 				'CLASS'			=> $core->switch_row_class());
 	}
 	
@@ -231,6 +232,7 @@ class Bz extends EQdkp_Admin {
 			$this->zone_drop[0] = $user->lang['bz_no_zone'];
 			ksort($this->zone_drop);
 		}
+		if(!$this->event_drop) $this->event_drop = $pdh->aget('event', 'name', 0, array($pdh->get('event', 'id_list')));
 		$this->prepare_diff_drop();
 		if(isset($_POST['boss_id'])) {
 			$bids = $in->getArray('boss_id', 'int');
@@ -254,20 +256,22 @@ class Bz extends EQdkp_Admin {
 				'SORT'		=> '',
 				'BSELECTED'	=> '',
 				'ZSELECTED'	=> '',
-				'DIFF_ARRAY' => $html->DropDown("diff[neu]", $this->diff_drop, '', '', '', true),
-				'ZONE_ARRAY' => $html->DropDown("tozone[neu]", $this->zone_drop, '', '', '', true),
+				'DIFF_ARRAY' => $html->DropDown("diff[neu]", $this->diff_drop, ''),
+				'ZONE_ARRAY' => $html->DropDown("tozone[neu]", $this->zone_drop, ''),
+				'EVENTS'	=> $html->DropDown("event[neu]", $this->event_drop, ''),
 				'CLASS'		=> $core->switch_row_class())
 			);
 		}
 
 		$tpl->assign_vars(array(
+			'S_DIFF'		=> ($game->get_game() == 'wow') ? true : false,
+			'S_BOSSEVENT'	=> ($core->config['raidlogimport']['event_boss']) ? true : false,
 			'L_BZ_UPD'		=> $user->lang['bz_upd'],
 			'L_TYPE'		=> $user->lang['bz_type'],
 			'L_STRING'		=> $user->lang['bz_string'],
 			'L_NOTE_EVENT'	=> $user->lang['bz_note_event'],
 			'L_BONUS'		=> $user->lang['bz_bonus'],
 			'L_TIMEBONUS'	=> $user->lang['bz_timebonus'],
-			'S_DIFF'		=> ($game->get_game() == 'wow') ? true : false,
 			'L_DIFF'		=> $user->lang['difficulty'],
 			'L_SAVE'		=> $user->lang['bz_save'],
 			'L_ZONE'		=> $user->lang['bz_zone_s'],
@@ -318,15 +322,15 @@ class Bz extends EQdkp_Admin {
 			$tpl->assign_block_vars('zone_list', array(
             	'ZID'		=> $zone_id,
 	            'ZSTRING'	=> ($zone_id) ? $pdh->geth('rli_zone', 'string', array($zone_id)) : $user->lang['bz_boss_oz'],
-                'ZTIMEBONUS'=> ($zone_id) ? $pdh->get('rli_zone', 'timebonus', array($zone_id)) : '',
-                'ZNOTE'		=> ($zone_id) ? $pdh->get('rli_zone', 'note', array($zone_id)) : '')
+                'ZTIMEBONUS'=> ($zone_id) ? $pdh->geth('rli_zone', 'timebonus', array($zone_id)) : '',
+                'ZNOTE'		=> ($zone_id) ? $pdh->geth('rli_zone', 'event', array($zone_id)) : '')
             );
 			foreach($sorting['boss'] as $boss_id => $bsort) {
 				if(in_array($boss_id, $tozone[$zone_id])) {
 					$tpl->assign_block_vars('zone_list.boss_list', array(
 						'BID'		=> $boss_id,
 						'BSTRING'	=> $pdh->geth('rli_boss', 'string', array($boss_id)),
-						'BNOTE'		=> $pdh->get('rli_boss', 'note', array($boss_id)),
+						'BNOTE'		=> $pdh->geth('rli_boss', 'note', array($boss_id)),
 						'BBONUS'	=> $pdh->get('rli_boss', 'bonus', array($boss_id)),
 						'BTIMEBONUS'=> $pdh->get('rli_boss', 'timebonus', array($boss_id)),
 						'CLASS' 	=> $core->switch_row_class())

@@ -44,7 +44,7 @@ class RLI_Settings extends EQdkp_Admin
 		global $core, $rli, $in;
 
 		$messages = array();
-		$bytes = array('s_member_rank', 'ignore_dissed', 'use_dkp', 'event_boss');
+		$bytes = array('s_member_rank', 'ignore_dissed', 'use_dkp', 'event_boss', 'standby_dkptype');
 		$floats = array('member_start', 'attendence_begin', 'attendence_end', 'am_value');
 		foreach($rli->config() as $old_name => $old_value) {
 			if(in_array($old_name, $bytes)) {
@@ -69,7 +69,7 @@ class RLI_Settings extends EQdkp_Admin
 	}
 
 	public function display_form($messages=array()) {
-		global $db, $user, $tpl, $core, $pm, $SID, $rli, $html, $jquery;
+		global $user, $tpl, $core, $pm, $rli, $html, $jquery, $pdh, $eqdkp_root_path;
 		if($messages) {
 			$rli->__construct();
 			foreach($messages as $name) {
@@ -77,13 +77,7 @@ class RLI_Settings extends EQdkp_Admin
 			}
 		}
 		//select ranks
-		$sql = "SELECT rank_name, rank_id FROM __member_ranks ORDER BY rank_name DESC;";
-		$result = $db->query($sql);
-		while ($row = $db->fetch_record($result)) {
-			if($row['rank_id']) {
-				$new_member_rank[$row['rank_id']] = $row['rank_name'];
-			}
-		}
+		$new_member_rank = $pdh->aget('rank', 'name', 0, array($pdh->get('rank', 'id_list')));
 
 		//select parsers
 		$parser = array(
@@ -99,18 +93,13 @@ class RLI_Settings extends EQdkp_Admin
 		}
 
 		//select null_sum & standbyraidoptions
-		$null_sum = array();
 		$standby_raid = array();
 		for($i=0; $i<=2; $i++) {
-			$null_sum[$i] = $user->lang['null_sum_'.$i];
 			$standby_raid[$i] = $user->lang['standby_raid_'.$i];
 		}
 
-		//select item_save_lang
-		$item_save_lang = array('en' => 'en', 'de' => 'de', 'fr' => 'fr', 'es' => 'es', 'ru' => 'ru');
-
 		//select member_start_event
-		$member_start_event = $rli->get_events('name');
+		$member_start_event = $pdh->aget('event', 'name', 0, array($pdh->get('event', 'id_list')));
 
 		//select member_display
 		$member_display = array(0 => $user->lang['member_display_0'], 1 => $user->lang['member_display_1'], 2 => $user->lang['member_display_2']);
@@ -121,29 +110,23 @@ class RLI_Settings extends EQdkp_Admin
 		$k = 2;
 		$configs = array(
 			'select' 	=> array(
-				'general' 		=> array('raidcount', 'null_sum', 'raid_note_time'),
+				'general' 		=> array('raidcount', 'raid_note_time', 'parser'),
 				'member'		=> array('new_member_rank', 'member_start_event', 'member_display'),
-				'parse'			=> array('parser'),
-				'loot'			=> array('item_save_lang'),
 				'standby'		=> array('standby_raid')
 			),
 			'yes_no'	=> array(
-				'general'		=> array('rli_upd_check'),
-				'hnh_suffix' 	=> array('dep_match'),
+				'general'		=> array('rli_upd_check', 'deactivate_adj'),
+				'difficulty' 	=> array('dep_match'),
 				'att'		 	=> array('attendence_raid'),
-				'adj'			=> array('deactivate_adj'),
 				'am'			=> array('auto_minus', 'am_value_raids', 'am_allxraids'),
 				'standby'		=> array('standby_absolute', 'standby_att')
 			),
 			'text'		=> array(
-				'general'		=> array('timedkp_handle'),
+				'general'		=> array('timedkp_handle', 'bz_parse', 'loottime'),
 				'member'		=> array('member_miss_time', 'member_start', 'member_raid'),
 				'am'			=> array('am_raidnum', 'am_value'),
 				'att'			=> array('attendence_begin', 'attendence_end', 'attendence_time', 'att_note_begin', 'att_note_end'),
-				'loot'			=> array('loottime'),
-				'adj'			=> array('adj_parse'),
-				'hnh_suffix'	=> array('hero', 'non_hero'),
-				'parse'			=> array('bz_parse'),
+				'difficulty'	=> array('diff_1', 'diff_2', 'diff_3', 'diff_4'),
 				'standby'		=> array('standby_value', 'standby_raidnote')
 			),
 			'normal' 	=> array(
@@ -153,10 +136,8 @@ class RLI_Settings extends EQdkp_Admin
 				'ignore'		=> array('rlic_data', 'rlic_lastcheck', 'rli_inst_build')
 			),
 			'special'	=> array(
-				'general'		=> array('3:use_dkp'),
-				'loot'			=> array('2:ignore_dissed'),
+				'general'		=> array('3:use_dkp', '2:ignore_dissed', '2:event_boss'),
 				'member'		=> array('3:s_member_rank'),
-				'parse'			=> array('2:event_boss'),
 				'standby'		=> array('3:standby_dkptype')
 			)
 		);
@@ -228,7 +209,7 @@ class RLI_Settings extends EQdkp_Admin
 		$num = 1;
 		foreach($holder as $type => $hold) {
 			ksort($hold);
-			if($type == 'hnh_suffix' AND $core->config['default_game'] != 'wow') {
+			if($type == 'difficulty' AND $core->config['default_game'] != 'wow') {
 				continue;
 			}
 			$tpl->assign_block_vars('holder', array(
@@ -237,17 +218,19 @@ class RLI_Settings extends EQdkp_Admin
 			);
 			$num++;
 			foreach($hold as $nava) {
-				$add = '';
+				$add = ($user->lang[$nava['name'].'_help']) ? $user->lang[$nava['name'].'_help'] : '';
 				if($nava['name'] == 'member_display') {
-					if(extension_loaded('gd')) {
-						$info = gd_info();
-						$add = sprintf($user->lang['member_display_add'], '<span class=\\\'positive\\\'>'.$info['GD Version'].'</span>');
-					} else {
-						$add = sprintf($user->lang['member_display_add'], $user->lang['no_gd_lib']);
-					}
+					$add = sprintf($add, (extension_loaded('gd')) ? '<span class=\\\'positive\\\'>'.$info['GD Version'].'</span>' : $user->lang['no_gd_lib']);
+				}
+				if($add != '') {
+					$add = ' <span id="h'.$nava['name'].'"><img alt="help" src="'.$eqdkp_root_path.'images/info.png"'.$jquery->tooltip('h'.$nava['name'], '', $add, false, true, false).' /></span>';
+				}
+				$warn = ($user->lang[$nava['name'].'_warn']) ? $user->lang[$nava['name'].'_warn'] : '';
+				if($warn != '') {
+					$warn = ' <span id="w'.$nava['name'].'"><img width="16" height="16" alt="help" src="'.$eqdkp_root_path.'images/error.png"'.$jquery->tooltip('w'.$nava['name'], '', $warn, false, true, false).' /></span>';
 				}
 				$tpl->assign_block_vars('holder.config', array(
-					'NAME'	=> $user->lang[$nava['name']].$add,
+					'NAME'	=> $user->lang[$nava['name']].' '.$add.' '.$warn,
 					'VALUE' => $nava['value'],
 					'CLASS'	=> $core->switch_row_class())
 				);

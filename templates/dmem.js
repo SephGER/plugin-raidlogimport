@@ -104,10 +104,10 @@ function set_width(w, nostopper) {
 			stopper = true;
 		}
         scale_object.style.width = w + "px";
-		leaver.value = $('#member_form').data('raid_start') + (parseInt(scale_object.marginLeft) + w)*20;
+		leaver.value = $('#member_form').data('raid_start') + (parseInt(scale_object.style.marginLeft) + w)*20;
 	} else {
         scale_object.style.width = 1 + "px";
-		leaver.value = $('#member_form').data('raid_start') + (parseInt(scale_object.marginLeft) + w)*20;
+		leaver.value = $('#member_form').data('raid_start') + (parseInt(scale_object.style.marginLeft) + w)*20;
 		stopper = true;
 	}
 	if(stopper && !nostopper) {
@@ -138,8 +138,8 @@ function add_timeframe() {
 	posx = clickx1;
 	//between which times did the user click?
 	var all_times = $('#times_' + member_id + ' > div');
-	var left = new Array(0,0);
-	var right = new Array(0,9999);
+	var left = new Array(0, posi_null);
+	var right = new Array(0, posi_max);
 	for(var i=0; i < all_times.length; i++) {
 		var current = new Array();
 		current.offset = $(all_times[i]).offset();
@@ -156,7 +156,6 @@ function add_timeframe() {
 	var change_id = '';
 	var lgth = 'times_' + member_id + '_';
 	var object_to_add = $('#times_' + member_id + '_99').clone(true);
-	object_to_add.removeAttr('disabled');
 	var selector = '';
 	var type = 'after';
 	var new_time_key = 0;
@@ -194,6 +193,9 @@ function add_timeframe() {
 	change_id_of_input('times_' + member_id + '_99', new_time_key);                             
     $('#times_' + member_id + '_' + new_time_key + 'j').attr('value', $('#member_form').data('raid_start') + (left[1]+2)*20);
 	$('#times_' + member_id + '_' + new_time_key + 'l').attr('value', $('#member_form').data('raid_start') + (left[1] + right[1])*20);
+	$('#times_' + member_id + '_' + new_time_key + 'l').removeAttr('disabled');
+	$('#times_' + member_id + '_' + new_time_key + 'j').removeAttr('disabled');
+	$('#times_' + member_id + '_' + new_time_key + 's').removeAttr('disabled');
 }
 
 function remove_timeframe() {
@@ -211,7 +213,7 @@ function remove_timeframe() {
 function change_standby() {
 	var input_id = 'times_' + member_id + '_' + time_id;
 	if($('#' + input_id + 's').attr('value') == 'standby') {
-		$('#' + input_id + 's').attr('value', '');
+		$('#' + input_id + 's').attr('value', '0');
 		$('#' + input_id).attr('class', 'time');
 	} else {
 		$('#' + input_id + 's').attr('value', 'standby');

@@ -36,7 +36,6 @@ class rli
 	public $raid = false;
 	public $item = false;
 	public $adj = false;
-	public $add_data = false;
 
 	public function __construct() {
 		global $core, $settings;
@@ -56,90 +55,30 @@ class rli
 		$this->parser = new rli_parse;
 	}
 
-	public function get_bonus() {
-		$this->load_bonus();
-		return $this->bonus;
-	}
-
 	public function config($name='') {
 		return ($name == '') ? $this->config : $this->config[$name];
 	}
 
-	private function load_bonus() {
-		global $db, $pdl, $dbname, $table_prefix;
-
-		if(!$this->bonus) {
-			$sql = "SELECT bz_id, bz_string, bz_note, bz_bonus, bz_type, bz_tozone FROM __raidlogimport_bz;";
-		if($result = $db->query($sql)) {
-			while($row = $db->fetch_record($result)) {
-				if($row['bz_type'] == 'boss') {
-					$this->bonus['boss'][$row['bz_id']]['string'] = explode($this->config('bz_parse'), $row['bz_string']);
-					$this->bonus['boss'][$row['bz_id']]['note'] = $row['bz_note'];
-					$this->bonus['boss'][$row['bz_id']]['bonus'] = $row['bz_bonus'];
-					$this->bonus['boss'][$row['bz_id']]['tozone'] = $row['bz_tozone'];
-				} else {
-					$this->bonus['zone'][$row['bz_id']]['string'] = explode($this->config('bz_parse'), $row['bz_string']);
-					$this->bonus['zone'][$row['bz_id']]['note'] = $row['bz_note'];
-					$this->bonus['zone'][$row['bz_id']]['bonus'] = $row['bz_bonus'];
-				}
-			}
-		} else {
-			$sql_error = $db->_sql_error();
-			$pdl->log('sql_error', $sql, $sql_error['message'], $sql_error['code'], $dbname, $table_prefix);
-			message_die("SQL-Error! <br /> Query:".$sql);
+	public function suffix($string, $append, $diff) {
+		global $game;
+		if($game->get_game() == 'wow' AND $append) {
+			return $string.$this->config('diff_'.$diff);
 		}
-		}
-	}
-
-	private function load_events() {
-		global $pdh;
-		if(!$this->events) {
-			$events = $pdh->get('event', 'id_list');
-			foreach($events as $event_id) {
-				$this->events['name'][$event_id] = $pdh->get('event', 'name', array($event_id));
-				$this->events['value'][$event_id] = $pdh->get('event', 'value', array($event_id));
-			}
-		}
-	}
-
-	public function get_events($key=false, $sec_key=false) {
-		$this->load_events();
-		return ($key) ? (($sec_key) ? $this->events[$key][$sec_key] : $this->events[$key]) : $this->events;
+		return $string;
 	}
 
 	public function get_cache_data($type) {
 		global $db, $core;
-
-		if(!$this->data[$type]) {
+		if(!$this->data) {
 			$sql = "SELECT cache_class, cache_data FROM __raidlogimport_cache;";
 			$result = $db->query($sql);
 			while ( $row = $db->fetch_record($result) ) {
 				$this->data[$row['cache_class']] = ($core->config['enable_gzip']) ? unserialize(gzuncompress($row['cache_data'])) : unserialize($row['cache_data']);
 			}
 			$db->query("TRUNCATE __raidlogimport_cache;");
+			$this->data['fetched'] = true;
 		}
 		return $this->data[$type];
-	}
-
-	public function boss_dropdown($bossname, $raid_key, $key) {
-		global $html;
-		$this->get_bonus();
-		if(!$this->bk_list) {
-			foreach($this->bonus['boss'] as $boss) {
-				$this->bk_list[htmlspecialchars($boss['string'][0], ENT_QUOTES)] = htmlentities($boss['note'], ENT_QUOTES);
-				if($this->config['use_dkp'] & 1) {
-					$this->bk_list[htmlspecialchars($boss['string'][0], ENT_QUOTES)] .= ' ('.$boss['bonus'].')';
-				}
-			}
-		}
-		foreach($this->bonus['boss'] as $boss)
-		{
-			if(in_array($bossname, $boss['string']))
-			{
-				$sel = htmlspecialchars($boss['string'][0], ENT_QUOTES);
-			}
-		}
-		return $html->DropDown('raids['.$raid_key.'][bosskills]['.$key.'][name]', $this->bk_list, $sel);
 	}
 
 	public function check_data() {

@@ -16,18 +16,16 @@
  * $Id: lang_main.php 4868 2009-05-15 16:51:52Z hoofy_leon $
  */
 	$lang['raidlogimport'] = 'Raid-Log-Import';
-	$lang['action_raidlogimport_dkp'] = 'DKP';
 	$lang['action_raidlogimport_bz_upd'] = 'Boss / Zone bearbeitet';
 	$lang['action_raidlogimport_bz_add'] = 'Boss / Zone hinzugefügt';
 	$lang['action_raidlogimport_bz_del'] = 'Boss / Zone gelöscht';
-	$lang['action_raidlogimport_config'] = 'DKP-Importer Einstellungen';
-	$lang['raidlogimport_long_desc'] = 'Das Plugin erlaubt das importieren von allerart Strings. Es können DKP-Werte für die einzelnen Bosse und pro Stunde eingetragen werden. Aliase sind ebenfalls erstellbar.';
-	$lang['raidlogimport_short_desc'] = 'Importiert DKP-Strings';
+	$lang['raidlogimport_long_desc'] = 'Das Plugin erlaubt das importieren von allerart Strings. Es können Punkte-Werte für die einzelnen Bosse und pro Stunde eingetragen werden.';
+	$lang['raidlogimport_short_desc'] = 'Importiert Raid-Logs';
 	$lang['links'] = 'Links';
 
 	//permissions
 	$lang['raidlogimport_bz'] = 'Boss/Zonen Verwaltung';
-	$lang['raidlogimport_dkp'] = 'DKP importieren';
+	$lang['raidlogimport_dkp'] = 'Raid-Log importieren';
 
 
 	//Bz
@@ -68,7 +66,7 @@
 	$lang['bz_no_copy'] = 'Kopieren fehlgeschlagen!';
 
 	//dkp
-	$lang['rli_dkp_insert'] = 'DKP String einfügen';
+	$lang['rli_dkp_insert'] = 'Raid-Log einfügen';
 	$lang['rli_send'] = 'Absenden';
 	$lang['rli_raidinfo'] = 'Raid Infos';
 	$lang['rli_start'] = 'Start';
@@ -80,8 +78,8 @@
 	$lang['rli_no_mem_create'] = " konnte nicht erzeugt werden. Bitte manuell erstellen";
 	$lang['rli_mem_auto'] = " wurde automatische erzeugt";
 	$lang['rli_raid_to'] = 'Raid auf %1$s am %2$s';
-	$lang['rli_t_dkp'] = 'Zeit-DKP';
-	$lang['rli_b_dkp'] = 'Boss-DKP';
+	$lang['rli_t_points'] = 'Zeit-Punkte';
+	$lang['rli_b_dkp'] = 'Boss-Punkte';
 	$lang['rli_looter'] = 'Looter';
 	$lang['xml_error'] = 'XML-Error. Bitte überprüf das Log!';
 	$lang['parse_error'] = 'Parse-Error!';
@@ -98,7 +96,7 @@
 	$lang['rli_back2item'] = 'Zurück zu Items';
 	$lang['rli_checkadj'] = 'Korrekturen überprüfen';
     $lang['rli_calc_note_value'] = 'Raidwert und Raidnotiz neu berechnen';
-	$lang['rli_insert'] = 'DKP Einfügen';
+	$lang['rli_insert'] = 'Raid(s) Einfügen';
 	$lang['rli_adjs'] = 'Korrekturen';
 	$lang['rli_partial_raid'] = 'Teilweise Raidteilnahme';
 	$lang['rli_add_raid'] = 'Raid hinzufügen';
@@ -131,24 +129,15 @@
 	$lang['magicdkp_format'] = 'Es trat ein Fehler auf.';
 	$lang['wrong_game'] = 'Das Raidlog stammt nicht aus dem unter Konfiguration angegebenen Spiel!';
 	$lang['wrong_settings'] = '<img src="$eqdkp_root_path'.'images/error.png" alt="error"> Verkehrte Einstellungen!';
-	$lang['wrong_settings_1'] = $lang['wrong_settings'].' '.$lang['raidcount_1'].' kann nicht mit keinen Zeit-DKP kombiniert werden.';
-	$lang['wrong_settings_2'] = $lang['wrong_settings'].' '.$lang['raidcount_2'].' kann nicht mit keinen Boss-DKP kombiniert werden.';
-	$lang['wrong_settings_3'] = $lang['wrong_settings'].' '.$lang['raidcount_3'].' kann nicht mit keine Boss- und/oder Zeit-DKP kombiniert werden.';
+	$lang['wrong_settings_1'] = $lang['wrong_settings'].' '.$lang['raidcount_1'].' kann nicht mit keinen Zeit-Punkten kombiniert werden.';
+	$lang['wrong_settings_2'] = $lang['wrong_settings'].' '.$lang['raidcount_2'].' kann nicht mit keinen Boss-Punkten kombiniert werden.';
+	$lang['wrong_settings_3'] = $lang['wrong_settings'].' '.$lang['raidcount_3'].' kann nicht mit keinen Boss- und/oder Zeit-Punkten kombiniert werden.';
 	$lang['rli_process'] = 'Ausführen';
-	$lang['translate_items'] = 'Items übersetzen';
-	$lang['get_itemid'] = 'Item-ID laden';
-	$lang['translate_items_tip'] = 'Nach dem Übersetzen einmal auf "Aktualisieren" drücken, damit die neuen Item-Daten übernommen werden.';
-	$lang['raidval_nullsum_later'] = 'Beim Null-Summen-System wird der Raid-Wert später eingegeben.';
 	$lang['check_raidval'] = 'Raid-Werte überprüfen';
-	$lang['rli_log_lang'] = 'In welcher Sprache sind die Items im Log?';
-	$lang['form_null_sum'] = 'Formel: Item-Kosten / Anzahl der Mitglieder ';
-	$lang['form_null_sum_1'] = $lang['form_null_sum'].'im Raid';
-	$lang['form_null_sum_2'] = $lang['form_null_sum'].'im System';
 	$lang['rli_choose_mem'] = 'Member wählen ...';
 	$lang['rli_go_on'] = 'Weiter';
 
 	//config
-	$lang['multidkp_need'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                    Für Multi-DKP Funktionalität aktivieren!                  </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='help'></a>";
 	$lang['new_member_rank'] = 'Standard-Rang bei automatischer Erstellung';
 	$lang['raidcount'] = 'Wie sollen die Raids erstellt werden?';
 	$lang['raidcount_0'] = 'Ein Raid für alles';
@@ -165,7 +154,6 @@
 	$lang['loottime'] = 'Zeit in Sekunden, die der Loot noch zum Boss davor gehört';
 	$lang['attendence_time'] = 'Zeit in Sekunden, die der Invite dauert, bzw. das Raid-Ende dauert';
 	$lang['rli_inst_version'] = 'Installierte Version';
-	$lang['adj_parse'] = 'Trennzeichen zwischen Grund und Wert einer Korrektur';
 	$lang['bz_parse'] = 'Trennzeichen zwischen den Strings die zu einem "Event" gehören';
 	$lang['parser'] = 'Welches XML-Format hat der String?';
 	$lang['parser_eqdkp'] = 'MLDKP 1.1 / EQdkp Plugin';
@@ -173,25 +161,25 @@
 	$lang['parser_magicdkp'] = 'MagicDKP';
 	$lang['rli_man_db_up'] = 'DB-Update erzwingen';
 	$lang['rli_upd_check'] = 'Update-Check aktivieren?';
-	$lang['use_dkp'] = 'Welche DKP sollen verwendet werden?';
-	$lang['use_dkp_1'] = 'Boss-DKP';
-	$lang['use_dkp_2'] = 'Zeit-DKP';
-	$lang['use_dkp_4'] = 'Ereignis-DKP';
+	$lang['use_dkp'] = 'Welche Punkte sollen verwendet werden?';
+	$lang['use_dkp_1'] = 'Boss-Punkte';
+	$lang['use_dkp_2'] = 'Zeit-Punkte';
+	$lang['use_dkp_4'] = 'Ereignis-Punkte';
 	$lang['null_sum'] = 'Null-Summen-Systen verwenden?';
 	$lang['null_sum_0'] = 'Nein';
-	$lang['null_sum_1'] = 'Jedes Mitglied im Raid bekommt die DKP';
-	$lang['null_sum_2'] = 'Jedes Mitglied im System bekommt die DKP';
-	$lang['item_save_lang'] = 'In welcher Sprache sollen die Items in der DB gespeichert werden?';
-	$lang['deactivate_adj'] = "Korrekturen deaktivieren? <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                   Durch setzen dieser Option bekommen die Member immer alle DKP vom Raid!                </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/error.gif' alt='warn'></a>";
-	$lang['addinfo_am'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                   Diese Einstellung bewirkt, dass Spieler, die die eingestellte Anzahl an Raids nicht dabeigewesen sind, Minus-DKP bekommen. Wenn Null-Summen aktiviert sind, wird das ganze über ein Item gemacht.                </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='warn'></a>";
-	$lang['auto_minus'] = 'Automatischer DKP-Abzug?'.$lang['addinfo_am'];
+	$lang['null_sum_1'] = 'Jedes Mitglied im Raid bekommt die Punkte';
+	$lang['null_sum_2'] = 'Jedes Mitglied im System bekommt die Punkte';
+	$lang['deactivate_adj'] = "Korrekturen deaktivieren?";
+	$lang['deactivate_adj_warn'] = "Durch setzen dieser Option bekommen die Member immer alle DKP vom Raid!";
+	$lang['auto_minus'] = 'Automatischer Punkte-Abzug?';
+	$lang['auto_minus_help'] = "Diese Einstellung bewirkt, dass Spieler, die die eingestellte Anzahl an Raids nicht dabeigewesen sind, Minus-DKP bekommen. Wenn Null-Summen aktiviert sind, wird das ganze über ein Item gemacht.";
 	$lang['am_raidnum'] = 'Anzahl der Raids';
-	$lang['am_value'] = 'Wert der abgezogenen DKP';
+	$lang['am_value'] = 'Wert der abgezogenen Punkte';
 	$lang['am_name'] = 'Mangelnde Teilnahme';
-	$lang['am_value_raids'] = 'DKP Wert = Wert der letzten Anzahl Raids';
-	$lang['am_allxraids'] = "Raidzähler, bei Vergabe von Minus-DKP resetten? <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td>Beispiel: Ein Mitglied bekommt nach 3 Raids Minus-DKP. Beim 4ten ist er wieder nicht dabei, wenn diese Option deaktiviert ist bekommt er wieder Minus-DKP. Ist sie hingegen aktiviert, würde er erst beim 6ten Raid den er fehlt wieder Minus-DKP bekommen. </td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='help'></a>";
-	$lang['addinfo_am'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td> Diese Einstellung bewirkt, dass Spieler, die die eingestellte Anzahl an Raids nicht dabeigewesen sind, Minus-DKP bekommen. Wenn Null-Summen aktiviert sind, wird das ganze über ein Item gemacht. </td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='help'></a>";
-	$lang['title_am'] = 'Automatischer DKP-Abzug';
+	$lang['am_value_raids'] = 'Punkt-Wert = Wert der letzten Anzahl Raids';
+	$lang['am_allxraids'] = "Raidzähler, bei Vergabe von Minus-DKP resetten?";
+	$lang['am_allxraids_help'] = "Beispiel: Ein Mitglied bekommt nach 3 Raids Minus-DKP. Beim 4ten ist er wieder nicht dabei, wenn diese Option deaktiviert ist bekommt er wieder Minus-DKP. Ist sie hingegen aktiviert, würde er erst beim 6ten Raid den er fehlt wieder Minus-DKP bekommen.";
+	$lang['title_am'] = 'Automatischer Punkte-Abzug';
 	$lang['title_adj'] = 'Korrekturen';
 	$lang['title_att'] = 'Anwesenheit';
 	$lang['title_general'] = 'Allgemein';
@@ -208,21 +196,22 @@
 	$lang['s_member_rank_2'] = 'Loot-Übersicht';
 	$lang['s_member_rank_4'] = 'Korrekturen-Übersicht';
 	$lang['rli_manual'] = 'Sollte dir die Bedeutung einiger Optionen nicht klar sein, so wirf einen Blick ins Manual (<a href="./../language/german/Manual.pdf">link</a>).';
-	$lang['member_start'] = 'Start-DKP, die ein Mitglied bekommt, wenn es automatisch erstellt wird.';
-	$lang['member_start_name'] = 'Start-DKP'; //value is used for reason of adjustment
-	$lang['member_start_event'] = 'Ereignis für die Start-DKP';
+	$lang['member_start'] = 'Start-Punkte, die ein Mitglied bekommt, wenn es automatisch erstellt wird.';
+	$lang['member_start_name'] = 'Start-Punkte'; //value is used for reason of adjustment
+	$lang['member_start_event'] = 'Ereignis für die Start-Punkte';
 	$lang['member_raid'] = 'Ab wie viel %Teilnahme soll das Mitglied dem Raid zugewiesen werden?';
 	$lang['att_note_begin'] = 'Raidnotiz des Anwesenheits-Start-Raids';
 	$lang['att_note_end'] = 'Raidnotiz des Anwesenheits-End-Raids';
 	$lang['raid_note_time']	= 'Raidnotiz der Raids pro Stunde';
 	$lang['raid_note_time_0'] = '20:00-21:00, 21:00-22:00, usw.';
 	$lang['raid_note_time_1'] = '1.Stunde, 2.Stunde, usw.';
-	$lang['timedkp_handle']	= "Berechnung der Zeit-DKP <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td> 0: exakte Berechnung pro Minute<br />&gt;0: Minuten, nach denen der Member die vollen DKP der Stunde bekommt </td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='help'></a>";
+	$lang['timedkp_handle']	= "Berechnung der Zeit-Punkte";
+	$lang['timedkp_handle_help'] = "0: exakte Berechnung pro Minute<br />&gt;0: Minuten, nach denen der Member die vollen Punkte der Stunde bekommt";
 	$lang['member_display'] = 'Wie soll die Member-Liste angezeigt werden?';
 	$lang['member_display_0'] = 'Multi-Select';
 	$lang['member_display_1'] = 'Mehrere Checkboxen';
 	$lang['member_display_2'] = 'Detaillierte Join/Leave Infos';
-    $lang['member_display_add'] = " <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td>Um die Ansicht \'".$lang['member_display_1']."\' zu verwenden, muss die GD-Lib vorhanden sein (PHP-Extension). Folgende GD-Lib wurde gefunden:<br />%s</td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/error.gif' alt='help'></a>";
+    $lang['member_display_help'] = "Um die Ansicht \'".$lang['member_display_1']."\' zu verwenden, muss die GD-Lib vorhanden sein (PHP-Extension). Folgende GD-Lib wurde gefunden:<br />%s";
     $lang['no_gd_lib'] = '<span class=\\\'negative\\\'>keine GD-Lib gefunden</span>';
     $lang['title_standby'] = 'Ersatzbank-Einstellungen';
     $lang['standby_raid'] = 'Sollen Ersatzbank-Mitglieder einem Raid zugeordnet werden?';
@@ -230,12 +219,12 @@
     $lang['standby_raid_1'] = 'Ja, einen Extra-Raid anlegen.';
     $lang['standby_raid_2'] = 'Ja, dem (den) normalem/n Raid(s).';
     $lang['standby_raid_note'] = 'Raid Notiz des Ersatzbankraids';
-    $lang['standby_absolute'] = 'Absolute DKP für die Ersatzbank vergeben?';
-    $lang['standby_value'] = 'Wie viel Prozent der DKP, bzw. wie viele DKP absolut, sollen Ersatzbankspieler bekommen?';
-	$lang['standby_att'] = 'Sollen Ersatzbankspieler Einlade/Ende-DKP bekommen?';
-	$lang['standby_att_1'] = 'Einlade-DKP';
-	$lang['standby_att_2'] = 'Ende-DKP';
-	$lang['standby_dkptype'] = 'Welche DKP sollen Ersatzbankspieler bekommen?';
+    $lang['standby_absolute'] = 'Absolute Punkte für die Ersatzbank vergeben?';
+    $lang['standby_value'] = 'Wie viel Prozent der Punkte, bzw. wie viele Punkte absolut, sollen Ersatzbankspieler bekommen?';
+	$lang['standby_att'] = 'Sollen Ersatzbankspieler Einlade/Ende-Punkte bekommen?';
+	$lang['standby_att_1'] = 'Einlade-Punkte';
+	$lang['standby_att_2'] = 'Ende-Punkte';
+	$lang['standby_dkptype'] = 'Welche Punkte sollen Ersatzbankspieler bekommen?';
 	$lang['standby_dkptype_1'] = $lang['use_dkp_1'];
 	$lang['standby_dkptype_2'] = $lang['use_dkp_2'];
 	$lang['standby_dkptype_4'] = $lang['use_dkp_4'];
@@ -244,5 +233,5 @@
 
     //portal
     $lang['p_rli_zone_display'] = 'Welche Zonen sollen angezeigt werden?';
-    $lang['dkpvals'] = 'DKP-Werte';
+    $lang['dkpvals'] = 'Punkte-Werte';
 ?>

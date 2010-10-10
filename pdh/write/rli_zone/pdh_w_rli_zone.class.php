@@ -26,11 +26,14 @@ class pdh_w_rli_zone extends pdh_w_generic {
 		parent::pdh_w_generic();
 	}
 	
-	public function add($string, $note, $timebonus=0.0, $diff=0, $sort=0) {
+	public function add($string, $event, $timebonus=0.0, $diff=0, $sort=0) {
 		global $db, $pdh, $user;
+		if(!$string OR !$event) {
+			return false;
+		}
 		if($db->query("INSERT INTO __raidlogimport_zone :params", array(
 						'zone_string'	=> $string,
-						'zone_note'		=> $note,
+						'zone_event'	=> $event,
 						'zone_timebonus'=> $timebonus,
 						'zone_diff'		=> $diff,
 						'zone_sort'		=> $sort))) {
@@ -41,7 +44,7 @@ class pdh_w_rli_zone extends pdh_w_generic {
 				'{L_ID}'			=> $id,
 				'{L_BZ_TYPE}'   	=> '{L_BZ_ZONE_S}',
 				'{L_BZ_STRING}'		=> $string,
-				'{L_BZ_BNOTE}'		=> $note,
+				'{L_EVENT}'			=> $pdh->get('event', 'name', array($event)),
 				'{L_BZ_TIMEBONUS}'	=> $timebonus,
 				'{L_BZ_DIFF}' 		=> $diff
 			);
@@ -51,21 +54,21 @@ class pdh_w_rli_zone extends pdh_w_generic {
 		return false;
 	}
 	
-	public function update($id, $string='', $note='', $timebonus=false, $diff=false, $sort=false) {
+	public function update($id, $string='', $event=false, $timebonus=false, $diff=false, $sort=false) {
 		global $db, $pdh, $core;
 		if(!$id) {
 			return false;
 		}
 		$old = array(
 			'string'	=> implode($core->config['raidlogimport']['bz_parse'], $pdh->get('rli_zone', 'string', array($id))),
-			'note'		=> $pdh->get('rli_zone', 'note', array($id)),
+			'event'		=> $pdh->get('rli_zone', 'event', array($id)),
 			'timebonus'	=> $pdh->get('rli_zone', 'timebonus', array($id)),
 			'diff'		=> $pdh->get('rli_zone', 'diff', array($id)),
 			'sort'		=> $pdh->get('rli_zone', 'sort', array($id))
 		);
 		$data = array(
 			'zone_string'	=> ($string == '') ? $old['string'] : $string,
-			'zone_note'		=> ($note == '') ? $old['note'] : $note,
+			'zone_event'	=> ($event === false) ? $old['event'] : $event,
 			'zone_timebonus'=> ($timebonus === false) ? $old['timebonus'] : $timebonus,
 			'zone_diff'		=> ($diff === false) ? $old['diff'] : $diff,
 			'zone_sort'		=> ($sort === false) ? $old['sort'] : $sort
@@ -78,7 +81,7 @@ class pdh_w_rli_zone extends pdh_w_generic {
 					'{L_ID}'			=> $id,
 					'{L_BZ_TYPE}'   	=> '{L_BZ_ZONE_S}',
 					'{L_BZ_STRING}'		=> $old['string']." => ".$string,
-					'{L_BZ_BNOTE}'		=> $old['note']." => ".$note,
+					'{L_EVENT}'			=> $pdh->get('event', 'name', array($old['event']))." => ".$pdh->get('event', 'name', array($event)),
 					'{L_BZ_TIMEBONUS}'	=> $old['timebonus']." => ".$timebonus,
 					'{L_BZ_DIFF}' 		=> $old['diff']." => ".$diff,
 				);
@@ -98,7 +101,7 @@ class pdh_w_rli_zone extends pdh_w_generic {
 		}
 		$old = array(
 			'string'	=> implode(', ', $pdh->get('rli_zone', 'string', array($id))),
-			'note'		=> $pdh->get('rli_zone', 'note', array($id)),
+			'event'		=> $pdh->get('rli_zone', 'event', array($id)),
 			'timebonus'	=> $pdh->get('rli_zone', 'timebonus', array($id)),
 			'diff'		=> $pdh->get('rli_zone', 'diff', array($id)),
 			'sort'		=> $pdh->get('rli_zone', 'sort', array($id))
@@ -110,7 +113,7 @@ class pdh_w_rli_zone extends pdh_w_generic {
 				'{L_ID}'			=> $id,
 				'{L_BZ_TYPE}'   	=> '{L_BZ_ZONE_S}',
 				'{L_BZ_STRING}'		=> $old['string'],
-				'{L_BZ_BNOTE}'		=> $old['note'],
+				'{L_EVENT}'			=> $pdh->get('event', 'name', array($old['event'])),
 				'{L_BZ_TIMEBONUS}'	=> $old['timebonus'],
 				'{L_BZ_DIFF}' 		=> $old['diff'],
 			);

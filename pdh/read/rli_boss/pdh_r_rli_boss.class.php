@@ -61,6 +61,15 @@ class pdh_r_rli_boss extends pdh_r_generic {
 		return array_keys($this->data);
 	}
 	
+	public function get_id_string($string, $diff) {
+		foreach($this->data as $id => $data) {
+			if(in_array($string, $data['string']) AND ($diff == 0 OR $data['diff'] == 0 OR $diff == $data['diff'])) {
+				return $id;
+			}
+		}
+		return false;
+	}
+	
 	public function get_string($id) {
 		return $this->data[$id]['string'];
 	}
@@ -71,6 +80,16 @@ class pdh_r_rli_boss extends pdh_r_generic {
 	
 	public function get_note($id) {
 		return $this->data[$id]['note'];
+	}
+	
+	public function get_html_note($id, $with_icon=true) {
+		global $core, $pdh, $game;
+		if($core->config['raidlogimport']['event_boss'] AND is_numeric($id)) {
+			$icon = ($with_icon) ? $game->decorate('events', array($this->get_note($id))) : '';
+			return $icon.$pdh->get('event', 'name', array($this->get_note($id)));
+		}
+		$suffix = ($core->config['raidlogimport']['dep_match'] AND $game->get_game() == 'wow') ? $core->config['raidlogimport']['diff_'.$this->get_diff($id)] : '';
+		return $this->get_note($id).$suffix;
 	}
 	
 	public function get_bonus($id) {
