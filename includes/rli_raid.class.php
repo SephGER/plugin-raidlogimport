@@ -112,7 +112,7 @@ class rli_raid {
 			}
 			if( $this->config('raidcount') & 2) {
 				foreach($this->data['bosskills'] as $b => $bosskill) {
-					$temp = $this->get_bosskill_raidtime($zone['begin'], $zone['end'], $bosskill['time'], @$this->data['bosskills'][$b-1]['time'], @$this->data['bosskills'][$b+1]['time']);
+					$temp = $this->get_bosskill_raidtime($zone['enter'], $zone['leave'], $bosskill['time'], @$this->data['bosskills'][$b-1]['time'], @$this->data['bosskills'][$b+1]['time']);
 					$this->raids[$key]['begin'] = $temp['begin'];
 					$this->raids[$key]['end'] = $temp['end'];
 					$this->raids[$key]['zone'] = $zone['name'];
@@ -426,6 +426,10 @@ class rli_raid {
 		return $att_ra;
 	}
 	
+	public function get_standby_raid() {
+		return $this->data['add']['standby_raid'];
+	}
+	
 	private function calc_timedkp($key, $in_raid) {
 		$timedkp = $in_raid['hours'] * $this->raids[$key]['timebonus'];
 		if($this->config('timedkp_handle')) {
@@ -570,23 +574,23 @@ class rli_raid {
 
 	private function get_bosskill_raidtime($begin, $end, $bosskill, $bosskill_before, $bosskill_after) {
 		if(isset($bosskill_before))	{
-			if(($bosskill_before + $this->config['loottime']) > $bosskill) {
+			if(($bosskill_before + $this->config('loottime')) > $bosskill) {
 				$r['begin'] = $bosskill -1;
-			} elseif(($bosskill_before + $this->config['loottime']) < $begin) {
+			} elseif(($bosskill_before + $this->config('loottime')) < $begin) {
 				$r['begin'] = $begin;
 			} else {
-				$r['begin'] = $bosskill_before + $this->config['loottime'];
+				$r['begin'] = $bosskill_before + $this->config('loottime');
 			}
 		} else {
 			$r['begin'] = $begin;
 		}
 		if(isset($bosskill_after)) {
-			if(($bosskill + $this->config['loottime']) > $bosskill_after) {
+			if(($bosskill + $this->config('loottime')) > $bosskill_after) {
 				$r['end'] = $bosskill_after -1;
-			} elseif(($bosskill + $this->config['loottime']) > $end) {
+			} elseif(($bosskill + $this->config('loottime')) > $end) {
 				$r['end'] = $end;
 			} else {
-				$r['end'] = $bosskill + $this->config['loottime'];
+				$r['end'] = $bosskill + $this->config('loottime');
 			}
 		} else {
 			$r['end'] = $end;
