@@ -26,6 +26,8 @@ if(!class_exists('rli_member')) {
   class rli_member {
   	private $members = array();
   	private $timebar_created = false;
+	private $positions = array('up', 'middle', 'down');
+	private $rpos = array();
 	public $raid_members = array();
 
 	public function __construct() {
@@ -279,28 +281,70 @@ if(!class_exists('rli_member')) {
 		}
 		return true;
 	}
+	
+	private function raid_positions($raids, $begin, $updown) {
+		global $rli;
+		if($this->raids_positioned) return true;
+		$suf = '';
+		if($updown[0] !== $updown[1]) {
+			$suf = ' half';
+			if($updown[0]) {
+				$pos = 0;
+			} else {
+				$pos = 2;
+			}
+		} else {
+			$pos = 1;
+		}
+		foreach($raids as $rkey => $raid) {
+			if($rli->raid->get_standby_raid() == $rkey) {
+				$pos = 2;
+			} elseif($this->config('raidcount') & 2 AND count($raid['bosskills']) == 1) {
+				$pos = 0;
+			}
+			$this->rpos[$rkey] = $this->positions[$pos].$suf;
+		}
+		$this->raids_positioned = true;
+		return true;
+	}
 
     private function detailed_times_list($key, $mraids) {
-    	global $rli, $tpl, $html, $eqdkp_root_path, $jquery, $user;
+    	global $rli, $tpl, $html, $eqdkp_root_path, $jquery, $user, $pdh;
 
     	$width = $rli->raid->get_start_end();
     	$px_time = (($width['end'] - $width['begin']) / 20);
     	settype($px_time, 'int');
+		$bars = 1;
+		$updown = array(false, false);
+		if($this->config('standby_raid') == 1) {
+			$bars++;
+			$updown[0] = true;
+		}
+		if($this->config('raidcount') & 1 AND $this->config('raidcount') & 2) {
+			$bars++;
+			$updown[1] = true;
+		}
+		$height = 11 + $bars*14;
 
-    	$out = "<td id='member_".$key."' class='add_time' onmouseover='set_member(\"".$key."\", \"".$px_time."\")'>";
+    	$out = "<td id='member_".$key."' class='add_time' onmouseover='set_member(\"".$key."\", \"".$px_time."\")' style='height: ".$height."px;'>";
         $raids = $rli->raid->get_data();
+		$this->raid_positions($raids, $width['begin'], $updown);
 
         $this->raid_div = '';
+		$mem_raids = $rli->raid->get_memberraids($this->members[$key]['times']);
         foreach($raids as $rkey => $raid) {
         	$w = ($raid['end']-$raid['begin'])/20;
         	$m = ($raid['begin']-$width['begin'])/20;
         	settype($w, 'int');
         	settype($m, 'int');
-        	$out .= "<div id='raid_".$key."_".$rkey."' class='raid' style='width:".$w."px; margin-left: ".$m."px;'><div class='raid_left'></div><div class='raid_middle'><input type='hidden' name='members[".$key."][raid_list][]' value='".$rkey."' /></div><div class='raid_right'></div></div>";
+			$w--;
+			$disabled = (in_array($rkey, $mem_raids)) ? "" : " disabled='disabled'";
+			$active = (in_array($rkey, $mem_raids)) ? " active" : "";
+        	$out .= "<div id='raid_".$key."_".$rkey."' class='raid ".$this->rpos[$rkey].$active."' style='width:".$w."px; margin-left: ".$m."px;'><div class='raid_left'></div><div class='raid_middle'><input type='hidden' name='members[".$key."][raid_list][]' value='".$rkey."'".$disabled." flag='0' /></div><div class='raid_right'></div></div>";
         	foreach($raid['bosskills'] as $bkey => $boss) {
         		$m = ($boss['time']-$width['begin'])/20 - 4;
         		settype($m, 'int');
-        		$bossinfo = "<table><tr><td>".$user->lang['rli_bossname']." </td><td>".$boss['name']."</td></tr><tr><td>".$user->lang['rli_bosstime']."</td><td>".date('H:i:s', $boss['time'])."</td></tr><tr><td>".$user->lang['rli_bossvalue']."</td><td>".$boss['bonus']."</td></tr></table>";
+        		$bossinfo = "<table><tr><td>".$user->lang['rli_bossname']." </td><td>".$pdh->get('rli_boss', 'note', array($boss['id']))."</td></tr><tr><td>".$user->lang['rli_bosstime']."</td><td>".date('H:i:s', $boss['time'])."</td></tr><tr><td>".$user->lang['rli_bossvalue']."</td><td>".$boss['bonus']."</td></tr></table>";
 				$tt_out = $jquery->tooltip('#boss_'.$key.'_'.$bkey.'_'.$key, 'boss', $bossinfo);
         		$out .= "<div id='boss_".$key."_".$bkey."_".$key."' ".$tt_out." style='margin-left: ".$m."px;'></div>";
         	}

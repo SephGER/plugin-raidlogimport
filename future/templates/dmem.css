@@ -1,10 +1,40 @@
+.add_time {
+	background-color: #000000;
+}
 
 .raid {
 	position: absolute;
-	height: 25px;
-	background-color: red;
-	margin-top: -12px;
+	height: 13px;
+}
+.raid.up {
+	margin-top: -21px;
+	z-index: 7;
+	background-image: url(./../images/raid_bg_bright.png);
+}
+.raid.up.half {
+	margin-top: -14px;
+}
+.raid.up.active {
+	background-image: url(./../images/araid_bg_bright.png);
+}
+.raid.middle {
+	margin-top: -7px;
 	z-index: 9;
+	background-image: url(./../images/raid_bg.png);
+}
+.raid.middle.active {
+	background-image: url(./../images/araid_bg.png);
+}
+.raid.down {
+	margin-top: 7px;
+	z-index: 8;
+	background-image: url(./../images/raid_bg_dark.png);
+}
+.raid.down.half {
+	margin-top: 1px;
+}
+.raid.down.active {
+	background-image: url(./../images/araid_bg_dark.png);
 }
 .boss {
 	position: absolute;
@@ -18,17 +48,17 @@
 }
 .time {
 	position: absolute;
-	background-color: black;
+	background-image: url(./../images/time_bg.png);
 	margin-top: -4px;
-	height: 8px;
+	height: 7px;
 	display: block;
 	z-index: 11;
 }
 .timestandby {
 	position: absolute;
-	background-color: yellow;
+	background-image: url(./../images/stime_bg.png);
 	margin-top: -4px;
-	height: 8px;
+	height: 7px;
 	display: block;
 	z-index: 11;
 }
