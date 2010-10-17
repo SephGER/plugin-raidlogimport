@@ -313,7 +313,18 @@ class rli_raid {
 		if(is_array($times)) {
 			foreach ($times as $time) {
 				if(!$standby OR ($standby == 1 AND !$time['standby']) OR ($standby == 2 AND $time['standby'])) {
-					$in_raid += (($time['leave'] > $this->raids[$key]['end']) ? $this->raids[$key]['end'] : $time['leave']) - (($time['join'] < $this->raids[$key]['begin']) ? $this->raids[$key]['begin'] : $time['join']);
+					if($time['join'] < $this->raids[$key]['end'] AND $time['leave'] > $this->raids[$key]['begin']) {
+						if($time['leave'] > $this->raids[$key]['end']) {
+							$in_raid += $this->raids[$key]['end'];
+						} else {
+							$in_raid += $time['leave'];
+						}
+						if($time['join'] < $this->raids[$key]['begin']) {
+							$in_raid -= $this->raids[$key]['begin'];
+						} else {
+							$in_raid -= $time['join'];
+						}
+					}
 				}
 			}
 		} else {

@@ -331,15 +331,15 @@ if(!class_exists('rli_member')) {
 		$this->raid_positions($raids, $width['begin'], $updown);
 
         $this->raid_div = '';
-		$mem_raids = $rli->raid->get_memberraids($this->members[$key]['times']);
+		if(!$this->members[$key]['raid_list']) $this->members[$key]['raid_list'] = $rli->raid->get_memberraids($this->members[$key]['times']);
         foreach($raids as $rkey => $raid) {
         	$w = ($raid['end']-$raid['begin'])/20;
         	$m = ($raid['begin']-$width['begin'])/20;
         	settype($w, 'int');
         	settype($m, 'int');
 			$w--;
-			$disabled = (in_array($rkey, $mem_raids)) ? "" : " disabled='disabled'";
-			$active = (in_array($rkey, $mem_raids)) ? " active" : "";
+			$disabled = (in_array($rkey, $this->members[$key]['raid_list'])) ? "" : " disabled='disabled'";
+			$active = (in_array($rkey, $this->members[$key]['raid_list'])) ? " active" : "";
         	$out .= "<div id='raid_".$key."_".$rkey."' class='raid ".$this->rpos[$rkey].$active."' style='width:".$w."px; margin-left: ".$m."px;'><div class='raid_left'></div><div class='raid_middle'><input type='hidden' name='members[".$key."][raid_list][]' value='".$rkey."'".$disabled." /></div><div class='raid_right'></div></div>";
         	foreach($raid['bosskills'] as $bkey => $boss) {
         		$m = ($boss['time']-$width['begin'])/20 - 4;
