@@ -130,6 +130,7 @@ function lang2tpl()
         'L_PROCESS'		=> $user->lang['rli_process'],
         'L_RAID'        => $user->lang['raid'],
         'L_RAID_ADD'    => $user->lang['rli_add_raid'],
+		'L_RAIDATT_UPD'	=> $user->lang['rli_raidatt_upd'],
         'L_RAIDS_ADD'	=> $user->lang['rli_add_raids'],
         'L_RAIDS'       => $user->lang['raids'],
         'L_RECALC_RAID'	=> $user->lang['rli_calc_note_value'],
