@@ -21,26 +21,16 @@ define('IN_ADMIN', true);
 $eqdkp_root_path = './../../../';
 include_once('./../includes/common.php');
 
-class RLI_Settings extends EQdkp_Admin
+class RLI_Settings extends admin_generic
 {
 	public function __construct() {
-		global $db, $pm, $tpl, $user, $core, $SID, $rli;
-		parent::eqdkp_admin();
-
-		$this->assoc_buttons(array(
-			'form' => array(
-				'name' 		=> '',
-				'process'	=> 'display_form',
-				'check'		=> 'a_raidlogimport_config'),
-			'submit' => array(
-				'name'		=> 'update',
-				'process'	=> 'save_config',
-				'check'		=> 'a_raidlogimport_config')
-			)
-		);
+		global $user;
+		$user->check_auth('a_raidlogimport_config');
+		parent::__construct(false);
+		$this->process();
 	}
 
-	public function save_config() {
+	public function update() {
 		global $core, $rli, $in;
 
 		$messages = array();
@@ -49,8 +39,8 @@ class RLI_Settings extends EQdkp_Admin
 		foreach($rli->config() as $old_name => $old_value) {
 			if(in_array($old_name, $bytes)) {
 				$val = 0;
-				if(is_array($_POST[$old_name])) {
-					foreach($in->getArray($old_name, 0) as $pos) {
+				if(is_array($in->getArray($old_name, 'int'))) {
+					foreach($in->getArray($old_name, 'int') as $pos) {
 						$val += $pos;
 					}
 				}
@@ -65,10 +55,10 @@ class RLI_Settings extends EQdkp_Admin
 				$messages[] = $old_name;
 			}
 		}
-		$this->display_form(array(implode(', ', $messages)));
+		$this->display(array(implode(', ', $messages)));
 	}
 
-	public function display_form($messages=array()) {
+	public function display($messages=array()) {
 		global $user, $tpl, $core, $pm, $rli, $html, $jquery, $pdh, $eqdkp_root_path;
 		if($messages) {
 			$rli->__construct();
@@ -254,5 +244,4 @@ class RLI_Settings extends EQdkp_Admin
 	}
 }
 $rli_settings = new RLI_Settings;
-$rli_settings->process();
 ?>

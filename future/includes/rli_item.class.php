@@ -69,7 +69,7 @@ class rli_item {
 	}
 	
 	public function display($with_form=false) {
-		global $rli, $html, $pdh, $tpl, $user, $core;
+		global $rli, $html, $pdh, $tpl, $user, $core, $in;
 		if(is_array($this->items)) {
 			$p = count($this->items);
 			$start = 0;
@@ -80,8 +80,8 @@ class rli_item {
 				settype($dic, 'int');
 				$page = 1;
 
-				if(!(strpos($_POST['checkitem'], $user->lang['rli_itempage']) === false)) {
-					$page = str_replace($user->lang['rli_itempage'], '', $_POST['checkitem']);
+				if(!(strpos($in->get('checkitem'), $user->lang['rli_itempage']) === false)) {
+					$page = str_replace($user->lang['rli_itempage'], '', $in->get('checkitem'));
 				}
 				if($page >= 1) {
 					$start = ($page-1)*$dic;

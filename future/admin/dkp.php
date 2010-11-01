@@ -23,67 +23,37 @@ define('IN_ADMIN', true);
 $eqdkp_root_path = './../../../';
 include_once('./../includes/common.php');
 
-class raidlogimport extends EQdkp_Admin {
+class raidlogimport extends admin_generic {
 	public function raidlogimport() {
-		global $db, $core, $user, $tpl, $pm, $rli;
-		global $SID;
-
-		parent::eqdkp_admin();
-
-		$this->assoc_buttons(array(
-			'checkraid' => array(
-				'name'    => 'checkraid',
-				'process' => 'process_raids',
-				'check'   => 'a_raidlogimport_dkp'),
-			'checkmem' => array(
-				'name'	  => 'checkmem',
-				'process' => 'process_members',
-				'check'	  => 'a_raidlogimport_dkp'),
-			'checkitem' => array(
-				'name'	  => 'checkitem',
-				'process' => 'process_items',
-				'check'   => 'a_raidlogimport_dkp'),
-			'checkadj' => array(
-				'name'	  => 'checkadj',
-				'process' => 'process_adjustments',
-				'check'	  => 'a_raidlogimport_dkp'),
-			'viewall' => array(
-				'name'    => 'viewall',
-				'process' => 'process_view',
-				'check'	  => 'a_raidlogimport_dkp'),
-			'form' => array(
-				'name'    => '',
-				'process' => 'display_form',
-				'check'   => 'a_raidlogimport_dkp'),
-			'insert' => array(
-				'name'    => 'insert',
-				'process' => 'insert_log',
-				'check'   => 'a_raidlogimport_dkp'),
-			'null_sum' => array(
-				'name'	  => 'nullsum',
-				'process' => 'process_null_sum',
-				'check'	  => 'a_raidlogimport_dkp')
-				)
+		global $user, $rli;
+		$user->check_auth('a_raidlogimport_dkp');
+		
+		$handler = array(
+			'checkraid'	=> array('process' => 'process_raids'),
+			'checkmem'	=> array('process' => 'process_members'),
+			'checkitem'	=> array('process' => 'process_items'),
+			'checkadj'	=> array('process' => 'process_adjustments'),
+			'viewall'	=> array('process' => 'process_views'),
+			'insert'	=> array('process' => 'insert_log')
 		);
+		parent::__construct(false, $handler);
 		$rli->init_import();
+		$this->process();
 	}
 
 	function process_raids() {
 		global $db, $core, $user, $tpl, $pm, $rli, $in;
 
-		if(isset($_POST['log'])) {
-			$log = simplexml_load_string(utf8_encode(trim(str_replace("&", "and", html_entity_decode($_POST['log'])))));
+		if($in->exists('log')) {
+			$log = simplexml_load_string(utf8_encode(trim(str_replace("&", "and", html_entity_decode($in->get('log', '', 'htmlescape'))))));
 			if ($log === false) {
 				message_die($user->lang['xml_error']);
 			} else {
 				$rli->parser->parse_string($log);
 			}
-			if(isset($_POST['log_lang'])) {
-				$rli->data['log_lang'] = $in->get('log_lang');
-			}
 		}
 		$rli->raid->add_new($in->get('raid_add', 0));
-		if($_POST['checkraid'] == $user->lang['rli_calc_note_value']) {
+		if($in->get('checkraid') == $user->lang['rli_calc_note_value']) {
 			$rli->raid->recalc();
 		}
 
@@ -259,7 +229,7 @@ class raidlogimport extends EQdkp_Admin {
 		}
 	}
 
-	function display_form($messages=array())
+	function display($messages=array())
 	{
 		global $db, $core, $user, $tpl, $pm;
 		global $SID, $myHtml, $rli;
@@ -291,5 +261,4 @@ class raidlogimport extends EQdkp_Admin {
 }
 
 $raidlogimport = new raidlogimport;
-$raidlogimport->process();
 ?>
