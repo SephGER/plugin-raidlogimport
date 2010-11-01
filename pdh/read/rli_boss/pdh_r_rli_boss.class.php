@@ -27,7 +27,7 @@ class pdh_r_rli_boss extends pdh_r_generic {
 	
 	public function init() {
 		global $pdc, $db, $core;
-		$data = $pdc->get('pdh_rli_bz');
+		$data = $pdc->get('pdh_rli_boss');
 		if(!$this->data) {
 			$sql = "SELECT boss_id, boss_string, boss_note, boss_bonus, boss_timebonus, boss_diff, boss_tozone, boss_sort FROM __raidlogimport_boss;";
 			if($result = $db->query($sql)) {
@@ -45,7 +45,7 @@ class pdh_r_rli_boss extends pdh_r_generic {
 				return false;
 			}
 			$db->free_result($result);
-			$pdc->put('pdh_rli_zone', $this->data, null);
+			$pdc->put('pdh_rli_boss', $this->data, null);
 		}
 		return true;
 	}

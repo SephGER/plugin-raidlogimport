@@ -189,14 +189,14 @@ if(!class_exists('rli_member')) {
   	}
 
   	public function display($with_form=false) {
-  		global $tpl, $jquery, $rli, $core, $user;
+  		global $tpl, $jquery, $rli, $core, $user, $in;
 
 		foreach($this->members as $key => $member) {
 			if($with_form) {
 				if($this->config['s_member_rank'] & 1) {
 					$member['rank'] = $this->rank_suffix($member['name']);
 				}
-				if($_POST['checkmem'] == $user->lang['rli_go_on'].' ('.$user->lang['rli_checkmem'].')') {
+				if($in->get('checkmem') == $user->lang['rli_go_on'].' ('.$user->lang['rli_checkmem'].')') {
 					$mraids = $rli->raid->get_memberraids($member['times']);
 					$a = $rli->raid->get_attendance($member['times']);
 					if($a['att_dkp_begin'] AND !in_array($this->add_data['att_begin_raid'], $mraids)) {

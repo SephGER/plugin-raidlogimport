@@ -30,18 +30,11 @@ if(!version_compare(phpversion(), '5.1.2', '>='))
 {
     message_die('This Plugin needs at least PHP-Version 5.1.2. Your Version is: '.phpversion().'.');
 }
-if (!$pm->check(PLUGIN_INSTALLED, 'raidlogimport') )
-{
+if (!$pm->check(PLUGIN_INSTALLED, 'raidlogimport') ) {
     message_die('The Raid-Log-Import plugin is not installed.');
 }
 require_once($eqdkp_root_path.'plugins/raidlogimport/includes/functions.php');
 $rli = new rli;
-
-$_COOKIE = stripslashes_array($_COOKIE);
-$_FILES = stripslashes_array($_FILES);
-$_GET = stripslashes_array($_GET);
-$_POST = stripslashes_array($_POST);
-$_REQUEST = stripslashes_array($_REQUEST);
 
 $raidlogimport = $pm->get_plugin('raidlogimport');
 ?>

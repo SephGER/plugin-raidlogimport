@@ -3,18 +3,19 @@ function update_select(id) {
 	if(document.getElementById('type_'+id).options[1].selected == true) {
 		document.getElementById('bonus_'+id).className = 'bz_hide';
 		document.getElementById('tozone_'+id).className = 'bz_hide';
-	}
-	if(<!-- IF S_BOSSEVENT -->false<!-- ELSE -->true<!-- ENDIF -->) {
-		document.getElementById('event_'+id).className = 'bz_show';
-		document.getElementById('note_'+id).className = 'bz_hide';
+		if(<!-- IF S_BOSSEVENT -->false<!-- ELSE -->true<!-- ENDIF -->) {
+			alert("ja");
+			document.getElementById('event_'+id).className = 'bz_show';
+			document.getElementById('note_'+id).className = 'bz_hide';
+		}
 	}
  	if(document.getElementById('type_'+id).options[0].selected == true) {
  		document.getElementById('bonus_'+id).className = 'bz_show';
  		document.getElementById('tozone_'+id).className = 'bz_show';
-	}
-	if(<!-- IF S_BOSSEVENT -->false<!-- ELSE -->true<!-- ENDIF -->) {
- 		document.getElementById('event_'+id).className = 'bz_hide';
- 		document.getElementById('note_'+id).className = 'bz_show';
+		if(<!-- IF S_BOSSEVENT -->false<!-- ELSE -->true<!-- ENDIF -->) {
+			document.getElementById('event_'+id).className = 'bz_hide';
+			document.getElementById('note_'+id).className = 'bz_show';
+		}
 	}
 }
 </script>

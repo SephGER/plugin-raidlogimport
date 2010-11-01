@@ -27,11 +27,11 @@ class rli_parse {
 	private $toload = array();
 
 	public function __construct() {
-		global $rli;
-		if(isset($_POST['adjs'])) $rli->adj->load_adjs();
-		if(isset($_POST['loots']))  $rli->item->load_items();
-		if(isset($_POST['members'])) $rli->member->load_members();
-		if(isset($_POST['raids'])) $rli->raid->load_raids();
+		global $rli, $in;
+		if($in->exists('adjs')) $rli->adj->load_adjs();
+		if($in->exists('loots'))  $rli->item->load_items();
+		if($in->exists('members')) $rli->member->load_members();
+		if($in->exists('raids')) $rli->raid->load_raids();
 	}
 
 	/**

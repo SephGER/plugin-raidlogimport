@@ -1,4 +1,4 @@
-<form action="bz.php" method="post">
+<form action="bz.php" method="post" name="post">
 	<table width="100%" border="0" cellspacing="1" cellpadding="2">
         <tr>
             <th colspan="5">{L_BZ}</th>
@@ -8,7 +8,7 @@
 		</tr>
 		<!-- BEGIN zone_list -->
 		<tr>
-			<th><input type="checkbox" name="zone_id[]" value="{zone_list.ZID}" /></th>
+			<th><!-- IF zone_list.ZID --><input type="checkbox" name="bz_ids[]" value="z{zone_list.ZID}" /><!-- ENDIF --></th>
 			<th>{zone_list.ZSTRING}</th>
 			<th>{zone_list.ZNOTE}</th>
 			<th>&nbsp;</th>
@@ -16,7 +16,7 @@
 		</tr>
 		<!-- BEGIN boss_list -->
 		<tr class="{zone_list.boss_list.CLASS}">
-			<td><input type="checkbox" name="boss_id[]" value="{zone_list.boss_list.BID}" /></td>
+			<td><input type="checkbox" name="bz_ids[]" value="b{zone_list.boss_list.BID}" /></td>
 			<td>{zone_list.boss_list.BSTRING}</td>
 			<td>{zone_list.boss_list.BNOTE}</td>
 			<td>{zone_list.boss_list.BBONUS}</td>
@@ -26,8 +26,9 @@
 		<!-- END zone_list -->
 		<tr>
 			<th colspan="5">
-				<input type="submit" name="update" value="{L_UPDATE}" class="mainoption" />
-				<input type="submit" name="delete" value="{L_DELETE}" class="mainoption" />
+				<input type="submit" name="upd" value="{L_UPDATE}" class="mainoption" />
+				<input type="button" name="del" value="{L_DELETE}" class="mainoption" onclick="delete_warning();" />
+				<input type="hidden" name="del" value="1" id="mass_del_submit" disabled="disabled" />
 				<!-- IF S_DIFF -->
 					<input type="submit" name="copy" value="{L_COPY_ZONE}" class="mainoption" />
 					{DIFF_DROP}
