@@ -45,7 +45,7 @@ class raidlogimport extends admin_generic {
 		global $db, $core, $user, $tpl, $pm, $rli, $in;
 
 		if($in->exists('log')) {
-			$log = simplexml_load_string(utf8_encode(trim(str_replace("&", "and", html_entity_decode($in->get('log', '', 'htmlescape'))))));
+			$log = simplexml_load_string(utf8_encode(trim(str_replace("&", "and", html_entity_decode($_POST['log'])))));
 			if ($log === false) {
 				message_die($user->lang['xml_error']);
 			} else {

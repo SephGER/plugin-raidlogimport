@@ -369,13 +369,16 @@ class rli_raid {
 	}
 
 	public function get_checkraidlist($memberraids, $mkey) {
-		global $eqdkp_root_path, $pcache;
+		global $eqdkp_root_path, $pcache, $user;
 
 		$td = '';
 		if(!$this->th_raidlist) {
-			$pcache->CheckCreateFolder($pcache->CacheFolder.'raidlogimport');
+			$pcache->CheckCreateFolder($pcache->FolderPath('raidlogimport'));
 			foreach($this->raids as $rkey => $raid) {
 				$imagefile = $eqdkp_root_path.$pcache->FileLink('image'.$rkey.'.png', 'raidlogimport');
+				if(!$pcache->CheckCreateFile($imagefile, true)) {
+					$this->th_raidlist = '<td colspan="20">'.$user->lang['rli_error_imagecreate'].'</td>';
+				}
 				$image = imagecreate(20, 150);
 				$weiss = imagecolorallocate($image, 0xFF, 0xFF, 0xFF);
 				$schwarz = imagecolorallocate($image, 0x00, 0x00, 0x00);

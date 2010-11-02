@@ -137,6 +137,7 @@
 	$lang['rli_choose_mem'] = 'Member wählen ...';
 	$lang['rli_go_on'] = 'Weiter';
 	$lang['rli_raidatt_upd'] = 'Auf "Aktualisieren" drücken, um die Raidteilnahme mit den neuen Zeiten anzuzeigen.';
+	$lang['rli_error_imagecreate'] = 'Fehler beim erstellen der Bilddatei.';
 
 	//config
 	$lang['new_member_rank'] = 'Standard-Rang bei automatischer Erstellung';
