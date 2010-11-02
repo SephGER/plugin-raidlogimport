@@ -205,6 +205,8 @@ if(!class_exists('rli_member')) {
 					if($a['att_dkp_end'] AND !in_array($this->add_data['att_end_raid'], $mraids)) {
 						$mraids[] = $rli->add_data['att_end_raid'];
 					}
+				} else {
+					$mraids = $member['raid_list'];
 				}
 				if($this->config('member_display') == 1 AND extension_loaded('gd')) {
 					$raid_list = $rli->raid->get_checkraidlist($mraids, $key);
@@ -212,7 +214,7 @@ if(!class_exists('rli_member')) {
 				elseif($this->config('member_display') == 2 AND extension_loaded('gd')) {
 					$raid_list = $this->detailed_times_list($key, $mraids);
 				} else {
-					$raid_list = '<td>'.$jquery->MultiSelect('members['.$key.'][raid_list]', $rli->raid->raidlist(), $mraids, '200', '200', false, 'members_'.$key.'_raidlist').'</td>';
+					$raid_list = '<td>'.$jquery->MultiSelect('members['.$key.'][raid_list]', $rli->raid->raidlist(), $mraids, '200', '200', array('id' => 'members_'.$key.'_raidlist')).'</td>';
 				}
 				$att_begin = ($a['att_dkp_begin']) ? 'checked="checked"' : '';
 				$att_end = ($a['att_dkp_end']) ? 'checked="checked"' : '';
