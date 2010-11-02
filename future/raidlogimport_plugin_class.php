@@ -100,7 +100,6 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin {
 		global $user, $core;
 		//create config-data
 		$config_data = array(
-			'rli_inst_version'	=> $this->get_data('version'),
 			'new_member_rank' 	=> '1',
 			'raidcount'			=> '0', //0 = one raid, 1 = raid per hour, 2 = raid per boss, 3 = raid per hour and per boss
 			'loottime'			=> '600', //time after bosskill to assign loot to boss (in seconds)
@@ -131,7 +130,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin {
 			'att_note_end'		=> $user->lang['rli_att'].' '.$user->lang['rli_end'],	//  "	"		"	 _end-raid
 			'raid_note_time'	=> '0', 	//0: exact time (20:03:43-21:03:43); 1: hour (1. hour, 2. hour)
 			'timedkp_handle'	=> '0',		//should timedkp be given exactly(0) or fully after x minutes
-			'member_display'	=> '0',		//0: multi-dropdown; 1: checkboxes
+			'member_display'	=> '2',		//0: multi-dropdown; 1: checkboxes; 2: detailed join/leave
 			'standby_raid'		=> '0',		//0: no extra-raid for standby, 1: extra-raid, 2: attendance on normal raid
 			'standby_absolute'	=> '0',		//0: relative dkp, 1: absolute dkp
 			'standby_value'		=> '0',		//value in percent or absolute
