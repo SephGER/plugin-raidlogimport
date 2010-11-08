@@ -83,7 +83,6 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin {
 		//permissions
 		$this->add_permission('a', 'config', 'N', $user->lang['configuration'], array(2,3));
 		$this->add_permission('a', 'dkp', 'N', $user->lang['raidlogimport_dkp'], array(2,3));
-		$this->add_permission('a', 'alias', 'N', $user->lang['raidlogimport_alias'], array(2,3));
 		$this->add_permission('a', 'bz', 'N', $user->lang['raidlogimport_bz'], array(2,3));
 		
 		//pdh-modules
