@@ -128,11 +128,6 @@
 	$lang['plus_format'] = 'Bitte stell das Ausgabeformat deines Trackers auf "EQdkpPlus XML Format"';
 	$lang['magicdkp_format'] = 'Es trat ein Fehler auf.';
 	$lang['wrong_game'] = 'Das Raidlog stammt nicht aus dem unter Konfiguration angegebenen Spiel!';
-	$lang['wrong_settings'] = '<img src="$eqdkp_root_path'.'images/error.png" alt="error"> Verkehrte Einstellungen!';
-	$lang['raidcount_1'] = $lang['raidcount_2'] = $lang['raidcount_3'] = '';
-	$lang['wrong_settings_1'] = $lang['wrong_settings'].' '.$lang['raidcount_1'].' kann nicht mit keinen Zeit-Punkten kombiniert werden.';
-	$lang['wrong_settings_2'] = $lang['wrong_settings'].' '.$lang['raidcount_2'].' kann nicht mit keinen Boss-Punkten kombiniert werden.';
-	$lang['wrong_settings_3'] = $lang['wrong_settings'].' '.$lang['raidcount_3'].' kann nicht mit keinen Boss- und/oder Zeit-Punkten kombiniert werden.';
 	$lang['rli_process'] = 'Ausführen';
 	$lang['check_raidval'] = 'Raid-Werte überprüfen';
 	$lang['rli_choose_mem'] = 'Member wählen ...';
@@ -147,6 +142,12 @@
 	$lang['raidcount_1'] = 'Ein Raid pro Stunde';
 	$lang['raidcount_2'] = 'Ein Raid pro Boss';
 	$lang['raidcount_3'] = 'Ein Raid pro Stunde und pro Boss';
+	//moved from dkp
+	$lang['wrong_settings'] = '<img src="$eqdkp_root_path'.'images/error.png" alt="error"> Verkehrte Einstellungen!';
+	$lang['wrong_settings_1'] = $lang['wrong_settings'].' '.$lang['raidcount_1'].' kann nicht mit keinen Zeit-Punkten kombiniert werden.';
+	$lang['wrong_settings_2'] = $lang['wrong_settings'].' '.$lang['raidcount_2'].' kann nicht mit keinen Boss-Punkten kombiniert werden.';
+	$lang['wrong_settings_3'] = $lang['wrong_settings'].' '.$lang['raidcount_3'].' kann nicht mit keinen Boss- und/oder Zeit-Punkten kombiniert werden.';
+	//move end
 	$lang['attendence_begin'] = 'Bonus für Anwesenheit am Raidbeginn';
 	$lang['attendence_end'] = 'Bonus für Anwesenheit am Raidende';
 	$lang['config_success'] = 'Konfigurations Erfolg';
