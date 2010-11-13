@@ -27,12 +27,12 @@ include_once('./../includes/common.php');
 class Bz extends admin_generic {
 
 	public function __construct() {
-		global $user;
+		global $user, $in;
 		$user->check_auth('a_raidlogimport_bz');
 		
 		$handler = array(
-			'save' => array('process' => 'save'),
-			'copy' => array('process' => 'copy')
+			'save' => array('process' => 'save', 'session_key' => true),
+			'copy' => array('process' => 'copy', 'session_key' => true)
 		);
 		parent::__construct(false, $handler, false, null, 'bz_ids[]');
 		$this->process();
@@ -179,7 +179,7 @@ class Bz extends admin_generic {
 	}
 	
 	public function update() {
-		global $db, $core, $user, $tpl, $pm, $html, $in, $pdh, $game;
+		global $core, $user, $tpl, $pm, $html, $in, $pdh, $game;
 		if(!$this->zone_drop) {
 			$this->zone_drop = $pdh->aget('rli_zone', 'html_string', 0, array($pdh->get('rli_zone', 'id_list')));
 			$this->zone_drop[0] = $user->lang['bz_no_zone'];
@@ -199,15 +199,15 @@ class Bz extends admin_generic {
 		} else {
 			$tpl->assign_block_vars('upd_list', array(
 				'ID'		=> 'neu',
-				'STRING'	=> '',
-				'NOTE'		=> '',
-				'BONUS'		=> '',
-				'TIMEBONUS'	=> '',
+				'STRING'	=> $in->get('string'),
+				'NOTE'		=> $in->get('note'),
+				'BONUS'		=> $in->get('bonus'),
+				'TIMEBONUS'	=> $in->get('timebonus'),
 				'SORT'		=> '',
 				'BSELECTED'	=> 'true',
 				'ZSELECTED'	=> '',
-				'DIFF_ARRAY' => $html->DropDown("diff[neu]", $this->diff_drop, ''),
-				'ZONE_ARRAY' => $html->DropDown("tozone[neu]", $this->zone_drop, ''),
+				'DIFF_ARRAY' => $html->DropDown("diff[neu]", $this->diff_drop, $in->get('diff')),
+				'ZONE_ARRAY' => $html->DropDown("tozone[neu]", $this->zone_drop, $in->get('zone_id')),
 				'EVENTS'	=> $html->DropDown("event[neu]", $this->event_drop, ''),
 				'CLASS'		=> $core->switch_row_class())
 			);
@@ -233,6 +233,7 @@ class Bz extends admin_generic {
 			'page_title'        => sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang['rli_bz_bz'],
 			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'bz_upd.html',
+			'header_format'		=> $this->simple_head,
 			'display'           => true,
 			)
 		);
@@ -293,6 +294,7 @@ class Bz extends admin_generic {
 			'page_title'        => sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang['rli_bz_bz'],
 			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'bz.html',
+			'header_format'		=> $this->simple_head,
 			'display'           => true,
 			)
 		);

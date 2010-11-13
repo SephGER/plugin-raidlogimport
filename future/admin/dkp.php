@@ -244,7 +244,6 @@ class raidlogimport extends admin_generic {
 			}
 		}
 		$tpl->assign_vars(array(
-			'F_PARSE_LOG'    => 'dkp.php' . $SID,
 			'L_INSERT'		 => $user->lang['rli_dkp_insert'],
 			'L_SEND'		 => $user->lang['rli_send'],
 			'S_STEP1'        => true)

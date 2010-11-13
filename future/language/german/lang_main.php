@@ -64,6 +64,7 @@
 	$lang['bz_copy_zone'] = 'Kopiere markierte Zone (samt Bossen) zu Schwierigkeit: ';
 	$lang['bz_copy_suc'] = 'Kopieren erfolgreich.';
 	$lang['bz_no_copy'] = 'Kopieren fehlgeschlagen!';
+	$lang['bz_import_boss'] = 'Boss importieren';
 
 	//dkp
 	$lang['rli_dkp_insert'] = 'Raid-Log einfügen';
