@@ -57,7 +57,7 @@ if(!class_exists('rli_member')) {
 		settype($time, 'int');
 		foreach($this->members as $key => &$mem) {
 			if($mem['name'] == $name) {
-				if(is_array($this->members['times'][$key]) AND array_key_exists($time, $this->members['times'][$key])) {
+				if(isset($this->members['times'][$key]) AND is_array($this->members['times'][$key]) AND array_key_exists($time, $this->members['times'][$key])) {
 					unset($this->members['times'][$key][$time]);
 				} else {
 					$this->members['times'][$key][$time] = (string) $type;
@@ -162,7 +162,8 @@ if(!class_exists('rli_member')) {
 	      	$tkey = 0;
         	$new_times = array();
 	      	foreach($times as $time => $type) {
-	      		list($type, $extra) = explode('_', $type);
+				$extra = '';
+	      		if(strpos($type, '_') !== false) list($type, $extra) = explode('_', $type);
 	      		if($type == 'join') {
 	      			$new_times[$tkey] = array($type => $time);
 	      			if($extra) {

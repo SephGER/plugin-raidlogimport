@@ -99,7 +99,7 @@ class rli_parse {
 					}
 				}
 			}
-			if(strpos($val, 'function:') !== false) {
+			if(strpos((string)$val, 'function:') !== false) {
 				$func = str_replace('function:', '', $val);
 				$back = call_user_func($func, $xml->name, $back);
 			}
