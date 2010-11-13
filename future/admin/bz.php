@@ -299,7 +299,8 @@ class Bz extends admin_generic {
 	}
 	
 	private function assign2tpl($zone_id, $sorting, $tozone) {
-		global $tpl, $pdh, $user, $core;
+		global $tpl, $pdh, $user, $core, $jquery;
+		$jquery->Collapse('zone_'.$zone_id);
 		$tpl->assign_block_vars('zone_list', array(
 			'ZID'		=> $zone_id,
 			'ZSTRING'	=> ($zone_id) ? $pdh->geth('rli_zone', 'string', array($zone_id)) : $user->lang['bz_boss_oz'],

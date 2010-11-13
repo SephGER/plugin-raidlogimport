@@ -88,7 +88,7 @@ class pdh_r_rli_boss extends pdh_r_generic {
 			$icon = ($with_icon) ? $game->decorate('events', array($this->get_note($id))) : '';
 			return $icon.$pdh->get('event', 'name', array($this->get_note($id)));
 		}
-		$suffix = ($core->config['raidlogimport']['dep_match'] AND $game->get_game() == 'wow') ? $core->config['raidlogimport']['diff_'.$this->get_diff($id)] : '';
+		$suffix = ($this->get_diff($id) AND $core->config['raidlogimport']['dep_match'] AND $game->get_game() == 'wow') ? $core->config['raidlogimport']['diff_'.$this->get_diff($id)] : '';
 		return $this->get_note($id).$suffix;
 	}
 	

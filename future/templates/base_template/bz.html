@@ -1,5 +1,5 @@
 <form action="bz.php" method="post" name="post">
-	<table width="100%" border="0" cellspacing="1" cellpadding="2">
+	<table width="100%" border="0" cellspacing="1" cellpadding="1">
         <tr>
             <th colspan="5">{L_BZ}</th>
         </tr>
@@ -8,21 +8,37 @@
 		</tr>
 		<!-- BEGIN zone_list -->
 		<tr>
-			<th><!-- IF zone_list.ZID --><input type="checkbox" name="bz_ids[]" value="z{zone_list.ZID}" /><!-- ENDIF --></th>
-			<th>{zone_list.ZSTRING}</th>
-			<th>{zone_list.ZNOTE}</th>
-			<th>&nbsp;</th>
-			<th>{zone_list.ZTIMEBONUS}</th>
+			<td colspan="5">
+				<div id="zone_{zone_list.ZID}">
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<th width="10"><!-- IF zone_list.ZID --><input type="checkbox" name="bz_ids[]" value="z{zone_list.ZID}" /><!-- ENDIF --></th>
+						<th width="35%"><div class="toggle_button"><span class="togglebutton_name">{zone_list.ZSTRING}</span></div></th>
+						<th width="35%">{zone_list.ZNOTE}</th>
+						<th>&nbsp;</th>
+						<th>{zone_list.ZTIMEBONUS}</th>
+					</tr>
+					<!-- BEGIN boss_list -->
+					<tr>
+						<td colspan="5">
+							<div class="toggle_container">
+							<table width="100%" border="0" cellspacing="1" cellpadding="2">
+								<tr class="{zone_list.boss_list.CLASS}">
+									<td width="10"><input type="checkbox" name="bz_ids[]" value="b{zone_list.boss_list.BID}" /></td>
+									<td width="35%">{zone_list.boss_list.BSTRING}</td>
+									<td width="35%">{zone_list.boss_list.BNOTE}</td>
+									<td>{zone_list.boss_list.BBONUS}</td>
+									<td>{zone_list.boss_list.BTIMEBONUS}</td>
+								</tr>
+							</table>
+							</div>
+						</td>
+					</tr>
+					<!-- END boss_list -->
+				</table>
+				</div>
+			</td>
 		</tr>
-		<!-- BEGIN boss_list -->
-		<tr class="{zone_list.boss_list.CLASS}">
-			<td><input type="checkbox" name="bz_ids[]" value="b{zone_list.boss_list.BID}" /></td>
-			<td>{zone_list.boss_list.BSTRING}</td>
-			<td>{zone_list.boss_list.BNOTE}</td>
-			<td>{zone_list.boss_list.BBONUS}</td>
-			<td>{zone_list.boss_list.BTIMEBONUS}</td>
-		</tr>
-		<!-- END boss_list -->
 		<!-- END zone_list -->
 		<tr>
 			<th colspan="5">
