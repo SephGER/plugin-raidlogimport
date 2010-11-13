@@ -181,6 +181,7 @@ class RLI_Settings extends admin_generic
 							list($num_of_opt, $name) = explode(':', $name);
 							$value = $rli->config($name);
 							$pv = array(0,1,2,4,8,16,32);
+							$holder[$holde][$k]['value'] = '';
 							for($i=1; $i<=$num_of_opt; $i++) {
 								$checked = ($value & $pv[$i]) ? 'checked="checked"' : '';
 								$holder[$holde][$k]['value'] .= "<nobr><input type='checkbox' name='".$name."[]' value='".$pv[$i]."' ".$checked." />".$user->lang[$name.'_'.$pv[$i]]."</nobr>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -208,14 +209,14 @@ class RLI_Settings extends admin_generic
 			);
 			$num++;
 			foreach($hold as $nava) {
-				$add = ($user->lang[$nava['name'].'_help']) ? $user->lang[$nava['name'].'_help'] : '';
+				$add = (isset($user->lang[$nava['name'].'_help'])) ? $user->lang[$nava['name'].'_help'] : '';
 				if($nava['name'] == 'member_display') {
 					$add = sprintf($add, (extension_loaded('gd')) ? '<span class=\\\'positive\\\'>'.$info['GD Version'].'</span>' : $user->lang['no_gd_lib']);
 				}
 				if($add != '') {
 					$add = ' <span id="h'.$nava['name'].'"><img alt="help" src="'.$eqdkp_root_path.'images/info.png"'.$jquery->tooltip('h'.$nava['name'], '', $add, false, true, false).' /></span>';
 				}
-				$warn = ($user->lang[$nava['name'].'_warn']) ? $user->lang[$nava['name'].'_warn'] : '';
+				$warn = (isset($user->lang[$nava['name'].'_warn'])) ? $user->lang[$nava['name'].'_warn'] : '';
 				if($warn != '') {
 					$warn = ' <span id="w'.$nava['name'].'"><img width="16" height="16" alt="help" src="'.$eqdkp_root_path.'images/error.png"'.$jquery->tooltip('w'.$nava['name'], '', $warn, false, true, false).' /></span>';
 				}
