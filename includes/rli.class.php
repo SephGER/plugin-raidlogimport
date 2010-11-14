@@ -189,6 +189,7 @@ if(!class_exists('rli'))
 		{
 			foreach($this->bonus['boss'] as $boss)
 			{
+				if($bosskill['diff'] === false) $bosskill['diff'] = $this->diff;
 				if(in_array($bosskill['name'], $boss['string']) AND $bosskill['time'] >= $begin AND $bosskill['time'] <= $end
 				   AND (($boss['diff'] AND $bosskill['diff'] == $boss['diff']) OR !$boss['diff'])) {
 					$rbosskills[$i]['name'] = $bosskill['name'];
@@ -542,7 +543,11 @@ if(!class_exists('rli'))
 
 						//value
 						$raids[$key]['value'] = $this->get_raidvalue($raids[$key]['begin'], $raids[$key]['end'], $raids[$key]['bosskills'], $raids[$key]['timebonus'], $raids[$key]['event'], true);
-						$key++;
+						if(!is_array($raids[$key]['bosskills'])) {
+							unset($raids[$key]);
+						} else {
+							$key++;
+						}
 					}
 				} else {
 					$raids[$key]['begin'] = $zone['enter'];
@@ -579,7 +584,7 @@ if(!class_exists('rli'))
 	                //note
 	                if($this->config['raid_note_time'])
 	                {
-	                  	$raid[$key]['note'] = $tc.'. '.$user->lang['rli_hour'];
+	                  	$raids[$key]['note'] = $tc.'. '.$user->lang['rli_hour'];
 	                  	$tc++;
 	                }
 	                else
@@ -623,7 +628,11 @@ if(!class_exists('rli'))
 
 						//value
 						$raids[$key]['value'] = $this->get_raidvalue($raids[$key]['begin'], $raids[$key]['end'], $raids[$key]['bosskills'], $raids[$key]['timebonus'], $raids[$key]['event'], true);
-						$key++;
+						if(!is_array($raids[$key]['bosskills'])) {
+							unset($raids[$key]);
+						} else {
+							$key++;
+						}
 					}
 				}
 				break;
@@ -1301,7 +1310,7 @@ if(!class_exists('rli'))
 			$this->data['bosskills'][$key] = array(
 				'name'	=> trim(utf8_decode($bosskill->name)),
 				'time'	=> (int) trim($bosskill->time),
-				'diff'  => (int) trim($bosskill->difficulty)
+				'diff'  => (isset($bosskill->difficulty)) ? (int) trim($bosskill->difficulty) : false,
 			);
 			$key++;
 		}

@@ -29,7 +29,7 @@ if ( !defined('EQDKP_INC') )
 class raidlogimport_Plugin_Class extends EQdkp_Plugin
 {
 	var $vstatus = 'Stable';
-	var $version = '0.5.6.3';
+	var $version = '0.5.6.4';
 	var $fwversion = '1.0.3';
 	var $jqversion = '2.0.1';
 

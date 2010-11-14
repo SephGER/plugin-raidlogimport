@@ -257,14 +257,15 @@ class raidlogimport extends EQdkp_Admin
 	           		}
 		        }
 		        $begin = $rli->data['raids'][1]['begin'];
-		        $end = $rli->data['raids'][count($rli->data['raids'])]['end'];
+				$lrkey = (isset($rli->data['raids'][0])) ? count($rli->data['raids'])-1 : count($rli->data['raids']);
+		        $end = $rli->data['raids'][$lrkey]['end'];
 	            $att_dkp = $rli->calculate_attendence($member['times'], $begin, $end);
 	            $member['att_dkp_begin'] = $att_dkp['begin'];
-	            if($att_dkp['begin'] AND !in_array($att_raids['begin'], $member['raid_list'])) {
+	            if($att_dkp['begin'] > 0 AND !in_array($att_raids['begin'], $member['raid_list'])) {
 	            	$member['raid_list'][] = $att_raids['start'];
 	            }
 	            $member['att_dkp_end'] = $att_dkp['end'];
-	            if($att_dkp['end'] AND !in_array($att_raids['end'], $member['raid_list'])) {
+	            if($att_dkp['end'] > 0 AND !in_array($att_raids['end'], $member['raid_list'])) {
 	            	$member['raid_list'][] = $att_raids['end'];
 	            }
 	        }
