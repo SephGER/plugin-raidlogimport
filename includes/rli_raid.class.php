@@ -53,16 +53,12 @@ class rli_raid {
 	}
 
 	public function load_raids() {
-		global $in, $pdh;
+		global $in, $pdh, $time;
 		$this->raids = array();
 		foreach($_POST['raids'] as $key => $raid) {
 			if(!isset($raid['delete'])) {
-				list($day, $month, $year) = explode('.', $in->get('raids:'.$key.':start_date','1.1.1970'), 3);
-				list($hour, $min, $sec) = explode(':', $in->get('raids:'.$key.':start_time','00:00:00'), 3);
-				$this->raids[$key]['begin'] = mktime($hour, $min, $sec, $month, $day, $year);
-				list($day, $month, $year) = explode('.', $in->get('raids:'.$key.':end_date','1.1.1970'), 3);
-				list($hour, $min, $sec) = explode(':', $in->get('raids:'.$key.':end_time','00:00:00'), 3);
-				$this->raids[$key]['end'] = mktime($hour, $min, $sec, $month, $day, $year);
+				$this->raids[$key]['begin'] = $time->fromformat($in->get('raids:'.$key.':start_date'), 1);
+				$this->raids[$key]['end'] = $time->fromformat($in->get('raids:'.$key.':end_date'), 1);
 				$this->raids[$key]['note'] = $in->get('raids:'.$key.':note');
 				$this->raids[$key]['value'] = runden(floatvalue($in->get('raids:'.$key.':value', '0.0')));
 				$this->raids[$key]['timebonus'] = runden(floatvalue($in->get('raids:'.$key.':timebonus', '0.0')));
@@ -73,9 +69,7 @@ class rli_raid {
 				if(is_array($raid['bosskills'])) {
 					foreach($raid['bosskills'] as $u => $bk) {
 						if(!isset($bk['delete'])) {
-							list($hour, $min, $sec) = explode(':', $in->get('raids:'.$key.':bosskills:'.$u.':time', '00:00:00'), 3);
-							list($day, $month, $year) = explode('.', $in->get('raids:'.$key.':bosskills:'.$u.':date', '1.1.1970'), 3);
-							$bosskills[$u]['time'] = mktime($hour, $min, $sec, $month, $day, $year);
+							$bosskills[$u]['time'] = $time->fromformat($in->get('raids:'.$key.':bosskills:'.$u.':date'), 1);
 							$bosskills[$u]['bonus'] = runden(floatvalue($in->get('raids:'.$key.':bosskills:'.$u.':bonus', '0.0')));
 							$bosskills[$u]['timebonus'] = runden(floatvalue($in->get('raids:'.$key.':bosskills:'.$u.':timebonus', '0.0')));
 							$bosskills[$u]['id'] = $in->get('raids:'.$key.':bosskills:'.$u.':id');
@@ -202,7 +196,7 @@ class rli_raid {
 	}
 
 	public function display($with_form=false) {
-		global $tpl, $html, $core, $rli, $pdh, $user, $jquery;
+		global $tpl, $html, $core, $rli, $pdh, $user, $jquery, $time;
 		
 		if(!isset($this->event_drop)) {
 			$this->event_drop = $pdh->aget('event', 'name', 0, array($pdh->get('event', 'id_list')));
@@ -227,12 +221,12 @@ class rli_raid {
 			if(isset($rai['bosskill_add'])) {
 				$this->new_bosskill($ky, $rai['bosskill_add']);
 			}
+			$begin = $time->user_date($rai['begin'], true);
+			$end = $time->user_date($rai['end'], true);
 			$tpl->assign_block_vars('raids', array(
 				'COUNT'     => $ky,
-				'START_DATE'=> ($with_form) ? $jquery->Calendar("raids[".$ky."][start_date]", date('d.m.Y', $rai['begin']), '', array('id' => 'raids_'.$ky.'_start_date')) : date('d.m.Y', $rai['begin']),
-				'START_TIME'=> date('H:i:s', $rai['begin']),
-				'END_DATE'	=> ($with_form) ? $jquery->Calendar("raids[".$ky."][end_date]", date('d.m.Y', $rai['end']), '', array('id' => 'raids_'.$ky.'_end_date')) : date('d.m.Y', $rai['end']),
-				'END_TIME'	=> date('H:i:s', $rai['end']),
+				'START_DATE'=> ($with_form) ? $jquery->Calendar("raids[".$ky."][start_date]", $begin, '', array('id' => 'raids_'.$ky.'_start_date', 'timepicker' => true)) : $begin,
+				'END_DATE'	=> ($with_form) ? $jquery->Calendar("raids[".$ky."][end_date]", $end, '', array('id' => 'raids_'.$ky.'_end_date', 'timepicker' => true)) : $end,
 				'EVENT'		=> ($with_form) ? $html->DropDown('raids['.$ky.'][event]', $this->event_drop, $rai['event']) : $pdh->get('event', 'name', array($rai['event'])),
 				'TIMEBONUS'	=> $rai['timebonus'],
 				'VALUE'		=> $rai['value'],
@@ -256,8 +250,7 @@ class rli_raid {
 						}
 						$tpl->assign_block_vars('raids.bosskills', array(
 							'BK_SELECT' => $name_field,
-							'BK_TIME'   => date('H:i:s', $bk['time']),
-							'BK_DATE'   => $jquery->Calendar("raids[".$ky."][bosskills][".$xy."][date]", date('d.m.Y', $bk['time']), '', array('id' => 'raids_'.$ky.'_boss_'.$xy.'_date')),
+							'BK_DATE'   => $jquery->Calendar("raids[".$ky."][bosskills][".$xy."][date]", $time->user_date($bk['time'], true), '', array('id' => 'raids_'.$ky.'_boss_'.$xy.'_date', 'timepicker' => true)),
 							'BK_BONUS'  => $bk['bonus'],
 							'BK_TIMEBONUS' => $bk['timebonus'],
 							'BK_DIFF'	=> $html->DropDown('raids['.$ky.'][bosskills]['.$xy.'][diff]', $this->diff_drop, $bk['diff'], '', '', 'input', $html_id.'_diff'),
