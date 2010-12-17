@@ -184,7 +184,7 @@ class RLI_Settings extends admin_generic
 							$holder[$holde][$k]['value'] = '';
 							for($i=1; $i<=$num_of_opt; $i++) {
 								$checked = ($value & $pv[$i]) ? 'checked="checked"' : '';
-								$holder[$holde][$k]['value'] .= "<nobr><input type='checkbox' name='".$name."[]' value='".$pv[$i]."' ".$checked." />".$user->lang[$name.'_'.$pv[$i]]."</nobr>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+								$holder[$holde][$k]['value'] .= "<span class='nowrap'><input type='checkbox' name='".$name."[]' value='".$pv[$i]."' ".$checked." />".$user->lang[$name.'_'.$pv[$i]]."</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 							}
 							$holder[$holde][$k]['name'] = $name;
 							break;
