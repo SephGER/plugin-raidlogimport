@@ -202,7 +202,7 @@ class rli_raid {
 			$this->event_drop = $pdh->aget('event', 'name', 0, array($pdh->get('event', 'id_list')));
 			asort($this->event_drop);
 		}
-		if(!isset($this->diff_drop)) $this->diff_drop = array($user->lang['diff_0'], $user->lang['diff_1'], $user->lang['diff_2'], $user->lang['diff_3'], $user->lang['diff_4']);
+		if(!isset($this->diff_drop)) $this->diff_drop = array($user->lang('diff_0'), $user->lang('diff_1'), $user->lang('diff_2'), $user->lang('diff_3'), $user->lang('diff_4'));
 		if(!isset($this->bk_list)) {
 			$this->bk_list = $pdh->aget('rli_boss', 'html_note', 0, array($pdh->get('rli_boss', 'id_list'), false));
 			asort($this->bk_list);
@@ -231,7 +231,7 @@ class rli_raid {
 				'TIMEBONUS'	=> $rai['timebonus'],
 				'VALUE'		=> $rai['value'],
 				'NOTE'		=> $rai['note'],
-				'DIFF'		=> ($with_form) ? $html->DropDown('raids['.$ky.'][diff]', $this->diff_drop, $rai['diff']) : $user->lang['diff_'.$rai['diff']],
+				'DIFF'		=> ($with_form) ? $html->DropDown('raids['.$ky.'][diff]', $this->diff_drop, $rai['diff']) : $user->lang('diff_'.$rai['diff']),
 				'BOSSKILLS' => $bosskills)
 			);
 			if($with_form) {
@@ -245,7 +245,7 @@ class rli_raid {
 							$params = "&string=' + $('#".$html_id."_id').val() + '&bonus=' + $('#".$html_id."_bonus').val() + '&timebonus=' + $('#".$html_id."_timebonus').val() + '&diff=' + $('#".$html_id."_diff').val()";
 							$params .= " + '&note=' + $('#".$html_id."_id').val()";
 							$onclosejs = "$('#onclose_submit').removeAttr('disabled'); $('form:first').submit();";
-							$jquery->Dialog($html_id, $user->lang['bz_import_boss'], array('url' => "bz.php?simple_head=simple&upd=true".$params." + '&", 'width' => 1200, 'onclosejs' => $onclosejs));
+							$jquery->Dialog($html_id, $user->lang('bz_import_boss'), array('url' => "bz.php?simple_head=simple&upd=true".$params." + '&", 'width' => 1200, 'onclosejs' => $onclosejs));
 							$import = true;
 						}
 						$tpl->assign_block_vars('raids.bosskills', array(
@@ -387,7 +387,7 @@ class rli_raid {
 			foreach($this->raids as $rkey => $raid) {
 				$imagefile = $eqdkp_root_path.$pcache->FileLink('image'.$rkey.'.png', 'raidlogimport');
 				if(!$pcache->CheckCreateFile($imagefile, true)) {
-					$this->th_raidlist = '<td colspan="20">'.$user->lang['rli_error_imagecreate'].'</td>';
+					$this->th_raidlist = '<td colspan="20">'.$user->lang('rli_error_imagecreate').'</td>';
 				}
 				$image = imagecreate(20, 150);
 				$weiss = imagecolorallocate($image, 0xFF, 0xFF, 0xFF);
@@ -658,7 +658,7 @@ class rli_raid {
 				return date('H:i', $this->raids[$key]['begin']).' - '.date('H:i', $this->raids[$key]['end']);
 			} else {
 				$this->hour_count++;
-				return $this->hour_count.'. '.$user->lang['rli_hour'];
+				return $this->hour_count.'. '.$user->lang('rli_hour');
 			}
 		} else {
 			foreach ($this->raids[$key]['bosskills'] as $bosskill) {

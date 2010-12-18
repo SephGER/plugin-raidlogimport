@@ -80,8 +80,8 @@ class rli_item {
 				settype($dic, 'int');
 				$page = 1;
 
-				if(!(strpos($in->get('checkitem'), $user->lang['rli_itempage']) === false)) {
-					$page = str_replace($user->lang['rli_itempage'], '', $in->get('checkitem'));
+				if(!(strpos($in->get('checkitem'), $user->lang('rli_itempage')) === false)) {
+					$page = str_replace($user->lang('rli_itempage'), '', $in->get('checkitem'));
 				}
 				if($page >= 1) {
 					$start = ($page-1)*$dic;
@@ -100,7 +100,7 @@ class rli_item {
 				if(($start <= $key AND $key < $end) OR !$with_form) {
 					if($with_form) {
 						$member_select = "<select size='1' name='loots[".$key."][member]'>";
-						$member_select .= "<option disabled ".((in_array($item['member'], $members)) ? "" : "selected='selected'").">".$user->lang['rli_choose_mem']."</option>";
+						$member_select .= "<option disabled ".((in_array($item['member'], $members)) ? "" : "selected='selected'").">".$user->lang('rli_choose_mem')."</option>";
 						foreach($members as $mn => $mem) {
 							$member_select .= "<option value='".$mn."' ".(($mn == $item['member']) ? "selected='selected'" : "").">".$mem."</option>";
 						}
@@ -132,13 +132,13 @@ class rli_item {
 			}
 		}
 		if($end <= $p AND $end) {
-			$next_button = '<input type="submit" name="checkitem" value="'.$user->lang['rli_itempage'].(($page) ? $page : 2).'" class="mainoption" />';
+			$next_button = '<input type="submit" name="checkitem" value="'.$user->lang('rli_itempage').(($page) ? $page : 2).'" class="mainoption" />';
 		} elseif($end+$dic >= $p AND $dic) {
-			$next_button .= ' <input type="submit" name="checkitem" value="'.$user->lang['rli_itempage'].(($page) ? $page : 2).'" class="mainoption" />';
+			$next_button .= ' <input type="submit" name="checkitem" value="'.$user->lang('rli_itempage').(($page) ? $page : 2).'" class="mainoption" />';
 		} elseif($rli->config('deactivate_adj')) {
-			$next_button = '<input type="submit" name="insert" value="'.$user->lang['rli_go_on'].' ('.$user->lang['rli_insert'].')" class="mainoption" />';
+			$next_button = '<input type="submit" name="insert" value="'.$user->lang('rli_go_on').' ('.$user->lang('rli_insert').')" class="mainoption" />';
 		} else {
-			$next_button = '<input type="submit" name="checkadj" value="'.$user->lang['rli_go_on'].' ('.$user->lang['rli_checkadj'].')" class="mainoption" />';
+			$next_button = '<input type="submit" name="checkadj" value="'.$user->lang('rli_go_on').' ('.$user->lang('rli_checkadj').')" class="mainoption" />';
 		}
 		$tpl->assign_var('NEXT_BUTTON', $next_button);
 	}

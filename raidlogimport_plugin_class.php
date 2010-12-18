@@ -55,7 +55,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin {
 		$lang_file = $eqdkp_root_path.'plugins/raidlogimport/language/'.$user->lang_name.'/'.$core->config['default_game'].'_lang.php';
 		if(file_exists($lang_file)) {
 			include($lang_file);
-			$user->lang = (@is_array($lang)) ? array_merge($user->lang, $lang) : $user->lang;
+			$user->add_lang($user->lang_name, $lang);
 		}
 
 		$this->add_dependency(array(
@@ -72,8 +72,8 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin {
 			'template_path' 	=> 'plugins/raidlogimport/templates/',
 			'version'			=> $this->version,
 			'author'			=> 'Hoofy',
-			'description'		=> $user->lang['raidlogimport_short_desc'],
-			'long_description'	=> $user->lang['raidlogimport_long_desc'],
+			'description'		=> $user->lang('raidlogimport_short_desc'),
+			'long_description'	=> $user->lang('raidlogimport_long_desc'),
 			'homepage'			=> 'http://www.eqdkp-plus.com',
 			'manuallink'		=> ($user->lang_name != 'german') ? false : $eqdkp_root_path . 'plugins/raidlogimport/language/'.$user->lang_name.'/Manual.pdf',
 			'build'				=> $this->build,
@@ -81,9 +81,9 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin {
 		);
 
 		//permissions
-		$this->add_permission('a', 'config', 'N', $user->lang['configuration'], array(2,3));
-		$this->add_permission('a', 'dkp', 'N', $user->lang['raidlogimport_dkp'], array(2,3));
-		$this->add_permission('a', 'bz', 'N', $user->lang['raidlogimport_bz'], array(2,3));
+		$this->add_permission('a', 'config', 'N', $user->lang('configuration'), array(2,3));
+		$this->add_permission('a', 'dkp', 'N', $user->lang('raidlogimport_dkp'), array(2,3));
+		$this->add_permission('a', 'bz', 'N', $user->lang('raidlogimport_bz'), array(2,3));
 		
 		//pdh-modules
 		$this->add_pdh_read_module('rli_zone');
@@ -125,8 +125,8 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin {
 			's_member_rank'		=> '0',		//show member_rank? (0: no, 1: memberpage, 2: lootpage, 4: adjustmentpage, 3:member+lootpage, 5:adjustments+memberpage, 6: loot+adjustmentpage, 7: overall)
 			'member_start'		=> '0',		//amount of DKP a member gains as an individual adjustment, when he is auto-created
 			'member_start_event' => '0',	//event for Start-DKP
-			'att_note_begin'	=> $user->lang['rli_att'].' '.$user->lang['rli_start'],	//note for attendence_start-raid
-			'att_note_end'		=> $user->lang['rli_att'].' '.$user->lang['rli_end'],	//  "	"		"	 _end-raid
+			'att_note_begin'	=> $user->lang('rli_att').' '.$user->lang('rli_start'),	//note for attendence_start-raid
+			'att_note_end'		=> $user->lang('rli_att').' '.$user->lang('rli_end'),	//  "	"		"	 _end-raid
 			'raid_note_time'	=> '0', 	//0: exact time (20:03:43-21:03:43); 1: hour (1. hour, 2. hour)
 			'timedkp_handle'	=> '0',		//should timedkp be given exactly(0) or fully after x minutes
 			'member_display'	=> '2',		//0: multi-dropdown; 1: checkboxes; 2: detailed join/leave
@@ -135,7 +135,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin {
 			'standby_value'		=> '0',		//value in percent or absolute
 			'standby_att'		=> '0', 	//shall standbys get att start/end?
 			'standby_dkptype'	=> '0',		//which dkp shall standbys get? (1 boss, 2 time, 4 event)
-			'standby_raidnote'	=> $user->lang['standby_raid_note'],		//note for standby-raid
+			'standby_raidnote'	=> $user->lang('standby_raid_note'),		//note for standby-raid
 			'member_raid'		=> '50',	//percent which member has to be in raid, to gain assignment to raid
 		);
 		if(strtolower($core->config['default_game']) == 'wow') {
@@ -224,20 +224,20 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin {
 			$admin_menu = array(
 				'raidlogimport' => array(
 					'icon' => './../../plugins/raidlogimport/images/report.png',
-					'name' => $user->lang['raidlogimport'],
+					'name' => $user->lang('raidlogimport'),
 					1 => array(
 						'link' => 'plugins/' . $this->get_data('path') . '/admin/settings.php'.$SID,
-						'text' => $user->lang['settings'],
+						'text' => $user->lang('settings'),
 						'check' => 'a_raidlogimport_config',
 						'icon' => 'settings.png'),
 					2 => array(
 						'link' => 'plugins/' . $this->get_data('path') . '/admin/bz.php'.$SID,
-						'text' => $user->lang['raidlogimport_bz'],
+						'text' => $user->lang('raidlogimport_bz'),
 						'check' => 'a_raidlogimport_bz',
 						'icon' => './../../plugins/raidlogimport/images/report_edit.png'),
 					3 => array(
 						'link' => 'plugins/' . $this->get_data('path') . '/admin/dkp.php'.$SID,
-						'text' => $user->lang['raidlogimport_dkp'],
+						'text' => $user->lang('raidlogimport_dkp'),
 						'check' => 'a_raidlogimport_dkp',
 						'icon' => './../../plugins/raidlogimport/images/report_add.png')
 				)

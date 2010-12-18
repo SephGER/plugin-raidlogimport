@@ -47,13 +47,13 @@ class raidlogimport extends admin_generic {
 		if($in->exists('log')) {
 			$log = simplexml_load_string(utf8_encode(trim(str_replace("&", "and", html_entity_decode($_POST['log'])))));
 			if ($log === false) {
-				message_die($user->lang['xml_error']);
+				message_die($user->lang('xml_error'));
 			} else {
 				$rli->parser->parse_string($log);
 			}
 		}
 		$rli->raid->add_new($in->get('raid_add', 0));
-		if($in->get('checkraid') == $user->lang['rli_calc_note_value']) {
+		if($in->get('checkraid') == $user->lang('rli_calc_note_value')) {
 			$rli->raid->recalc();
 		}
 
@@ -69,7 +69,7 @@ class raidlogimport extends admin_generic {
 		$rli->destroy();
 
 		$core->set_vars(array(
-			'page_title'        => sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang['rli_check_data'],
+			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang('rli_check_data'),
 			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'rli_step2raids.html',
 			'display'           => true)
@@ -102,7 +102,7 @@ class raidlogimport extends admin_generic {
 		$rli->destroy();
 
 		$core->set_vars(array(
-			'page_title'        => sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang['rli_check_data'],
+			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang('rli_check_data'),
 			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => ($rli->config('member_display') == 2) ? 'rli_step2dmems.html' : 'rli_step2mems.html',
 			'display'           => true)
@@ -129,7 +129,7 @@ class raidlogimport extends admin_generic {
 		$rli->destroy();
 		
 		$core->set_vars(array(
-			'page_title'        => sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang['rli_check_data'],
+			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang('rli_check_data'),
 			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'rli_step2items.html',
 			'display'           => true)
@@ -158,7 +158,7 @@ class raidlogimport extends admin_generic {
 		$rli->destroy();
 		
 		$core->set_vars(array(
-			'page_title'        => sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang['rli_check_data'],
+			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang('rli_check_data'),
 			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'rli_step2adj.html',
 			'display'           => true)
@@ -182,11 +182,11 @@ class raidlogimport extends admin_generic {
 				$pm->do_hooks('/plugins/raidlogimport/admin/dkp.php');
 				$pdh->process_hook_queue();
 				$rli->flush_cache();
-				$message[] = $user->lang['bz_save_suc'];
+				$message[] = $user->lang('bz_save_suc');
 			} else {
 				$db->query("ROLLBACK;");
 				$rli->destroy();
-				$message[] = $user->lang['rli_error'];
+				$message[] = $user->lang('rli_error');
 			}
 			foreach($message as $answer) {
 				$tpl->assign_block_vars('sucs', array(
@@ -195,32 +195,32 @@ class raidlogimport extends admin_generic {
 				);
 			}
 			$tpl->assign_vars(array(
-				'L_SUCCESS' => $user->lang['rli_success'],
-				'L_LINKS'	=> $user->lang['links'])
+				'L_SUCCESS' => $user->lang('rli_success'),
+				'L_LINKS'	=> $user->lang('links'))
 			);
 	
 			$core->set_vars(array(
-				'page_title'        => sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang['rli_imp_suc'],
+				'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang('rli_imp_suc'),
 				'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
 				'template_file'     => 'success.html',
 				'display'           => true)
 			);
 		} else {
 			unset($_POST);
-			$check = $user->lang['rli_missing_values'].'<br />';
+			$check = $user->lang('rli_missing_values').'<br />';
 			foreach($bools['false'] as $loc => $la) {
 				if($la == 'miss') {
-					$check .= $user->lang['rli_'.$loc.'_needed'];
+					$check .= $user->lang('rli_'.$loc.'_needed');
 				}
-				$check .= '<input type="submit" name="check'.$loc.'" value="'.$user->lang['rli_check'.$loc].'" class="mainoption" /><br />';
+				$check .= '<input type="submit" name="check'.$loc.'" value="'.$user->lang('rli_check'.$loc).'" class="mainoption" /><br />';
 			}
 			$tpl->assign_vars(array(
-				'L_NO_IMP_SUC'	=> $user->lang['rli_imp_no_suc'],
+				'L_NO_IMP_SUC'	=> $user->lang('rli_imp_no_suc'),
 				'CHECK'			=> $check)
 			);
 			$rli->destroy();
 			$core->set_vars(array(
-				'page_title'		=> sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang['rli_imp_no_suc'],
+				'page_title'		=> sprintf($user->lang('admin_title_prefix'), $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang('rli_imp_no_suc'),
 				'template_path'		=> $pm->get_data('raidlogimport', 'template_path'),
 				'template_file'		=> 'check_input.html',
 				'display'			=> true,
@@ -240,17 +240,17 @@ class raidlogimport extends admin_generic {
 				if(is_array($message)) {
 					$message = implode(',<br />', $message);
 				}
-				System_Message($message, $user->lang[$title].':', $type);
+				System_Message($message, $user->lang($title).':', $type);
 			}
 		}
 		$tpl->assign_vars(array(
-			'L_INSERT'		 => $user->lang['rli_dkp_insert'],
-			'L_SEND'		 => $user->lang['rli_send'],
+			'L_INSERT'		 => $user->lang('rli_dkp_insert'),
+			'L_SEND'		 => $user->lang('rli_send'),
 			'S_STEP1'        => true)
 		);
 
 		$core->set_vars(array(
-			'page_title'        => sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '."DKP String",
+			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config['guildtag'], $core->config['dkp_name']).': '."DKP String",
 			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'rli_step1.html',
 			'display'           => true,

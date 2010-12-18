@@ -145,7 +145,7 @@ class rli_parse {
 
 		if(	(trim($xml->head->gameinfo->game) == 'Runes of Magic' AND $core->config['default_game'] != 'rom') OR
 			(trim($xml->head->gameinfo->game) == 'World of Warcraft' AND $core->config['default_game'] != 'wow')) {
-				message_die($user->lang['wrong_game']);
+				message_die($user->lang('wrong_game'));
 		}
 		$lang = trim($xml->head->gameinfo->language);
 		$rli->add_data['log_lang'] = substr($lang, 0, 2);
@@ -325,10 +325,10 @@ class rli_parse {
 				$rli->raid->recalc(true);
 				$rli->member->finish();
 			} else {
-				message_die($user->lang['wrong_format'].' '.$user->lang[$rli->config('parser').'_format'].'<br />'.$user->lang['rli_miss'].implode(', ', $back[2]));
+				message_die($user->lang('wrong_format').' '.$user->lang($rli->config('parser').'_format').'<br />'.$user->lang('rli_miss').implode(', ', $back[2]));
 			}
 		} else {
-			message_die($user->lang['no_parser']);
+			message_die($user->lang('no_parser'));
 		}
 	}
 

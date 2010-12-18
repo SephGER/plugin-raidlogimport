@@ -37,8 +37,8 @@ $reloadSETT = 'settings.php';
 
 global $user;
 $updateSQL = array(
-	"INSERT INTO __raidlogimport_config (config_name, config_value) VALUES ('att_note_begin', '".$user->lang['rli_att']." ".$user->lang['rli_start']."');",
-	"INSERT INTO __raidlogimport_config (config_name, config_value) VALUES ('att_note_end', '".$user->lang['rli_att']." ".$user->lang['rli_end']."');",
+	"INSERT INTO __raidlogimport_config (config_name, config_value) VALUES ('att_note_begin', '".$user->lang('rli_att')." ".$user->lang('rli_start')."');",
+	"INSERT INTO __raidlogimport_config (config_name, config_value) VALUES ('att_note_end', '".$user->lang('rli_att')." ".$user->lang('rli_end')."');",
 	"INSERT INTO __raidlogimport_config (config_name, config_value) VALUES ('raid_note_time', '0');",
 	"INSERT INTO __raidlogimport_config (config_name, config_value) VALUES ('timedkp_handle', '0');",
 	"INSERT INTO __raidlogimport_config (config_name, config_value) VALUES ('member_display', '0');"
