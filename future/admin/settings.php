@@ -63,7 +63,7 @@ class RLI_Settings extends admin_generic
 		if($messages) {
 			$rli->__construct();
 			foreach($messages as $name) {
-				$core->message($name, $user->lang['bz_save_suc'], 'green');
+				$core->message($name, $user->lang('bz_save_suc'), 'green');
 			}
 		}
 		//select ranks
@@ -71,31 +71,31 @@ class RLI_Settings extends admin_generic
 
 		//select parsers
 		$parser = array(
-			'eqdkp' => $user->lang['parser_eqdkp'],
-			'plus' => $user->lang['parser_plus'],
-			'magicdkp' => $user->lang['parser_magicdkp']
+			'eqdkp' => $user->lang('parser_eqdkp'),
+			'plus' => $user->lang('parser_plus'),
+			'magicdkp' => $user->lang('parser_magicdkp')
 		);
 
 		//select raidcount
 		$raidcount = array();
 		for($i=0; $i<=3; $i++) {
-			$raidcount[$i] = $user->lang['raidcount_'.$i];
+			$raidcount[$i] = $user->lang('raidcount_'.$i);
 		}
 
 		//select null_sum & standbyraidoptions
 		$standby_raid = array();
 		for($i=0; $i<=2; $i++) {
-			$standby_raid[$i] = $user->lang['standby_raid_'.$i];
+			$standby_raid[$i] = $user->lang('standby_raid_'.$i);
 		}
 
 		//select member_start_event
 		$member_start_event = $pdh->aget('event', 'name', 0, array($pdh->get('event', 'id_list')));
 
 		//select member_display
-		$member_display = array(0 => $user->lang['member_display_0'], 1 => $user->lang['member_display_1'], 2 => $user->lang['member_display_2']);
+		$member_display = array(0 => $user->lang('member_display_0'), 1 => $user->lang('member_display_1'), 2 => $user->lang('member_display_2'));
 
 		//select raid_note_time
-		$raid_note_time = array(0 => $user->lang['raid_note_time_0'], 1 => $user->lang['raid_note_time_1']);
+		$raid_note_time = array(0 => $user->lang('raid_note_time_0'), 1 => $user->lang('raid_note_time_1'));
 
 		$k = 2;
 		$configs = array(
@@ -154,8 +154,8 @@ class RLI_Settings extends admin_generic
 							} else {
 								$check_0 = "checked='checked'";
 							}
-							$holder[$holde][$k]['value'] = "<input type='radio' name='".$name."' value='1' ".$check_1." />".$user->lang['yes']."&nbsp;&nbsp;&nbsp;";
-							$holder[$holde][$k]['value'] .= "&nbsp;&nbsp;&nbsp;<input type='radio' name='".$name."' value='0' ".$check_0." />".$user->lang['no'];
+							$holder[$holde][$k]['value'] = "<input type='radio' name='".$name."' value='1' ".$check_1." />".$user->lang('yes')."&nbsp;&nbsp;&nbsp;";
+							$holder[$holde][$k]['value'] .= "&nbsp;&nbsp;&nbsp;<input type='radio' name='".$name."' value='0' ".$check_0." />".$user->lang('no');
 							$holder[$holde][$k]['name'] = $name;
 							$k = $a;
 							break;
@@ -184,7 +184,7 @@ class RLI_Settings extends admin_generic
 							$holder[$holde][$k]['value'] = '';
 							for($i=1; $i<=$num_of_opt; $i++) {
 								$checked = ($value & $pv[$i]) ? 'checked="checked"' : '';
-								$holder[$holde][$k]['value'] .= "<span class='nowrap'><input type='checkbox' name='".$name."[]' value='".$pv[$i]."' ".$checked." />".$user->lang[$name.'_'.$pv[$i]]."</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+								$holder[$holde][$k]['value'] .= "<span class='nowrap'><input type='checkbox' name='".$name."[]' value='".$pv[$i]."' ".$checked." />".$user->lang($name.'_'.$pv[$i])."</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 							}
 							$holder[$holde][$k]['name'] = $name;
 							break;
@@ -204,39 +204,39 @@ class RLI_Settings extends admin_generic
 				continue;
 			}
 			$tpl->assign_block_vars('holder', array(
-				'TITLE'	=> $user->lang['title_'.$type],
+				'TITLE'	=> $user->lang('title_'.$type),
 				'NUM'	=> $num)
 			);
 			$num++;
 			foreach($hold as $nava) {
-				$add = (isset($user->lang[$nava['name'].'_help'])) ? $user->lang[$nava['name'].'_help'] : '';
+				$add = ($user->lang($nava['name'].'_help')) ? $user->lang($nava['name'].'_help') : '';
 				if($nava['name'] == 'member_display') {
-					$add = sprintf($add, (extension_loaded('gd')) ? '<span class=\\\'positive\\\'>'.$info['GD Version'].'</span>' : $user->lang['no_gd_lib']);
+					$add = sprintf($add, (extension_loaded('gd')) ? '<span class=\\\'positive\\\'>'.$info['GD Version'].'</span>' : $user->lang('no_gd_lib'));
 				}
 				if($add != '') {
 					$add = ' <span id="h'.$nava['name'].'"><img alt="help" src="'.$eqdkp_root_path.'images/info.png"'.$jquery->tooltip('h'.$nava['name'], '', $add, false, true, false).' /></span>';
 				}
-				$warn = (isset($user->lang[$nava['name'].'_warn'])) ? $user->lang[$nava['name'].'_warn'] : '';
+				$warn = ($user->lang($nava['name'].'_warn')) ? $user->lang($nava['name'].'_warn') : '';
 				if($warn != '') {
 					$warn = ' <span id="w'.$nava['name'].'"><img width="16" height="16" alt="help" src="'.$eqdkp_root_path.'images/error.png"'.$jquery->tooltip('w'.$nava['name'], '', $warn, false, true, false).' /></span>';
 				}
 				$tpl->assign_block_vars('holder.config', array(
-					'NAME'	=> $user->lang[$nava['name']].' '.$add.' '.$warn,
+					'NAME'	=> $user->lang($nava['name']).' '.$add.' '.$warn,
 					'VALUE' => $nava['value'],
 					'CLASS'	=> $core->switch_row_class())
 				);
 			}
 		}
 		$tpl->assign_vars(array(
-			'L_CONFIG' => $user->lang['raidlogimport'].' '.$user->lang['settings'],
-			'L_SAVE'	 => $user->lang['bz_save'],
-			'L_MANUAL'	=> $user->lang['rli_manual'],
-			'S_GERMAN'	=> ($user->lang['lang'] == 'german') ? true : false,
+			'L_CONFIG' => $user->lang('raidlogimport').' '.$user->lang('settings'),
+			'L_SAVE'	 => $user->lang('bz_save'),
+			'L_MANUAL'	=> $user->lang('rli_manual'),
+			'S_GERMAN'	=> ($user->lang('lang') == 'german') ? true : false,
 			'TAB_JS'	=> $jquery->Tab_header('rli_config'))
 		);
 
 		$core->set_vars(array(
-			'page_title' 		=> sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang['configuration'],
+			'page_title' 		=> sprintf($user->lang('admin_title_prefix'), $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang('configuration'),
 			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'rli_settings.html',
 			'display'           => true,

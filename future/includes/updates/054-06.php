@@ -50,7 +50,7 @@ $updateSQL = array(
 	"INSERT INTO __raidlogimport_config (`config_name`, `config_value`) VALUES ('standby_value', 0);",
 	"INSERT INTO __raidlogimport_config (`config_name`, `config_value`) VALUES ('standby_att', 0);",
 	"INSERT INTO __raidlogimport_config (`config_name`, `config_value`) VALUES ('standby_dkptype', 0);",
-	"INSERT INTO __raidlogimport_config (`config_name`, `config_value`) VALUES ('standby_raidnote', '".$user->lang['standby_raid_note']."');",
+	"INSERT INTO __raidlogimport_config (`config_name`, `config_value`) VALUES ('standby_raidnote', '".$user->lang('standby_raid_note')."');",
 	"INSERT INTO __raidlogimport_config (`config_name`, `config_value`) VALUES ('member_raid', 50);",
 );
 

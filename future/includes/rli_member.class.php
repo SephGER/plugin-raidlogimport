@@ -108,10 +108,10 @@ if(!class_exists('rli_member')) {
 								if($dkp <  $raid['value']) {
 									//add an adjustment
 									$dkp -= $raid['value'];
-									if($akey = $rli->adj->check_adj_exists($member['name'], $user->lang['rli_partial_raid'], $raid_id)) {
+									if($akey = $rli->adj->check_adj_exists($member['name'], $user->lang('rli_partial_raid'), $raid_id)) {
 										$rli->adj->update($akey, array('value' => $dkp));
 									} else {
-										$rli->adj->add($user->lang['rli_partial_raid'], $member['name'], $dkp, $raid['event'], $raid['begin'], $raid_id);
+										$rli->adj->add($user->lang('rli_partial_raid'), $member['name'], $dkp, $raid['event'], $raid['begin'], $raid_id);
 									}
 								}
 							}
@@ -197,7 +197,7 @@ if(!class_exists('rli_member')) {
 				if($this->config['s_member_rank'] & 1) {
 					$member['rank'] = $this->rank_suffix($member['name']);
 				}
-				if($in->get('checkmem') == $user->lang['rli_go_on'].' ('.$user->lang['rli_checkmem'].')') {
+				if($in->get('checkmem') == $user->lang('rli_go_on').' ('.$user->lang('rli_checkmem').')') {
 					$mraids = $rli->raid->get_memberraids($member['times']);
 					$a = $rli->raid->get_attendance($member['times']);
 					if($a['att_dkp_begin'] AND !in_array($this->add_data['att_begin_raid'], $mraids)) {
@@ -220,8 +220,8 @@ if(!class_exists('rli_member')) {
 				$att_begin = ($a['att_dkp_begin']) ? 'checked="checked"' : '';
 				$att_end = ($a['att_dkp_end']) ? 'checked="checked"' : '';
 			} else {
-				$att_begin = ($member['att_dkp_begin']) ? $user->lang['yes'] : $user->lang['no'];
-				$att_end = ($member['att_dkp_end']) ? $user->lang['yes'] : $user->lang['no'];
+				$att_begin = ($member['att_dkp_begin']) ? $user->lang('yes') : $user->lang('no');
+				$att_end = ($member['att_dkp_end']) ? $user->lang('yes') : $user->lang('no');
 				$raid_list = array();
 				if(is_array($member['raid_list'])) {
 					$rli->raid->raidlist();
@@ -347,7 +347,7 @@ if(!class_exists('rli_member')) {
         	foreach($raid['bosskills'] as $bkey => $boss) {
         		$m = ($boss['time']-$width['begin'])/20 - 4;
         		settype($m, 'int');
-        		$bossinfo = "<table><tr><td>".$user->lang['rli_bossname']." </td><td>".$pdh->get('rli_boss', 'note', array($boss['id']))."</td></tr><tr><td>".$user->lang['rli_bosstime']."</td><td>".date('H:i:s', $boss['time'])."</td></tr><tr><td>".$user->lang['rli_bossvalue']."</td><td>".$boss['bonus']."</td></tr></table>";
+        		$bossinfo = "<table><tr><td>".$user->lang('rli_bossname')." </td><td>".$pdh->get('rli_boss', 'note', array($boss['id']))."</td></tr><tr><td>".$user->lang('rli_bosstime')."</td><td>".date('H:i:s', $boss['time'])."</td></tr><tr><td>".$user->lang('rli_bossvalue')."</td><td>".$boss['bonus']."</td></tr></table>";
 				$tt_out = $jquery->tooltip('#boss_'.$key.'_'.$bkey.'_'.$key, 'boss', $bossinfo);
         		$out .= "<div id='boss_".$key."_".$bkey."_".$key."' ".$tt_out." style='margin-left: ".$m."px;'></div>";
         	}
@@ -384,9 +384,9 @@ if(!class_exists('rli_member')) {
     	//only do this once
     	if(!$this->tpl_assignments) {
 			$rightc_menu = array(
-				'rli_add_dmem' => array('image' => $eqdkp_root_path.'images/menues/add.png', 'name' => $user->lang['rli_add_time'], 'jscode' => 'add_timeframe();'),
-				'rli_del_dmem' => array('image' => $eqdkp_root_path.'images/menues/delete.png', 'name' => $user->lang['rli_del_time'], 'jscode' => 'remove_timeframe();'),
-				'rli_swi_dmem' => array('image' => $eqdkp_root_path.'images/menues/update.png', 'name' => $user->lang['rli_standby_switch'], 'jscode' => 'change_standby();')
+				'rli_add_dmem' => array('image' => $eqdkp_root_path.'images/menues/add.png', 'name' => $user->lang('rli_add_time'), 'jscode' => 'add_timeframe();'),
+				'rli_del_dmem' => array('image' => $eqdkp_root_path.'images/menues/delete.png', 'name' => $user->lang('rli_del_time'), 'jscode' => 'remove_timeframe();'),
+				'rli_swi_dmem' => array('image' => $eqdkp_root_path.'images/menues/update.png', 'name' => $user->lang('rli_standby_switch'), 'jscode' => 'change_standby();')
 			);
 			$tpl->assign_vars(array(
 				'CONTEXT_MENU' => $jquery->RightClickMenu('_rli_dmem', '.add_time', $rightc_menu),

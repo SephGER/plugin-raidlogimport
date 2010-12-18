@@ -98,7 +98,7 @@ if(!function_exists('dkpvals_module')) {
   	$rli_portal = new rli_portal;
 
   	$out = "<table width='100%'border='0' cellspacing='1' cellpadding='2'>
-  				<tr><th width='66%'>".$user->lang['bz_zone_s']."</th><th width='34%'>".$core->config['dkp_name']."</th></tr>";
+  				<tr><th width='66%'>".$user->lang('bz_zone_s')."</th><th width='34%'>".$core->config['dkp_name']."</th></tr>";
   	foreach($rli_portal->bonus['zone'] as $zone_id => $zone)
   	{
   		$zones2display = explode('|', $conf_plus['rli_zone_display']);

@@ -68,7 +68,7 @@ class Bz extends admin_generic {
 	public function save() {
 		global $user, $pdh, $in;
 		$message = array('bz_no_save' => array(), 'bz_save_suc' => array());
-		if($in->get('save') == $user->lang['bz_save']) {
+		if($in->get('save') == $user->lang('bz_save')) {
 			$data = $in->getArray('type', 'string');
 			foreach($data as $id => $type) {
 				$method = ($id == 'neu') ? 'add' : 'update';
@@ -149,7 +149,7 @@ class Bz extends admin_generic {
 				}
 			}
 		} else {
-			$message['bz_no_save'][] = $user->lang['bz_no_id'];
+			$message['bz_no_save'][] = $user->lang('bz_no_id');
 		}
 		$pdh->process_hook_queue();
 		$this->display($message);
@@ -175,14 +175,14 @@ class Bz extends admin_generic {
 	
 	private function prepare_diff_drop() {
 		global $user;
-		if(!$this->diff_drop) $this->diff_drop = array($user->lang['diff_0'], $user->lang['diff_1'], $user->lang['diff_2'], $user->lang['diff_3'], $user->lang['diff_4']);
+		if(!$this->diff_drop) $this->diff_drop = array($user->lang('diff_0'), $user->lang('diff_1'), $user->lang('diff_2'), $user->lang('diff_3'), $user->lang('diff_4'));
 	}
 	
 	public function update() {
 		global $core, $user, $tpl, $pm, $html, $in, $pdh, $game;
 		if(!$this->zone_drop) {
 			$this->zone_drop = $pdh->aget('rli_zone', 'html_string', 0, array($pdh->get('rli_zone', 'id_list')));
-			$this->zone_drop[0] = $user->lang['bz_no_zone'];
+			$this->zone_drop[0] = $user->lang('bz_no_zone');
 			ksort($this->zone_drop);
 		}
 		if(!$this->event_drop) $this->event_drop = $pdh->aget('event', 'name', 0, array($pdh->get('event', 'id_list')));
@@ -216,21 +216,21 @@ class Bz extends admin_generic {
 		$tpl->assign_vars(array(
 			'S_DIFF'		=> ($game->get_game() == 'wow') ? true : false,
 			'S_BOSSEVENT'	=> ($core->config['raidlogimport']['event_boss']) ? true : false,
-			'L_BZ_UPD'		=> $user->lang['bz_upd'],
-			'L_TYPE'		=> $user->lang['bz_type'],
-			'L_STRING'		=> $user->lang['bz_string'],
-			'L_NOTE_EVENT'	=> $user->lang['bz_note_event'],
-			'L_BONUS'		=> $user->lang['bz_bonus'],
-			'L_TIMEBONUS'	=> $user->lang['bz_timebonus'],
-			'L_DIFF'		=> $user->lang['difficulty'],
-			'L_SAVE'		=> $user->lang['bz_save'],
-			'L_ZONE'		=> $user->lang['bz_zone_s'],
-			'L_BOSS'		=> $user->lang['bz_boss_s'],
-			'L_TOZONE'		=> $user->lang['bz_tozone'],
-			'L_SORT'		=> $user->lang['bz_sort'])
+			'L_BZ_UPD'		=> $user->lang('bz_upd'),
+			'L_TYPE'		=> $user->lang('bz_type'),
+			'L_STRING'		=> $user->lang('bz_string'),
+			'L_NOTE_EVENT'	=> $user->lang('bz_note_event'),
+			'L_BONUS'		=> $user->lang('bz_bonus'),
+			'L_TIMEBONUS'	=> $user->lang('bz_timebonus'),
+			'L_DIFF'		=> $user->lang('difficulty'),
+			'L_SAVE'		=> $user->lang('bz_save'),
+			'L_ZONE'		=> $user->lang('bz_zone_s'),
+			'L_BOSS'		=> $user->lang('bz_boss_s'),
+			'L_TOZONE'		=> $user->lang('bz_tozone'),
+			'L_SORT'		=> $user->lang('bz_sort'))
 		);
 		$core->set_vars(array(
-			'page_title'        => sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang['rli_bz_bz'],
+			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang('rli_bz_bz'),
 			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'bz_upd.html',
 			'header_format'		=> $this->simple_head,
@@ -249,7 +249,7 @@ class Bz extends admin_generic {
 					$type = 'red';
 				}
 				if($mess) {
-					$core->message(implode(', ', $mess), $user->lang[$title], $type);
+					$core->message(implode(', ', $mess), $user->lang($title), $type);
 				}
 			}
 		}
@@ -280,18 +280,18 @@ class Bz extends admin_generic {
 		$tpl->assign_vars(array(
 			'S_DIFF'		=> ($core->config['default_game'] == 'wow') ? true : false,
 			'DIFF_DROP'		=> $html->DropDown('diff', $this->diff_drop, ''),
-			'L_BZ'			=> $user->lang['rli_bz_bz'],
-			'L_STRING'		=> $user->lang['bz_string'],
-			'L_NOTE'		=> $user->lang['bz_note_event'],
-			'L_BONUS'		=> $user->lang['bz_bonus'],
-			'L_TIMEBONUS'	=> $user->lang['bz_timebonus'],
-			'L_UPDATE'		=> $user->lang['bz_update'],
-			'L_DELETE'		=> $user->lang['bz_delete'],
-			'L_COPY_ZONE'	=> $user->lang['bz_copy_zone'])
+			'L_BZ'			=> $user->lang('rli_bz_bz'),
+			'L_STRING'		=> $user->lang('bz_string'),
+			'L_NOTE'		=> $user->lang('bz_note_event'),
+			'L_BONUS'		=> $user->lang('bz_bonus'),
+			'L_TIMEBONUS'	=> $user->lang('bz_timebonus'),
+			'L_UPDATE'		=> $user->lang('bz_update'),
+			'L_DELETE'		=> $user->lang('bz_delete'),
+			'L_COPY_ZONE'	=> $user->lang('bz_copy_zone'))
 		);
 
 		$core->set_vars(array(
-			'page_title'        => sprintf($user->lang['admin_title_prefix'], $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang['rli_bz_bz'],
+			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang('rli_bz_bz'),
 			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'bz.html',
 			'header_format'		=> $this->simple_head,
@@ -305,7 +305,7 @@ class Bz extends admin_generic {
 		$jquery->Collapse('zone_'.$zone_id);
 		$tpl->assign_block_vars('zone_list', array(
 			'ZID'		=> $zone_id,
-			'ZSTRING'	=> ($zone_id) ? $pdh->geth('rli_zone', 'string', array($zone_id)) : $user->lang['bz_boss_oz'],
+			'ZSTRING'	=> ($zone_id) ? $pdh->geth('rli_zone', 'string', array($zone_id)) : $user->lang('bz_boss_oz'),
 			'ZTIMEBONUS'=> ($zone_id) ? $pdh->geth('rli_zone', 'timebonus', array($zone_id)) : '',
 			'ZNOTE'		=> ($zone_id) ? $pdh->geth('rli_zone', 'event', array($zone_id)) : '')
 		);

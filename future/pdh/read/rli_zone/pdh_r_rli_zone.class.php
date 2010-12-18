@@ -105,7 +105,7 @@ class pdh_r_rli_zone extends pdh_r_generic {
 	
 	public function get_html_diff($id) {
 		global $user;
-		return ($this->get_diff($id)) ? ' &nbsp; ('.$user->lang['diff_'.$this->get_diff($id)].')' : '';
+		return ($this->get_diff($id)) ? ' &nbsp; ('.$user->lang('diff_'.$this->get_diff($id)).')' : '';
 	}
 	
 	public function get_sort($id) {
