@@ -56,7 +56,7 @@ class rli
 	}
 
 	public function config($name='') {
-		return ($name == '') ? $this->config : $this->config[$name];
+		return ($name == '') ? $this->config : ((isset($this->config[$name])) ? $this->config[$name] : null);
 	}
 
 	public function suffix($string, $append, $diff) {
@@ -78,7 +78,7 @@ class rli
 			$db->query("TRUNCATE __raidlogimport_cache;");
 			$this->data['fetched'] = true;
 		}
-		return $this->data[$type];
+		return (isset($this->data[$type])) ? $this->data[$type] : null;
 	}
 
 	public function check_data() {

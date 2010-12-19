@@ -6,7 +6,7 @@
       <!-- BEGIN raids -->
       <tr>
       	<th <!-- IF not L_DIFFICULTY -->colspan="2"<!-- ENDIF -->> {raids.COUNT}. {L_RAID}:&nbsp;&nbsp;&nbsp;
-      		<img src="./../images/delete.png" alt="{L_DELETE}"><input type="checkbox" name="raids[{raids.COUNT}][delete]" value="true" title="{L_DELETE}" /></th>
+      		<img src="./../images/delete.png" alt="{L_DELETE}" /><input type="checkbox" name="raids[{raids.COUNT}][delete]" value="true" title="{L_DELETE}" /></th>
         <!-- IF L_DIFFICULTY -->
         <th>{L_DIFFICULTY}: {raids.DIFF}</th>
       	<!-- ENDIF -->
@@ -39,8 +39,8 @@
 			&nbsp;&nbsp;&nbsp;&nbsp;{L_TIME}: <input type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][time]" value="{raids.bosskills.BK_TIME}" size="9" />
 			&nbsp;&nbsp;&nbsp;&nbsp;{L_DATE}: {raids.bosskills.BK_DATE}
 			<!-- IF USE_BOSSDKP -->
-				&nbsp;&nbsp;&nbsp;&nbsp;{L_VALUE}: <input id="{raids.bosskills.IMPORT}_bonus" type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][bonus]" value="{raids.bosskills.BK_BONUS}" size="5" />
-				&nbsp;&nbsp;&nbsp;&nbsp;{L_T_DKP}: <input id="{raids.bosskills.IMPORT}_timebonus" type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][timebonus]" value="{raids.bosskills.BK_TIMEBONUS}" size="5" />
+				&nbsp;&nbsp;&nbsp;&nbsp;{L_VALUE}: <input id="bonus_{raids.bosskills.BK_KEY}" type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][bonus]" value="{raids.bosskills.BK_BONUS}" size="5" />
+				&nbsp;&nbsp;&nbsp;&nbsp;{L_T_DKP}: <input id="timebonus_{raids.bosskills.BK_KEY}" type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][timebonus]" value="{raids.bosskills.BK_TIMEBONUS}" size="5" />
 			<!-- ENDIF -->
 			<!-- IF L_DIFFICULTY -->
 			&nbsp;&nbsp;&nbsp;&nbsp;{L_DIFFICULTY}: {raids.bosskills.BK_DIFF}
@@ -82,5 +82,6 @@
 						<input id="onclose_submit" type="hidden" name="checkraid" value="{L_UPD}" disabled="disabled" />
             			<input type="submit" name="checkraid" value="{L_RECALC_RAID}" class="mainoption" />
                         <input type="submit" name="checkmem" value="{L_GO_ON} ({L_CHECKMEM})" class="mainoption" /></th>
+	  </tr>
 	</table>
 </form>

@@ -52,7 +52,7 @@ class rli_item {
 			if(is_array($this->items)) {
 				foreach($this->items as $key => $item) {
 					if($k == $key) {
-						if($loot['delete']) {
+						if(isset($loot['delete']) AND $loot['delete']) {
 							unset($this->items[$key]);
 							continue;
 						}
@@ -100,7 +100,7 @@ class rli_item {
 				if(($start <= $key AND $key < $end) OR !$with_form) {
 					if($with_form) {
 						$member_select = "<select size='1' name='loots[".$key."][member]'>";
-						$member_select .= "<option disabled ".((in_array($item['member'], $members)) ? "" : "selected='selected'").">".$user->lang('rli_choose_mem')."</option>";
+						$member_select .= "<option disabled='disabled' ".((in_array($item['member'], $members)) ? "" : "selected='selected'").">".$user->lang('rli_choose_mem')."</option>";
 						foreach($members as $mn => $mem) {
 							$member_select .= "<option value='".$mn."' ".(($mn == $item['member']) ? "selected='selected'" : "").">".$mem."</option>";
 						}
@@ -120,7 +120,7 @@ class rli_item {
 					}
 					$tpl->assign_block_vars('loots', array(
 						'LOOTNAME'  => $item['name'],
-						'ITEMID'    => $item['game_id'],
+						'ITEMID'    => (isset($item['game_id'])) ? $item['game_id'] : '',
 						'LOOTER'    => ($with_form) ? $member_select."</select>" : $item['member'],
 						'RAID'      => ($with_form) ? $raid_select."</select>" : $item['raid'],
 						'ITEMPOOL'	=> ($with_form) ? $html->DropDown('loots['.$key.'][itempool]', $itempools, $item['itempool']) : $pdh->get('itempool', 'name', array($item['itempool'])),
@@ -133,7 +133,7 @@ class rli_item {
 		}
 		if($end <= $p AND $end) {
 			$next_button = '<input type="submit" name="checkitem" value="'.$user->lang('rli_itempage').(($page) ? $page : 2).'" class="mainoption" />';
-		} elseif($end+$dic >= $p AND $dic) {
+		} elseif(isset($dic) AND $end+$dic >= $p) {
 			$next_button .= ' <input type="submit" name="checkitem" value="'.$user->lang('rli_itempage').(($page) ? $page : 2).'" class="mainoption" />';
 		} elseif($rli->config('deactivate_adj')) {
 			$next_button = '<input type="submit" name="insert" value="'.$user->lang('rli_go_on').' ('.$user->lang('rli_insert').')" class="mainoption" />';

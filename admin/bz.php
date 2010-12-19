@@ -175,7 +175,7 @@ class Bz extends admin_generic {
 	
 	private function prepare_diff_drop() {
 		global $user;
-		if(!$this->diff_drop) $this->diff_drop = array($user->lang('diff_0'), $user->lang('diff_1'), $user->lang('diff_2'), $user->lang('diff_3'), $user->lang('diff_4'));
+		if(!isset($this->diff_drop)) $this->diff_drop = array($user->lang('diff_0'), $user->lang('diff_1'), $user->lang('diff_2'), $user->lang('diff_3'), $user->lang('diff_4'));
 	}
 	
 	public function update() {
@@ -272,7 +272,7 @@ class Bz extends admin_generic {
 		foreach($sorting['zone'] as $zone_id => $zsort) {
 			$this->assign2tpl($zone_id, $sorting, $tozone);
 		}
-		if(count($tozone[0]) > 0) {
+		if(isset($tozone[0]) AND count($tozone[0]) > 0) {
 			$this->assign2tpl(0, $sorting, $tozone);
 		}
 		$this->prepare_diff_drop();

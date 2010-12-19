@@ -241,9 +241,9 @@ class rli_raid {
 						if(is_numeric($bk['id'])) {
 							$name_field = $html->DropDown('raids['.$ky.'][bosskills]['.$xy.'][id]', $this->bk_list, $bk['id']);
 						} else {
-							$name_field = $html->TextField('raids['.$ky.'][bosskills]['.$xy.'][id]', 22, $bk['id'], 'text', $html_id.'_id');
-							$params = "&string=' + $('#".$html_id."_id').val() + '&bonus=' + $('#".$html_id."_bonus').val() + '&timebonus=' + $('#".$html_id."_timebonus').val() + '&diff=' + $('#".$html_id."_diff').val()";
-							$params .= " + '&note=' + $('#".$html_id."_id').val()";
+							$name_field = $html->TextField('raids['.$ky.'][bosskills]['.$xy.'][id]', 22, $bk['id'], 'text', 'id_'.$html_id);
+							$params = "&string=' + $('#id_".$html_id."').val() + '&bonus=' + $('#bonus_".$html_id."').val() + '&timebonus=' + $('#timebonus_".$html_id."').val() + '&diff=' + $('#diff_".$html_id."').val()";
+							$params .= " + '&note=' + $('#id_".$html_id."').val()";
 							$onclosejs = "$('#onclose_submit').removeAttr('disabled'); $('form:first').submit();";
 							$jquery->Dialog($html_id, $user->lang('bz_import_boss'), array('url' => "bz.php?simple_head=simple&upd=true".$params." + '&", 'width' => 1200, 'onclosejs' => $onclosejs));
 							$import = true;
@@ -253,9 +253,9 @@ class rli_raid {
 							'BK_DATE'   => $jquery->Calendar("raids[".$ky."][bosskills][".$xy."][date]", $time->user_date($bk['time'], true), '', array('id' => 'raids_'.$ky.'_boss_'.$xy.'_date', 'timepicker' => true)),
 							'BK_BONUS'  => $bk['bonus'],
 							'BK_TIMEBONUS' => $bk['timebonus'],
-							'BK_DIFF'	=> $html->DropDown('raids['.$ky.'][bosskills]['.$xy.'][diff]', $this->diff_drop, $bk['diff'], '', '', 'input', $html_id.'_diff'),
+							'BK_DIFF'	=> $html->DropDown('raids['.$ky.'][bosskills]['.$xy.'][diff]', $this->diff_drop, $bk['diff'], '', '', 'input', 'diff_'.$html_id),
 							'BK_KEY'    => $xy,
-							'IMPORT'	=> ($import) ? $html_id : 0)
+							'IMPORT'	=> (isset($import)) ? $html_id : 0)
 						);
 					}
 				}
@@ -322,7 +322,7 @@ class rli_raid {
 		}
 		if(is_array($times)) {
 			foreach ($times as $time) {
-				if(!$standby OR ($standby == 1 AND !$time['standby']) OR ($standby == 2 AND $time['standby'])) {
+				if(!$standby OR ($standby == 1 AND (!isset($time['standby']) OR !$time['standby'])) OR ($standby == 2 AND $time['standby'])) {
 					if($time['join'] < $this->raids[$key]['end'] AND $time['leave'] > $this->raids[$key]['begin']) {
 						if($time['leave'] > $this->raids[$key]['end']) {
 							$in_raid += $this->raids[$key]['end'];
@@ -406,7 +406,7 @@ class rli_raid {
 	}
 
 	public function raidlist() {
-		if(!$this->raidlist) {
+		if(!isset($this->raidlist)) {
 			foreach($this->raids as $key => $raid) {
 				$this->raidlist[$key] = $raid['note'];
 			}
@@ -504,7 +504,7 @@ class rli_raid {
 			//absolute bossdkp
 			if($times !== false) {
 				foreach ($times as $time) {
-					if($standby == $time['standby']) {
+					if(isset($time['standby']) AND $standby == $time['standby']) {
 						if($time['join'] < $bosskill['time'] AND $time['leave'] > $bosskill['time']) {
 							$bossdkp += $bosskill['bonus'];
 							break;
@@ -559,7 +559,7 @@ class rli_raid {
 	
 	private function calc_attdkp($key, $type, $times=false, $force=array(-1,-1)) {
 		$att_raids = $this->get_attendance_raids(true);
-		if($key == $att_raids[$type] && $this->config('attendance_'.$type)) {
+		if($this->config('attendance_'.$type) && $key == $att_raids[$type]) {
 			if($times !== false) {
 				if($type == 'begin') {
 					$ct = $this->config('attendence_time') + $this->raids[$key]['begin'];
