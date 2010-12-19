@@ -58,7 +58,7 @@ if(!class_exists('rli_adjustment')) {
 		global $in;
 		$this->adjs = array();
 		foreach($_POST['adjs'] as $a => $adj) {
-			if(!$adj['delete']) {
+			if(!isset($adj['delete']) AND !$adj['delete']) {
 				$this->adjs[$a] = $in->getArray('adjs:'.$a, '');
 				$this->adjs[$a]['value'] = runden(floatvalue($adj['value']));
 			}

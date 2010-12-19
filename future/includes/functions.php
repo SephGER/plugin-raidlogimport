@@ -137,8 +137,6 @@ function lang2tpl()
 		'L_START'		=> $user->lang('rli_start'),
 		'L_T_DKP'		=> $user->lang('rli_t_points'),
 		'L_TIME'		=> $user->lang('time'),
-		'L_TRANSLATE_ITEMS' => ($rli->add_data['log_lang'] == $rli->config('item_save_lang')) ? $user->lang('get_itemid') : $user->lang('translate_items'),
-		'L_TRANSLATE_ITEMS_TIP' => $user->lang('translate_items_tip'),
 		'L_UPD'			=> $user->lang('update'),
         'L_VALUE'       => $user->lang('value')
 	);

@@ -56,7 +56,7 @@ if(!class_exists('rli_member')) {
 	public function add_time($name, $time, $type, $extra=0) {
 		settype($time, 'int');
 		foreach($this->members as $key => &$mem) {
-			if($mem['name'] == $name) {
+			if(isset($mem['name']) AND $mem['name'] == $name) {
 				if(isset($this->members['times'][$key]) AND is_array($this->members['times'][$key]) AND array_key_exists($time, $this->members['times'][$key])) {
 					unset($this->members['times'][$key][$time]);
 				} else {
@@ -72,10 +72,11 @@ if(!class_exists('rli_member')) {
 		
 	public function load_members() {
 		global $rli, $in, $user;
+		$globalattraids = $rli->raid->get_attendance_raids();
 		foreach($_POST['members'] as $k => $mem) {
 			foreach($this->members as $key => &$member) {
 				if($k == $key) {
-					if($mem['delete']) {
+					if(isset($mem['delete']) AND $mem['delete']) {
 						unset($this->members[$key]);
 						continue;
 					}
@@ -101,7 +102,7 @@ if(!class_exists('rli_member')) {
 					}
 					if($member['raid_list']) {
 						foreach($member['raid_list'] as $raid_id) {
-							if(($raid_id != $rli->add_data['att_begin_raid'] AND $raid_id != $rli->add_data['att_end_raid']) OR !$rli->config('attendence_raid')) {
+							if(!$rli->config('attendence_raid') OR ($raid_id != $globalattraids['begin'] AND $raid_id != $globalattraids['end'])) {
 								$dkp = $rli->raid->get_value($raid_id, $member['times'], array($member['att_begin'], $member['att_end']));
 								$dkp = runden($dkp, 2);
 								$raid = $rli->raid->get($raid_id);
@@ -191,20 +192,20 @@ if(!class_exists('rli_member')) {
 
   	public function display($with_form=false) {
   		global $tpl, $jquery, $rli, $core, $user, $in;
-
+		$globalattraids = $rli->raid->get_attendance_raids();
 		foreach($this->members as $key => $member) {
 			if($with_form) {
-				if($this->config['s_member_rank'] & 1) {
+				if($this->config('s_member_rank') & 1) {
 					$member['rank'] = $this->rank_suffix($member['name']);
 				}
 				if($in->get('checkmem') == $user->lang('rli_go_on').' ('.$user->lang('rli_checkmem').')') {
 					$mraids = $rli->raid->get_memberraids($member['times']);
 					$a = $rli->raid->get_attendance($member['times']);
-					if($a['att_dkp_begin'] AND !in_array($this->add_data['att_begin_raid'], $mraids)) {
-						$mraids[] = $rli->add_data['att_begin_raid'];
+					if($a['begin'] AND !in_array($globalattraids['begin'], $mraids)) {
+						$mraids[] = $globalattaraids['begin'];
 					}
-					if($a['att_dkp_end'] AND !in_array($this->add_data['att_end_raid'], $mraids)) {
-						$mraids[] = $rli->add_data['att_end_raid'];
+					if($a['end'] AND !in_array($globalattraids['end'], $mraids)) {
+						$mraids[] = $globalattraids['end'];
 					}
 				} else {
 					$mraids = $member['raid_list'];
@@ -217,11 +218,11 @@ if(!class_exists('rli_member')) {
 				} else {
 					$raid_list = '<td>'.$jquery->MultiSelect('members['.$key.'][raid_list]', $rli->raid->raidlist(), $mraids, '200', '200', array('id' => 'members_'.$key.'_raidlist')).'</td>';
 				}
-				$att_begin = ($a['att_dkp_begin']) ? 'checked="checked"' : '';
-				$att_end = ($a['att_dkp_end']) ? 'checked="checked"' : '';
+				$att_begin = ($a['begin']) ? 'checked="checked"' : '';
+				$att_end = ($a['end']) ? 'checked="checked"' : '';
 			} else {
-				$att_begin = ($member['att_dkp_begin']) ? $user->lang('yes') : $user->lang('no');
-				$att_end = ($member['att_dkp_end']) ? $user->lang('yes') : $user->lang('no');
+				$att_begin = (@$member['att_dkp_begin']) ? $user->lang('yes') : $user->lang('no');
+				$att_end = (@$member['att_dkp_end']) ? $user->lang('yes') : $user->lang('no');
 				$raid_list = array();
 				if(is_array($member['raid_list'])) {
 					$rli->raid->raidlist();
@@ -238,7 +239,7 @@ if(!class_exists('rli_member')) {
                 'ZAHL'     => $core->switch_row_class(),
                 'KEY'	   => $key,
                 'NR'	   => $key +1,
-                'RANK'	   => ($this->config['s_member_rank'] & 1) ? $this->rank_suffix($member['name']) : '')
+                'RANK'	   => ($this->config('s_member_rank') & 1) ? $this->rank_suffix($member['name']) : '')
            	);
         }//foreach members
   	}
