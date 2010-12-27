@@ -26,13 +26,17 @@ class rli_raid {
 	private $data = array();
 	private $raids = array();
 	private $hour_count = 0;
-	private $add_data = array();
 	public $real_ids = array();
 
 	public function __construct() {
 		global $rli;
 		$this->raids = $rli->get_cache_data('raid');
 		$this->data = $rli->get_cache_data('data_raid');
+	}
+	
+	public function reset() {
+		$this->raids = array();
+		$this->data = array();
 	}
 
 	private function config($name) {
@@ -235,6 +239,14 @@ class rli_raid {
 				'BOSSKILLS' => $bosskills)
 			);
 			if($with_form) {
+				//js deletion
+				$options = array(
+					'custom_js' => "$('#'+del_id).css('display', 'none'); $('#'+del_id+'submit').removeAttr('disabled');",
+					'withid' => 'del_id',
+					'message' => $user->lang('rli_delete_raids_warning')
+				);
+				$jquery->Dialog('delete_warning', $user->lang('confirm_deletion'), $options, 'confirm');
+
 				if(is_array($rai['bosskills'])) {
 					foreach($rai['bosskills'] as $xy => $bk) {
 						$html_id = 'boss'.$xy;
@@ -405,10 +417,11 @@ class rli_raid {
 		return $td;
 	}
 
-	public function raidlist() {
-		if(!isset($this->raidlist)) {
+	public function raidlist($with_event=false) {
+		if(!isset($this->raidlist) OR ($with_event AND !isset($this->raidevents))) {
 			foreach($this->raids as $key => $raid) {
 				$this->raidlist[$key] = $raid['note'];
+				if($with_event) $this->raidevents[$key] = $raid['event'];
 			}
 		}
 		return $this->raidlist;
@@ -515,7 +528,9 @@ class rli_raid {
 				$bossdkp += $bosskill['bonus'];
 			}
 			//timed bossdkp
-			$temp = $this->get_bosskill_raidtime($this->raids[$key]['begin'], $this->raids[$key]['end'], $bosskill['time'], @$this->data['bosskills'][$b-1]['time'], @$this->data['bosskills'][$b+1]['time']);
+			$kill_before = (isset($this->data['bosskills'][$b-1]['time'])) ? $this->data['bosskills'][$b-1]['time'] : NULL;
+			$kill_after = (isset($this->data['bosskills'][$b+1]['time'])) ? $this->data['bosskills'][$b+1]['time'] : NULL;
+			$temp = $this->get_bosskill_raidtime($this->raids[$key]['begin'], $this->raids[$key]['end'], $bosskill['time'], $kill_before, $kill_after);
 			$in_boss = format_duration($this->in_raid($temp, $times, $standby1));
 			$bossdkp += $this->calc_timebossdkp($bosskill['timebonus'], $in_boss);
 		}

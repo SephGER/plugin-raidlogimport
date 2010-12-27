@@ -1,0 +1,32 @@
+<form method="post" action="{ACTION}" name="post">
+	<!-- INCLUDE raid_display.html -->
+	<table width="100%" border="0" cellspacing="1" cellpadding="1" id="member">
+	<!-- IF DETAIL_RAIDLIST -->
+		<!-- INCLUDE detailed_members_raids.html -->
+	<!-- ELSE -->
+		<!-- INCLUDE members_raids.html -->
+	<!-- ENDIF -->
+	  <tr class="row2">
+		<td colspan="2"><select name="members_add">
+	  		  <option value="0">0..{L_MEMS_ADD}</option>
+	  		  <option value="1">1..{L_MEM_ADD}</option>
+	  		  <option value="2">2..{L_MEMS_ADD}</option>
+	  		  <option value="3">3..{L_MEMS_ADD}</option>
+	  		  <option value="4">4..{L_MEMS_ADD}</option>
+	  		  <option value="5">5..{L_MEMS_ADD}</option>
+	  		</select>
+	  		<input type="submit" name="checkmem" value="{L_update}" class="mainoption" />
+	  	</td>
+	  	<td class="row2" colspan="99">&nbsp;</td>
+	  </tr>
+    </table>
+    <table width="100%" border="0" cellspacing="1" cellpadding="1">
+      <tr>
+        <th align="center" colspan="8">
+      	   <input type="hidden" name="rest" value="{DATA}" />
+      	   <input type="submit" name="checkraid" value="{L_rli_back2raid}" class="mainoption" />
+		   <input type="submit" name="checkitem" value="{L_rli_go_on} ({L_rli_checkitem})" class="mainoption" /></th>
+      </tr>
+	</table>
+</form>
+{CONTEXT_MENU}

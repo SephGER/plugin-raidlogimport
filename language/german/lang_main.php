@@ -58,7 +58,7 @@
 	$lang['bz_tozone'] = 'In Zone';
 	$lang['bz_no_save'] = 'Daten nicht gespeichert!';
 	$lang['bz_save_suc'] = 'Daten erfolgereich gespeichert.';
-	$lang['bz_suc'] = 'Bosse / Zonen Erfolg';
+	$lang['bz_suc'] = 'Boss / Zonen Erfolg';
 	$lang['bz_missing_values'] = 'Es müssen alle Felder ausgefüllt sein.';
 	$lang['bz_sort'] = 'Reihenfolge';
 	$lang['bz_copy_zone'] = 'Kopiere markierte Zone (samt Bossen) zu Schwierigkeit: ';
@@ -102,8 +102,10 @@
 	$lang['rli_partial_raid'] = 'Teilweise Raidteilnahme';
 	$lang['rli_add_raid'] = 'Raid hinzufügen';
 	$lang['rli_add_raids'] = 'Raids hinzufügen';
+	$lang['rli_delete_raids_warning'] = 'Soll der Raid/Boss wirklich gelöscht werden?';
 	$lang['rli_add_mem'] = 'Mitglied hinzufügen';
 	$lang['rli_add_mems'] = 'Mitglieder hinzufügen';
+	$lang['rli_delete_members_warning'] = 'Soll der Member wirklich gelöscht werden?';
 	$lang['rli_add_time'] = 'Zeitbalken hinzufügen';
 	$lang['rli_standby_switch'] = 'Ersatzbank umschalten';
 	$lang['rli_del_time'] = 'Zeitbalken löschen';
@@ -112,6 +114,7 @@
 	$lang['rli_bossvalue'] = 'Wert / Bonus:';
 	$lang['rli_add_item'] = 'Item hinzufügen';
 	$lang['rli_add_items'] = 'Items hinzufügen';
+	$lang['rli_delete_items_warning'] = 'Soll das Item wirklich gelöscht werden?';
 	$lang['rli_item_id'] = 'Item-ID';
 	$lang['rli_add_adj'] = 'Korrektur hinzufügen';
 	$lang['rli_add_adjs'] = 'Korrekturen hinzufügen';

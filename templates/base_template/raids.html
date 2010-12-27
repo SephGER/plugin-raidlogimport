@@ -1,0 +1,90 @@
+<form method="post" action="{ACTION}" name="post">
+    <table width="100%" border="0" cellspacing="1" cellpadding="2" id="raid">
+      <tr>
+      	<th>{L_raids}</th>
+      </tr>
+	</table>
+    <!-- BEGIN raids -->
+	<table width="100%" border="0" cellspacing="1" cellpadding="2" id="raid_{raids.COUNT}">
+      <tr>
+      	<th <!-- IF not L_DIFFICULTY -->colspan="2"<!-- ENDIF -->>
+			<img src="./../images/delete.png" alt="{L_delete}" title="{L_delete}" onclick="delete_warning('raid_{raids.COUNT}');" />
+			<input type="hidden" id="item_{raids.COUNT}submit" name="raids[{raids.COUNT}][delete]" value="true" disabled="disabled" />
+			&nbsp;&nbsp;{raids.COUNT}. {L_raid}:
+		</th>
+        <!-- IF L_DIFFICULTY -->
+        <th>{L_DIFFICULTY}: {raids.DIFF}</th>
+      	<!-- ENDIF -->
+      </tr>
+      <tr class="row1">
+      	<td>{L_rli_start}: {raids.START_DATE}</td>
+        <td>{L_event}: {raids.EVENT}</td>
+      </tr>
+      <tr class="row2">
+        <td>{L_rli_end}: {raids.END_DATE}</td>
+        <td>
+			{L_value}: <input type="text" name="raids[{raids.COUNT}][value]" value="{raids.VALUE}" class="maininput" size="6" />
+			<!-- IF USE_TIMEDKP -->&nbsp;&nbsp;&nbsp;&nbsp; {L_rli_t_points}: <input type="text" name="raids[{raids.COUNT}][timebonus]" value="{raids.TIMEBONUS}" class="maininput" size="6" /><!-- ENDIF -->
+		</td>
+      </tr>
+      <tr class="row1">
+        <td colspan="2">{L_note}: <input type="text" name="raids[{raids.COUNT}][note]" value="{raids.NOTE}" class="maininput" size="90" /></td>
+      </tr>
+      <tr class="row2">
+		<td colspan="2">{L_rli_bosskills}:</td>
+	  </tr>
+	  <tr class="row1">
+		<td colspan="2">
+		<!-- BEGIN bosskills -->
+			<div id="boss_{raids.bosskills.BK_KEY}">
+			&nbsp;<img src="./../images/delete.png" alt="{L_delete}" title="{L_delete}" onclick="delete_warning('boss_{raids.bosskills.BK_KEY}');" />
+			&nbsp;&nbsp;{raids.bosskills.BK_SELECT}
+			&nbsp;&nbsp;&nbsp;&nbsp;{L_date}: {raids.bosskills.BK_DATE}
+			<!-- IF USE_BOSSDKP -->
+				&nbsp;&nbsp;&nbsp;&nbsp;{L_VALUE}: <input id="bonus_{raids.bosskills.BK_KEY}" type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][bonus]" value="{raids.bosskills.BK_BONUS}" size="5" />
+				&nbsp;&nbsp;&nbsp;&nbsp;{L_T_DKP}: <input id="timebonus_{raids.bosskills.BK_KEY}" type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][timebonus]" value="{raids.bosskills.BK_TIMEBONUS}" size="5" />
+			<!-- ENDIF -->
+			<!-- IF L_DIFFICULTY -->
+			&nbsp;&nbsp;&nbsp;&nbsp;{L_DIFFICULTY}: {raids.bosskills.BK_DIFF}
+			<!-- ENDIF -->
+			<!-- IF raids.bosskills.IMPORT -->&nbsp; <img src="./../images/add.png" alt="{L_bz_import_boss}" title="{L_bz_import_boss}" onclick="javascript:{raids.bosskills.IMPORT}();" style="mouse:thumb;" /><!-- ENDIF -->
+			</div>
+		<!-- END bosskills -->
+		</td>
+	  </tr>
+	  <tr class="row2">
+	  	<td colspan="2">
+	  		<select name="raids[{raids.COUNT}][bosskill_add]">
+	  		  <option value="0">0..{L_BKS_ADD}</option>
+	  		  <option value="1">1..{L_BK_ADD}</option>
+	  		  <option value="2">2..{L_BKS_ADD}</option>
+	  		  <option value="3">3..{L_BKS_ADD}</option>
+	  		  <option value="4">4..{L_BKS_ADD}</option>
+	  		  <option value="5">5..{L_BKS_ADD}</option>
+	  		</select>
+	  	</td>
+	  </tr>
+	</table>
+	<!-- END raids -->
+	<table width="100%" border="0" cellspacing="1" cellpadding="2">
+	  <tr class="row1">
+	  	<td><select name="raid_add">
+	  		  <option value="0">0..{L_RAIDS_ADD}</option>
+	  		  <option value="1">1..{L_RAID_ADD}</option>
+	  		  <option value="2">2..{L_RAIDS_ADD}</option>
+	  		  <option value="3">3..{L_RAIDS_ADD}</option>
+	  		  <option value="4">4..{L_RAIDS_ADD}</option>
+	  		  <option value="5">5..{L_RAIDS_ADD}</option>
+	  		</select>
+	  	</td>
+	  	<td class="row1">&nbsp;</td>
+	  </tr>
+	  <tr>
+	   	<th colspan="2"><input type="hidden" name="rest" value="{DATA}" />
+            			<input type="submit" name="checkraid" value="{L_update}" class="mainoption" />
+						<input id="onclose_submit" type="hidden" name="checkraid" value="{L_update}" disabled="disabled" />
+            			<input type="submit" name="checkraid" value="{L_rli_calc_note_value}" class="mainoption" />
+                        <input type="submit" name="checkmem" value="{L_rli_go_on} ({L_rli_checkmem})" class="mainoption" /></th>
+	  </tr>
+	</table>
+</form>

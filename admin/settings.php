@@ -211,6 +211,7 @@ class RLI_Settings extends admin_generic
 			foreach($hold as $nava) {
 				$add = ($user->lang($nava['name'].'_help')) ? $user->lang($nava['name'].'_help') : '';
 				if($nava['name'] == 'member_display') {
+					$info = gd_info();
 					$add = sprintf($add, (extension_loaded('gd')) ? '<span class=\\\'positive\\\'>'.$info['GD Version'].'</span>' : $user->lang('no_gd_lib'));
 				}
 				if($add != '') {

@@ -1,0 +1,49 @@
+<form method="post" action="{ACTION}" name="post">
+	<!-- INCLUDE raid_display.html -->
+	<!-- INCLUDE member_display.html -->
+	<table width="100%" border="0" cellspacing="1" cellpadding="2" id="item">
+		<tr>
+			<th colspan="2">{L_item}</th>
+			<th>{L_rli_item_id}</th>
+			<th>{L_rli_looter}</th>
+			<th>{L_raid}</th>
+			<th>{L_itempool}</th>
+			<th>{L_rli_cost}</th>
+		</tr>
+		<!-- BEGIN loots -->
+		<tr class="{loots.CLASS}" id="item_{loots.KEY}">
+			<td width="25">
+				&nbsp;<img src="./../images/delete.png" alt="{L_delete}" title="{L_delete}" onclick="delete_warning('item_{loots.KEY}');" />
+				<input type="hidden" id="item_{loots.KEY}submit" name="loots[{loots.KEY}][delete]" value="true" disabled="disabled" />
+			</td>
+			<td><input type="text" name="loots[{loots.KEY}][name]" class="maininput" value="{loots.LOOTNAME}" size="40" {loots.READONLY} /></td>
+			<td><input type="text" name="loots[{loots.KEY}][id]" class="maininput" value="{loots.ITEMID}" /></td>
+			<td>{loots.LOOTER}</td>
+			<td>{loots.RAID}</td>
+			<td>{loots.ITEMPOOL}</td>
+			<td><input type="text" name="loots[{loots.KEY}][value]" value="{loots.LOOTDKP}" class="maininput" size="7" /></td>
+		</tr>
+		<!-- END loots -->
+		<tr class="row1">
+			<td colspan="2">
+				<select name="items_add">
+					<option value="0">0..{L_ITEMS_ADD}</option>
+					<option value="1">1..{L_ITEM_ADD}</option>
+					<option value="2">2..{L_ITEMS_ADD}</option>
+					<option value="3">3..{L_ITEMS_ADD}</option>
+					<option value="4">4..{L_ITEMS_ADD}</option>
+					<option value="5">5..{L_ITEMS_ADD}</option>
+				</select>
+			</td>
+			<td colspan="5">&nbsp;</td>
+		</tr>
+		<tr>
+			<th colspan="7">
+				<input type="submit" name="checkraid" value="{L_rli_back2raid}" class="mainoption" />
+				<input type="submit" name="checkmem" value="{L_rli_back2mem}" class="mainoption" />
+				<input type="submit" name="checkitem" value="{L_update}" class="mainoption" />
+				{NEXT_BUTTON}
+			</th>
+		</tr>
+	</table>
+</form>
