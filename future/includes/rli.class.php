@@ -75,19 +75,17 @@ class rli
 			while ( $row = $db->fetch_record($result) ) {
 				$this->data[$row['cache_class']] = ($core->config['enable_gzip']) ? unserialize(gzuncompress($row['cache_data'])) : unserialize($row['cache_data']);
 			}
-			$db->query("TRUNCATE __raidlogimport_cache;");
 			$this->data['fetched'] = true;
 		}
 		return (isset($this->data[$type])) ? $this->data[$type] : null;
 	}
 
 	public function check_data() {
-		global $rli;
 		$bools = array();
-		$rli->raid->check(&$bools);
-		$rli->member->check(&$bools);
-		$rli->item->check(&$bools);
-		$rli->adj->check(&$bools);
+		$this->raid->check(&$bools);
+		$this->member->check(&$bools);
+		$this->item->check(&$bools);
+		$this->adj->check(&$bools);
 		return $bools;
 	}
 	
@@ -97,6 +95,10 @@ class rli
 	
 	public function flush_cache() {
 		global $db;
+		$this->raid->reset();
+		$this->member->reset();
+		$this->item->reset();
+		$this->adj->reset();
 		return $db->query("TRUNCATE __raidlogimport_cache;");
 	}
 
@@ -108,7 +110,8 @@ class rli
 		unset($this->item);
 		unset($this->adj);
 		unset($this->parse);
-
+		
+		$db->query("TRUNCATE __raidlogimport_cache;");
 		$sql = "INSERT INTO __raidlogimport_cache
 				(cache_class, cache_data)
 				VALUES ";

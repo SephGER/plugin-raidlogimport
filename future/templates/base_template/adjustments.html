@@ -1,0 +1,44 @@
+<form action="{ACTION}" name="post" method="post">
+	<!-- INCLUDE raid_display.html -->
+	<!-- INCLUDE member_display.html -->
+	<!-- INCLUDE item_display.html -->
+	<table width="100%" cellspacing="1" cellpadding="1" border="0" id="adj">
+	<tr>
+		<th colspan="6">{L_rli_adjs}</th>
+	</tr>
+	<tr>
+		<th width="40px"><span style="float:right; cursor:pointer;" class="down_arrow_red" id="rli_select_all" /></th><th>{L_member}</th><th>{L_event}</th><th>{L_raid}</th><th>{L_note}</th><th>{L_value}</th>
+	</tr>
+	<!-- BEGIN adjs -->
+	<tr class="{adjs.CLASS}">
+		<td align="right"><img src="./../images/delete.png" alt="{L_delete}" title="{L_delete}" /><input type="checkbox" name="adjs[{adjs.KEY}][delete]" value="true" title="{L_delete}" class="rli_select_me" /></td>
+		<td>{adjs.MEMBER}</td>
+		<td>{adjs.EVENT}</td>
+		<td>{adjs.RAID}</td>
+		<td><input type="text" name="adjs[{adjs.KEY}][reason]" value="{adjs.NOTE}" class="maininput" {adjs.READONLY} /></td>
+		<td><input type="text" name="adjs[{adjs.KEY}][value]" value="{adjs.VALUE}" class="maininput" /></td>
+	</tr>
+	<!-- END adjs -->
+	<tr class="row2">
+		<td colspan="3"><select name="adjs_add">
+				<option value="0">0..{L_ADJS_ADD}</option>
+				<option value="1">1..{L_ADJ_ADD}</option>
+				<option value="2">2..{L_ADJS_ADD}</option>
+				<option value="3">3..{L_ADJS_ADD}</option>
+				<option value="4">4..{L_ADJS_ADD}</option>
+				<option value="5">5..{L_ADJS_ADD}</option>
+			</select>
+			<input type="submit" name="checkadj" value="{L_update}" class="mainoption" />
+		</td>
+		<td colspan="3">&nbsp;</td>
+	</tr>
+	<tr>
+		<th colspan="6">
+			<input type="submit" name="checkraid" value="{L_rli_back2raid}" class="mainoption" />
+			<input type="submit" name="checkmem" value="{L_rli_back2mem}" class="mainoption" />
+			<input type="submit" name="checkitem" value="{L_rli_back2item}" class="mainoption" />
+			<input type="submit" name="insert" value="{L_rli_go_on} ({L_rli_insert})" class="mainoption" />
+		</th>
+	</tr>
+	</table>
+</form>

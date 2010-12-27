@@ -42,9 +42,10 @@ class raidlogimport extends admin_generic {
 	}
 
 	function process_raids() {
-		global $db, $core, $user, $tpl, $pm, $rli, $in;
+		global $core, $user, $tpl, $pm, $rli, $in;
 
 		if($in->exists('log')) {
+			$rli->flush_cache();
 			$log = simplexml_load_string(utf8_encode(trim(str_replace("&", "and", html_entity_decode($_POST['log'])))));
 			if ($log === false) {
 				message_die($user->lang('xml_error'));
@@ -71,7 +72,7 @@ class raidlogimport extends admin_generic {
 		$core->set_vars(array(
 			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang('rli_check_data'),
 			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
-			'template_file'     => 'rli_step2raids.html',
+			'template_file'     => 'raids.html',
 			'display'           => true)
 		);
 	}
@@ -96,7 +97,8 @@ class raidlogimport extends admin_generic {
 			'S_ATT_END'		 => ($rli->config('attendence_end') > 0 AND !$rli->config('attendence_raid')) ? TRUE : FALSE,
 			'MEMBER_DISPLAY' => ($rli->config('member_display') == 1) ? $rli->raid->th_raidlist : false,
 			'RAIDCOUNT'		 => ($rli->config('member_display') == 1) ? $rli->raid->count() : 1,
-			'RAIDCOUNT3'	 => ($rli->config('member_display') == 1) ? $rli->raid->count() +2 : 3)
+			'RAIDCOUNT3'	 => ($rli->config('member_display') == 1) ? $rli->raid->count()+2 : 3,
+			'DETAIL_RAIDLIST' =>($rli->config('member_display') == 2) ? true : false)
 		);
 
 		$rli->destroy();
@@ -104,7 +106,7 @@ class raidlogimport extends admin_generic {
 		$core->set_vars(array(
 			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang('rli_check_data'),
 			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
-			'template_file'     => ($rli->config('member_display') == 2) ? 'rli_step2dmems.html' : 'rli_step2mems.html',
+			'template_file'     => 'members.html',
 			'display'           => true)
 		);
 	}
@@ -131,7 +133,7 @@ class raidlogimport extends admin_generic {
 		$core->set_vars(array(
 			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang('rli_check_data'),
 			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
-			'template_file'     => 'rli_step2items.html',
+			'template_file'     => 'items.html',
 			'display'           => true)
 		);
 	}
@@ -160,7 +162,7 @@ class raidlogimport extends admin_generic {
 		$core->set_vars(array(
 			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang('rli_check_data'),
 			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
-			'template_file'     => 'rli_step2adj.html',
+			'template_file'     => 'adjustments.html',
 			'display'           => true)
 		);
 	}
@@ -252,7 +254,7 @@ class raidlogimport extends admin_generic {
 		$core->set_vars(array(
 			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config['guildtag'], $core->config['dkp_name']).': '."DKP String",
 			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
-			'template_file'     => 'rli_step1.html',
+			'template_file'     => 'log_insert.html',
 			'display'           => true,
 			)
 		);

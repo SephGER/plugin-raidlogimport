@@ -33,6 +33,10 @@ if(!class_exists('rli_adjustment')) {
 		return $rli->config($name);
 	}
 	
+	public function reset() {
+		$this->adjs = array();
+	}
+
 	public function add($reason, $member, $value, $event, $date=0, $raid=0) {
 		$this->adjs[] = array('reason' => $reason, 'member' => $member, 'value' => runden($value), 'date' => $date, 'raid' => $raid);
 	}
@@ -58,7 +62,7 @@ if(!class_exists('rli_adjustment')) {
 		global $in;
 		$this->adjs = array();
 		foreach($_POST['adjs'] as $a => $adj) {
-			if(!isset($adj['delete']) AND !$adj['delete']) {
+			if(!(isset($adj['delete']) AND $adj['delete'])) {
 				$this->adjs[$a] = $in->getArray('adjs:'.$a, '');
 				$this->adjs[$a]['value'] = runden(floatvalue($adj['value']));
 			}
@@ -66,11 +70,11 @@ if(!class_exists('rli_adjustment')) {
 	}
 	
 	public function display($with_form=false) {
-		global $rli, $core, $html, $tpl, $pdh;
+		global $rli, $core, $html, $tpl, $pdh, $user;
 		if(is_array($this->adjs)) {
 			$members = $rli->member->get_for_dropdown(4);
 			$events = $pdh->aget('event', 'name', 0, array($pdh->get('event', 'id_list')));
-			$rli->raid->raidlist();
+			$raid_select = array_merge(array($user->lang('none')), $rli->raid->raidlist());
 			foreach($this->adjs as $a => $adj) {
 				$ev_sel = (isset($adj['event'])) ? $adj['event'] : 0;
 				if(runden($adj['value']) == '0' || runden($adj['value']) == '-0') {
@@ -82,18 +86,26 @@ if(!class_exists('rli_adjustment')) {
 					'EVENT'		=> $html->DropDown('adjs['.$a.'][event]', $events, $ev_sel, '', '', true),
 					'NOTE'		=> $adj['reason'],
 					'VALUE'		=> $adj['value'],
-					'RAID'		=> $html->DropDown('adjs['.$a.'][raid]', $rli->raid->raidlist, $adj['raid'], '', '', true),
+					'RAID'		=> $html->DropDown('adjs['.$a.'][raid]', $raid_select, $adj['raid'], '', '', true),
 					'CLASS'		=> $core->switch_row_class(),
 					'KEY'		=> $a)
 				);
 			}
+				$tpl->add_js(
+"$('#rli_select_all').click(function() {
+	if($('.rli_select_me').attr('checked')) {
+		$('.rli_select_me').removeAttr('checked');
+	} else {
+		$('.rli_select_me').attr('checked', 'checked');
+	}
+});", 'docready');
 		}
 	}
 	
 	public function check_adj_exists($member, $reason, $raid_id=0) {
 		if(is_array($this->adjs)) {
 			foreach($this->adjs as $key => $adj) {
-				if($adj['member'] == $member AND $adj['reason'] == $reason AND ($adj['raid'] == $raid_id OR !$raid_id)) {
+				if($adj['member'] == $member AND $adj['reason'] == $reason AND (!$raid_id OR $adj['raid'] == $raid_id)) {
 					return $key;
 				}
 			}

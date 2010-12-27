@@ -29,14 +29,18 @@ class rli_item {
 		global $rli;
 		$this->items = $rli->get_cache_data('item');
 	}
+	
+	public function reset() {
+		$this->items = array();
+	}
 
 	private function config($name) {
 		global $rli;
 		return $rli->config($name);
 	}
 	
-	public function add($name, $member, $value, $id=0, $time=0, $raid=0) {
-		$this->items[] = array('name' => $name, 'member' => $member, 'value' => $value, 'game_id' => $id, 'time' => $time, 'raid' => $raid);
+	public function add($name, $member, $value, $id=0, $time=0, $raid=0, $itempool=0) {
+		$this->items[] = array('name' => $name, 'member' => $member, 'value' => $value, 'game_id' => $id, 'time' => $time, 'raid' => $raid, 'itempool' => $itempool);
 	}
 	
 	public function add_new($num) {
@@ -69,7 +73,7 @@ class rli_item {
 	}
 	
 	public function display($with_form=false) {
-		global $rli, $html, $pdh, $tpl, $user, $core, $in;
+		global $rli, $html, $pdh, $tpl, $user, $core, $in, $jquery;
 		if(is_array($this->items)) {
 			$p = count($this->items);
 			$start = 0;
@@ -104,19 +108,29 @@ class rli_item {
 						foreach($members as $mn => $mem) {
 							$member_select .= "<option value='".$mn."' ".(($mn == $item['member']) ? "selected='selected'" : "").">".$mem."</option>";
 						}
-						
 						$raid_select = "<select size='1' name='loots[".$key."][raid]'>";
 						$att_raids = $rli->raid->get_attendance_raids();
-						$rli->raid->raidlist();
+						$rli->raid->raidlist(true);
 						foreach($rli->raid->raidlist as $i => $note) {
 							if(!(in_array($i, $att_raids) AND $this->config['attendence_raid'])) {
 								$raid_select .= "<option value='".$i."'";
 								if($rli->raid->item_in_raid($i, $item['time'])) {
 									$raid_select .= ' selected="selected"';
+									$mdkps = $pdh->get('multidkp', 'mdkpids4eventid', array($rli->raid->raidevents[$i]));
+									$itmpls = $pdh->get('multidkp', 'itempool_ids', array($mdkps[0]));
+									$item['itempool'] = $itmpls[0];
 								}
 								$raid_select .= ">".$i."</option>";
 							}
 						}
+						//js deletion
+						$options = array(
+							'custom_js' => "$('#'+del_id).css('display', 'none'); $('#'+del_id+'submit').removeAttr('disabled');",
+							'withid' => 'del_id',
+							'message' => $user->lang('rli_delete_items_warning')
+						);
+						$jquery->Dialog('delete_warning', $user->lang('confirm_deletion'), $options, 'confirm');
+
 					}
 					$tpl->assign_block_vars('loots', array(
 						'LOOTNAME'  => $item['name'],
