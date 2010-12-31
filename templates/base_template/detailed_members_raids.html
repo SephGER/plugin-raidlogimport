@@ -7,10 +7,10 @@
 	<th width="{PXTIME}">{L_raids}</th>
 </tr>
 <!-- BEGIN player -->
-<tr class="{player.ZAHL}" id="memberrow_{player.KEY}">
+<tr class="{player.ZAHL}" id="memberrow_{player.KEY}" {player.DISPLAY}>
 	<td align="right">
 		{player.NR}&nbsp;<img src="./../images/delete.png" alt="{L_delete}" title="{L_delete}" onclick="delete_warning('memberrow_{player.KEY}');" />
-		<input type="hidden" id="memberrow_{player.KEY}submit" name="members[{player.KEY}][delete]" value="true" disabled="disabled" />
+		<input type="hidden" id="memberrow_{player.KEY}submit" name="members[{player.KEY}][delete]" value="true" {player.DELDIS} />
 	</td>
 	<td><input type="text" name="members[{player.KEY}][name]" value="{player.MITGLIED}" /></td>
 	<td id="member_{player.KEY}" class="add_time" onmouseover="set_member('{player.KEY}', '{PXTIME}');" style="height: {HEIGHT}px;">
@@ -20,7 +20,7 @@
 			<div class="raid_middle">
 				<input type="hidden" name="members[{player.KEY}][raid_list][]" value="{player.member_raids.KEY}" {player.member_raids.DISABLED} />
 			</div>
-			<div class='raid_right'> </div>
+			<div class="raid_right"> </div>
 		</div>
 		<!-- END member_raids -->
 		<!-- BEGIN bosses --><div id="boss_{player.KEY}_{bosses.KEY}" {bosses.TOOLTIP} style="margin-left: {bosses.LEFT}px;"></div><!-- END bosses -->

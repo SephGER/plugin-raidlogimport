@@ -51,9 +51,9 @@ class rli_item {
 	}
 	
 	public function load_items() {
-		global $in;
+		global $in, $rli;
 		foreach($_POST['loots'] as $k => $loot) {
-			if(is_array($this->items)) {
+			if(is_array($this->items) AND in_array($k, array_keys($this->items))) {
 				foreach($this->items as $key => $item) {
 					if($k == $key) {
 						if(isset($loot['delete']) AND $loot['delete']) {
@@ -65,11 +65,14 @@ class rli_item {
 						$this->items[$key]['time'] = $item['time'];
 					}
 				}
-			} else {
+			} elseif(!isset($loot['delete'])) {
 				$this->items[$k] = $in->getArray('loots:'.$k, '');
 				$this->items[$k]['value'] = floatvalue($in->get('loots:'.$k.':value', '0.0'));
+				if(!isset($begin_end)) $begin_end = $rli->raid->get_start_end();
+				$this->items[$k]['time'] = $begin_end['begin'];
 			}
 		}
+		unset($begin_end);
 	}
 	
 	public function display($with_form=false) {
@@ -98,16 +101,13 @@ class rli_item {
 			$members['disenchanted'] = 'disenchanted';
 			$members['bank'] = 'bank';
 			ksort($members);
+			$members = array_merge(array($user->lang('rli_choose_mem')), $members);
 			$itempools = $pdh->aget('itempool', 'name', 0, array($pdh->get('itempool', 'id_list')));
 			//maybe add "saving" for itempool
 			foreach($this->items as $key => $item) {
 				if(($start <= $key AND $key < $end) OR !$with_form) {
 					if($with_form) {
-						$member_select = "<select size='1' name='loots[".$key."][member]'>";
-						$member_select .= "<option disabled='disabled' ".((in_array($item['member'], $members)) ? "" : "selected='selected'").">".$user->lang('rli_choose_mem')."</option>";
-						foreach($members as $mn => $mem) {
-							$member_select .= "<option value='".$mn."' ".(($mn == $item['member']) ? "selected='selected'" : "").">".$mem."</option>";
-						}
+						$mem_sel = (in_array($item['member'], $members)) ? $item['member'] : 0;
 						$raid_select = "<select size='1' name='loots[".$key."][raid]'>";
 						$att_raids = $rli->raid->get_attendance_raids();
 						$rli->raid->raidlist(true);
@@ -120,29 +120,59 @@ class rli_item {
 									$itmpls = $pdh->get('multidkp', 'itempool_ids', array($mdkps[0]));
 									$item['itempool'] = $itmpls[0];
 								}
-								$raid_select .= ">".$i."</option>";
+								$raid_select .= ">".$note."</option>";
 							}
 						}
-						//js deletion
-						$options = array(
-							'custom_js' => "$('#'+del_id).css('display', 'none'); $('#'+del_id+'submit').removeAttr('disabled');",
-							'withid' => 'del_id',
-							'message' => $user->lang('rli_delete_items_warning')
-						);
-						$jquery->Dialog('delete_warning', $user->lang('confirm_deletion'), $options, 'confirm');
-
 					}
 					$tpl->assign_block_vars('loots', array(
 						'LOOTNAME'  => $item['name'],
 						'ITEMID'    => (isset($item['game_id'])) ? $item['game_id'] : '',
-						'LOOTER'    => ($with_form) ? $member_select."</select>" : $item['member'],
+						'LOOTER'    => ($with_form) ? $html->DropDown("loots[".$key."][member]", $members, $mem_sel, '', '', 'input', '', 0) : $item['member'],
 						'RAID'      => ($with_form) ? $raid_select."</select>" : $item['raid'],
 						'ITEMPOOL'	=> ($with_form) ? $html->DropDown('loots['.$key.'][itempool]', $itempools, $item['itempool']) : $pdh->get('itempool', 'name', array($item['itempool'])),
 						'LOOTDKP'   => runden($item['value']),
 						'KEY'       => $key,
-						'CLASS'     => $core->switch_row_class())
+						'CLASS'     => $core->switch_row_class(),
+						'DELDIS'	=> 'disabled="disabled"')
 					);
 				}
+			}
+			if($with_form) {
+				//js deletion
+				$options = array(
+					'custom_js' => "$('#'+del_id).css('display', 'none'); $('#'+del_id+'submit').removeAttr('disabled');",
+					'withid' => 'del_id',
+					'message' => $user->lang('rli_delete_items_warning')
+				);
+				$jquery->Dialog('delete_warning', $user->lang('confirm_deletion'), $options, 'confirm');
+				
+				//js addition
+				$tpl->assign_block_vars('loots', array(
+					'KEY'		=> 999,
+					'ITEMPOOL'	=> $html->DropDown('loots[999][itempool]', $itempools, 0),
+					'LOOTER'	=> $html->DropDown('loots[999][member]', $members, ''),
+					'RAID'		=> $html->DropDown('loots[999][raid]', $rli->raid->raidlist, 0),
+					'DISPLAY'	=> 'style="display: none;"'
+				));
+				$tpl->add_js(
+"var rli_key = ".($key+1).";
+$('.del_item').click(function() {
+	$(this).removeClass('del_item');
+	delete_warning($(this).attr('class'));
+});
+$('#add_item_button').click(function() {
+	var item = $('#item_999').clone(true);
+	item.find('#item_999submit').attr('disabled', 'disabled');
+	item.html(item.html().replace(/999/g, rli_key));
+	item.attr('id', 'item_'+rli_key);
+	item.removeAttr('style');
+	$('#item_'+(rli_key-1)).after(item);
+	$('#item_'+rli_key+'submit').prev().click(function() {
+		$(this).removeClass('del_item');
+		delete_warning($(this).attr('class'));
+	});
+	rli_key++;
+});", 'docready');
 			}
 		}
 		if($end <= $p AND $end) {

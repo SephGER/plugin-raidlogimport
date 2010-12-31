@@ -15,10 +15,10 @@
 </tr>
 <!-- ENDIF -->
 <!-- BEGIN player -->
-<tr class="{player.ZAHL}" id="member_{player.KEY}">
+<tr class="{player.ZAHL}" id="memberrow_{player.KEY}" {player.DISPLAY}>
 	<td align="right">
-		{player.NR}&nbsp;<img src="./../images/delete.png" alt="{L_delete}" title="{L_delete}" onclick="delete_warning('memberrow_{player.KEY}');" />
-		<input type="hidden" id="memberrow_{player.KEY}submit" name="members[{player.KEY}][delete]" value="true" disabled="disabled" />
+		{player.NR}&nbsp;<img src="./../images/delete.png" alt="{L_delete}" title="{L_delete}" class="del_mem memberrow_{player.KEY}" />
+		<input type="hidden" id="memberrow_{player.KEY}submit" name="members[{player.KEY}][delete]" value="true" {player.DELDIS} />
 	</td>
 	<td width="300"><input type="text" name="members[{player.KEY}][name]" value="{player.MITGLIED}" /> {player.ALIAS} {player.RANK}</td>
 	{player.RAID_LIST}

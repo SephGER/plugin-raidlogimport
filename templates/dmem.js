@@ -98,6 +98,7 @@ function set_clickx(ereignis) {
 
 function set_width(w, nostopper) {
 	var stopper = false;
+	console.log($('#member_form').data('raid_start'));
 	if(w > 0) {
 		if(w+posi_null+parseInt(scale_object.style.marginLeft) > max_right) {
 			w = max_right - parseInt(scale_object.style.marginLeft) - posi_null;
@@ -145,17 +146,17 @@ function add_timeframe() {
 		current.offset = $(all_times[i]).offset();
 		current.right_edge = (current.offset.left + $(all_times[i]).width());
 		if(current.right_edge < posx && current.right_edge > left[1]) {
-			left[0] = all_times[i].id;
+			left[0] = all_times[i].attr('id');
 			left[1] = current.right_edge;
 		}
 		if(current.offset.left > posx && current.offset.left < right[1]) {
-			right[0] = all_times[i].id;
+			right[0] = all_times[i].attr('id');
 			right[1] = current.offset.left;
 		}
 	}
 	var change_id = '';
 	var lgth = 'times_' + member_id + '_';
-	var object_to_add = $('#times_' + member_id + '_99').clone(true);
+	var object_to_add = $('#times_' + member_id + '_99').clone();
 	var selector = '';
 	var type = 'after';
 	var new_time_key = 0;
@@ -171,16 +172,16 @@ function add_timeframe() {
 		selector = '#times_' + member_id + '_1';
 		type = 'before';
 	}
+	//no time there
+	if(!right[0] && !left[0]) {
+		selector = '#times_' + member_id;
+		type = 'prepend';
+	}
 	for(i=(change_id.length -1); i>=0; i--) {
 		if(!isNaN(parseInt(change_id[i].id.substr(lgth.length)))) {
 			change_id_of_input(change_id[i].id, (parseInt(change_id[i].id.substr(lgth.length)) + 1));
 			change_id[i].id = 'times_' + member_id + '_' + (parseInt(change_id[i].id.substr(lgth.length)) + 1);
 		}
-	}
-	if(type == 'before') {
-		$(selector).before(object_to_add);
-	} else {
-		$(selector).after(object_to_add);
 	}
 	if(left[1]) {
 		left[1] = left[1] - posi_null;
@@ -190,6 +191,13 @@ function add_timeframe() {
 		right[1] = 12;
 	}
 	object_to_add.css('width', (right[1] - left[1] - posi_null - 4) + 'px');
+	if(type == 'before') {
+		$(selector).before(object_to_add);
+	} else if(type == 'after') {
+		$(selector).after(object_to_add);
+	} else if(type == 'prepend') {
+		$(selector).prepend(object_to_add);
+	}
 	change_id_of_input('times_' + member_id + '_99', new_time_key);                             
     $('#times_' + member_id + '_' + new_time_key + 'j').attr('value', $('#member_form').data('raid_start') + (left[1]+2)*20);
 	$('#times_' + member_id + '_' + new_time_key + 'l').attr('value', $('#member_form').data('raid_start') + (left[1] + right[1])*20);

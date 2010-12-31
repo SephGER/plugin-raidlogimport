@@ -113,7 +113,6 @@
 	$lang['rli_bosstime'] = 'Killzeitpunkt:';
 	$lang['rli_bossvalue'] = 'Wert / Bonus:';
 	$lang['rli_add_item'] = 'Item hinzufügen';
-	$lang['rli_add_items'] = 'Items hinzufügen';
 	$lang['rli_delete_items_warning'] = 'Soll das Item wirklich gelöscht werden?';
 	$lang['rli_item_id'] = 'Item-ID';
 	$lang['rli_add_adj'] = 'Korrektur hinzufügen';

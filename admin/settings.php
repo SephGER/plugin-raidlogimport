@@ -239,7 +239,7 @@ class RLI_Settings extends admin_generic
 		$core->set_vars(array(
 			'page_title' 		=> sprintf($user->lang('admin_title_prefix'), $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang('configuration'),
 			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
-			'template_file'     => 'rli_settings.html',
+			'template_file'     => 'settings.html',
 			'display'           => true,
 			)
 		);

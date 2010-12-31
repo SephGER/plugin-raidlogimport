@@ -78,6 +78,9 @@ if(!class_exists('rli_member')) {
 		global $rli, $in, $user;
 		$globalattraids = $rli->raid->get_attendance_raids();
 		foreach($_POST['members'] as $k => $mem) {
+			if(!(is_array($this->members) AND in_array($k, array_keys($this->members)))) {
+				$this->members[$k] = array();
+			}
 			foreach($this->members as $key => &$member) {
 				if($k == $key) {
 					if(isset($mem['delete']) AND $mem['delete']) {
@@ -198,6 +201,7 @@ if(!class_exists('rli_member')) {
   	public function display($with_form=false) {
   		global $tpl, $jquery, $rli, $core, $user, $in;
 		$globalattraids = $rli->raid->get_attendance_raids();
+		$key = 0;
 		foreach($this->members as $key => $member) {
 			if($with_form) {
 				if($this->config('s_member_rank') & 1) {
@@ -252,10 +256,50 @@ if(!class_exists('rli_member')) {
                 'ZAHL'     => $core->switch_row_class(),
                 'KEY'	   => $key,
                 'NR'	   => $key +1,
-                'RANK'	   => ($this->config('s_member_rank') & 1) ? $this->rank_suffix($member['name']) : ''
+                'RANK'	   => ($this->config('s_member_rank') & 1) ? $this->rank_suffix($member['name']) : '',
+				'DELDIS'	=> 'disabled="disabled"',
            	));
 			if(isset($detail_raid_list)) $this->detailed_times_list($key, $mraids);
         }//foreach members
+		//a member to copy from for js-addition
+		if($with_form) {
+			if(!isset($detail_raid_list)) {
+				if($this->config('member_display') == 1 AND extension_loaded('gd')) {
+					$raid_list = $rli->raid->get_checkraidlist(array(), 999);
+				} else {
+					$raid_list = '<td>'.$jquery->MultiSelect('members[999][raid_list]', $rli->raid->raidlist, array(), '200', '200', array('id' => 'members_999_raidlist')).'</td>';
+				}
+			}
+			$tpl->assign_block_vars('player', array(
+                'RAID_LIST'	=> (!isset($detai_raid_list)) ? $raid_list : '',
+                'KEY'		=> 999,
+				'DISPLAY'	=> 'style="display: none;"',
+			));
+			$this->members[999]['times'] = array();
+			if(isset($detail_raid_list)) $this->detailed_times_list(999, array());
+			unset($this->members[999]);
+			$tpl->add_js(
+"var rli_key = ".($key+1).";
+$('.del_mem').click(function() {
+	$(this).removeClass('del_mem');
+	delete_warning($(this).attr('class'));
+});
+$('#add_mem_button').click(function() {
+	var mem = $('#memberrow_999').clone(true);
+	mem.find('#memberrow_999submit').attr('disabled', 'disabled');
+	mem.html(mem.html().replace(/999/g, rli_key));
+	mem.attr('id', 'memberrow_'+rli_key);
+	mem.removeAttr('style');
+	mem.find('td:first').html((rli_key+1)+$.trim(mem.find('td:first').html()));
+	mem.find('.add_time').".$this->rightclick_js.";
+	$('#memberrow_'+(rli_key-1)).after(mem);
+	$('#memberrow_'+rli_key+'submit').prev().click(function() {
+		$(this).removeClass('del_mem');
+		delete_warning($(this).attr('class'));
+	});
+	rli_key++;
+});", 'docready');
+		}
   	}
 
     public function rank_suffix($mname) {
@@ -415,6 +459,7 @@ if(!class_exists('rli_member')) {
 				'PXTIME' => $this->px_time,
 				'HEIGHT' => $this->height)
 			);
+			$this->rightclick_js = $jquery->RightClickMenu('_rli_dmem', '.add_time', $rightc_menu, '170px', true);
     		$tpl->js_file($eqdkp_root_path.'plugins/raidlogimport/templates/dmem.js');
     		$tpl->css_file($eqdkp_root_path.'plugins/raidlogimport/templates/base_template/dmem.css');
     		$tpl->add_css(".time_scale {
@@ -428,10 +473,10 @@ if(!class_exists('rli_member')) {
 							}");
     		$tpl->add_js("$(document).ready(function() {
                             $('#member_form').data('raid_start', ".$width['begin'].");
-							$('.add_time').mouseover(function() {
+							$('.add_time').live('mouseenter', function() {
 								$('#time_scale_' + member_id).attr('class', 'time_scale');
 							});
-							$('.add_time').mouseout(function() {
+							$('.add_time').live('mouseleave', function() {
 								$('#time_scale_' + member_id).attr('class', 'time_scale_hide');
 							});
                         });");

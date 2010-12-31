@@ -5,11 +5,11 @@
       </tr>
 	</table>
     <!-- BEGIN raids -->
-	<table width="100%" border="0" cellspacing="1" cellpadding="2" id="raid_{raids.COUNT}">
+	<table width="100%" border="0" cellspacing="1" cellpadding="2" id="raid_{raids.COUNT}" {raids.DISPLAY}>
       <tr>
       	<th <!-- IF not L_DIFFICULTY -->colspan="2"<!-- ENDIF -->>
-			<img src="./../images/delete.png" alt="{L_delete}" title="{L_delete}" onclick="delete_warning('raid_{raids.COUNT}');" />
-			<input type="hidden" id="item_{raids.COUNT}submit" name="raids[{raids.COUNT}][delete]" value="true" disabled="disabled" />
+			<img src="./../images/delete.png" alt="{L_delete}" title="{L_delete}" class="del_raid raid_{raids.COUNT}" />
+			<input type="hidden" id="raid_{raids.COUNT}submit" name="raids[{raids.COUNT}][delete]" value="true" {raids.DELDIS} />
 			&nbsp;&nbsp;{raids.COUNT}. {L_raid}:
 		</th>
         <!-- IF L_DIFFICULTY -->
@@ -36,13 +36,14 @@
 	  <tr class="row1">
 		<td colspan="2">
 		<!-- BEGIN bosskills -->
-			<div id="boss_{raids.bosskills.BK_KEY}">
-			&nbsp;<img src="./../images/delete.png" alt="{L_delete}" title="{L_delete}" onclick="delete_warning('boss_{raids.bosskills.BK_KEY}');" />
+			<div id="raid_{raids.COUNT}_boss_{raids.bosskills.BK_KEY}" {raids.bosskills.DISPLAY}>
+			&nbsp;<img src="./../images/delete.png" alt="{L_delete}" title="{L_delete}" class="del_boss raid_{raids.COUNT}_boss_{raids.bosskills.BK_KEY}" />
+			<input type="hidden" id="raid_{raids.COUNT}_boss_{raids.bosskills.BK_KEY}submit" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][delete]" value="true" {raids.bosskills.DELDIS} />
 			&nbsp;&nbsp;{raids.bosskills.BK_SELECT}
 			&nbsp;&nbsp;&nbsp;&nbsp;{L_date}: {raids.bosskills.BK_DATE}
 			<!-- IF USE_BOSSDKP -->
-				&nbsp;&nbsp;&nbsp;&nbsp;{L_VALUE}: <input id="bonus_{raids.bosskills.BK_KEY}" type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][bonus]" value="{raids.bosskills.BK_BONUS}" size="5" />
-				&nbsp;&nbsp;&nbsp;&nbsp;{L_T_DKP}: <input id="timebonus_{raids.bosskills.BK_KEY}" type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][timebonus]" value="{raids.bosskills.BK_TIMEBONUS}" size="5" />
+				&nbsp;&nbsp;&nbsp;&nbsp;{L_value}: <input id="raid_{raids.COUNT}_bonus_{raids.bosskills.BK_KEY}" type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][bonus]" value="{raids.bosskills.BK_BONUS}" size="5" />
+				&nbsp;&nbsp;&nbsp;&nbsp;{L_rli_t_points}: <input id="raid_{raids.COUNT}_timebonus_{raids.bosskills.BK_KEY}" type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][timebonus]" value="{raids.bosskills.BK_TIMEBONUS}" size="5" />
 			<!-- ENDIF -->
 			<!-- IF L_DIFFICULTY -->
 			&nbsp;&nbsp;&nbsp;&nbsp;{L_DIFFICULTY}: {raids.bosskills.BK_DIFF}
@@ -54,28 +55,15 @@
 	  </tr>
 	  <tr class="row2">
 	  	<td colspan="2">
-	  		<select name="raids[{raids.COUNT}][bosskill_add]">
-	  		  <option value="0">0..{L_BKS_ADD}</option>
-	  		  <option value="1">1..{L_BK_ADD}</option>
-	  		  <option value="2">2..{L_BKS_ADD}</option>
-	  		  <option value="3">3..{L_BKS_ADD}</option>
-	  		  <option value="4">4..{L_BKS_ADD}</option>
-	  		  <option value="5">5..{L_BKS_ADD}</option>
-	  		</select>
+			<input type="button" id="raidb_{raids.COUNT}" name="add_boss_button[]" class="mainoption bi_new" value="{L_rli_add_bk}"/>
 	  	</td>
 	  </tr>
 	</table>
 	<!-- END raids -->
 	<table width="100%" border="0" cellspacing="1" cellpadding="2">
 	  <tr class="row1">
-	  	<td><select name="raid_add">
-	  		  <option value="0">0..{L_RAIDS_ADD}</option>
-	  		  <option value="1">1..{L_RAID_ADD}</option>
-	  		  <option value="2">2..{L_RAIDS_ADD}</option>
-	  		  <option value="3">3..{L_RAIDS_ADD}</option>
-	  		  <option value="4">4..{L_RAIDS_ADD}</option>
-	  		  <option value="5">5..{L_RAIDS_ADD}</option>
-	  		</select>
+	  	<td>
+			<input type="button" id="add_raid_button" class="mainoption bi_new" value="{L_rli_add_raid}"/>
 	  	</td>
 	  	<td class="row1">&nbsp;</td>
 	  </tr>

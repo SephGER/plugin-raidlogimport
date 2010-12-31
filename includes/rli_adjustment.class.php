@@ -71,10 +71,10 @@ if(!class_exists('rli_adjustment')) {
 	
 	public function display($with_form=false) {
 		global $rli, $core, $html, $tpl, $pdh, $user;
+		$members = $rli->member->get_for_dropdown(4);
+		$events = $pdh->aget('event', 'name', 0, array($pdh->get('event', 'id_list')));
+		$raid_select = array_merge(array($user->lang('none')), $rli->raid->raidlist());
 		if(is_array($this->adjs)) {
-			$members = $rli->member->get_for_dropdown(4);
-			$events = $pdh->aget('event', 'name', 0, array($pdh->get('event', 'id_list')));
-			$raid_select = array_merge(array($user->lang('none')), $rli->raid->raidlist());
 			foreach($this->adjs as $a => $adj) {
 				$ev_sel = (isset($adj['event'])) ? $adj['event'] : 0;
 				if(runden($adj['value']) == '0' || runden($adj['value']) == '-0') {
@@ -82,24 +82,42 @@ if(!class_exists('rli_adjustment')) {
 					continue;
 				}
 				$tpl->assign_block_vars('adjs', array(
-					'MEMBER'	=> $html->DropDown('adjs['.$a.'][member]', $members, $adj['member'], '', '', true),
-					'EVENT'		=> $html->DropDown('adjs['.$a.'][event]', $events, $ev_sel, '', '', true),
+					'MEMBER'	=> $html->DropDown('adjs['.$a.'][member]', $members, $adj['member']),
+					'EVENT'		=> $html->DropDown('adjs['.$a.'][event]', $events, $ev_sel),
 					'NOTE'		=> $adj['reason'],
 					'VALUE'		=> $adj['value'],
-					'RAID'		=> $html->DropDown('adjs['.$a.'][raid]', $raid_select, $adj['raid'], '', '', true),
+					'RAID'		=> $html->DropDown('adjs['.$a.'][raid]', $raid_select, $adj['raid']),
 					'CLASS'		=> $core->switch_row_class(),
-					'KEY'		=> $a)
-				);
+					'KEY'		=> $a,
+				));
 			}
-				$tpl->add_js(
+		}
+		$tpl->assign_block_vars('adjs', array(
+			'KEY'		=> 999,
+			'MEMBER'	=> $html->DropDown('adjs[999][member]', $members, 0),
+			'EVENT'		=> $html->DropDown('adjs[999][event]', $events, 0),
+			'RAID'		=> $html->DropDown('adjs[999][raid]', $raid_select, 0),
+			'DISPLAY'	=> 'style="display: none;"',
+			'DELCHK'	=> 'checked="checked"',
+		));
+		$tpl->add_js(
 "$('#rli_select_all').click(function() {
 	if($('.rli_select_me').attr('checked')) {
 		$('.rli_select_me').removeAttr('checked');
 	} else {
 		$('.rli_select_me').attr('checked', 'checked');
 	}
+});
+var rli_key = ".($a+1).";
+$('#add_adj_button').click(function() {
+	var adj = $('#adj_999').clone(true);
+	adj.find('.rli_select_me').removeAttr('checked');
+	adj.html(adj.html().replace(/999/g, rli_key));
+	adj.attr('id', 'adj_'+rli_key);
+	adj.removeAttr('style');
+	$('#adj_'+(rli_key-1)).after(adj);
+	rli_key++;
 });", 'docready');
-		}
 	}
 	
 	public function check_adj_exists($member, $reason, $raid_id=0) {
