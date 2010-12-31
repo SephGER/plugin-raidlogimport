@@ -211,6 +211,9 @@ class rli_raid {
 			$this->bk_list = $pdh->aget('rli_boss', 'html_note', 0, array($pdh->get('rli_boss', 'id_list'), false));
 			asort($this->bk_list);
 		}
+		$last_key = 0;
+		ksort($this->raids);
+		$tpl->add_js("var boss_keys = new Array();", 'docready');
 		foreach($this->raids as $ky => $rai) {
 			if($ky == $this->data['add']['standby_raid'] AND $this->config('standby_raid') == 0) {
 				continue;
@@ -236,8 +239,10 @@ class rli_raid {
 				'VALUE'		=> $rai['value'],
 				'NOTE'		=> $rai['note'],
 				'DIFF'		=> ($with_form) ? $html->DropDown('raids['.$ky.'][diff]', $this->diff_drop, $rai['diff']) : $user->lang('diff_'.$rai['diff']),
-				'BOSSKILLS' => $bosskills)
+				'BOSSKILLS' => $bosskills,
+				'DELDIS'	=> 'disabled="disabled"')
 			);
+			$last_key = $ky;
 			if($with_form) {
 				//js deletion
 				$options = array(
@@ -249,7 +254,7 @@ class rli_raid {
 
 				if(is_array($rai['bosskills'])) {
 					foreach($rai['bosskills'] as $xy => $bk) {
-						$html_id = 'boss'.$xy;
+						$html_id = 'raid'.$ky.'_boss'.$xy;
 						if(is_numeric($bk['id'])) {
 							$name_field = $html->DropDown('raids['.$ky.'][bosskills]['.$xy.'][id]', $this->bk_list, $bk['id']);
 						} else {
@@ -267,11 +272,71 @@ class rli_raid {
 							'BK_TIMEBONUS' => $bk['timebonus'],
 							'BK_DIFF'	=> $html->DropDown('raids['.$ky.'][bosskills]['.$xy.'][diff]', $this->diff_drop, $bk['diff'], '', '', 'input', 'diff_'.$html_id),
 							'BK_KEY'    => $xy,
-							'IMPORT'	=> (isset($import)) ? $html_id : 0)
+							'IMPORT'	=> (isset($import)) ? $html_id : 0,
+							'DELDIS'	=> 'disabled="disabled"')
 						);
 					}
 				}
+				$tpl->add_js("boss_keys[".$ky."] = ".($xy+1).";", 'docready');
+				$tpl->assign_block_vars('raids.bosskills', array(
+					'BK_SELECT'	=> $html->DropDown('raids['.$ky.'][bosskills][99][id]', $this->bk_list, 0),
+					'BK_DATE'	=> '<input type="text" name="raids['.$ky.'][bosskills][99][date]" id="raids_'.$ky.'_boss_99_date" size="15" />',
+					'BK_DIFF'	=> $html->DropDown('raids['.$ky.'][bosskills][99][diff]', $this->diff_drop, 0, '', '', 'input', 'diff_raid'.$ky.'_boss99'),
+					'BK_KEY'	=> 99,
+					'DISPLAY'	=> 'style="display: none;"'
+				));
 			}
+		}
+		if($with_form) {
+			$tpl->assign_block_vars('raids', array(
+				'COUNT'     => 999,
+				'START_DATE'=> '<input type="text" name="raids[999][start_date]" id="raids_999_start_date" size="15" />',
+				'END_DATE'	=> '<input type="text" name="raids[999][end_date]" id="raids_999_end_date" size="15" />',
+				'EVENT'		=> $html->DropDown('raids[999][event]', $this->event_drop, $rai['event']),
+				'DIFF'		=> $html->DropDown('raids[999][diff]', $this->diff_drop, $rai['diff']),
+				'DISPLAY'	=> 'style="display: none;"'
+			));
+			$tpl->assign_block_vars('raids.bosskills', array(
+				'BK_SELECT'	=> $html->DropDown('raids[999][bosskills][99][id]', $this->bk_list, 0),
+				'BK_DATE'	=> '<input type="text" name="raids[999][bosskills][99][date]" id="raids_999_boss_99_date" size="15" />',
+				'BK_DIFF'	=> $html->DropDown('raids[999][bosskills][99][diff]', $this->diff_drop, 0, '', '', 'input', 'diff_raid999_boss99'),
+				'BK_KEY'	=> 99,
+				'DISPLAY'	=> 'style="display: none;"'
+			));
+			$functioncall = $jquery->Calendar('n', 0, '', array('timepicker' => true, 'return_function' => true));
+			$tpl->add_js(
+"var rli_rkey = ".($last_key+1).";
+$('.del_boss').live('click', function() {
+	$(this).removeClass('del_boss');
+	delete_warning($(this).attr('class'));
+});
+$('.del_raid').live('click', function() {
+	$(this).removeClass('del_raid');
+	delete_warning($(this).attr('class'));
+});
+$('#add_raid_button').click(function() {
+	var raid = $('#raid_999').clone(true);
+	raid.find('#raid_999submit').attr('disabled', 'disabled');
+	raid.html(raid.html().replace(/999/g, rli_rkey));
+	raid.attr('id', 'raid_'+rli_rkey);
+	raid.removeAttr('style');
+	$('#raid_999').before(raid);
+	$('#raids_'+rli_rkey+'_end_date').".$functioncall.";
+	$('#raids_'+rli_rkey+'_start_date').".$functioncall.";
+	boss_keys[rli_rkey] = 0;
+	rli_rkey++;
+});
+$('input[name=\"add_boss_button[]\"]').live('click', function() {
+	var raid_key = $(this).attr('id').substr(-1);
+	var boss = $('#raid_'+raid_key+'_boss_99').clone(true);
+	boss.find('#raid_'+raid_key+'_boss_99submit').attr('disabled', 'disabled');
+	boss.html(boss.html().replace(/99/g, boss_keys[raid_key]));
+	boss.attr('id', 'raid_'+raid_key+'_boss_'+boss_keys[raid_key]);
+	boss.removeAttr('style');
+	$('#raid_'+raid_key+'_boss_99').before(boss);
+	$('#raids_'+raid_key+'_boss_'+boss_keys[raid_key]+'_date').".$functioncall.";
+	boss_keys[raid_key]++;
+});", 'docready');
 		}
 	}
 
