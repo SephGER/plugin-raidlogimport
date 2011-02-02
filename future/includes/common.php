@@ -35,6 +35,4 @@ if (!$pm->check(PLUGIN_INSTALLED, 'raidlogimport') ) {
 }
 require_once($eqdkp_root_path.'plugins/raidlogimport/includes/functions.php');
 $rli = new rli;
-
-$raidlogimport = $pm->get_plugin('raidlogimport');
 ?>
