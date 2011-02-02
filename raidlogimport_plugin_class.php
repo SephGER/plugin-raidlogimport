@@ -20,10 +20,9 @@ if ( !defined('EQDKP_INC') ) {
 	die('You cannot access this file directly.');
 }
 
-class raidlogimport_Plugin_Class extends EQdkp_Plugin {
+class raidlogimport extends plugin_generic {
 	public $vstatus = 'Stable';
 	public $version = '0.6.0.0';
-	public $build = 0;
 	
 	public function pre_install() {
 		global $core;
@@ -44,13 +43,10 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin {
 		}
 	}
 
-	public function raidlogimport_plugin_class($pm) {
+	public function __construct($pm) {
 		global $eqdkp_root_path, $user, $SID, $core;
 
-		$this->build = (int) substr('$Rev: 5173 $', 6, 4);
-
-		$this->eqdkp_plugin($pm);
-		$this->pm->get_language_pack('raidlogimport');
+		parent::__construct($pm);
 		//Load Game-Specific Language
 		$lang_file = $eqdkp_root_path.'plugins/raidlogimport/language/'.$user->lang_name.'/'.$core->config['default_game'].'_lang.php';
 		if(file_exists($lang_file)) {
@@ -76,7 +72,7 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin {
 			'long_description'	=> $user->lang('raidlogimport_long_desc'),
 			'homepage'			=> 'http://www.eqdkp-plus.com',
 			'manuallink'		=> ($user->lang_name != 'german') ? false : $eqdkp_root_path . 'plugins/raidlogimport/language/'.$user->lang_name.'/Manual.pdf',
-			'build'				=> $this->build,
+			'icon'				=> $eqdkp_root_path.'plugins/raidlogimport/images/report.png',
 			)
 		);
 
@@ -218,33 +214,26 @@ class raidlogimport_Plugin_Class extends EQdkp_Plugin {
 	}
 	
 	public function gen_admin_menu() {
-		if ( $this->pm->check(PLUGIN_INSTALLED, 'raidlogimport') ) {
-			global $db, $user, $SID, $eqdkp_root_path;
-
-			$admin_menu = array(
-				'raidlogimport' => array(
-					'icon' => './../../plugins/raidlogimport/images/report.png',
-					'name' => $user->lang('raidlogimport'),
-					1 => array(
-						'link' => 'plugins/' . $this->get_data('path') . '/admin/settings.php'.$SID,
-						'text' => $user->lang('settings'),
-						'check' => 'a_raidlogimport_config',
-						'icon' => 'settings.png'),
-					2 => array(
-						'link' => 'plugins/' . $this->get_data('path') . '/admin/bz.php'.$SID,
-						'text' => $user->lang('raidlogimport_bz'),
-						'check' => 'a_raidlogimport_bz',
-						'icon' => './../../plugins/raidlogimport/images/report_edit.png'),
-					3 => array(
-						'link' => 'plugins/' . $this->get_data('path') . '/admin/dkp.php'.$SID,
-						'text' => $user->lang('raidlogimport_dkp'),
-						'check' => 'a_raidlogimport_dkp',
-						'icon' => './../../plugins/raidlogimport/images/report_add.png')
-				)
-			);
-			return $admin_menu;
-		}
-		return;
+		global $user, $SID;
+		return array(
+			'icon' => './../../plugins/raidlogimport/images/report.png',
+			'name' => $user->lang('raidlogimport'),
+			1 => array(
+				'link' => 'plugins/' . $this->code . '/admin/settings.php'.$SID,
+				'text' => $user->lang('settings'),
+				'check' => 'a_raidlogimport_config',
+				'icon' => 'settings.png'),
+			2 => array(
+				'link' => 'plugins/' . $this->code . '/admin/bz.php'.$SID,
+				'text' => $user->lang('raidlogimport_bz'),
+				'check' => 'a_raidlogimport_bz',
+				'icon' => './../../plugins/raidlogimport/images/report_edit.png'),
+			3 => array(
+				'link' => 'plugins/' . $this->code . '/admin/dkp.php'.$SID,
+				'text' => $user->lang('raidlogimport_dkp'),
+				'check' => 'a_raidlogimport_dkp',
+				'icon' => './../../plugins/raidlogimport/images/report_add.png')
+		);
 	}
 
 	public function get_info($varname) {
