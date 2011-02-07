@@ -21,7 +21,7 @@ define('IN_ADMIN', true);
 $eqdkp_root_path = './../../../';
 include_once('./../includes/common.php');
 
-class RLI_Settings extends admin_generic
+class RLI_Settings extends page_generic
 {
 	public function __construct() {
 		global $user;

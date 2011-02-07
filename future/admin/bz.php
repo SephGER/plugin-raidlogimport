@@ -24,7 +24,7 @@ $eqdkp_root_path = './../../../';
 
 include_once('./../includes/common.php');
 
-class Bz extends admin_generic {
+class Bz extends page_generic {
 
 	public function __construct() {
 		global $user, $in;

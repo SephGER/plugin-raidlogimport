@@ -23,8 +23,8 @@ define('IN_ADMIN', true);
 $eqdkp_root_path = './../../../';
 include_once('./../includes/common.php');
 
-class raidlogimport extends admin_generic {
-	public function raidlogimport() {
+class rli_import extends page_generic {
+	public function __construct() {
 		global $user, $rli;
 		$user->check_auth('a_raidlogimport_dkp');
 		
@@ -261,5 +261,5 @@ class raidlogimport extends admin_generic {
 	}
 }
 
-$raidlogimport = new raidlogimport;
+$raidlogimport = new rli_import;
 ?>
