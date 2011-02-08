@@ -139,10 +139,6 @@
 	$lang['plus_format'] = 'Please set the output of your Tracker to EQdkpPlus XML Format';
 	$lang['magicdkp_format'] = 'An error occured.';
 	$lang['wrong_game'] = 'The game from which you exported the log and the game you specified in the configuration are not the same!';
-	$lang['wrong_settings'] = '<img src="$eqdkp_root_path'.'images/error.png" alt="error"> Wrong Settings!';
-	$lang['wrong_settings_1'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_1'].' with no Time-DKP.';
-	$lang['wrong_settings_2'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_2'].' with no Boss-DKP.';
-	$lang['wrong_settings_3'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_3'].' with no Boss- and/or Time-DKP.';
 	$lang['rli_process'] = 'Process';
 	$lang['translate_items'] = 'Translate items';
 	$lang['get_itemid'] = 'Load Item-ID';
@@ -164,6 +160,10 @@
 	$lang['raidcount_1'] = 'One raid per hour';
 	$lang['raidcount_2'] = 'One raid per boss';
 	$lang['raidcount_3'] = 'One raid per hour and per boss';
+	$lang['wrong_settings'] = '<img src="$eqdkp_root_path'.'images/error.png" alt="error"> Wrong Settings!';
+	$lang['wrong_settings_1'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_1'].' with no Time-DKP.';
+	$lang['wrong_settings_2'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_2'].' with no Boss-DKP.';
+	$lang['wrong_settings_3'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_3'].' with no Boss- and/or Time-DKP.';
 	$lang['attendence_begin'] = 'Bonus for attendence during raidbegin';
 	$lang['attendence_end'] = 'Bonus for attendence during raidend';
 	$lang['config_success'] = 'Configuration Success';
