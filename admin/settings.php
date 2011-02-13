@@ -219,7 +219,7 @@ class RLI_Settings extends page_generic
 				}
 				$warn = ($user->lang($nava['name'].'_warn')) ? $user->lang($nava['name'].'_warn') : '';
 				if($warn != '') {
-					$warn = ' <span id="w'.$nava['name'].'"><img width="16" height="16" alt="help" src="'.$eqdkp_root_path.'images/error.png"'.$jquery->tooltip('w'.$nava['name'], '', $warn, false, true, false).' /></span>';
+					$warn = ' <span id="w'.$nava['name'].'"><img width="16" height="16" alt="help" src="'.$eqdkp_root_path.'images/false.png"'.$jquery->tooltip('w'.$nava['name'], '', $warn, false, true, false).' /></span>';
 				}
 				$tpl->assign_block_vars('holder.config', array(
 					'NAME'	=> $user->lang($nava['name']).' '.$add.' '.$warn,
