@@ -137,6 +137,10 @@
 	$lang['rli_go_on'] = 'Weiter';
 	$lang['rli_raidatt_upd'] = 'Auf "Aktualisieren" drücken, um die Raidteilnahme mit den neuen Zeiten anzuzeigen.';
 	$lang['rli_error_imagecreate'] = 'Fehler beim erstellen der Bilddatei.';
+	$lang['rli_save_itempool'] = 'Itempool für markierte Items speichern.';
+	$lang['rli_itempool_saved'] = 'Itempools gespeichert!';
+	$lang['rli_itempool_partial_save'] = 'Itempools nur teilweise gespeichert.';
+	$lang['rli_itempool_nosave'] = 'Nicht gespeicherte Items';
 
 	//config
 	$lang['new_member_rank'] = 'Standard-Rang bei automatischer Erstellung';
@@ -237,6 +241,8 @@
 	$lang['standby_dkptype_4'] = $lang['use_dkp_4'];
 	$lang['standby_raidnote'] = 'Notiz des Raids für die Ersatzbank';
 	$lang['standby_raid_note'] = 'Ersatzbank';
+	$lang['itempool_save'] = 'Itempools können pro Item und Ereignis gespeichert werden.';
+	$lang['itempool_save_help'] = 'Auf der Item-Seite kann für alle angezeigten Items die Itempool-Auswahl gespeichert werden. Beim nächsten Import des Items in dem Raid, wird automatisch der gespeicherte Itempool gewählt.';
 
     //portal
     $lang['p_rli_zone_display'] = 'Welche Zonen sollen angezeigt werden?';

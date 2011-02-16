@@ -84,8 +84,10 @@ class raidlogimport extends plugin_generic {
 		//pdh-modules
 		$this->add_pdh_read_module('rli_zone');
 		$this->add_pdh_read_module('rli_boss');
+		$this->add_pdh_read_module('rli_item');
 		$this->add_pdh_write_module('rli_zone');
 		$this->add_pdh_write_module('rli_boss');
+		$this->add_pdh_write_module('rli_item');
 
 		//menu
 		$this->add_menu('admin_menu', $this->gen_admin_menu());
@@ -133,6 +135,7 @@ class raidlogimport extends plugin_generic {
 			'standby_dkptype'	=> '0',		//which dkp shall standbys get? (1 boss, 2 time, 4 event)
 			'standby_raidnote'	=> $user->lang('standby_raid_note'),		//note for standby-raid
 			'member_raid'		=> '50',	//percent which member has to be in raid, to gain assignment to raid
+			'itempool_save'		=> '1',		//save itempool per item & event
 		);
 		if(strtolower($core->config['default_game']) == 'wow') {
 			$config_data = array_merge($config_data, array(
@@ -171,6 +174,12 @@ class raidlogimport extends plugin_generic {
 				`cache_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 				`cache_class` VARCHAR(255) NOT NULL,
 				`cache_data` BLOB DEFAULT NULL
+			);",
+			"CREATE TABLE IF NOT EXISTS __raidlogimport_item2itempool (
+				`item_id` INT NOT NULL,
+				`event_id` INT NOT NULL,
+				`itempool_id` INT NOT NULL,
+				PRIMARY KEY (`item_id`, `event_id`)
 			);");
 		
 		//add default bz_data
@@ -209,6 +218,7 @@ class raidlogimport extends plugin_generic {
 		$uninstall_sqls = array(
 			"DROP TABLE IF EXISTS __raidlogimport_boss;",
 			"DROP TABLE IF EXISTS __raidlogimport_zone;",
+			"DROP TABLE IF EXISTS __raidlogimport_item2itempool;",
 			"DROP TABLE IF EXISTS __raidlogimport_cache;");
 		return $uninstall_sqls;
 	}

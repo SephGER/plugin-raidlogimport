@@ -105,7 +105,7 @@ class RLI_Settings extends page_generic
 				'standby'		=> array('standby_raid')
 			),
 			'yes_no'	=> array(
-				'general'		=> array('rli_upd_check', 'deactivate_adj'),
+				'general'		=> array('rli_upd_check', 'deactivate_adj', 'itempool_save'),
 				'difficulty' 	=> array('dep_match'),
 				'att'		 	=> array('attendence_raid'),
 				'am'			=> array('auto_minus', 'am_value_raids', 'am_allxraids'),
@@ -209,7 +209,7 @@ class RLI_Settings extends page_generic
 			);
 			$num++;
 			foreach($hold as $nava) {
-				$add = ($user->lang($nava['name'].'_help')) ? $user->lang($nava['name'].'_help') : '';
+				$add = ($user->lang($nava['name'].'_help', false, false)) ? $user->lang($nava['name'].'_help') : '';
 				if($nava['name'] == 'member_display') {
 					$info = gd_info();
 					$add = sprintf($add, (extension_loaded('gd')) ? '<span class=\\\'positive\\\'>'.$info['GD Version'].'</span>' : $user->lang('no_gd_lib'));
@@ -217,7 +217,11 @@ class RLI_Settings extends page_generic
 				if($add != '') {
 					$add = ' <span id="h'.$nava['name'].'"><img alt="help" src="'.$eqdkp_root_path.'images/info.png"'.$jquery->tooltip('h'.$nava['name'], '', $add, false, true, false).' /></span>';
 				}
-				$warn = ($user->lang($nava['name'].'_warn')) ? $user->lang($nava['name'].'_warn') : '';
+				if($user->lang($nava['name'].'_warn', false, false)) {
+					$warn = $user->lang($nava['name'].'_warn');
+				} else {
+					$warn = '';
+				}
 				if($warn != '') {
 					$warn = ' <span id="w'.$nava['name'].'"><img width="16" height="16" alt="help" src="'.$eqdkp_root_path.'images/false.png"'.$jquery->tooltip('w'.$nava['name'], '', $warn, false, true, false).' /></span>';
 				}
@@ -232,7 +236,7 @@ class RLI_Settings extends page_generic
 			'L_CONFIG' => $user->lang('raidlogimport').' '.$user->lang('settings'),
 			'L_SAVE'	 => $user->lang('bz_save'),
 			'L_MANUAL'	=> $user->lang('rli_manual'),
-			'S_GERMAN'	=> ($user->lang('lang') == 'german') ? true : false,
+			#'S_GERMAN'	=> ($user->lang_name == 'german') ? true : false,
 			'TAB_JS'	=> $jquery->Tab_header('rli_config'))
 		);
 

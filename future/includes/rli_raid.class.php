@@ -194,6 +194,7 @@ class rli_raid {
 		$timedkp = $this->get_timedkp($key, $times);
 		$bossdkp = $this->get_bossdkp($key, $times);
 		$eventdkp = $this->get_eventdkp($key, $times);
+		#$itemdkp = $this->get_itemdkp($key, $times);
 		$attdkp = $this->get_attdkp($key, $times, $attdkp_force);
 		$dkp = $timedkp + $bossdkp + $eventdkp + $attdkp;
 		return $dkp;

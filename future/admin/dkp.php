@@ -32,6 +32,7 @@ class rli_import extends page_generic {
 			'checkraid'	=> array('process' => 'process_raids'),
 			'checkmem'	=> array('process' => 'process_members'),
 			'checkitem'	=> array('process' => 'process_items'),
+			'save_itempools' => array('process' => 'itempool_save'),
 			'checkadj'	=> array('process' => 'process_adjustments'),
 			'viewall'	=> array('process' => 'process_views'),
 			'insert'	=> array('process' => 'insert_log')
@@ -41,7 +42,7 @@ class rli_import extends page_generic {
 		$this->process();
 	}
 
-	function process_raids() {
+	public function process_raids() {
 		global $core, $user, $tpl, $pm, $rli, $in;
 
 		if($in->exists('log')) {
@@ -77,8 +78,7 @@ class rli_import extends page_generic {
 		);
 	}
 
-	function process_members()
-	{
+	public function process_members() {
 		global $core, $user, $tpl, $pm, $rli, $in;
 
 		$rli->member->add_new($in->get('members_add', 0));
@@ -111,8 +111,7 @@ class rli_import extends page_generic {
 		);
 	}
 
-	function process_items()
-	{
+	public function process_items() {
 		global $core, $user, $tpl, $pm, $rli, $in;
 		
 		$rli->item->add_new($in->get('items_add', 0));
@@ -137,13 +136,18 @@ class rli_import extends page_generic {
 			'display'           => true)
 		);
 	}
+	
+	public function itempool_save() {
+		global $rli;
+		$rli->item->save_itempools();
+		$this->process_items();
+	}
 
-	function process_adjustments()
-	{
+	public function process_adjustments() {
 		global $core, $tpl, $user, $pm, $rli, $in;
 
 		$rli->adj->add_new($in->get('adjs_add', 0));
-				
+
 		$rli->member->display();
 		$rli->raid->display();
 		$rli->item->display();
@@ -167,8 +171,7 @@ class rli_import extends page_generic {
 		);
 	}
 
-	function insert_log()
-	{
+	public function insert_log() {
 		global $db, $core, $user, $tpl, $pm, $rli, $pdh;
 		
 		$message = array();
@@ -231,8 +234,7 @@ class rli_import extends page_generic {
 		}
 	}
 
-	function display($messages=array())
-	{
+	public function display($messages=array()) {
 		global $db, $core, $user, $tpl, $pm;
 		global $SID, $myHtml, $rli;
 
@@ -260,6 +262,5 @@ class rli_import extends page_generic {
 		);
 	}
 }
-
 $raidlogimport = new rli_import;
 ?>
