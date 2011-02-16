@@ -8,7 +8,7 @@
 	<table width="100%" border="0" cellspacing="1" cellpadding="2" id="raid_{raids.COUNT}" {raids.DISPLAY}>
       <tr>
       	<th <!-- IF not L_DIFFICULTY -->colspan="2"<!-- ENDIF -->>
-			<img src="./../images/glyphs/delete.png" alt="{L_delete}" title="{L_delete}" class="del_raid raid_{raids.COUNT}" />
+			<img src="{IMAGE_PATH}glyphs/delete.png" alt="{L_delete}" title="{L_delete}" class="del_raid raid_{raids.COUNT}" />
 			<input type="hidden" id="raid_{raids.COUNT}submit" name="raids[{raids.COUNT}][delete]" value="true" {raids.DELDIS} />
 			&nbsp;&nbsp;{raids.COUNT}. {L_raid}:
 		</th>
@@ -37,7 +37,7 @@
 		<td colspan="2">
 		<!-- BEGIN bosskills -->
 			<div id="raid_{raids.COUNT}_boss_{raids.bosskills.BK_KEY}" {raids.bosskills.DISPLAY}>
-			&nbsp;<img src="./../images/glyphs/delete.png" alt="{L_delete}" title="{L_delete}" class="del_boss raid_{raids.COUNT}_boss_{raids.bosskills.BK_KEY}" />
+			&nbsp;<img src="{IMAGE_PATH}glyphs/delete.png" alt="{L_delete}" title="{L_delete}" class="del_boss raid_{raids.COUNT}_boss_{raids.bosskills.BK_KEY}" />
 			<input type="hidden" id="raid_{raids.COUNT}_boss_{raids.bosskills.BK_KEY}submit" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][delete]" value="true" {raids.bosskills.DELDIS} />
 			&nbsp;&nbsp;{raids.bosskills.BK_SELECT}
 			&nbsp;&nbsp;&nbsp;&nbsp;{L_date}: {raids.bosskills.BK_DATE}

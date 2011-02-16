@@ -114,11 +114,16 @@ class rli_item {
 						foreach($rli->raid->raidlist as $i => $note) {
 							if(!(in_array($i, $att_raids) AND $this->config['attendence_raid'])) {
 								$raid_select .= "<option value='".$i."'";
-								if($rli->raid->item_in_raid($i, $item['time'])) {
+								if((!$item['raid'] && $rli->raid->item_in_raid($i, $item['time'])) || ($item['raid'] && $item['raid'] == $i)) {
 									$raid_select .= ' selected="selected"';
-									$mdkps = $pdh->get('multidkp', 'mdkpids4eventid', array($rli->raid->raidevents[$i]));
-									$itmpls = $pdh->get('multidkp', 'itempool_ids', array($mdkps[0]));
-									$item['itempool'] = $itmpls[0];
+									if(!$item['itempool'] && $this->config('itempool_save')) {
+										$item['itempool'] = $pdh->get('rli_item', 'itempool', array($item['game_id'], $rli->raid->raidevents[$i]));
+									}
+									if(!$item['itempool']) {
+										$mdkps = $pdh->get('multidkp', 'mdkpids4eventid', array($rli->raid->raidevents[$i]));
+										$itmpls = $pdh->get('multidkp', 'itempool_ids', array($mdkps[0]));
+										$item['itempool'] = $itmpls[0];
+									}
 								}
 								$raid_select .= ">".$note."</option>";
 							}
@@ -127,7 +132,7 @@ class rli_item {
 					$tpl->assign_block_vars('loots', array(
 						'LOOTNAME'  => $item['name'],
 						'ITEMID'    => (isset($item['game_id'])) ? $item['game_id'] : '',
-						'LOOTER'    => ($with_form) ? $html->DropDown("loots[".$key."][member]", $members, $mem_sel, '', '', 'input', '', 0) : $item['member'],
+						'LOOTER'    => ($with_form) ? $html->DropDown("loots[".$key."][member]", $members, $mem_sel, '', '', 'input', '', '0') : $item['member'],
 						'RAID'      => ($with_form) ? $raid_select."</select>" : $item['raid'],
 						'ITEMPOOL'	=> ($with_form) ? $html->DropDown('loots['.$key.'][itempool]', $itempools, $item['itempool']) : $pdh->get('itempool', 'name', array($item['itempool'])),
 						'LOOTDKP'   => runden($item['value']),
@@ -152,7 +157,8 @@ class rli_item {
 					'ITEMPOOL'	=> $html->DropDown('loots[999][itempool]', $itempools, 0),
 					'LOOTER'	=> $html->DropDown('loots[999][member]', $members, ''),
 					'RAID'		=> $html->DropDown('loots[999][raid]', $rli->raid->raidlist, 0),
-					'DISPLAY'	=> 'style="display: none;"'
+					'DISPLAY'	=> 'style="display: none;"',
+					'S_IP_SAVE' => $this->config('itempool_save')
 				));
 				$tpl->add_js(
 "var rli_key = ".($key+1).";
@@ -185,6 +191,29 @@ $('#add_item_button').click(function() {
 			$next_button = '<input type="submit" name="checkadj" value="'.$user->lang('rli_go_on').' ('.$user->lang('rli_checkadj').')" class="mainoption" />';
 		}
 		$tpl->assign_var('NEXT_BUTTON', $next_button);
+	}
+	
+	public function save_itempools() {
+		global $pdh, $in, $rli, $core, $user;
+		$to_save = $in->getArray('itempool_save', 'int');
+		$rli->raid->raidlist(true);
+		$saves = array();
+		foreach($to_save as $id) {
+			$event = $rli->raid->raidevents[$in->get('loots:'.$id.':raid', 0)];
+			$game_id = $in->get('loots:'.$id.':game_id', 0);
+			$saves[$id] = $pdh->put('rli_item', 'add', array($game_id, $event, $in->get('loots:'.$id.':itempool', 0)));
+		}
+		if(!in_array(false, $saves, true)) {
+			$core->message($user->lang('rli_itempool_saved'), $user->lang('success'), 'green');
+		} else {
+			$message = $user->lang('rli_itempool_nosave').': <br />';
+			$fails = array();
+			foreach($saves as $id => $res) {
+				if(!$res) $fails[] = $in->get('loots:'.$id.':name');
+			}
+			$core->message($message.implode(', ', $fails), $user->lang('rli_itempool_partial_save'), 'red');
+		}
+		$pdh->process_hook_queue();
 	}
 
 	public function check($bools) {
