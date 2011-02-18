@@ -23,7 +23,26 @@
 			<div class="raid_right"> </div>
 		</div>
 		<!-- END member_raids -->
-		<!-- BEGIN bosses --><div id="boss_{player.KEY}_{bosses.KEY}" {bosses.TOOLTIP} style="margin-left: {bosses.LEFT}px;"></div><!-- END bosses -->
+		<!-- BEGIN bosses -->
+		<div id="boss_{player.KEY}_{player.bosses.KEY}" class="rli_boss" style="margin-left: {player.bosses.LEFT}px;">
+			<span class="rli_boss_c" style="display: none;">
+				<table>
+					<tr>
+						<td>{L_rli_bossname}</td>
+						<td>{player.bosses.NAME}</td>
+					</tr>
+					<tr>
+						<td>{L_rli_bosstime}</td>
+						<td>{player.bosses.TIME}</td>
+					</tr>
+					<tr>
+						<td>{L_rli_bossvalue}</td>
+						<td>{player.bosses.VALUE}</td>
+					</tr>
+				</table>
+			</span>
+		</div>
+		<!-- END bosses -->
 		<div id="times_{player.KEY}">
 		<!-- BEGIN times -->
 			<div id="times_{player.KEY}_{player.times.KEY}" class="time{player.times.STANDBY}" style="width: {player.times.WIDTH}px; margin-left: {player.times.LEFT}px;" onmouseover="set_time_key(this.id);">

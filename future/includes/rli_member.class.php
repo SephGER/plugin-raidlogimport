@@ -416,17 +416,21 @@ $('#add_mem_button').click(function() {
 				foreach($raid['bosskills'] as $bkey => $boss) {
 					$m = ($boss['time']-$width['begin'])/20 - 4;
 					settype($m, 'int');
-					$bossinfo = "<table><tr><td>".$user->lang('rli_bossname')." </td><td>".$pdh->get('rli_boss', 'note', array($boss['id']))."</td></tr><tr><td>".$user->lang('rli_bosstime')."</td><td>".$time->user_date($boss['time'], false, false, true)."</td></tr><tr><td>".$user->lang('rli_bossvalue')."</td><td>".$boss['bonus']."</td></tr></table>";
-					$tt_out = $jquery->tooltip('#boss_'.$key.'_'.$bkey, 'boss', $bossinfo);
-					$tpl->assign_block_vars('bosses', array(
+					$jquery->qtip('.rli_boss', 'return $(".rli_boss_c", this).html();', true);
+					$this->boss_data[] = array(
 						'KEY' => $bkey,
 						'LEFT' => $m,
-						'TOOLTIP' => $tt_out)
+						'NAME' => $pdh->get('rli_boss', 'note', array($boss['id'])),
+						'TIME' => $time->user_date($boss['time'], false, false, true),
+						'VALUE'	=> $boss['bonus']
 					);
 				}
+				$this->bosses_done = true;
         	}
+			foreach($this->boss_data as $boss_data) {
+				$tpl->assign_block_vars('player.bosses', $boss_data);
+			}
         }
-		$this->bosses_done = true;
         $tkey = 0;
         foreach($this->members[$key]['times'] as $mtime) {
         	$s = (isset($mtime['standby']) AND $mtime['standby']) ? 'standby' : '';

@@ -36,7 +36,7 @@
 .raid.down.active {
 	background-image: url(./../../images/araid_bg_dark.png);
 }
-.boss {
+.rli_boss {
 	position: absolute;
 	height: 18px;
 	background-image: url(./../../images/skull.png);
