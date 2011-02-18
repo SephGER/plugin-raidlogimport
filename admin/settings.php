@@ -215,7 +215,7 @@ class RLI_Settings extends page_generic
 					$add = sprintf($add, (extension_loaded('gd')) ? '<span class=\\\'positive\\\'>'.$info['GD Version'].'</span>' : $user->lang('no_gd_lib'));
 				}
 				if($add != '') {
-					$add = ' <span id="h'.$nava['name'].'"><img alt="help" src="'.$eqdkp_root_path.'images/info.png"'.$jquery->tooltip('h'.$nava['name'], '', $add, false, true, false).' /></span>';
+					$add = $html->ToolTip($add, '<img alt="help" src="'.$eqdkp_root_path.'images/info.png" />');
 				}
 				if($user->lang($nava['name'].'_warn', false, false)) {
 					$warn = $user->lang($nava['name'].'_warn');
@@ -223,7 +223,7 @@ class RLI_Settings extends page_generic
 					$warn = '';
 				}
 				if($warn != '') {
-					$warn = ' <span id="w'.$nava['name'].'"><img width="16" height="16" alt="help" src="'.$eqdkp_root_path.'images/false.png"'.$jquery->tooltip('w'.$nava['name'], '', $warn, false, true, false).' /></span>';
+					$warn = $html->ToolTip($warn, '<img width="16" height="16" alt="help" src="'.$eqdkp_root_path.'images/false.png" />');
 				}
 				$tpl->assign_block_vars('holder.config', array(
 					'NAME'	=> $user->lang($nava['name']).' '.$add.' '.$warn,
