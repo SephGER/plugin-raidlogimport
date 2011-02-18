@@ -225,7 +225,7 @@ class raidlogimport extends plugin_generic {
 	
 	public function gen_admin_menu() {
 		global $user, $SID;
-		return array(
+		return array(array(
 			'icon' => './../../plugins/raidlogimport/images/report.png',
 			'name' => $user->lang('raidlogimport'),
 			1 => array(
@@ -243,7 +243,7 @@ class raidlogimport extends plugin_generic {
 				'text' => $user->lang('raidlogimport_dkp'),
 				'check' => 'a_raidlogimport_dkp',
 				'icon' => './../../plugins/raidlogimport/images/report_add.png')
-		);
+		));
 	}
 
 	public function get_info($varname) {
