@@ -421,7 +421,7 @@ $('#add_mem_button').click(function() {
 						'KEY' => $bkey,
 						'LEFT' => $m,
 						'NAME' => $pdh->get('rli_boss', 'note', array($boss['id'])),
-						'TIME' => $time->user_date($boss['time'], false, false, true),
+						'TIME' => $time->user_date($boss['time'], false, true),
 						'VALUE'	=> $boss['bonus']
 					);
 				}
