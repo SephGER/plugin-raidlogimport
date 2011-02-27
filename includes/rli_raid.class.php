@@ -223,7 +223,7 @@ class rli_raid {
 			if(!$with_form) {
 				foreach($rai['bosskills'] as $bk) {
 					$note = (!is_numeric($bk['id'])) ? $bk['id'] : $pdh->geth('rli_boss', 'note', array($bk['id']));
-					$bosskills .= '<tr class="'.$core->switch_row_class().'"><td>'.$note.'</td><td colspan="2">'.date('H:i:s',$bk['time']).'</td><td>'.$bk['bonus'].'</td></tr>';
+					$bosskills .= '<tr><td>'.$note.'</td><td colspan="2">'.date('H:i:s',$bk['time']).'</td><td>'.$bk['bonus'].'</td></tr>';
 				}
 			}
 			if(isset($rai['bosskill_add'])) {

@@ -87,7 +87,6 @@ if(!class_exists('rli_adjustment')) {
 					'NOTE'		=> $adj['reason'],
 					'VALUE'		=> $adj['value'],
 					'RAID'		=> $html->DropDown('adjs['.$a.'][raid]', $raid_select, $adj['raid']),
-					'CLASS'		=> $core->switch_row_class(),
 					'KEY'		=> $a,
 				));
 			}

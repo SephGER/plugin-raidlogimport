@@ -169,8 +169,8 @@ class Bz extends page_generic {
 				'ZSELECTED'		=> ($type == 'zone') ? 'selected="selected"' : '',
 				'DIFF_ARRAY'	=> $html->DropDown("diff[".$type."_".$id."]", $this->diff_drop, $pdh->get('rli_'.$type, 'diff', array($id))),
 				'ZONE_ARRAY'	=> $html->DropDown("tozone[".$type."_".$id."]", $this->zone_drop, (($type == 'boss') ? $pdh->get('rli_boss', 'tozone', array($id)) : $id)),
-				'EVENTS'		=> $html->DropDown("event[".$type."_".$id."]", $this->event_drop, (($type == 'zone') ? $pdh->get('rli_zone', 'event', array($id)) : $pdh->get('rli_boss', 'note', array($id)))),
-				'CLASS'			=> $core->switch_row_class());
+				'EVENTS'		=> $html->DropDown("event[".$type."_".$id."]", $this->event_drop, (($type == 'zone') ? $pdh->get('rli_zone', 'event', array($id)) : $pdh->get('rli_boss', 'note', array($id))))
+		);
 	}
 	
 	private function prepare_diff_drop() {
@@ -208,9 +208,8 @@ class Bz extends page_generic {
 				'ZSELECTED'	=> '',
 				'DIFF_ARRAY' => $html->DropDown("diff[neu]", $this->diff_drop, $in->get('diff')),
 				'ZONE_ARRAY' => $html->DropDown("tozone[neu]", $this->zone_drop, $in->get('zone_id')),
-				'EVENTS'	=> $html->DropDown("event[neu]", $this->event_drop, ''),
-				'CLASS'		=> $core->switch_row_class())
-			);
+				'EVENTS'	=> $html->DropDown("event[neu]", $this->event_drop, '')
+			));
 		}
 
 		$tpl->assign_vars(array(
@@ -316,9 +315,8 @@ class Bz extends page_generic {
 					'BSTRING'	=> $pdh->geth('rli_boss', 'string', array($boss_id)),
 					'BNOTE'		=> $pdh->geth('rli_boss', 'note', array($boss_id)),
 					'BBONUS'	=> $pdh->get('rli_boss', 'bonus', array($boss_id)),
-					'BTIMEBONUS'=> $pdh->get('rli_boss', 'timebonus', array($boss_id)),
-					'CLASS' 	=> $core->switch_row_class())
-				);
+					'BTIMEBONUS'=> $pdh->get('rli_boss', 'timebonus', array($boss_id))
+				));
 			}
 		}
 	}
