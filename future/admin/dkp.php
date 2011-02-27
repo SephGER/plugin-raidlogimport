@@ -195,8 +195,7 @@ class rli_import extends page_generic {
 			}
 			foreach($message as $answer) {
 				$tpl->assign_block_vars('sucs', array(
-					'PART1'	=> $answer,
-					'CLASS'	=> $core->switch_row_class())
+					'PART1'	=> $answer)
 				);
 			}
 			$tpl->assign_vars(array(

@@ -15,7 +15,7 @@
 </tr>
 <!-- ENDIF -->
 <!-- BEGIN player -->
-<tr class="{player.ZAHL}" id="memberrow_{player.KEY}" {player.DISPLAY}>
+<tr id="memberrow_{player.KEY}" {player.DISPLAY}>
 	<td align="right">
 		{player.NR}&nbsp;<img src="{IMAGE_PATH}glyphs/delete.png" alt="{L_delete}" title="{L_delete}" class="del_mem memberrow_{player.KEY}" />
 		<input type="hidden" id="memberrow_{player.KEY}submit" name="members[{player.KEY}][delete]" value="true" {player.DELDIS} />

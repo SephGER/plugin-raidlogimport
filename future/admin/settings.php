@@ -227,8 +227,7 @@ class RLI_Settings extends page_generic
 				}
 				$tpl->assign_block_vars('holder.config', array(
 					'NAME'	=> $user->lang($nava['name']).' '.$add.' '.$warn,
-					'VALUE' => $nava['value'],
-					'CLASS'	=> $core->switch_row_class())
+					'VALUE' => $nava['value'])
 				);
 			}
 		}

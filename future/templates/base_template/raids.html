@@ -5,7 +5,7 @@
       </tr>
 	</table>
     <!-- BEGIN raids -->
-	<table width="100%" border="0" cellspacing="1" cellpadding="2" id="raid_{raids.COUNT}" {raids.DISPLAY}>
+	<table width="100%" border="0" cellspacing="1" cellpadding="2" id="raid_{raids.COUNT}" {raids.DISPLAY} class="colorswitch">
       <tr>
       	<th <!-- IF not L_DIFFICULTY -->colspan="2"<!-- ENDIF -->>
 			<img src="{IMAGE_PATH}glyphs/delete.png" alt="{L_delete}" title="{L_delete}" class="del_raid raid_{raids.COUNT}" />
@@ -16,25 +16,25 @@
         <th>{L_DIFFICULTY}: {raids.DIFF}</th>
       	<!-- ENDIF -->
       </tr>
-      <tr class="row1">
+      <tr>
       	<td>{L_rli_start}: {raids.START_DATE}</td>
         <td>{L_event}: {raids.EVENT}</td>
       </tr>
-      <tr class="row2">
+      <tr>
         <td>{L_rli_end}: {raids.END_DATE}</td>
         <td>
 			{L_value}: <input type="text" name="raids[{raids.COUNT}][value]" value="{raids.VALUE}" class="maininput" size="6" />
 			<!-- IF USE_TIMEDKP -->&nbsp;&nbsp;&nbsp;&nbsp; {L_rli_t_points}: <input type="text" name="raids[{raids.COUNT}][timebonus]" value="{raids.TIMEBONUS}" class="maininput" size="6" /><!-- ENDIF -->
 		</td>
       </tr>
-      <tr class="row1">
+      <tr>
         <td colspan="2">{L_note}: <input type="text" name="raids[{raids.COUNT}][note]" value="{raids.NOTE}" class="maininput" size="90" /></td>
       </tr>
-      <tr class="row2">
+      <tr>
 		<td colspan="2">{L_rli_bosskills}:</td>
 	  </tr>
-	  <tr class="row1">
-		<td colspan="2">
+	  <t">
+		<td colspan="2" class="colorswitch">
 		<!-- BEGIN bosskills -->
 			<div id="raid_{raids.COUNT}_boss_{raids.bosskills.BK_KEY}" {raids.bosskills.DISPLAY}>
 			&nbsp;<img src="{IMAGE_PATH}glyphs/delete.png" alt="{L_delete}" title="{L_delete}" class="del_boss raid_{raids.COUNT}_boss_{raids.bosskills.BK_KEY}" />
@@ -53,7 +53,7 @@
 		<!-- END bosskills -->
 		</td>
 	  </tr>
-	  <tr class="row2">
+	  <tr>
 	  	<td colspan="2">
 			<input type="button" id="raidb_{raids.COUNT}" name="add_boss_button[]" class="mainoption bi_new" value="{L_rli_add_bk}"/>
 	  	</td>

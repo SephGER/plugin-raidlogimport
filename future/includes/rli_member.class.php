@@ -253,7 +253,6 @@ if(!class_exists('rli_member')) {
                 'RAID_LIST'=> ($with_form) ? $raid_list : implode('; ', $raid_list),
                 'ATT_BEGIN'=> $att_begin,
                 'ATT_END'  => $att_end,
-                'ZAHL'     => $core->switch_row_class(),
                 'KEY'	   => $key,
                 'NR'	   => $key +1,
                 'RANK'	   => ($this->config('s_member_rank') & 1) ? $this->rank_suffix($member['name']) : '',

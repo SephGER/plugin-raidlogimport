@@ -137,7 +137,6 @@ class rli_item {
 						'ITEMPOOL'	=> ($with_form) ? $html->DropDown('loots['.$key.'][itempool]', $itempools, $item['itempool']) : $pdh->get('itempool', 'name', array($item['itempool'])),
 						'LOOTDKP'   => runden($item['value']),
 						'KEY'       => $key,
-						'CLASS'     => $core->switch_row_class(),
 						'DELDIS'	=> 'disabled="disabled"')
 					);
 				}
