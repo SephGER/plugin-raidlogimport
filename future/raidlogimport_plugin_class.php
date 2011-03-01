@@ -110,19 +110,10 @@ class raidlogimport extends plugin_generic {
 			'parser'			=> 'plus',  //which format has the xml-string?
 			'rli_upd_check'		=> '1',		//enable update check?
 			'use_dkp'			=> '1',		//1: bossdkp, 2:zeitdkp, 4: event-dkp
-			'null_sum'			=> '0', 	//use null-sum-system?
-			'item_save_lang'	=> 'de',
 			'deactivate_adj'	=> '0',
-			'auto_minus'		=> '0',		//automatic minus
-			'am_raidnum'		=> '3',		//if not joined last 3 raids
-			'am_value'			=> '10',	//member looses 10dkp
-			'am_value_raids'	=> '0',		//dkp-value depends on value of last 3 (or set number) of raids (option above becomes useless)
-			'am_allxraids'		=> '0',		//reset raidcounter if member gains minus? (default off)
 			'ignore_dissed'		=> '0',		//ignore disenchanted and bank loot?
 			'member_miss_time' 	=> '300',	//time in secs member can miss without it being tracked
 			's_member_rank'		=> '0',		//show member_rank? (0: no, 1: memberpage, 2: lootpage, 4: adjustmentpage, 3:member+lootpage, 5:adjustments+memberpage, 6: loot+adjustmentpage, 7: overall)
-			'member_start'		=> '0',		//amount of DKP a member gains as an individual adjustment, when he is auto-created
-			'member_start_event' => '0',	//event for Start-DKP
 			'att_note_begin'	=> $user->lang('rli_att').' '.$user->lang('rli_start'),	//note for attendence_start-raid
 			'att_note_end'		=> $user->lang('rli_att').' '.$user->lang('rli_end'),	//  "	"		"	 _end-raid
 			'raid_note_time'	=> '0', 	//0: exact time (20:03:43-21:03:43); 1: hour (1. hour, 2. hour)
@@ -189,25 +180,24 @@ class raidlogimport extends plugin_generic {
 			$data = (is_array(${$user->lang_name})) ? ${$user->lang_name} : $english;
 			if (is_array($data)) {
 				$zones = $pdh->aget('event', 'name', 0, array($pdh->get('event', 'id_list')));
-				foreach($data as $bz) {
-					if($bz[0] == 'zone') {
-						$id = 1;
-						foreach($zones as $zid => $zone) {
-							if(strpos($zone, $bz[2]) !== false) {
-								$id = $zid;
-								break;
-							}
-						}							
-						$install_sqls[] = 	"INSERT INTO __raidlogimport_zone
-												(zone_string, zone_event, zone_timebonus, zone_diff, zone_sort)
-											VALUES
-												('".$db->escape($bz[1])."', '".$id."', '".$bz[4]."', '".$bz[5]."', '".$bz[7]."');";
-					} else {
-						$install_sqls[] = 	"INSERT INTO __raidlogimport_boss
-												(boss_string, boss_note, boss_bonus, boss_timebonus, boss_diff, boss_tozone, boss_sort)
-											VALUES
-												('".$db->escape($bz[1])."', '".$db->escape($bz[2])."', '".$bz[3]."', '".$bz[4]."', '".$bz[5]."', '".$bz[6]."', '".$bz[7]."');";
-					}
+				foreach($data['zone'] as $bz) {
+					$id = 1;
+					foreach($zones as $zid => $zone) {
+						if(strpos($zone, $bz[1]) !== false) {
+							$id = $zid;
+							break;
+						}
+					}							
+					$install_sqls[] = 	"INSERT INTO __raidlogimport_zone
+											(zone_string, zone_event, zone_timebonus, zone_diff, zone_sort)
+										VALUES
+											('".$db->escape($bz[0])."', '".$id."', '".$bz[2]."', '".$bz[3]."', '".$bz[4]."');";
+				}
+				foreach($data['boss'] as $bz) {
+					$install_sqls[] = 	"INSERT INTO __raidlogimport_boss
+											(boss_string, boss_note, boss_bonus, boss_timebonus, boss_diff, boss_tozone, boss_sort)
+										VALUES
+											('".$db->escape($bz[0])."', '".$db->escape($bz[1])."', '".$bz[2]."', '".$bz[3]."', '".$bz[4]."', '".$bz[5]."', '".$bz[6]."');";
 				}
 			}
 		}

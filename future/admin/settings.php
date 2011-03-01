@@ -101,20 +101,20 @@ class RLI_Settings extends page_generic
 		$configs = array(
 			'select' 	=> array(
 				'general' 		=> array('raidcount', 'raid_note_time', 'parser'),
-				'member'		=> array('new_member_rank', 'member_start_event', 'member_display'),
+				'member'		=> array('new_member_rank', 'member_display'), #, 'member_start_event'),
 				'standby'		=> array('standby_raid')
 			),
 			'yes_no'	=> array(
 				'general'		=> array('rli_upd_check', 'deactivate_adj', 'itempool_save'),
 				'difficulty' 	=> array('dep_match'),
 				'att'		 	=> array('attendence_raid'),
-				'am'			=> array('auto_minus', 'am_value_raids', 'am_allxraids'),
+				#'am'			=> array('auto_minus', 'am_value_raids', 'am_allxraids'),
 				'standby'		=> array('standby_absolute', 'standby_att')
 			),
 			'text'		=> array(
 				'general'		=> array('timedkp_handle', 'bz_parse', 'loottime'),
-				'member'		=> array('member_miss_time', 'member_start', 'member_raid'),
-				'am'			=> array('am_raidnum', 'am_value'),
+				'member'		=> array('member_miss_time', 'member_raid'), #'member_start'),
+				#'am'			=> array('am_raidnum', 'am_value'),
 				'att'			=> array('attendence_begin', 'attendence_end', 'attendence_time', 'att_note_begin', 'att_note_end'),
 				'difficulty'	=> array('diff_1', 'diff_2', 'diff_3', 'diff_4'),
 				'standby'		=> array('standby_value', 'standby_raidnote')
