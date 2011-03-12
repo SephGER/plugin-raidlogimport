@@ -39,7 +39,6 @@ class pdh_w_rli_boss extends pdh_w_generic {
 			$id = $db->insert_id();
 			$pdh->enqueue_hook('rli_boss_update', array($id));
 			$log_action = array(
-				'header'			=> '{L_ACTION_RAIDLOGIMPORT_BZ_ADD}',
 				'{L_ID}'			=> $id,
 				'{L_BZ_TYPE}'   	=> '{L_BZ_BOSS_S}',
 				'{L_BZ_STRING}'		=> $string,
@@ -49,7 +48,7 @@ class pdh_w_rli_boss extends pdh_w_generic {
 				'{L_BZ_TOZONE}' 	=> ($tozone) ? $pdh->get('rli_zone', 'note', array($tozone)) : '{L_BZ_NO_ZONE}',
 				'{L_BZ_DIFF}' 		=> $diff
 			);
-			$this->log_insert($log_action, true, 'raidlogimport');
+			$this->log_insert('action_raidlogimport_bz_add', $log_action, true, 'raidlogimport');
 			return $id;
 		}
 		return false;
@@ -82,7 +81,6 @@ class pdh_w_rli_boss extends pdh_w_generic {
 			if($db->query("UPDATE __raidlogimport_boss SET :params WHERE boss_id = '".$id."';", $data)) {
 				$pdh->enqueue_hook('rli_boss_update', array($id));
 				$log_action = array(
-					'header'			=> '{L_ACTION_RAIDLOGIMPORT_BZ_UPD}',
 					'{L_ID}'			=> $id,
 					'{L_BZ_TYPE}'   	=> '{L_BZ_ZONE_S}',
 					'{L_BZ_STRING}'		=> $old['string']." => ".$string,
@@ -92,7 +90,7 @@ class pdh_w_rli_boss extends pdh_w_generic {
 					'{L_BZ_DIFF}' 		=> $old['diff']." => ".$diff,
 					'{L_BZ_TOZONE}' 	=> (($old['tozone']) ? $pdh->get('rli_zone', 'note', array($old['tozone'])) : '{L_BZ_NO_ZONE}').(($tozone) ? $pdh->get('rli_zone', 'note', array($tozone)) : '{L_BZ_NO_ZONE}'),
 				);
-				$this->log_insert($log_action, true, 'raidlogimport');
+				$this->log_insert('action_raidlogimport_bz_upd', $log_action, true, 'raidlogimport');
 				return $id;
 			}
 		} else {
@@ -118,7 +116,6 @@ class pdh_w_rli_boss extends pdh_w_generic {
 		if($db->query("DELETE FROM __raidlogimport_boss WHERE boss_id = '".$id."';")) {
 			$pdh->enqueue_hook('rli_boss_update', array($id));
 			$log_action = array(
-				'header'			=> '{L_ACTION_RAIDLOGIMPORT_BZ_UPD}',
 				'{L_ID}'			=> $id,
 				'{L_BZ_TYPE}'   	=> '{L_BZ_ZONE_S}',
 				'{L_BZ_STRING}'		=> $old['string'],
@@ -128,7 +125,7 @@ class pdh_w_rli_boss extends pdh_w_generic {
 				'{L_BZ_DIFF}' 		=> $old['diff'],
 				'{L_BZ_TOZONE}' 	=> ($old['tozone']) ? $pdh->get('rli_zone', 'note', array($old['tozone'])) : '{L_BZ_NO_ZONE}',
 			);
-			$this->log_insert($log_action, true, 'raidlogimport' );
+			$this->log_insert('action_raidlogimport_bz_del', $log_action, true, 'raidlogimport' );
 			return $id;
 		}
 		return false;
