@@ -40,7 +40,6 @@ class pdh_w_rli_zone extends pdh_w_generic {
 			$id = $db->insert_id();
 			$pdh->enqueue_hook('rli_zone_update', array($id));
 			$log_action = array(
-				'header'			=> '{L_ACTION_RAIDLOGIMPORT_BZ_ADD}',
 				'{L_ID}'			=> $id,
 				'{L_BZ_TYPE}'   	=> '{L_BZ_ZONE_S}',
 				'{L_BZ_STRING}'		=> $string,
@@ -48,7 +47,7 @@ class pdh_w_rli_zone extends pdh_w_generic {
 				'{L_BZ_TIMEBONUS}'	=> $timebonus,
 				'{L_BZ_DIFF}' 		=> $diff
 			);
-			$this->log_insert($log_action, true, 'raidlogimport' );
+			$this->log_insert('action_raidlogimport_bz_add', $log_action, true, 'raidlogimport' );
 			return $id;
 		}
 		return false;
@@ -77,7 +76,6 @@ class pdh_w_rli_zone extends pdh_w_generic {
 			if($db->query("UPDATE __raidlogimport_zone SET :params WHERE zone_id = '".$id."';", $data)) {
 				$pdh->enqueue_hook('rli_zone_update', array($id));
 				$log_action = array(
-					'header'			=> '{L_ACTION_RAIDLOGIMPORT_BZ_UPD}',
 					'{L_ID}'			=> $id,
 					'{L_BZ_TYPE}'   	=> '{L_BZ_ZONE_S}',
 					'{L_BZ_STRING}'		=> $old['string']." => ".$string,
@@ -85,7 +83,7 @@ class pdh_w_rli_zone extends pdh_w_generic {
 					'{L_BZ_TIMEBONUS}'	=> $old['timebonus']." => ".$timebonus,
 					'{L_BZ_DIFF}' 		=> $old['diff']." => ".$diff,
 				);
-				$this->log_insert($log_action, true, 'raidlogimport' );
+				$this->log_insert('action_raidlogimport_bz_upd', $log_action, true, 'raidlogimport' );
 				return $id;
 			}
 		} else {
@@ -109,7 +107,6 @@ class pdh_w_rli_zone extends pdh_w_generic {
 		if($db->query("DELETE FROM __raidlogimport_zone WHERE zone_id = '".$id."';")) {
 			$pdh->enqueue_hook('rli_zone_update', array($id));
 			$log_action = array(
-				'header'			=> '{L_ACTION_RAIDLOGIMPORT_BZ_DEL}',
 				'{L_ID}'			=> $id,
 				'{L_BZ_TYPE}'   	=> '{L_BZ_ZONE_S}',
 				'{L_BZ_STRING}'		=> $old['string'],
@@ -117,7 +114,7 @@ class pdh_w_rli_zone extends pdh_w_generic {
 				'{L_BZ_TIMEBONUS}'	=> $old['timebonus'],
 				'{L_BZ_DIFF}' 		=> $old['diff'],
 			);
-			$this->log_insert($log_action, true, 'raidlogimport' );
+			$this->log_insert('action_raidlogimport_bz_del', $log_action, true, 'raidlogimport' );
 			return $id;
 		}
 		return false;
