@@ -229,8 +229,8 @@ class rli_raid {
 			if(isset($rai['bosskill_add'])) {
 				$this->new_bosskill($ky, $rai['bosskill_add']);
 			}
-			$begin = $time->user_date($rai['begin'], true);
-			$end = $time->user_date($rai['end'], true);
+			$begin = $time->user_date($rai['begin'], true, false, false, function_exists('date_create_from_format'));
+			$end = $time->user_date($rai['end'], true, false, false, function_exists('date_create_from_format'));
 			$tpl->assign_block_vars('raids', array(
 				'COUNT'     => $ky,
 				'START_DATE'=> ($with_form) ? $jquery->Calendar("raids[".$ky."][start_date]", $begin, '', array('id' => 'raids_'.$ky.'_start_date', 'timepicker' => true)) : $begin,
@@ -268,7 +268,7 @@ class rli_raid {
 						}
 						$tpl->assign_block_vars('raids.bosskills', array(
 							'BK_SELECT' => $name_field,
-							'BK_DATE'   => $jquery->Calendar("raids[".$ky."][bosskills][".$xy."][date]", $time->user_date($bk['time'], true), '', array('id' => 'raids_'.$ky.'_boss_'.$xy.'_date', 'timepicker' => true)),
+							'BK_DATE'   => $jquery->Calendar("raids[".$ky."][bosskills][".$xy."][date]", $time->user_date($bk['time'], true, false, false, function_exists('date_create_from_format')), '', array('id' => 'raids_'.$ky.'_boss_'.$xy.'_date', 'timepicker' => true)),
 							'BK_BONUS'  => $bk['bonus'],
 							'BK_TIMEBONUS' => $bk['timebonus'],
 							'BK_DIFF'	=> $html->DropDown('raids['.$ky.'][bosskills]['.$xy.'][diff]', $this->diff_drop, $bk['diff'], '', '', 'input', 'diff_'.$html_id),
