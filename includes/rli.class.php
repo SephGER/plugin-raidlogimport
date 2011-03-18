@@ -38,8 +38,8 @@ class rli
 	public $adj = false;
 
 	public function __construct() {
-		global $core, $settings;
-		$this->config = $settings->get_config('raidlogimport');
+		global $core;
+		$this->config = $core->config['raidlogimport'];
 		if($this->config['bz_parse'] == '' or !$this->config['bz_parse'])
 		{
 			$this->config['bz_parse'] = ',';
