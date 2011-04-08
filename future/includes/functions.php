@@ -87,7 +87,7 @@ function deep_in_array($search, $array) {
 function lang2tpl() {
 	global $user, $core;
 	$la_ar = array(
-        'L_DIFFICULTY' 	=> ($core->config['default_game'] == 'wow') ? $user->lang('difficulty') : false,
+        'L_DIFFICULTY' 	=> ($core->config('default_game') == 'wow') ? $user->lang('difficulty') : false,
 	);
 	return $la_ar;
 }

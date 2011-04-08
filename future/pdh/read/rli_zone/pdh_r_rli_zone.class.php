@@ -32,7 +32,7 @@ class pdh_r_rli_zone extends pdh_r_generic {
 			$sql = "SELECT zone_id, zone_string, zone_event, zone_timebonus, zone_diff, zone_sort FROM __raidlogimport_zone;";
 			if($result = $db->query($sql)) {
 				while($row = $db->fetch_record($result)) {
-					$this->data[$row['zone_id']]['string'] = explode($core->config['raidlogimport']['bz_parse'], $row['zone_string']);
+					$this->data[$row['zone_id']]['string'] = explode($core->config('bz_parse', 'raidlogimport'), $row['zone_string']);
 					$this->data[$row['zone_id']]['event'] = $row['zone_event'];
 					$this->data[$row['zone_id']]['timebonus'] = $row['zone_timebonus'];
 					$this->data[$row['zone_id']]['diff'] = $row['zone_diff'];

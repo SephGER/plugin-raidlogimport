@@ -222,8 +222,8 @@
 	$lang['member_display_0'] = 'Multi-Select';
 	$lang['member_display_1'] = 'Mehrere Checkboxen';
 	$lang['member_display_2'] = 'Detaillierte Join/Leave Infos';
-    $lang['member_display_help'] = "Um die Ansicht \'".$lang['member_display_1']."\' zu verwenden, muss die GD-Lib vorhanden sein (PHP-Extension). Folgende GD-Lib wurde gefunden:<br />%s";
-    $lang['no_gd_lib'] = '<span class=\\\'negative\\\'>keine GD-Lib gefunden</span>';
+    $lang['member_display_help'] = "Um die Ansicht '".$lang['member_display_1']."' zu verwenden, muss die GD-Lib vorhanden sein (PHP-Extension). Folgende GD-Lib wurde gefunden:<br />%s";
+    $lang['no_gd_lib'] = "<span class='negative'>keine GD-Lib gefunden</span>";
     $lang['title_standby'] = 'Ersatzbank-Einstellungen';
     $lang['standby_raid'] = 'Sollen Ersatzbank-Mitglieder einem Raid zugeordnet werden?';
     $lang['standby_raid_0'] = 'Nein, keinem.';

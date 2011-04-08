@@ -59,7 +59,7 @@ class pdh_w_rli_zone extends pdh_w_generic {
 			return false;
 		}
 		$old = array(
-			'string'	=> implode($core->config['raidlogimport']['bz_parse'], $pdh->get('rli_zone', 'string', array($id))),
+			'string'	=> implode($core->config('bz_parse', 'raidlogimport'), $pdh->get('rli_zone', 'string', array($id))),
 			'event'		=> $pdh->get('rli_zone', 'event', array($id)),
 			'timebonus'	=> $pdh->get('rli_zone', 'timebonus', array($id)),
 			'diff'		=> $pdh->get('rli_zone', 'diff', array($id)),
