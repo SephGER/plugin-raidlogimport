@@ -143,8 +143,8 @@ class rli_parse {
 	private function parse_plus_string($xml) {
 		global $core, $user, $rli;
 
-		if(	(trim($xml->head->gameinfo->game) == 'Runes of Magic' AND $core->config['default_game'] != 'rom') OR
-			(trim($xml->head->gameinfo->game) == 'World of Warcraft' AND $core->config['default_game'] != 'wow')) {
+		if(	(trim($xml->head->gameinfo->game) == 'Runes of Magic' AND $core->config('default_game') != 'rom') OR
+			(trim($xml->head->gameinfo->game) == 'World of Warcraft' AND $core->config('default_game') != 'wow')) {
 				message_die($user->lang('wrong_game'));
 		}
 		$lang = trim($xml->head->gameinfo->language);

@@ -51,7 +51,7 @@ class Bz extends page_generic {
 		} else {
 			$data = array(
 				$in->get('string:'.$id, ''),
-				(($core->config['raidlogimport']['event_boss']) ? $in->get('event:'.$id, 0) : $in->get('note:'.$id, '')),
+				(($core->config('event_boss', 'raidlogimport')) ? $in->get('event:'.$id, 0) : $in->get('note:'.$id, '')),
 				runden(floatvalue($in->get('bonus:'.$id, '0.0'))),
 				runden(floatvalue($in->get('timebonus:'.$id, '0.0'))),
 				$in->get('diff:'.$id, 0),
@@ -96,7 +96,7 @@ class Bz extends page_generic {
 		$zones = $in->getArray('zone_id', 'int');
 		foreach($zones as $id) {
 			$data = array(
-				implode($core->config['raidlogimport']['bz_parse'], $pdh->get('rli_zone', 'string', array($id))),
+				implode($core->config('bz_parse', 'raidlogimport'), $pdh->get('rli_zone', 'string', array($id))),
 				$pdh->get('rli_zone', 'event', array($id)),
 				$pdh->get('rli_zone', 'timebonus', array($id)),
 				$in->get('diff', 0),
@@ -107,7 +107,7 @@ class Bz extends page_generic {
 				foreach($bosses as $bid) {
 					$boss_diff = $pdh->get('rli_boss', 'diff', array($bid));
 					$data = array(
-						implode($core->config['raidlogimport']['bz_parse'], $pdh->get('rli_boss', 'string', array($bid))),
+						implode($core->config('bz_parse', 'raidlogimport'), $pdh->get('rli_boss', 'string', array($bid))),
 						$pdh->get('rli_boss', 'note', array($bid)),
 						$pdh->get('rli_boss', 'bonus', array($bid)),
 						$pdh->get('rli_boss', 'timebonus', array($bid)),
@@ -159,7 +159,7 @@ class Bz extends page_generic {
 		global $html, $pdh, $core;
 		return array(
 				'ID'			=> $type.'_'.$id,
-				'STRING'		=> implode($core->config['raidlogimport']['bz_parse'], $pdh->get('rli_'.$type, 'string', array($id))),
+				'STRING'		=> implode($core->config('bz_parse', 'raidlogimport'), $pdh->get('rli_'.$type, 'string', array($id))),
 				'NOTE'			=> ($type == 'boss') ? $pdh->get('rli_boss', 'note', array($id)) : '',
 				'BONUS'			=> ($type == 'boss') ? $pdh->get('rli_boss', 'bonus', array($id)) : '',
 				'TIMEBONUS'		=> $pdh->get('rli_'.$type, 'timebonus', array($id)),
@@ -214,7 +214,7 @@ class Bz extends page_generic {
 
 		$tpl->assign_vars(array(
 			'S_DIFF'		=> ($game->get_game() == 'wow') ? true : false,
-			'S_BOSSEVENT'	=> ($core->config['raidlogimport']['event_boss']) ? true : false,
+			'S_BOSSEVENT'	=> ($core->config('event_boss', 'raidlogimport')) ? true : false,
 			'L_BZ_UPD'		=> $user->lang('bz_upd'),
 			'L_TYPE'		=> $user->lang('bz_type'),
 			'L_STRING'		=> $user->lang('bz_string'),
@@ -229,7 +229,7 @@ class Bz extends page_generic {
 			'L_SORT'		=> $user->lang('bz_sort'))
 		);
 		$core->set_vars(array(
-			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang('rli_bz_bz'),
+			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config('guildtag'), $core->config('dkp_name')).': '.$user->lang('rli_bz_bz'),
 			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'bz_upd.html',
 			'header_format'		=> $this->simple_head,
@@ -277,7 +277,7 @@ class Bz extends page_generic {
 		$this->prepare_diff_drop();
 		$this->confirm_delete();
 		$tpl->assign_vars(array(
-			'S_DIFF'		=> ($core->config['default_game'] == 'wow') ? true : false,
+			'S_DIFF'		=> ($core->config('default_game') == 'wow') ? true : false,
 			'DIFF_DROP'		=> $html->DropDown('diff', $this->diff_drop, ''),
 			'L_BZ'			=> $user->lang('rli_bz_bz'),
 			'L_STRING'		=> $user->lang('bz_string'),
@@ -290,7 +290,7 @@ class Bz extends page_generic {
 		);
 
 		$core->set_vars(array(
-			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang('rli_bz_bz'),
+			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config('guildtag'), $core->config('dkp_name')).': '.$user->lang('rli_bz_bz'),
 			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'bz.html',
 			'header_format'		=> $this->simple_head,

@@ -112,7 +112,7 @@ class rli_item {
 						$att_raids = $rli->raid->get_attendance_raids();
 						$rli->raid->raidlist(true);
 						foreach($rli->raid->raidlist as $i => $note) {
-							if(!(in_array($i, $att_raids) AND $this->config['attendence_raid'])) {
+							if(!(in_array($i, $att_raids) AND $this->config('attendence_raid'))) {
 								$raid_select .= "<option value='".$i."'";
 								if((!$item['raid'] && $rli->raid->item_in_raid($i, $item['time'])) || ($item['raid'] && $item['raid'] == $i)) {
 									$raid_select .= ' selected="selected"';

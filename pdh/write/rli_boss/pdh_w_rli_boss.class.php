@@ -60,7 +60,7 @@ class pdh_w_rli_boss extends pdh_w_generic {
 			return false;
 		}
 		$old = array(
-			'string'	=> implode($core->config['raidlogimport']['bz_parse'], $pdh->get('rli_boss', 'string', array($id))),
+			'string'	=> implode($core->config('bz_parse', 'raidlogimport'), $pdh->get('rli_boss', 'string', array($id))),
 			'note'		=> $pdh->get('rli_boss', 'note', array($id)),
 			'bonus'		=> $pdh->get('rli_boss', 'bonus', array($id)),
 			'timebonus'	=> $pdh->get('rli_boss', 'timebonus', array($id)),

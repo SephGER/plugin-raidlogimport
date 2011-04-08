@@ -32,7 +32,7 @@ class pdh_r_rli_boss extends pdh_r_generic {
 			$sql = "SELECT boss_id, boss_string, boss_note, boss_bonus, boss_timebonus, boss_diff, boss_tozone, boss_sort FROM __raidlogimport_boss;";
 			if($result = $db->query($sql)) {
 				while($row = $db->fetch_record($result)) {
-					$this->data[$row['boss_id']]['string'] = explode($core->config['raidlogimport']['bz_parse'], $row['boss_string']);
+					$this->data[$row['boss_id']]['string'] = explode($core->config('bz_parse', 'raidlogimport'), $row['boss_string']);
 					$this->data[$row['boss_id']]['note'] = $row['boss_note'];
 					$this->data[$row['boss_id']]['bonus'] = $row['boss_bonus'];
 					$this->data[$row['boss_id']]['timebonus'] = $row['boss_timebonus'];
@@ -84,11 +84,11 @@ class pdh_r_rli_boss extends pdh_r_generic {
 	
 	public function get_html_note($id, $with_icon=true) {
 		global $core, $pdh, $game;
-		if($core->config['raidlogimport']['event_boss'] AND is_numeric($id)) {
+		if($core->config('event_boss', 'raidlogimport') AND is_numeric($id)) {
 			$icon = ($with_icon) ? $game->decorate('events', array($this->get_note($id))) : '';
 			return $icon.$pdh->get('event', 'name', array($this->get_note($id)));
 		}
-		$suffix = ($this->get_diff($id) AND $core->config['raidlogimport']['dep_match'] AND $game->get_game() == 'wow') ? $core->config['raidlogimport']['diff_'.$this->get_diff($id)] : '';
+		$suffix = ($this->get_diff($id) AND $core->config('dep_match', 'raidlogimport') AND $game->get_game() == 'wow') ? $core->config('diff_'.$this->get_diff($id), 'raidlogimport') : '';
 		return $this->get_note($id).$suffix;
 	}
 	

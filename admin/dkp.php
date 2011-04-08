@@ -71,7 +71,7 @@ class rli_import extends page_generic {
 		$rli->destroy();
 
 		$core->set_vars(array(
-			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang('rli_check_data'),
+			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config('guildtag'), $core->config('dkp_name')).': '.$user->lang('rli_check_data'),
 			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'raids.html',
 			'display'           => true)
@@ -104,7 +104,7 @@ class rli_import extends page_generic {
 		$rli->destroy();
 
 		$core->set_vars(array(
-			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang('rli_check_data'),
+			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config('guildtag'), $core->config('dkp_name')).': '.$user->lang('rli_check_data'),
 			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'members.html',
 			'display'           => true)
@@ -130,7 +130,7 @@ class rli_import extends page_generic {
 		$rli->destroy();
 		
 		$core->set_vars(array(
-			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang('rli_check_data'),
+			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config('guildtag'), $core->config('dkp_name')).': '.$user->lang('rli_check_data'),
 			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'items.html',
 			'display'           => true)
@@ -164,7 +164,7 @@ class rli_import extends page_generic {
 		$rli->destroy();
 		
 		$core->set_vars(array(
-			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang('rli_check_data'),
+			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config('guildtag'), $core->config('dkp_name')).': '.$user->lang('rli_check_data'),
 			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'adjustments.html',
 			'display'           => true)
@@ -204,7 +204,7 @@ class rli_import extends page_generic {
 			);
 	
 			$core->set_vars(array(
-				'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang('rli_imp_suc'),
+				'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config('guildtag'), $core->config('dkp_name')).': '.$user->lang('rli_imp_suc'),
 				'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
 				'template_file'     => 'success.html',
 				'display'           => true)
@@ -224,7 +224,7 @@ class rli_import extends page_generic {
 			);
 			$rli->destroy();
 			$core->set_vars(array(
-				'page_title'		=> sprintf($user->lang('admin_title_prefix'), $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang('rli_imp_no_suc'),
+				'page_title'		=> sprintf($user->lang('admin_title_prefix'), $core->config('guildtag'), $core->config('dkp_name')).': '.$user->lang('rli_imp_no_suc'),
 				'template_path'		=> $pm->get_data('raidlogimport', 'template_path'),
 				'template_file'		=> 'check_input.html',
 				'display'			=> true,
@@ -253,7 +253,7 @@ class rli_import extends page_generic {
 		);
 
 		$core->set_vars(array(
-			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config['guildtag'], $core->config['dkp_name']).': '."DKP String",
+			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config('guildtag'), $core->config('dkp_name')).': '."DKP String",
 			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'log_insert.html',
 			'display'           => true,

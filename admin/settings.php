@@ -36,7 +36,8 @@ class RLI_Settings extends page_generic
 		$messages = array();
 		$bytes = array('s_member_rank', 'ignore_dissed', 'use_dkp', 'event_boss', 'standby_dkptype');
 		$floats = array('member_start', 'attendence_begin', 'attendence_end', 'am_value');
-		foreach($rli->config() as $old_name => $old_value) {
+		$copy_config = $rli->config();
+		foreach($copy_config as $old_name => $old_value) {
 			if(in_array($old_name, $bytes)) {
 				$val = 0;
 				if(is_array($in->getArray($old_name, 'int'))) {
@@ -52,6 +53,7 @@ class RLI_Settings extends page_generic
 			}
 			if(isset($data[$old_name]) AND $data[$old_name] != $old_value) { //Update
 				$core->config_set($old_name, $data[$old_name], 'raidlogimport');
+				$rli->reload_config();
 				$messages[] = $old_name;
 			}
 		}
@@ -200,7 +202,7 @@ class RLI_Settings extends page_generic
 		$num = 1;
 		foreach($holder as $type => $hold) {
 			ksort($hold);
-			if($type == 'difficulty' AND $core->config['default_game'] != 'wow') {
+			if($type == 'difficulty' AND $core->config('default_game') != 'wow') {
 				continue;
 			}
 			$tpl->assign_block_vars('holder', array(
@@ -212,7 +214,7 @@ class RLI_Settings extends page_generic
 				$add = ($user->lang($nava['name'].'_help', false, false)) ? $user->lang($nava['name'].'_help') : '';
 				if($nava['name'] == 'member_display') {
 					$info = gd_info();
-					$add = sprintf($add, (extension_loaded('gd')) ? '<span class=\\\'positive\\\'>'.$info['GD Version'].'</span>' : $user->lang('no_gd_lib'));
+					$add = sprintf($add, (extension_loaded('gd')) ? '<span class=\'positive\'>'.$info['GD Version'].'</span>' : $user->lang('no_gd_lib'));
 				}
 				if($add != '') {
 					$add = $html->ToolTip($add, '<img alt="help" src="'.$eqdkp_root_path.'images/info.png" />');
@@ -240,7 +242,7 @@ class RLI_Settings extends page_generic
 		);
 
 		$core->set_vars(array(
-			'page_title' 		=> sprintf($user->lang('admin_title_prefix'), $core->config['guildtag'], $core->config['dkp_name']).': '.$user->lang('configuration'),
+			'page_title' 		=> sprintf($user->lang('admin_title_prefix'), $core->config('guildtag'), $core->config('dkp_name')).': '.$user->lang('configuration'),
 			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'settings.html',
 			'display'           => true,

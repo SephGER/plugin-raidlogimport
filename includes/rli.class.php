@@ -39,12 +39,16 @@ class rli
 
 	public function __construct() {
 		global $core;
-		$this->config = $core->config['raidlogimport'];
-		if($this->config['bz_parse'] == '' or !$this->config['bz_parse'])
-		{
+		$this->config = $core->config('raidlogimport');
+		if(empty($this->config['bz_parse'])) {
 			$this->config['bz_parse'] = ',';
 			$core->config_set('bz_parse', ',', 'raidlogimport');
 		}
+	}
+	
+	public function reload_config() {
+		global $core;
+		$this->config = $core->config('raidlogimport');
 	}
 
 	public function init_import() {
@@ -73,7 +77,7 @@ class rli
 			$sql = "SELECT cache_class, cache_data FROM __raidlogimport_cache;";
 			$result = $db->query($sql);
 			while ( $row = $db->fetch_record($result) ) {
-				$this->data[$row['cache_class']] = ($core->config['enable_gzip']) ? unserialize(gzuncompress($row['cache_data'])) : unserialize($row['cache_data']);
+				$this->data[$row['cache_class']] = ($core->config('enable_gzip')) ? unserialize(gzuncompress($row['cache_data'])) : unserialize($row['cache_data']);
 			}
 			$this->data['fetched'] = true;
 		}
@@ -117,7 +121,7 @@ class rli
 				VALUES ";
 		if($this->data) {
 			foreach($this->data as $type => $data) {
-				$data = ($core->config['enable_gzip']) ? gz_compress(serialize($data)) : serialize($data);
+				$data = ($core->config('enable_gzip')) ? gz_compress(serialize($data)) : serialize($data);
 				$sqls[] = "('".$type."', '".$db->escape($data)."')";
 			}
 			$sql .= implode(", ", $sqls).";";

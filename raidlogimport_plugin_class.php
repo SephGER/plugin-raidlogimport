@@ -48,7 +48,7 @@ class raidlogimport extends plugin_generic {
 
 		parent::__construct($pm);
 		//Load Game-Specific Language
-		$lang_file = $eqdkp_root_path.'plugins/raidlogimport/language/'.$user->lang_name.'/'.$core->config['default_game'].'_lang.php';
+		$lang_file = $eqdkp_root_path.'plugins/raidlogimport/language/'.$user->lang_name.'/'.$core->config('default_game').'_lang.php';
 		if(file_exists($lang_file)) {
 			include($lang_file);
 			$user->add_lang($user->lang_name, $lang);
@@ -128,7 +128,7 @@ class raidlogimport extends plugin_generic {
 			'member_raid'		=> '50',	//percent which member has to be in raid, to gain assignment to raid
 			'itempool_save'		=> '1',		//save itempool per item & event
 		);
-		if(strtolower($core->config['default_game']) == 'wow') {
+		if(strtolower($core->config('default_game')) == 'wow') {
 			$config_data = array_merge($config_data, array(
 				'diff_1'	=> ' (10)',		//suffix for 10-player normal
 				'diff_2'	=> ' (25)', 	//suffix for 25-player normal
@@ -141,7 +141,7 @@ class raidlogimport extends plugin_generic {
 	}
 
 	private function create_install_sqls() {
-		global $core, $db, $eqdkp_root_path, $pdh;
+		global $core, $db, $eqdkp_root_path, $pdh, $user;
 		$install_sqls = array(
 			"CREATE TABLE IF NOT EXISTS __raidlogimport_boss (
 				`boss_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -174,10 +174,10 @@ class raidlogimport extends plugin_generic {
 			);");
 		
 		//add default bz_data
-		$file = $eqdkp_root_path.'plugins/raidlogimport/games/'.$core->config['default_game'].'/bz_sql.php';
+		$file = $eqdkp_root_path.'plugins/raidlogimport/games/'.$core->config('default_game').'/bz_sql.php';
 		if(is_file($file)) {
 			include_once($file);
-			$data = (is_array(${$user->lang_name})) ? ${$user->lang_name} : $english;
+			$data = (!empty(${$user->lang_name})) ? ${$user->lang_name} : $english;
 			if (is_array($data)) {
 				$zones = $pdh->aget('event', 'name', 0, array($pdh->get('event', 'id_list')));
 				foreach($data['zone'] as $bz) {
