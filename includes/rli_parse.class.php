@@ -301,7 +301,7 @@ class rli_parse {
 			$rli->member->add_time(utf8_decode(trim($joiner->player)), strtotime($joiner->time), 'join');
 		}
 		foreach ($xml->Leave->children() as $leaver) {
-			$rli->member->add_time(uft8_decode(trim($leaver->player)), strtotime($leaver->time), 'leave');
+			$rli->member->add_time(utf8_decode(trim($leaver->player)), strtotime($leaver->time), 'leave');
 		}
 	}
 
