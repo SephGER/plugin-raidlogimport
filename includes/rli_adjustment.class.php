@@ -82,20 +82,20 @@ if(!class_exists('rli_adjustment')) {
 					continue;
 				}
 				$tpl->assign_block_vars('adjs', array(
-					'MEMBER'	=> $html->DropDown('adjs['.$a.'][member]', $members, $adj['member']),
-					'EVENT'		=> $html->DropDown('adjs['.$a.'][event]', $events, $ev_sel),
+					'MEMBER'	=> $html->widget(array('type' => 'dropdown', 'name' => 'adjs['.$a.'][member]', 'options' => $members, 'selected' => $adj['member'], 'id' => 'adjs_'.$a.'_member')),
+					'EVENT'		=> $html->widget(array('type' => 'dropdown', 'name' => 'adjs['.$a.'][event]', 'options' => $events, 'selected' => $ev_sel, 'id' => 'adjs_'.$a.'_event')),
 					'NOTE'		=> $adj['reason'],
 					'VALUE'		=> $adj['value'],
-					'RAID'		=> $html->DropDown('adjs['.$a.'][raid]', $raid_select, $adj['raid']),
+					'RAID'		=> $html->widget(array('type' => 'dropdown', 'name' => 'adjs['.$a.'][raid]', 'options' => $raid_select, 'selected' => $adj['raid'], 'id' => 'adjs_'.$a.'raid')),
 					'KEY'		=> $a,
 				));
 			}
 		}
 		$tpl->assign_block_vars('adjs', array(
 			'KEY'		=> 999,
-			'MEMBER'	=> $html->DropDown('adjs[999][member]', $members, 0),
-			'EVENT'		=> $html->DropDown('adjs[999][event]', $events, 0),
-			'RAID'		=> $html->DropDown('adjs[999][raid]', $raid_select, 0),
+			'MEMBER'	=> $html->widget(array('type' => 'dropdown', 'name' => 'adjs[999][member]', 'options' => $members, 'selected' => 0, 'id' => 'adjs_999_member')),
+			'EVENT'		=> $html->widget(array('type' => 'dropdown', 'name' => 'adjs[999][event]', 'options' => $events, 'selected' => 0, 'id' => 'adjs_999_event')),
+			'RAID'		=> $html->widget(array('type' => 'dropdown', 'name' => 'adjs[999][raid]', 'options' => $raid_select, 'selected' => 0, 'id' => 'adjs_999_raid')),
 			'DISPLAY'	=> 'style="display: none;"',
 			'DELCHK'	=> 'checked="checked"',
 		));

@@ -23,34 +23,44 @@
       <tr>
         <td>{L_rli_end}: {raids.END_DATE}</td>
         <td>
-			{L_value}: <input type="text" name="raids[{raids.COUNT}][value]" value="{raids.VALUE}" class="maininput" size="6" />
-			<!-- IF USE_TIMEDKP -->&nbsp;&nbsp;&nbsp;&nbsp; {L_rli_t_points}: <input type="text" name="raids[{raids.COUNT}][timebonus]" value="{raids.TIMEBONUS}" class="maininput" size="6" /><!-- ENDIF -->
+			{L_value}: <input type="text" name="raids[{raids.COUNT}][value]" value="{raids.VALUE}" class="input" size="6" />
+			<!-- IF USE_TIMEDKP -->&nbsp;&nbsp;&nbsp;&nbsp; {L_rli_t_points}: <input type="text" name="raids[{raids.COUNT}][timebonus]" value="{raids.TIMEBONUS}" class="input" size="6" /><!-- ENDIF -->
 		</td>
       </tr>
       <tr>
-        <td colspan="2">{L_note}: <input type="text" name="raids[{raids.COUNT}][note]" value="{raids.NOTE}" class="maininput" size="90" /></td>
+        <td colspan="2">{L_note}: <input type="text" name="raids[{raids.COUNT}][note]" value="{raids.NOTE}" class="input" size="90" /></td>
       </tr>
       <tr>
 		<td colspan="2">{L_rli_bosskills}:</td>
 	  </tr>
-	  <t">
+	  <tr>
 		<td colspan="2" class="colorswitch">
-		<!-- BEGIN bosskills -->
-			<div id="raid_{raids.COUNT}_boss_{raids.bosskills.BK_KEY}" {raids.bosskills.DISPLAY}>
-			&nbsp;<img src="{IMAGE_PATH}glyphs/delete.png" alt="{L_delete}" title="{L_delete}" class="del_boss raid_{raids.COUNT}_boss_{raids.bosskills.BK_KEY}" />
-			<input type="hidden" id="raid_{raids.COUNT}_boss_{raids.bosskills.BK_KEY}submit" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][delete]" value="true" {raids.bosskills.DELDIS} />
-			&nbsp;&nbsp;{raids.bosskills.BK_SELECT}
-			&nbsp;&nbsp;&nbsp;&nbsp;{L_date}: {raids.bosskills.BK_DATE}
-			<!-- IF USE_BOSSDKP -->
-				&nbsp;&nbsp;&nbsp;&nbsp;{L_value}: <input id="raid_{raids.COUNT}_bonus_{raids.bosskills.BK_KEY}" type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][bonus]" value="{raids.bosskills.BK_BONUS}" size="5" />
-				&nbsp;&nbsp;&nbsp;&nbsp;{L_rli_t_points}: <input id="raid_{raids.COUNT}_timebonus_{raids.bosskills.BK_KEY}" type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][timebonus]" value="{raids.bosskills.BK_TIMEBONUS}" size="5" />
-			<!-- ENDIF -->
-			<!-- IF L_DIFFICULTY -->
-			&nbsp;&nbsp;&nbsp;&nbsp;{L_DIFFICULTY}: {raids.bosskills.BK_DIFF}
-			<!-- ENDIF -->
-			<!-- IF raids.bosskills.IMPORT -->&nbsp; <img src="./../images/add.png" alt="{L_bz_import_boss}" title="{L_bz_import_boss}" onclick="javascript:{raids.bosskills.IMPORT}();" style="mouse:thumb;" /><!-- ENDIF -->
-			</div>
-		<!-- END bosskills -->
+			<table width="100%" cellspacing="0" cellpadding="1" class="colorswitch">
+			<!-- BEGIN bosskills -->
+				<tr id="raid_{raids.COUNT}_boss_{raids.bosskills.BK_KEY}" {raids.bosskills.DISPLAY}>
+					<td width="20">
+						<img src="{IMAGE_PATH}glyphs/delete.png" alt="{L_delete}" title="{L_delete}" class="del_boss raid_{raids.COUNT}_boss_{raids.bosskills.BK_KEY}" />
+						<input type="hidden" id="raid_{raids.COUNT}_boss_{raids.bosskills.BK_KEY}submit" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][delete]" value="true" {raids.bosskills.DELDIS} />
+					</td>
+					<!-- IF raids.bosskills.IMPORT -->
+						<td>
+							<input type="text" id="id_raid{raids.COUNT}_boss{raids.bosskills.BK_KEY}" class="input" value="{raids.bosskills.BK_SELECT}" size="22" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][id]" />
+							<img src="./../images/add.png" alt="{L_bz_import_boss}" title="{L_bz_import_boss}" onclick="javascript:{raids.bosskills.IMPORT}();" style="cursor:pointer;" />
+						</td>
+					<!-- ELSE -->
+						<td>{raids.bosskills.BK_SELECT}</td>
+					<!-- ENDIF -->
+					<td>{L_date}: {raids.bosskills.BK_DATE}</td>
+					<!-- IF USE_BOSSDKP -->
+					<td>{L_value}: <input id="raid_{raids.COUNT}_bonus_{raids.bosskills.BK_KEY}" type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][bonus]" value="{raids.bosskills.BK_BONUS}" size="5" class="input" /></td>
+					<td>{L_rli_t_points}: <input id="raid_{raids.COUNT}_timebonus_{raids.bosskills.BK_KEY}" type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][timebonus]" value="{raids.bosskills.BK_TIMEBONUS}" size="5" class="input" /></td>
+					<!-- ENDIF -->
+					<!-- IF L_DIFFICULTY -->
+					<td>{L_DIFFICULTY}: {raids.bosskills.BK_DIFF}</td>
+					<!-- ENDIF -->
+				</tr>
+			<!-- END bosskills -->
+			</table>
 		</td>
 	  </tr>
 	  <tr>

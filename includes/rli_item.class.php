@@ -132,9 +132,9 @@ class rli_item {
 					$tpl->assign_block_vars('loots', array(
 						'LOOTNAME'  => $item['name'],
 						'ITEMID'    => (isset($item['game_id'])) ? $item['game_id'] : '',
-						'LOOTER'    => ($with_form) ? $html->DropDown("loots[".$key."][member]", $members, $mem_sel, '', '', 'input', '', '0') : $item['member'],
+						'LOOTER'    => ($with_form) ? $html->widget(array('type' => 'dropdown', 'name' => "loots[".$key."][member]", 'options' => $members, 'selected' => $mem_sel, 'id' => 'loots_'.$key.'_member')) : $item['member'],
 						'RAID'      => ($with_form) ? $raid_select."</select>" : $item['raid'],
-						'ITEMPOOL'	=> ($with_form) ? $html->DropDown('loots['.$key.'][itempool]', $itempools, $item['itempool']) : $pdh->get('itempool', 'name', array($item['itempool'])),
+						'ITEMPOOL'	=> ($with_form) ? $html->widget(array('type' => 'dropdown', 'name' => "loots[".$key."][itempool]", 'options' => $itempools, 'selected' => $item['itempool'], 'id' => 'loots_'.$key.'_itempool')) : $pdh->get('itempool', 'name', array($item['itempool'])),
 						'LOOTDKP'   => runden($item['value']),
 						'KEY'       => $key,
 						'DELDIS'	=> 'disabled="disabled"')
@@ -153,9 +153,9 @@ class rli_item {
 				//js addition
 				$tpl->assign_block_vars('loots', array(
 					'KEY'		=> 999,
-					'ITEMPOOL'	=> $html->DropDown('loots[999][itempool]', $itempools, 0),
-					'LOOTER'	=> $html->DropDown('loots[999][member]', $members, ''),
-					'RAID'		=> $html->DropDown('loots[999][raid]', $rli->raid->raidlist, 0),
+					'ITEMPOOL'	=> $html->widget(array('type' => 'dropdown', 'name' => 'loots[999][itempool]', 'options' => $itempools, 'selected' => 0, 'id' => 'loots_999_itempool')),
+					'ITEMPOOL'	=> $html->widget(array('type' => 'dropdown', 'name' => 'loots[999][member]', 'options' => $members, 'selected' => 0, 'id' => 'loots_999_member')),
+					'ITEMPOOL'	=> $html->widget(array('type' => 'dropdown', 'name' => 'loots[999][raid]', 'options' => $rli->raid->raidlist, 'selected' => 0, 'id' => 'loots_999_raid')),
 					'DISPLAY'	=> 'style="display: none;"',
 					'S_IP_SAVE' => $this->config('itempool_save')
 				));

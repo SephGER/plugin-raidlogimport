@@ -419,7 +419,7 @@ $('#add_mem_button').click(function() {
 					$this->boss_data[] = array(
 						'KEY' => $bkey,
 						'LEFT' => $m,
-						'NAME' => $pdh->get('rli_boss', 'note', array($boss['id'])),
+						'NAME' => (is_numeric($boss['id'])) ? $pdh->get('rli_boss', 'note', array($boss['id'])) : $boss['id'],
 						'TIME' => $time->user_date($boss['time'], false, true),
 						'VALUE'	=> $boss['bonus']
 					);
