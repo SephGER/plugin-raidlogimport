@@ -1,7 +1,7 @@
 <form method="post" action="{ACTION}" name="post">
 	<!-- INCLUDE raid_display.html -->
 	<!-- INCLUDE member_display.html -->
-	<table width="100%" border="0" cellspacing="1" cellpadding="2">
+	<table width="100%" border="0" cellspacing="1" cellpadding="2" class="colorswitch">
 		<tr>
 			<th colspan="2">{L_item}</th>
 			<th>{L_rli_item_id}</th>
@@ -16,14 +16,14 @@
 				&nbsp;<img src="{IMAGE_PATH}glyphs/delete.png" alt="{L_delete}" title="{L_delete}" class="del_item item_{loots.KEY}" />
 				<input type="hidden" id="item_{loots.KEY}submit" name="loots[{loots.KEY}][delete]" value="true" {loots.DELDIS} />
 			</td>
-			<td><input type="text" name="loots[{loots.KEY}][name]" class="maininput" value="{loots.LOOTNAME}" size="40" {loots.READONLY} /></td>
-			<td><input type="text" name="loots[{loots.KEY}][game_id]" class="maininput" value="{loots.ITEMID}" /></td>
+			<td><input type="text" name="loots[{loots.KEY}][name]" class="input" value="{loots.LOOTNAME}" size="40" {loots.READONLY} /></td>
+			<td><input type="text" name="loots[{loots.KEY}][game_id]" class="input" value="{loots.ITEMID}" /></td>
 			<td>{loots.LOOTER}</td>
 			<td>{loots.RAID}</td>
 			<td>{loots.ITEMPOOL}</td>
 			<td><input type="text" name="loots[{loots.KEY}][value]" value="{loots.LOOTDKP}" class="maininput" size="7" /></td>
 			<!-- IF S_IP_SAVE -->
-			<td><input type="checkbox" name="itempool_save[]" value="{loots.KEY}" class="maininput" /></td>
+			<td><input type="checkbox" name="itempool_save[]" value="{loots.KEY}" class="input" /></td>
 			<!-- ENDIF -->
 		</tr>
 		<!-- END loots -->

@@ -286,8 +286,8 @@ class rli_parse {
 			$rli->raid->add_bosskill(trim($bosskill->name), strtotime($bosskill->time));
 		}
 		foreach($xml->Loot->children() as $loot) {
-			$player = uft8_decode(trim($loot->Player));
-			if(!(($rli->config['ignore_dissed'] & 1 AND $player == 'disenchanted') OR ($rli->config['ignore_dissed'] & 2 AND $player == 'bank'))) {
+			$player = utf8_decode(trim($loot->Player));
+			if(!(($rli->config('ignore_dissed') & 1 AND $player == 'disenchanted') OR ($rli->config('ignore_dissed') & 2 AND $player == 'bank'))) {
 				$cost = (array_key_exists('Costs', $loot)) ? (int) $loot->Costs : (int) $loot->Note;
 				$rli->item->add(utf8_decode(trim($loot->ItemName)), $player, $cost, substr(trim($loot->ItemID), 0, 5), strtotime($loot->Time));
 			}
