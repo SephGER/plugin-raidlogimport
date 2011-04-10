@@ -415,7 +415,7 @@ $('#add_mem_button').click(function() {
 				foreach($raid['bosskills'] as $bkey => $boss) {
 					$m = ($boss['time']-$width['begin'])/20 - 4;
 					settype($m, 'int');
-					$jquery->qtip('.rli_boss', 'return $(".rli_boss_c", this).html();', true);
+					$jquery->qtip('.rli_boss', 'return $(".rli_boss_c", this).html();', array('contfunc' => true));
 					$this->boss_data[] = array(
 						'KEY' => $bkey,
 						'LEFT' => $m,
