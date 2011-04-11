@@ -284,7 +284,7 @@ if(!class_exists('rli_member')) {
 				if($this->config('member_display') == 1 AND extension_loaded('gd')) {
 					$raid_list = $rli->raid->get_checkraidlist(array(), 999);
 				} else {
-					$raid_list = '<td>'.$jquery->MultiSelect('members[999][raid_list]', $rli->raid->raidlist, array(), '200', '200', array('id' => 'members_999_raidlist')).'</td>';
+					$raid_list = '<td>'.$html->widget(array('type' => 'jq_multiselect', 'name' => 'members[999][raid_list]', 'options' => $rli->raid->raidlist, 'selected' => array(), 'width' => '200', 'height' => '200', 'id' => 'members_999_raidlist', 'no_lang' => true)).'</td>';
 				}
 			}
 			$tpl->assign_block_vars('player', array(

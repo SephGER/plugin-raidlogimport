@@ -81,9 +81,10 @@ class rli_item {
 			$p = count($this->items);
 			$start = 0;
 			$end = $p+1;
-			if($vars = ini_get('suhosin.post.max_vars')) {
+			$vars = 100;
+			if($vars || $vars = ini_get('suhosin.post.max_vars')) {
 				$vars = $vars - 5;
-				$dic = $vars/6;
+				$dic = $vars/7;
 				settype($dic, 'int');
 				$page = 1;
 
@@ -132,9 +133,9 @@ class rli_item {
 					$tpl->assign_block_vars('loots', array(
 						'LOOTNAME'  => $item['name'],
 						'ITEMID'    => (isset($item['game_id'])) ? $item['game_id'] : '',
-						'LOOTER'    => ($with_form) ? $html->widget(array('type' => 'dropdown', 'name' => "loots[".$key."][member]", 'options' => $members, 'selected' => $mem_sel, 'id' => 'loots_'.$key.'_member')) : $item['member'],
+						'LOOTER'    => ($with_form) ? $html->widget(array('type' => 'dropdown', 'name' => "loots[".$key."][member]", 'options' => $members, 'selected' => $mem_sel, 'id' => 'loots_'.$key.'_member', 'no_lang' => true)) : $item['member'],
 						'RAID'      => ($with_form) ? $raid_select."</select>" : $item['raid'],
-						'ITEMPOOL'	=> ($with_form) ? $html->widget(array('type' => 'dropdown', 'name' => "loots[".$key."][itempool]", 'options' => $itempools, 'selected' => $item['itempool'], 'id' => 'loots_'.$key.'_itempool')) : $pdh->get('itempool', 'name', array($item['itempool'])),
+						'ITEMPOOL'	=> ($with_form) ? $html->widget(array('type' => 'dropdown', 'name' => "loots[".$key."][itempool]", 'options' => $itempools, 'selected' => $item['itempool'], 'id' => 'loots_'.$key.'_itempool', 'no_lang' => true)) : $pdh->get('itempool', 'name', array($item['itempool'])),
 						'LOOTDKP'   => runden($item['value']),
 						'KEY'       => $key,
 						'DELDIS'	=> 'disabled="disabled"')
@@ -153,9 +154,9 @@ class rli_item {
 				//js addition
 				$tpl->assign_block_vars('loots', array(
 					'KEY'		=> 999,
-					'ITEMPOOL'	=> $html->widget(array('type' => 'dropdown', 'name' => 'loots[999][itempool]', 'options' => $itempools, 'selected' => 0, 'id' => 'loots_999_itempool')),
-					'ITEMPOOL'	=> $html->widget(array('type' => 'dropdown', 'name' => 'loots[999][member]', 'options' => $members, 'selected' => 0, 'id' => 'loots_999_member')),
-					'ITEMPOOL'	=> $html->widget(array('type' => 'dropdown', 'name' => 'loots[999][raid]', 'options' => $rli->raid->raidlist, 'selected' => 0, 'id' => 'loots_999_raid')),
+					'ITEMPOOL'	=> $html->widget(array('type' => 'dropdown', 'name' => 'loots[999][itempool]', 'options' => $itempools, 'selected' => 0, 'id' => 'loots_999_itempool', 'no_lang' => true)),
+					'ITEMPOOL'	=> $html->widget(array('type' => 'dropdown', 'name' => 'loots[999][member]', 'options' => $members, 'selected' => 0, 'id' => 'loots_999_member', 'no_lang' => true)),
+					'ITEMPOOL'	=> $html->widget(array('type' => 'dropdown', 'name' => 'loots[999][raid]', 'options' => $rli->raid->raidlist, 'selected' => 0, 'id' => 'loots_999_raid', 'no_lang' => true)),
 					'DISPLAY'	=> 'style="display: none;"',
 					'S_IP_SAVE' => $this->config('itempool_save')
 				));
@@ -180,15 +181,14 @@ $('#add_item_button').click(function() {
 });", 'docready');
 			}
 		}
-		if($end <= $p AND $end) {
+		if($end && $end <= $p) {
 			$next_button = '<input type="submit" name="checkitem" value="'.$user->lang('rli_itempage').(($page) ? $page : 2).'" class="mainoption" />';
-		} elseif(isset($dic) AND $end+$dic >= $p) {
-			$next_button .= ' <input type="submit" name="checkitem" value="'.$user->lang('rli_itempage').(($page) ? $page : 2).'" class="mainoption" />';
 		} elseif($rli->config('deactivate_adj')) {
 			$next_button = '<input type="submit" name="insert" value="'.$user->lang('rli_go_on').' ('.$user->lang('rli_insert').')" class="mainoption" />';
 		} else {
 			$next_button = '<input type="submit" name="checkadj" value="'.$user->lang('rli_go_on').' ('.$user->lang('rli_checkadj').')" class="mainoption" />';
 		}
+		if($end >= $p && !empty($dic) && $p+$dic >= $end) $next_button .= ' <input type="submit" name="checkitem" value="'.$user->lang('rli_itempage').(($page) ? $page : 2).'" class="mainoption" />';
 		$tpl->assign_var('NEXT_BUTTON', $next_button);
 	}
 	
