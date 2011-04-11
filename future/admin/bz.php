@@ -51,7 +51,7 @@ class Bz extends page_generic {
 		} else {
 			$data = array(
 				$in->get('string:'.$id, ''),
-				(($core->config('event_boss', 'raidlogimport')) ? $in->get('event:'.$id, 0) : $in->get('note:'.$id, '')),
+				(($core->config('event_boss', 'raidlogimport') & 1) ? $in->get('event:'.$id, 0) : $in->get('note:'.$id, '')),
 				runden(floatvalue($in->get('bonus:'.$id, '0.0'))),
 				runden(floatvalue($in->get('timebonus:'.$id, '0.0'))),
 				$in->get('diff:'.$id, 0),
@@ -180,12 +180,12 @@ class Bz extends page_generic {
 	
 	public function update() {
 		global $core, $user, $tpl, $pm, $html, $in, $pdh, $game;
-		if(!$this->zone_drop) {
+		if(empty($this->zone_drop)) {
 			$this->zone_drop = $pdh->aget('rli_zone', 'html_string', 0, array($pdh->get('rli_zone', 'id_list')));
 			$this->zone_drop[0] = $user->lang('bz_no_zone');
 			ksort($this->zone_drop);
 		}
-		if(!$this->event_drop) $this->event_drop = $pdh->aget('event', 'name', 0, array($pdh->get('event', 'id_list')));
+		if(empty($this->event_drop)) $this->event_drop = $pdh->aget('event', 'name', 0, array($pdh->get('event', 'id_list')));
 		$this->prepare_diff_drop();
 		if($in->exists('bz_ids')) {
 			$bz_ids = $in->getArray('bz_ids', 'string');
@@ -214,7 +214,7 @@ class Bz extends page_generic {
 
 		$tpl->assign_vars(array(
 			'S_DIFF'		=> ($game->get_game() == 'wow') ? true : false,
-			'S_BOSSEVENT'	=> ($core->config('event_boss', 'raidlogimport')) ? true : false,
+			'S_BOSSEVENT'	=> ($core->config('event_boss', 'raidlogimport')  & 1) ? true : false,
 			'L_BZ_UPD'		=> $user->lang('bz_upd'),
 			'L_TYPE'		=> $user->lang('bz_type'),
 			'L_STRING'		=> $user->lang('bz_string'),
@@ -228,6 +228,37 @@ class Bz extends page_generic {
 			'L_TOZONE'		=> $user->lang('bz_tozone'),
 			'L_SORT'		=> $user->lang('bz_sort'))
 		);
+		$js = '
+			$(".boss_zone_type").change(function(){
+				var id = $(this).attr("id").substr(5);
+				if($(this).val() == "zone") {
+					$("#bonus_"+id).attr("class", "bz_hide");
+					$("#tozone_"+id).attr("class", "bz_hide");
+					';
+		if(!($core->config('event_boss', 'raidlogimport') & 1)) {
+			$js .= '$("#event_"+id).attr("class", "bz_show");
+					$("#note_"+id).attr("class", "bz_hide");';
+		}
+		$js .= '
+				} else {
+					$("#bonus_"+id).attr("class", "bz_show");
+					$("#tozone_"+id).attr("class", "bz_show");
+					';
+		if(!($core->config('event_boss', 'raidlogimport') & 1)) {
+			$js .= '$("#event_"+id).attr("class", "bz_hide");
+					$("#note_"+id).attr("class", "bz_show");';
+		}
+		$js .= '
+				}
+			});';
+		$tpl->add_js($js, 'docready');
+		$tpl->add_css('
+			.bz_show {
+				position: relative;
+			}
+			.bz_hide {
+				display: none;
+			}');
 		$core->set_vars(array(
 			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config('guildtag'), $core->config('dkp_name')).': '.$user->lang('rli_bz_bz'),
 			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),

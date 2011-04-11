@@ -127,6 +127,7 @@ class raidlogimport extends plugin_generic {
 			'standby_raidnote'	=> $user->lang('standby_raid_note'),		//note for standby-raid
 			'member_raid'		=> '50',	//percent which member has to be in raid, to gain assignment to raid
 			'itempool_save'		=> '1',		//save itempool per item & event
+			'del_dbl_times'		=> '0',		//delete double leave/joins
 		);
 		if(strtolower($core->config('default_game')) == 'wow') {
 			$config_data = array_merge($config_data, array(

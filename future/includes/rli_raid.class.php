@@ -300,9 +300,9 @@ class rli_raid {
 				'DISPLAY'	=> 'style="display: none;"'
 			));
 			$tpl->assign_block_vars('raids.bosskills', array(
-				'BK_SELECT'	=> $html->widget(array('type' => 'dropdown', 'name' => 'raids[999][bosskills][99][id]', 'options' => $this->bk_list, 'selected' => 0, 'id' => 'a'.uniqid())),
+				'BK_SELECT'	=> $html->widget(array('type' => 'dropdown', 'name' => 'raids[999][bosskills][99][id]', 'options' => $this->bk_list, 'selected' => 0, 'id' => 'a'.uniqid(), 'no_lang' => true)),
 				'BK_DATE'	=> '<input type="text" name="raids[999][bosskills][99][date]" id="raids_999_boss_99_date" size="15" />',
-				'BK_DIFF'	=> $html->widget(array('type' => 'dropdown', 'name' => 'raids[999][bosskills][99][diff]', 'options' => $this->diff_drop, 'selected' => 0, 'id' => 'diff_raid999_boss99')),
+				'BK_DIFF'	=> $html->widget(array('type' => 'dropdown', 'name' => 'raids[999][bosskills][99][diff]', 'options' => $this->diff_drop, 'selected' => 0, 'id' => 'diff_raid999_boss99', 'no_lang' => true)),
 				'BK_KEY'	=> 99,
 				'DISPLAY'	=> 'style="display: none;"'
 			));
@@ -713,7 +713,7 @@ $('input[name=\"add_boss_button[]\"]').live('click', function() {
 
 	private function get_event($key) {
 		global $pdh, $rli;
-		if($this->config('event_boss') AND count($this->raids[$key]['bosskills']) == 1 AND $this->config('raidcount') & 2) {
+		if($this->config('event_boss') & 1 AND count($this->raids[$key]['bosskills']) == 1 AND $this->config('raidcount') & 2) {
 			$id = $pdh->get('rli_boss', 'id_string', array(trim($this->raids[$key]['bosskills'][0]), $this->raids[$key]['diff']));
 			$event = $pdh->get('rli_boss', 'note', array($id));
 			if($this->config('raidcount') & 1) {
