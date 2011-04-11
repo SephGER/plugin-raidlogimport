@@ -145,11 +145,11 @@ function add_timeframe() {
 		current.offset = $(all_times[i]).offset();
 		current.right_edge = (current.offset.left + $(all_times[i]).width());
 		if(current.right_edge < posx && current.right_edge > left[1]) {
-			left[0] = all_times[i].attr('id');
+			left[0] = $(all_times[i]).attr('id');
 			left[1] = current.right_edge;
 		}
 		if(current.offset.left > posx && current.offset.left < right[1]) {
-			right[0] = all_times[i].attr('id');
+			right[0] = $(all_times[i]).attr('id');
 			right[1] = current.offset.left;
 		}
 	}

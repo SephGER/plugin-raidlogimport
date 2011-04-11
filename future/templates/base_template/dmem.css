@@ -49,6 +49,7 @@
 .time {
 	position: absolute;
 	background-image: url(./../../images/time_bg.png);
+	background-repeat: repeat-x;
 	margin-top: -4px;
 	height: 7px;
 	display: block;
@@ -57,6 +58,7 @@
 .timestandby {
 	position: absolute;
 	background-image: url(./../../images/stime_bg.png);
+	background-repeat: repeat-x;
 	margin-top: -4px;
 	height: 7px;
 	display: block;
@@ -68,7 +70,7 @@
 	margin-left: 0px;
 	width: 3%;
 	min-width: 4px;
-	height: 8px;
+	height: 7px;
 	z-index: 14;
 }
 .time_middle {
@@ -76,17 +78,18 @@
 	position: absolute;
 	width: 94%;
 	left: 3%;
-	height: 8px;
+	height: 11px;
 	z-index: 13;
 }
 .time_right {
+	background-image: url(./../../images/rtime_bg.png);
 	cursor: e-resize;
 	position: absolute;
 	float: right;
 	right: 0px;
 	width: 3%;
 	min-width: 4px;
-	height: 8px;
+	height: 7px;
 	z-index: 14;
 }
 

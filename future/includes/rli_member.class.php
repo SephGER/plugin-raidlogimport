@@ -295,6 +295,7 @@ if(!class_exists('rli_member')) {
 			$this->members[999]['times'] = array();
 			if(isset($detail_raid_list)) $this->detailed_times_list(999, array());
 			unset($this->members[999]);
+			$jquery->qtip('#dt_help', $user->lang('rli_help_dt_member'), array('my' => 'center right', 'at' => 'left center'));
 			$tpl->add_js(
 "var rli_key = ".($key+1).";
 $('.del_mem').click(function() {
