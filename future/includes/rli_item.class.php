@@ -81,8 +81,7 @@ class rli_item {
 			$p = count($this->items);
 			$start = 0;
 			$end = $p+1;
-			$vars = 100;
-			if($vars || $vars = ini_get('suhosin.post.max_vars')) {
+			if($vars = ini_get('suhosin.post.max_vars')) {
 				$vars = $vars - 5;
 				$dic = $vars/7;
 				settype($dic, 'int');
