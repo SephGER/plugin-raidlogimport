@@ -4,7 +4,7 @@
 <tr>
 	<th style="width:45px;">&nbsp;</th>
 	<th style="max-width:300px;">{L_member}</th>
-	<th width="{PXTIME}">{L_raids}</th>
+	<th width="{PXTIME}"><span style="float:left;">{L_raids}</span><span id="dt_help" style="float:right;">{L_rli_help}</span></th>
 </tr>
 <!-- BEGIN player -->
 <tr id="memberrow_{player.KEY}" {player.DISPLAY}>
@@ -12,7 +12,7 @@
 		{player.NR}&nbsp;<img src="{IMAGE_PATH}glyphs/delete.png" alt="{L_delete}" title="{L_delete}" onclick="delete_warning('memberrow_{player.KEY}');" />
 		<input type="hidden" id="memberrow_{player.KEY}submit" name="members[{player.KEY}][delete]" value="true" {player.DELDIS} />
 	</td>
-	<td><input type="text" name="members[{player.KEY}][name]" value="{player.MITGLIED}" /></td>
+	<td><input type="text" name="members[{player.KEY}][name]" value="{player.MITGLIED}" class="input" /></td>
 	<td id="member_{player.KEY}" class="add_time" onmouseover="set_member('{player.KEY}', '{PXTIME}');" style="height: {HEIGHT}px;">
 		<!-- BEGIN member_raids -->
 		<div id="raid_{player.KEY}_{player.member_raids.KEY}" class="raid {player.member_raids.RPOS} {player.member_raids.ACTIVE}" style="width: {player.member_raids.WIDTH}px; margin-left: {player.member_raids.LEFT}px;">
