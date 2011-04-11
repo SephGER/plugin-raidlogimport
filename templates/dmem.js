@@ -77,14 +77,14 @@ function scale(ereignis) {
 	posx = document.all ? window.event.clientX : ereignis.pageX;
 	if(scale_object != null) {
 		if(corner == "left") {
+			set_left((posx - oldx - posi_null), 1);
         	set_width((parseInt(scale_object.style.width) + (startx - posx)), true);
-			set_left((posx - oldx - posi_null));
 		}
 		if(corner == "right") {
 			set_width(parseInt(scale_object.style.width) + (posx - startx));
 		}
 		if(corner == "middle") {
-			set_left((posx - oldx - posi_null), true);
+			set_left((posx - oldx - posi_null));
 		}
         startx = posx;
 	}
@@ -98,7 +98,6 @@ function set_clickx(ereignis) {
 
 function set_width(w, nostopper) {
 	var stopper = false;
-	console.log($('#member_form').data('raid_start'));
 	if(w > 0) {
 		if(w+posi_null+parseInt(scale_object.style.marginLeft) > max_right) {
 			w = max_right - parseInt(scale_object.style.marginLeft) - posi_null;
@@ -119,18 +118,18 @@ function set_width(w, nostopper) {
 function set_left(l, nostopper) {
 	var stopper = false;
 	if(l >= min_left) {
-		if(l >= max_right - posi_null - parseInt(scale_object.style.width)) {
+		if(l > max_right - posi_null - parseInt(scale_object.style.width)) {
 			l = max_right - posi_null - parseInt(scale_object.style.width);
-			stopper = true;
+			stopper = 2;
 		}
 		scale_object.style.marginLeft = l + "px";
 	} else {
 		scale_object.style.marginLeft = min_left + "px";
-		stopper = true;
+		stopper = 1;
 	}
     joiner.value = $('#member_form').data('raid_start') + l*20;
     leaver.value = $('#member_form').data('raid_start') + (l + parseInt(scale_object.style.width))*20;
-	if(stopper && !nostopper) {
+	if(stopper && (!nostopper || nostopper == stopper)) {
 		stop_scale();
 	}
 }

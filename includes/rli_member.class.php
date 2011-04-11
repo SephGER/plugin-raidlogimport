@@ -485,7 +485,7 @@ $('#add_mem_button').click(function() {
     		$tpl->css_file($eqdkp_root_path.'plugins/raidlogimport/templates/base_template/dmem.css');
     		$tpl->add_css(".time_scale {
 								position: absolute;
-								background-image: url(./../../../plugins/raidlogimport/images/time_scale.png);
+								background-image: url(".$this->timescalefile.");
 								background-repeat: repeat-x;
 								width: ".$this->px_time."px;
 								height: 18px;
@@ -506,8 +506,9 @@ $('#add_mem_button').click(function() {
     }
 
 	private function create_timebar($start, $end) {
+		global $pcache, $eqdkp_root_path;
 		if(!$this->timebar_created) {
-			$px_time = ($this->px_time > 10000) ? 10000 : $this->px_time; //prevent very big images (although 10000 is quite big)
+			$px_time = ($this->px_time > 5000) ? 5000 : $this->px_time; //prevent very big images (although 5000 is quite big)
 			$im = imagecreate($px_time, 18);
 			$black = imagecolorallocate($im, 0,0,0);
 			$white = imagecolorallocate($im, 255,255,255);
@@ -532,8 +533,8 @@ $('#add_mem_button').click(function() {
 				$i += 900;
 				$counter++;
 			}
-			#$imagefile = $eqdkp_root_path.$pcache->FileLink('time_scale.png', 'raidlogimport');
-			imagepng($im, './../images/time_scale.png');
+			$this->timescalefile = $pcache->FilePath('images/time_scale.png', 'raidlogimport');
+			imagepng($im, $this->timescalefile);
 			imagedestroy($im);
 			$this->timebar_created = true;
 		}
