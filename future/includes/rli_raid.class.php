@@ -723,13 +723,13 @@ $('input[name=\"add_boss_button[]\"]').live('click', function() {
 			}
 		} else {
 			$id = $pdh->get('rli_zone', 'id_string', array(trim($this->raids[$key]['zone']), $this->raids[$key]['diff']));
-			if(!$id) return false;
-			$event = $pdh->get('rli_zone', 'event', array($id));
-			if($this->config('raidcount') & 1 AND $this->config('raidcount') & 2 AND count($this->raids[$key]['bosskills']) == 1) {
+			if(($this->config('raidcount') & 1 AND $this->config('raidcount') & 2 AND count($this->raids[$key]['bosskills']) == 1) OR !$id) {
 				$this->raids[$key]['timebonus'] = 0;
 			} else {
 				$this->raids[$key]['timebonus'] = $pdh->get('rli_zone', 'timebonus', array($id));
 			}
+			if(!$id) return false;
+			$event = $pdh->get('rli_zone', 'event', array($id));
 		}
 		return $event;
 	}

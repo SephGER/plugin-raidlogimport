@@ -22,7 +22,7 @@ if ( !defined('EQDKP_INC') ) {
 
 class raidlogimport extends plugin_generic {
 	public $vstatus = 'Stable';
-	public $version = '0.6.0.0';
+	public $version = '0.6.0.1';
 	
 	public function pre_install() {
 		global $core;

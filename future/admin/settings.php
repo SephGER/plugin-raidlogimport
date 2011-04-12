@@ -49,7 +49,7 @@ class RLI_Settings extends page_generic
 			} elseif(in_array($old_name, $floats)) {
 				$data[$old_name] = number_format(floatvalue($in->get($old_name)), 2, '.', '');
 			} else {
-				$data[$old_name] = $in->get($old_name, '0');
+				$data[$old_name] = $in->get($old_name, '');
 			}
 			if(isset($data[$old_name]) AND $data[$old_name] != $old_value) { //Update
 				$core->config_set($old_name, $data[$old_name], 'raidlogimport');
