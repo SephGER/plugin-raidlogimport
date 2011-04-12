@@ -217,7 +217,7 @@ if(!class_exists('rli_member')) {
   	}
 
   	public function display($with_form=false) {
-  		global $tpl, $jquery, $rli, $core, $user, $in;
+  		global $tpl, $jquery, $rli, $core, $user, $in, $html;
 		$globalattraids = $rli->raid->get_attendance_raids();
 		$key = 0;
 		foreach($this->members as $key => $member) {

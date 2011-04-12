@@ -46,24 +46,24 @@
 		<div id="times_{player.KEY}">
 		<!-- BEGIN times -->
 			<div id="times_{player.KEY}_{player.times.KEY}" class="time{player.times.STANDBY}" style="width: {player.times.WIDTH}px; margin-left: {player.times.LEFT}px;" onmouseover="set_time_key(this.id);">
-				<div class="time_left" onmousedown="scale_start('left')"></div>
+				<div class="time_left" onmousedown="scale_start('left')"></div><div></div>
 				<div class="time_middle" onmousedown="scale_start('middle')">
 					<input type="hidden" name="members[{player.KEY}][times][{player.times.KEY}][join]" value="{player.times.JOIN}" id="times_{player.KEY}_{player.times.KEY}j" />
 					<input type="hidden" name="members[{player.KEY}][times][{player.times.KEY}][leave]" value="{player.times.LEAVE}" id="times_{player.KEY}_{player.times.KEY}l" />
 					<input type="hidden" name="members[{player.KEY}][times][{player.times.KEY}][extra]" value="{player.times.EXTRA}" id="times_{player.KEY}_{player.times.KEY}s" />
 				</div>
-				<div class="time_right" onmousedown="scale_start('right')"></div>
+				<div class="time_right" onmousedown="scale_start('right')"></div><div></div>
 			</div>
 		<!-- END times -->
 			<div style="display:none;">
 				<div id="times_{player.KEY}_99" class="time" style="width:0px; margin-left:0px;" onmouseover="set_time_key(this.id)">
-					<div class="time_left" onmousedown="scale_start('left')"></div>
+					<div class="time_left" onmousedown="scale_start('left')"></div><div></div>
 					<div class="time_middle" onmousedown="scale_start('middle')">
 						<input type="hidden" name="members[{player.KEY}][times][99][join]" value="0" id="times_{player.KEY}_99j" disabled="disabled" />
 						<input type="hidden" name="members[{player.KEY}][times][99][leave]" value="0" id="times_{player.KEY}_99l" disabled="disabled" />
 						<input type="hidden" name="members[{player.KEY}][times][99][extra]" value="0" id="times_{player.KEY}_99s" disabled="disabled" />
 					</div>
-					<div class="time_right" onmousedown="scale_start('right')"></div>
+					<div class="time_right" onmousedown="scale_start('right')"></div><div></div>
 				</div>
 			</div>
 			<div id="time_scale_{player.KEY}" class="time_scale_hide"></div>
