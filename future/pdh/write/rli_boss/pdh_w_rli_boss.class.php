@@ -131,6 +131,16 @@ class pdh_w_rli_boss extends pdh_w_generic {
 		return false;
 	}
 	
+	public function set_active($boss_id, $active) {
+		global $db, $pdh;
+		$active = ($active) ? '1' : '0';
+		if($db->query("UPDATE __raidlogimport_boss SET boss_active = '".$active."' WHERE boss_id = '".$boss_id."';")) {
+			$pdh->enqueue_hook('rli_boss_update', array($boss_id));
+			return true;
+		}
+		return false;
+	}
+	
 	private function changed($array1, $array2) {
 		foreach($array1 as $val) {
 			if(!in_array($val, $array2, true)) {

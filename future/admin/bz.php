@@ -32,7 +32,8 @@ class Bz extends page_generic {
 		
 		$handler = array(
 			'save' => array('process' => 'save', 'session_key' => true),
-			'copy' => array('process' => 'copy', 'session_key' => true)
+			'copy' => array('process' => 'copy', 'session_key' => true),
+			'inactive' => array('process' => 'switch_inactive', 'session_key' => true)
 		);
 		parent::__construct(false, $handler, false, null, 'bz_ids[]');
 		$this->process();
@@ -121,8 +122,19 @@ class Bz extends page_generic {
 				$message['bz_no_copy'][] = $pdh->geth('rli_zone', 'event', array($id, false));
 			}
 		}
-		$pdh->process_hook_queue();
 		$this->display($message);
+	}
+	
+	public function switch_inactive() {
+		global $in, $pdh;
+		$ids = $in->getArray('bz_ids', 'string');
+		foreach($ids as $id) {
+			if(strpos($id, 'z') !== 0) continue;
+			$id = intval(substr($id, 1));
+			$pdh->put('rli_zone', 'switch_inactive', array($id));
+			$zones[] = $pdh->geth('rli_zone', 'event', array($id, false));
+		}
+		$this->display(array('bz_active_suc' => $zones));
 	}
 
 	public function delete() {
@@ -151,7 +163,6 @@ class Bz extends page_generic {
 		} else {
 			$message['bz_no_save'][] = $user->lang('bz_no_id');
 		}
-		$pdh->process_hook_queue();
 		$this->display($message);
 	}
 	
@@ -270,9 +281,10 @@ class Bz extends page_generic {
 	}
 
 	public function display($messages=array()) {
-		global $tpl, $core, $pm, $user, $pdh, $html;
+		global $tpl, $core, $pm, $user, $pdh, $html, $jquery;
 
 		if($messages) {
+			$pdh->process_hook_queue();
 			$type = 'green';
 			foreach($messages as $title => $mess) {
 				if(strpos('no', $title) !== false) {
@@ -283,10 +295,10 @@ class Bz extends page_generic {
 				}
 			}
 		}
-		$bosses = $pdh->get('rli_boss', 'id_list');
+		$bosses = $pdh->get('rli_boss', 'id_list', array(false));
 		$tozone = array();
 		$sorting = array();
-		$zones = $pdh->get('rli_zone', 'id_list');
+		$zones = $pdh->get('rli_zone', 'id_list', array(false));
 		foreach($bosses as $boss_id) {
 			$sorting['boss'][$boss_id] = $pdh->get('rli_boss', 'sort', array($boss_id));
 			$tozone[$pdh->get('rli_boss', 'tozone', array($boss_id))][] = $boss_id;
@@ -310,16 +322,8 @@ class Bz extends page_generic {
 		$tpl->assign_vars(array(
 			'S_DIFF'		=> ($core->config('default_game') == 'wow') ? true : false,
 			'DIFF_DROP'		=> $html->DropDown('diff', $this->diff_drop, ''),
-			'L_BZ'			=> $user->lang('rli_bz_bz'),
-			'L_STRING'		=> $user->lang('bz_string'),
-			'L_NOTE'		=> $user->lang('bz_note_event'),
-			'L_BONUS'		=> $user->lang('bz_bonus'),
-			'L_TIMEBONUS'	=> $user->lang('bz_timebonus'),
-			'L_UPDATE'		=> $user->lang('bz_update'),
-			'L_DELETE'		=> $user->lang('bz_delete'),
-			'L_COPY_ZONE'	=> $user->lang('bz_copy_zone'))
-		);
-
+		));
+		$jquery->Tab_header('rli_manage_bz');
 		$core->set_vars(array(
 			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config('guildtag'), $core->config('dkp_name')).': '.$user->lang('rli_bz_bz'),
 			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
@@ -333,7 +337,8 @@ class Bz extends page_generic {
 	private function assign2tpl($zone_id, $sorting, $tozone) {
 		global $tpl, $pdh, $user, $core, $jquery;
 		$jquery->Collapse('#zone_'.$zone_id);
-		$tpl->assign_block_vars('zone_list', array(
+		$inactive = ($pdh->get('rli_zone', 'active', array($zone_id))) ? '' : 'inactive_';
+		$tpl->assign_block_vars($inactive.'zone_list', array(
 			'ZID'		=> $zone_id,
 			'ZSTRING'	=> ($zone_id) ? $pdh->geth('rli_zone', 'string', array($zone_id)) : $user->lang('bz_boss_oz'),
 			'ZTIMEBONUS'=> ($zone_id) ? $pdh->geth('rli_zone', 'timebonus', array($zone_id)) : '',
@@ -341,7 +346,7 @@ class Bz extends page_generic {
 		);
 		foreach($sorting['boss'] as $boss_id => $bsort) {
 			if(in_array($boss_id, $tozone[$zone_id])) {
-				$tpl->assign_block_vars('zone_list.boss_list', array(
+				$tpl->assign_block_vars($inactive.'zone_list.'.$inactive.'boss_list', array(
 					'BID'		=> $boss_id,
 					'BSTRING'	=> $pdh->geth('rli_boss', 'string', array($boss_id)),
 					'BNOTE'		=> $pdh->geth('rli_boss', 'note', array($boss_id)),

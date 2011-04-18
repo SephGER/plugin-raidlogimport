@@ -29,7 +29,7 @@ class pdh_r_rli_zone extends pdh_r_generic {
 		global $pdc, $db, $core;
 		$this->data = $pdc->get('pdh_rli_zone');
 		if(!$this->data) {
-			$sql = "SELECT zone_id, zone_string, zone_event, zone_timebonus, zone_diff, zone_sort FROM __raidlogimport_zone;";
+			$sql = "SELECT zone_id, zone_string, zone_event, zone_timebonus, zone_diff, zone_sort, zone_active FROM __raidlogimport_zone;";
 			if($result = $db->query($sql)) {
 				while($row = $db->fetch_record($result)) {
 					$this->data[$row['zone_id']]['string'] = explode($core->config('bz_parse', 'raidlogimport'), $row['zone_string']);
@@ -37,6 +37,7 @@ class pdh_r_rli_zone extends pdh_r_generic {
 					$this->data[$row['zone_id']]['timebonus'] = $row['zone_timebonus'];
 					$this->data[$row['zone_id']]['diff'] = $row['zone_diff'];
 					$this->data[$row['zone_id']]['sort'] = $row['zone_sort'];
+					$this->data[$row['zone_id']]['active'] = ($row['zone_active']) ? 1 : 0;
 				}
 			} else {
 				$this->data = array();
@@ -52,10 +53,17 @@ class pdh_r_rli_zone extends pdh_r_generic {
 		global $pdc;
 		unset($this->data);
 		$pdc->del('pdh_rli_zone');
-		$this->init();
+		pd(empty($this->data));
 	}
 	
-	public function get_id_list() {
+	public function get_id_list($active_only=true) {
+		if($active_only) {
+			$out = array();
+			foreach($this->data as $id => $data) {
+				if($data['active']) $out[] = $id;
+			}
+			return $out;
+		}
 		return array_keys($this->data);
 	}
 	
@@ -110,6 +118,10 @@ class pdh_r_rli_zone extends pdh_r_generic {
 	
 	public function get_sort($id) {
 		return $this->data[$id]['sort'];
+	}
+	
+	public function get_active($id) {
+		return $this->data[$id]['active'];
 	}
 }
 }
