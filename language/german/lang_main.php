@@ -30,6 +30,8 @@
 
 	//Bz
 	$lang['rli_bz_bz'] = 'Bosse / Zonen';
+	$lang['rli_bz_abz'] = 'Aktive Bosse / Zonen';
+	$lang['rli_bz_ibz'] = 'Inaktive Bosse / Zonen';
 	$lang['bz_boss'] = 'Bosse';
 	$lang['bz_boss_s'] = 'Boss';
 	$lang['bz_boss_oz'] = 'Bosse ohne Zone';
@@ -65,6 +67,8 @@
 	$lang['bz_copy_suc'] = 'Kopieren erfolgreich.';
 	$lang['bz_no_copy'] = 'Kopieren fehlgeschlagen!';
 	$lang['bz_import_boss'] = 'Boss importieren';
+	$lang['bz_set_inactive'] = 'Markierte Zonen (samt Bossen) inaktiv/aktiv schalten';
+	$lang['bz_active_suc'] = 'Aktiv/Inaktiv für markierte Zonen umgeschaltet';
 
 	//dkp
 	$lang['rli_dkp_insert'] = 'Raid-Log einfügen';

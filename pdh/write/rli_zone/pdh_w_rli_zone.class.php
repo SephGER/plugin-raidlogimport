@@ -120,6 +120,20 @@ class pdh_w_rli_zone extends pdh_w_generic {
 		return false;
 	}
 	
+	public function switch_inactive($zone_id) {
+		global $db, $pdh;
+		$active = ($pdh->get('rli_zone', 'active', array($zone_id))) ? '0' : '1';
+		if($db->query("UPDATE __raidlogimport_zone SET zone_active = '".$active."' WHERE zone_id = '".$zone_id."'")) {
+			$bosses = $pdh->get('rli_boss', 'bosses2zone', array($zone_id));
+			foreach($bosses as $boss_id) {
+				$pdh->put('rli_boss', 'set_active', array($boss_id, $active));
+			}
+			$pdh->enqueue_hook('rli_zone_update', array($zone_id));
+			return true;
+		}
+		return false;
+	}
+	
 	private function changed($array1, $array2) {
 		foreach($array1 as $val) {
 			if(!in_array($val, $array2, true)) {

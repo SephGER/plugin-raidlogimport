@@ -29,7 +29,7 @@ class pdh_r_rli_boss extends pdh_r_generic {
 		global $pdc, $db, $core;
 		$this->data = $pdc->get('pdh_rli_boss');
 		if(!$this->data) {
-			$sql = "SELECT boss_id, boss_string, boss_note, boss_bonus, boss_timebonus, boss_diff, boss_tozone, boss_sort FROM __raidlogimport_boss;";
+			$sql = "SELECT boss_id, boss_string, boss_note, boss_bonus, boss_timebonus, boss_diff, boss_tozone, boss_sort, boss_active FROM __raidlogimport_boss;";
 			if($result = $db->query($sql)) {
 				while($row = $db->fetch_record($result)) {
 					$this->data[$row['boss_id']]['string'] = explode($core->config('bz_parse', 'raidlogimport'), $row['boss_string']);
@@ -39,6 +39,7 @@ class pdh_r_rli_boss extends pdh_r_generic {
 					$this->data[$row['boss_id']]['diff'] = $row['boss_diff'];
 					$this->data[$row['boss_id']]['sort'] = $row['boss_sort'];
 					$this->data[$row['boss_id']]['tozone'] = $row['boss_tozone'];
+					$this->data[$row['boss_id']]['active'] = ($row['boss_active']) ? 1 : 0;
 				}
 			} else {
 				$this->data = array();
@@ -54,16 +55,27 @@ class pdh_r_rli_boss extends pdh_r_generic {
 		global $pdc;
 		unset($this->data);
 		$pdc->del('pdh_rli_boss');
-		$this->init();
 	}
 	
-	public function get_id_list() {
+	public function get_id_list($active_only=true) {
+		if($active_only) {
+			$out = array();
+			foreach($this->data as $id => $data) {
+				if($data['active']) $out[] = $id;
+			}
+			return $out;
+		}
 		return array_keys($this->data);
 	}
 	
 	public function get_id_string($string, $diff) {
+		global $pdh;
 		foreach($this->data as $id => $data) {
 			if(in_array($string, $data['string']) AND ($diff == 0 OR $data['diff'] == 0 OR $diff == $data['diff'])) {
+				if(!$data['active'] && $data['tozone']) {
+					$pdh->put('rli_zone', 'switch_inactive', array($data['tozone']));
+					$pdh->process_hook_queue();
+				}
 				return $id;
 			}
 		}
