@@ -9,7 +9,7 @@
 <!-- BEGIN player -->
 <tr id="memberrow_{player.KEY}" {player.DISPLAY}>
 	<td align="right">
-		{player.NR}&nbsp;<img src="{IMAGE_PATH}glyphs/delete.png" alt="{L_delete}" title="{L_delete}" onclick="delete_warning('memberrow_{player.KEY}');" />
+		{player.NR}&nbsp;<img src="{EQDKP_IMAGE_PATH}glyphs/delete.png" alt="{L_delete}" title="{L_delete}" onclick="delete_warning('memberrow_{player.KEY}');" />
 		<input type="hidden" id="memberrow_{player.KEY}submit" name="members[{player.KEY}][delete]" value="true" {player.DELDIS} />
 	</td>
 	<td><input type="text" name="members[{player.KEY}][name]" value="{player.MITGLIED}" class="input" /></td>
