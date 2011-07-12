@@ -472,9 +472,9 @@ $('#add_mem_button').click(function() {
     	//only do this once
     	if(!isset($this->tpl_assignments)) {
 			$rightc_menu = array(
-				'rli_add_dmem' => array('image' => $eqdkp_root_path.'images/menues/add.png', 'name' => $user->lang('rli_add_time'), 'jscode' => 'add_timeframe();'),
-				'rli_del_dmem' => array('image' => $eqdkp_root_path.'images/menues/delete.png', 'name' => $user->lang('rli_del_time'), 'jscode' => 'remove_timeframe();'),
-				'rli_swi_dmem' => array('image' => $eqdkp_root_path.'images/menues/update.png', 'name' => $user->lang('rli_standby_switch'), 'jscode' => 'change_standby();')
+				'rli_add_dmem' => array('image' => $eqdkp_root_path.'images/global/add.png', 'name' => $user->lang('rli_add_time'), 'jscode' => 'add_timeframe();'),
+				'rli_del_dmem' => array('image' => $eqdkp_root_path.'images/global/delete.png', 'name' => $user->lang('rli_del_time'), 'jscode' => 'remove_timeframe();'),
+				'rli_swi_dmem' => array('image' => $eqdkp_root_path.'images/gloval/update.png', 'name' => $user->lang('rli_standby_switch'), 'jscode' => 'change_standby();')
 			);
 			$tpl->assign_vars(array(
 				'CONTEXT_MENU' => $jquery->RightClickMenu('_rli_dmem', '.add_time', $rightc_menu),
