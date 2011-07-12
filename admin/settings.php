@@ -218,7 +218,7 @@ class RLI_Settings extends page_generic
 					$add = sprintf($add, (extension_loaded('gd')) ? '<span class=\'positive\'>'.$info['GD Version'].'</span>' : $user->lang('no_gd_lib'));
 				}
 				if($add != '') {
-					$add = $html->ToolTip($add, '<img alt="help" src="'.$eqdkp_root_path.'images/info.png" />');
+					$add = $html->ToolTip($add, '<img alt="help" src="'.$eqdkp_root_path.'images/global/info.png" />');
 				}
 				if($user->lang($nava['name'].'_warn', false, false)) {
 					$warn = $user->lang($nava['name'].'_warn');
@@ -226,7 +226,7 @@ class RLI_Settings extends page_generic
 					$warn = '';
 				}
 				if($warn != '') {
-					$warn = $html->ToolTip($warn, '<img width="16" height="16" alt="help" src="'.$eqdkp_root_path.'images/false.png" />');
+					$warn = $html->ToolTip($warn, '<img width="16" height="16" alt="help" src="'.$eqdkp_root_path.'images/global/false.png" />');
 				}
 				$tpl->assign_block_vars('holder.config', array(
 					'NAME'	=> $user->lang($nava['name']).' '.$add.' '.$warn,

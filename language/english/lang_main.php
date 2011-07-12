@@ -153,14 +153,14 @@
 	$lang['rli_go_on'] = 'Forward';
 
 	//config
-	$lang['multidkp_need'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                    Activate for functionality with MultiDKP!                  </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='help' /></a>";
+	$lang['multidkp_need'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                    Activate for functionality with MultiDKP!                  </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/global/info.png' alt='help' /></a>";
 	$lang['new_member_rank'] = 'Default rank for automatic created members.';
 	$lang['raidcount'] = 'How should the raids be created?';
 	$lang['raidcount_0'] = 'One raid for everything';
 	$lang['raidcount_1'] = 'One raid per hour';
 	$lang['raidcount_2'] = 'One raid per boss';
 	$lang['raidcount_3'] = 'One raid per hour and per boss';
-	$lang['wrong_settings'] = '<img src="$eqdkp_root_path'.'images/false.png" alt="error" width="32"> Wrong Settings!';
+	$lang['wrong_settings'] = '<img src="$eqdkp_root_path'.'images/global/false.png" alt="error" width="32"> Wrong Settings!';
 	$lang['wrong_settings_1'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_1'].' with no Time-DKP.';
 	$lang['wrong_settings_2'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_2'].' with no Boss-DKP.';
 	$lang['wrong_settings_3'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_3'].' with no Boss- and/or Time-DKP.';
@@ -197,8 +197,8 @@
 	$lang['am_raidnum'] = 'Number of raids for automatic minus';
 	$lang['am_value'] = 'Amount of DKP drawn off';
 	$lang['am_value_raids'] = 'DKP value = DKP of last number of raids';
-	$lang['am_allxraids'] = "Reset raidcount on Minus-DKP? <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td>Example: A member looses DKP after 3 Raids of not being there. The 4th Raid he is missing again. If this option is deactivated, the member will loose DKP again. If its activated he will loose the DKP on his 6th Raid of not being there. </td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='help' /></a>";
-	$lang['addinfo_am'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td> When used, member, who did not join the last x raids, loose an amount of DKP. If you use zero-sum the member will be awarded an item, else he gets an adjustment. <td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='help' /></a>";
+	$lang['am_allxraids'] = "Reset raidcount on Minus-DKP? <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td>Example: A member looses DKP after 3 Raids of not being there. The 4th Raid he is missing again. If this option is deactivated, the member will loose DKP again. If its activated he will loose the DKP on his 6th Raid of not being there. </td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/global/info.png' alt='help' /></a>";
+	$lang['addinfo_am'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td> When used, member, who did not join the last x raids, loose an amount of DKP. If you use zero-sum the member will be awarded an item, else he gets an adjustment. <td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/global/info.png' alt='help' /></a>";
 	$lang['am_name'] = 'lack of participation';
 	$lang['title_am'] = 'Automatic Minus';
 	$lang['title_adj'] = 'Adjustments';
@@ -225,7 +225,7 @@
 	$lang['raid_note_time']	= 'raid note of the raids per hour';
 	$lang['raid_note_time_0'] = '20:00-21:00, 21:00-22:00, etc.';
 	$lang['raid_note_time_1'] = '1.Hour, 2.Hour, etc.';
-	$lang['timedkp_handle']	= "Calculation of Timedkp <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td> 0: exactly calculation per minute <br /> >0: minutes, after the member gains full dkp of the hour </td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/info.png' alt='help' /></a>";
+	$lang['timedkp_handle']	= "Calculation of Timedkp <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td> 0: exactly calculation per minute <br /> >0: minutes, after the member gains full dkp of the hour </td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='$eqdkp_root_path"."images/global/info.png' alt='help' /></a>";
 	$lang['member_display'] = 'How should the member-list be displayed?';
 	$lang['member_display_1'] = 'Multiple Checkboxes';
 	$lang['member_display_0'] = 'Multi-Select';
