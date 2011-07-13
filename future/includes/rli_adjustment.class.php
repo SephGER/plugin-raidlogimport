@@ -101,7 +101,7 @@ if(!class_exists('rli_adjustment')) {
 		));
 		$tpl->add_js(
 "$('#rli_select_all').click(function() {
-	if($('.rli_select_me').attr('checked')) {
+	if($('.rli_select_me').prop('checked')) {
 		$('.rli_select_me').removeAttr('checked');
 	} else {
 		$('.rli_select_me').attr('checked', 'checked');
