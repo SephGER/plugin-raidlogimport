@@ -223,7 +223,7 @@ class raidlogimport extends plugin_generic {
 				'link' => 'plugins/' . $this->code . '/admin/settings.php'.$SID,
 				'text' => $user->lang('settings'),
 				'check' => 'a_raidlogimport_config',
-				'icon' => 'settings.png'),
+				'icon' => 'manage_settings.png'),
 			2 => array(
 				'link' => 'plugins/' . $this->code . '/admin/bz.php'.$SID,
 				'text' => $user->lang('raidlogimport_bz'),
