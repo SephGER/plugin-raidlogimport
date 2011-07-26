@@ -507,7 +507,7 @@ $('#add_mem_button').click(function() {
     }
 
 	private function create_timebar($start, $end) {
-		global $pcache, $eqdkp_root_path;
+		global $pfh, $eqdkp_root_path;
 		if(!$this->timebar_created) {
 			$px_time = ($this->px_time > 5000) ? 5000 : $this->px_time; //prevent very big images (although 5000 is quite big)
 			$im = imagecreate($px_time, 18);
@@ -534,7 +534,7 @@ $('#add_mem_button').click(function() {
 				$i += 900;
 				$counter++;
 			}
-			$this->timescalefile = $pcache->FilePath('images/time_scale.png', 'raidlogimport');
+			$this->timescalefile = $pfh->FilePath('images/time_scale.png', 'raidlogimport');
 			imagepng($im, $this->timescalefile);
 			imagedestroy($im);
 			$this->timebar_created = true;

@@ -459,14 +459,14 @@ $('input[name=\"add_boss_button[]\"]').live('click', function() {
 	}
 
 	public function get_checkraidlist($memberraids, $mkey) {
-		global $eqdkp_root_path, $pcache, $user;
+		global $eqdkp_root_path, $pfh, $user;
 
 		$td = '';
 		if(!$this->th_raidlist) {
-			$pcache->CheckCreateFolder($pcache->FolderPath('raidlogimport'));
+			$pfh->CheckCreateFolder($pfh->FolderPath('raidlogimport'));
 			foreach($this->raids as $rkey => $raid) {
-				$imagefile = $eqdkp_root_path.$pcache->FileLink('image'.$rkey.'.png', 'raidlogimport');
-				if(!$pcache->CheckCreateFile($imagefile, true)) {
+				$imagefile = $eqdkp_root_path.$pfh->FileLink('image'.$rkey.'.png', 'raidlogimport');
+				if(!$pfh->CheckCreateFile($imagefile, true)) {
 					$this->th_raidlist = '<td colspan="20">'.$user->lang('rli_error_imagecreate').'</td>';
 				}
 				$image = imagecreate(20, 150);
