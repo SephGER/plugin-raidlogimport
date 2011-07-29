@@ -287,10 +287,8 @@ class rli_parse {
 		}
 		foreach($xml->Loot->children() as $loot) {
 			$player = utf8_decode(trim($loot->Player));
-			if(!(($rli->config('ignore_dissed') & 1 AND $player == 'disenchanted') OR ($rli->config('ignore_dissed') & 2 AND $player == 'bank'))) {
-				$cost = (array_key_exists('Costs', $loot)) ? (int) $loot->Costs : (int) $loot->Note;
-				$rli->item->add(utf8_decode(trim($loot->ItemName)), $player, $cost, substr(trim($loot->ItemID), 0, 5), strtotime($loot->Time));
-			}
+			$cost = (array_key_exists('Costs', $loot)) ? (int) $loot->Costs : (int) $loot->Note;
+			$rli->item->add(utf8_decode(trim($loot->ItemName)), $player, $cost, substr(trim($loot->ItemID), 0, 5), strtotime($loot->Time));
 		}
 		if(!$magic) {
 			foreach($xml->PlayerInfos->children() as $xmember) {

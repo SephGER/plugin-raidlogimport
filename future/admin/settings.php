@@ -34,7 +34,7 @@ class RLI_Settings extends page_generic
 		global $core, $rli, $in;
 
 		$messages = array();
-		$bytes = array('s_member_rank', 'ignore_dissed', 'use_dkp', 'event_boss', 'standby_dkptype');
+		$bytes = array('s_member_rank', 'use_dkp', 'event_boss', 'standby_dkptype');
 		$floats = array('member_start', 'attendence_begin', 'attendence_end', 'am_value');
 		$copy_config = $rli->config();
 		foreach($copy_config as $old_name => $old_value) {
@@ -115,7 +115,7 @@ class RLI_Settings extends page_generic
 				'member'		=> array('del_dbl_times')
 			),
 			'text'		=> array(
-				'general'		=> array('timedkp_handle', 'bz_parse', 'loottime'),
+				'general'		=> array('timedkp_handle', 'bz_parse', 'loottime', 'ignore_dissed'),
 				'member'		=> array('member_miss_time', 'member_raid'), #'member_start'),
 				#'am'			=> array('am_raidnum', 'am_value'),
 				'att'			=> array('attendence_begin', 'attendence_end', 'attendence_time', 'att_note_begin', 'att_note_end'),
@@ -129,7 +129,7 @@ class RLI_Settings extends page_generic
 				'ignore'		=> array('rlic_data', 'rlic_lastcheck', 'rli_inst_build')
 			),
 			'special'	=> array(
-				'general'		=> array('3:use_dkp', '2:ignore_dissed', '2:event_boss'),
+				'general'		=> array('3:use_dkp', '2:event_boss'),
 				'member'		=> array('3:s_member_rank'),
 				'standby'		=> array('3:standby_dkptype')
 			)

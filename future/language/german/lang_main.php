@@ -204,9 +204,8 @@
 	$lang['title_parse'] = 'Parse-Einstellungen';
 	$lang['title_hnh_suffix'] = 'Heroic / Non-Heroic';
 	$lang['title_member'] = 'Mitglieder Einstellungen';
-	$lang['ignore_dissed'] = 'Disenchanted- und Bank-Loot ignorieren?';
-	$lang['ignore_dissed_1'] = 'Disenchanted ignorieren';
-	$lang['ignore_dissed_2'] = 'Bank ignorieren';
+	$lang['ignore_dissed'] = 'Bestimmte Looter ignorieren?';
+	$lang['ignore_dissed_help'] = 'z.B. Disenchanted oder bank. Separariert durch Kommata, ohne Unterscheidung von Groß- und Kleinschreibung';
 	$lang['member_miss_time'] = 'Zeit in Sekunden, die ein Member fehlen kann, ohne dass er Abzüge bekommt.';
 	$lang['s_member_rank'] = 'Member Rang anzeigen?';
 	$lang['s_member_rank_1'] = 'Member-Übersicht';

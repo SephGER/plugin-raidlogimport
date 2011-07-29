@@ -40,7 +40,18 @@ class rli_item {
 	}
 	
 	public function add($name, $member, $value, $id=0, $time=0, $raid=0, $itempool=0) {
+		global $rli;
+		if(!empty($this->toignore)) {
+			foreach($this->toignore as $toignore) {
+				if(strcasecmp($toignore, $member) === 0) return false;
+			}
+		} elseif(!isset($this->toignore) && strlen($rli->config('ignore_dissed')) > 2) {
+			$this->toignore = explode(',', $rli->config('ignore_dissed'));
+		} else {
+			$this->toignore = array();
+		}
 		$this->items[] = array('name' => $name, 'member' => $member, 'value' => $value, 'game_id' => $id, 'time' => $time, 'raid' => $raid, 'itempool' => $itempool);
+		return true;
 	}
 	
 	public function add_new($num) {

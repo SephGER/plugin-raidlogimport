@@ -111,7 +111,7 @@ class raidlogimport extends plugin_generic {
 			'rli_upd_check'		=> '1',		//enable update check?
 			'use_dkp'			=> '1',		//1: bossdkp, 2:zeitdkp, 4: event-dkp
 			'deactivate_adj'	=> '0',
-			'ignore_dissed'		=> '0',		//ignore disenchanted and bank loot?
+			'ignore_dissed'		=> '',		//ignore disenchanted and bank loot?
 			'member_miss_time' 	=> '300',	//time in secs member can miss without it being tracked
 			's_member_rank'		=> '0',		//show member_rank? (0: no, 1: memberpage, 2: lootpage, 4: adjustmentpage, 3:member+lootpage, 5:adjustments+memberpage, 6: loot+adjustmentpage, 7: overall)
 			'att_note_begin'	=> $user->lang('rli_att').' '.$user->lang('rli_start'),	//note for attendence_start-raid

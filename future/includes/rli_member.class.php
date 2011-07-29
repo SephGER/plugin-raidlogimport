@@ -350,7 +350,7 @@ $('#add_mem_button').click(function() {
 	
 	public function insert() {
 		global $pdh;
-		$members = $pdh->aget('member', 'name', 0, array($pdh->get('member', 'id_list')));
+		$members = $pdh->aget('member', 'name', 0, array($pdh->get('member', 'id_list', array(false, false, false))));
 		foreach($this->members as $member) {
 			if(!($id = array_search($member['name'], $members))) {
 				$id = $pdh->put('member', 'add_member', array($member['name'], $member['level'], $member['race'], $member['class'], $this->config('new_member_rank'), 0));
