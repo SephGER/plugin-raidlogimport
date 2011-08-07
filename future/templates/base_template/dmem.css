@@ -65,7 +65,7 @@
 	z-index: 11;
 }
 .time_left {
-	background-color: #bbbbbb;
+	background-color: transparent;
 	border-radius: 5px;
 	cursor: e-resize;
 	position: absolute;
@@ -77,9 +77,9 @@
 }
 .time_left + div {
 	background-color: #bbbbbb;
-	height: 15px;
-	margin-left: 3px;
+	height: 11px;
 	width: 3px;
+	margin-top: -2px;
 	z-index: 13;
 	position: absolute;
 }
@@ -92,7 +92,7 @@
 	z-index: 13;
 }
 .time_right {
-	background-color: #bbbbbb;
+	background-color: transparent;
 	border-radius: 5px;
 	cursor: e-resize;
 	position: absolute;
@@ -105,9 +105,10 @@
 }
 .time_right + div {
 	background-color: #bbbbbb;
-	height: 15px;
-	right: 2px;
+	height: 11px;
+	right: 0px;
 	width: 3px;
+	margin-top: -2px;
 	z-index: 13;
 	position: absolute;
 }
