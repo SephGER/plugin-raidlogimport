@@ -78,7 +78,7 @@ function scale(ereignis) {
 	if(scale_object != null) {
 		if(corner == "left") {
 			set_left((posx - oldx - posi_null), 1);
-        	set_width((parseInt(scale_object.style.width) + (startx - posx)), true);
+        	if(scale_object != null) set_width((parseInt(scale_object.style.width) + (startx - posx)), true);
 		}
 		if(corner == "right") {
 			set_width(parseInt(scale_object.style.width) + (posx - startx));
