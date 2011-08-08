@@ -249,6 +249,9 @@
 	$lang['itempool_save'] = 'Itempools können pro Item und Ereignis gespeichert werden.';
 	$lang['itempool_save_help'] = 'Auf der Item-Seite kann für alle angezeigten Items die Itempool-Auswahl gespeichert werden. Beim nächsten Import des Items in dem Raid, wird automatisch der gespeicherte Itempool gewählt.';
 	$lang['del_dbl_times'] = 'Sollen doppelte Zeiten gelöscht werden? Bei Joins die spätere, bei Leaves die frühere Zeit.';
+	$lang['autocomplete'] = 'Felder mit autocomplete-Funktion versehen?';
+	$lang['autocomplete_1'] = 'Mitgliedsname';
+	$lang['autocomplete_2'] = 'Itemname';
 
     //portal
     $lang['p_rli_zone_display'] = 'Welche Zonen sollen angezeigt werden?';
