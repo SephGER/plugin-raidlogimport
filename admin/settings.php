@@ -34,7 +34,7 @@ class RLI_Settings extends page_generic
 		global $core, $rli, $in;
 
 		$messages = array();
-		$bytes = array('s_member_rank', 'use_dkp', 'event_boss', 'standby_dkptype');
+		$bytes = array('s_member_rank', 'use_dkp', 'event_boss', 'standby_dkptype', 'autocomplete');
 		$floats = array('member_start', 'attendence_begin', 'attendence_end', 'am_value');
 		$copy_config = $rli->config();
 		foreach($copy_config as $old_name => $old_value) {
@@ -129,7 +129,7 @@ class RLI_Settings extends page_generic
 				'ignore'		=> array('rlic_data', 'rlic_lastcheck', 'rli_inst_build')
 			),
 			'special'	=> array(
-				'general'		=> array('3:use_dkp', '2:event_boss'),
+				'general'		=> array('3:use_dkp', '2:event_boss', '2:autocomplete'),
 				'member'		=> array('3:s_member_rank'),
 				'standby'		=> array('3:standby_dkptype')
 			)

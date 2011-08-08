@@ -22,7 +22,7 @@ if ( !defined('EQDKP_INC') ) {
 
 class raidlogimport extends plugin_generic {
 	public $vstatus = 'Stable';
-	public $version = '0.6.0.1';
+	public $version = '0.6.0.2';
 	
 	public function pre_install() {
 		global $core;
@@ -128,6 +128,7 @@ class raidlogimport extends plugin_generic {
 			'member_raid'		=> '50',	//percent which member has to be in raid, to gain assignment to raid
 			'itempool_save'		=> '1',		//save itempool per item & event
 			'del_dbl_times'		=> '0',		//delete double leave/joins
+			'autocomplete'		=> '0',		//auto-complete fields (1 member, 2 items)
 		);
 		if(strtolower($core->config('default_game')) == 'wow') {
 			$config_data = array_merge($config_data, array(
@@ -152,7 +153,8 @@ class raidlogimport extends plugin_generic {
 				`boss_timebonus` FLOAT(5,2) NOT NULL DEFAULT 0,
 				`boss_diff` INT NOT NULL DEFAULT 0,
 				`boss_tozone` INT NOT NULL DEFAULT 0,
-				`boss_sort` INT NOT NULL DEFAULT 0
+				`boss_sort` INT NOT NULL DEFAULT 0,
+				`boss_active` INT(1) NOT NULL DEFAULT 1
 			);",
 			"CREATE TABLE IF NOT EXISTS __raidlogimport_zone (
 				`zone_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -160,7 +162,8 @@ class raidlogimport extends plugin_generic {
 				`zone_event` INT NOT NULL,
 				`zone_timebonus` FLOAT(5,2) NOT NULL DEFAULT 0,
 				`zone_diff` INT NOT NULL DEFAULT 0,
-				`zone_sort` INT NOT NULL DEFAULT 0
+				`zone_sort` INT NOT NULL DEFAULT 0,
+				`zone_active` INT(1) NOT NULL DEFAULT 1
 			);",
 			"CREATE TABLE IF NOT EXISTS __raidlogimport_cache (
 				`cache_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
