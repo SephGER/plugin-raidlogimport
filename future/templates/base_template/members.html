@@ -23,4 +23,12 @@
       </tr>
 	</table>
 </form>
-{CONTEXT_MENU}
+<!-- IF CONTEXT_MENU -->
+<div id="myrcm" class="rli_rcm" style="display: block;">
+	<ul>
+		<li id="rli_add_dmem"><img src="{EQDKP_IMAGE_PATH}global/add.png" alt="" />{L_rli_add_time}</li>
+		<li id="rli_del_dmem"><img src="{EQDKP_IMAGE_PATH}global/delete.png" alt="" />{L_rli_del_time}</li>
+		<li id="rli_swi_dmem"><img src="{EQDKP_IMAGE_PATH}global/update.png" alt="" />{L_rli_standby_switch}</li>
+	</ul>
+</div>
+<!-- ENDIF -->

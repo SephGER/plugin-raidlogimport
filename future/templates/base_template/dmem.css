@@ -136,3 +136,23 @@
 	height: 3px;
 	background-position: bottom right;
 }
+.rli_rcm {
+	background: #ffffff;
+	border: 1px solid #a9a9a9;
+	width: 200px;
+}
+.rli_rcm > ul {
+	list-style-type: none;
+	margin-left: -25px;
+}
+.rli_rcm li {
+	color: #000000;
+	cursor: pointer;
+	padding: 2px;
+	border: 2px solid #ffffff;
+	margin-right: 10px;
+}
+.rli_rcm li:hover {
+	background-color: #ababab;
+	border: 2px solid #767676;
+}

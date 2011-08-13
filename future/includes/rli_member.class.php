@@ -309,7 +309,6 @@ $('#add_mem_button').click(function() {
 	mem.attr('id', 'memberrow_'+rli_key);
 	mem.removeAttr('style');
 	mem.find('td:first').html((rli_key+1)+$.trim(mem.find('td:first').html()));
-	mem.find('.add_time').".$this->rightclick_js.";
 	$('#memberrow_'+(rli_key-1)).after(mem);
 	$('#memberrow_'+rli_key+'submit').prev().click(function() {
 		$(this).removeClass('del_mem');
@@ -471,17 +470,17 @@ $('#add_mem_button').click(function() {
 
     	//only do this once
     	if(!isset($this->tpl_assignments)) {
-			$rightc_menu = array(
+			/*$rightc_menu = array(
 				'rli_add_dmem' => array('image' => $eqdkp_root_path.'images/global/add.png', 'name' => $user->lang('rli_add_time'), 'jscode' => 'add_timeframe();'),
 				'rli_del_dmem' => array('image' => $eqdkp_root_path.'images/global/delete.png', 'name' => $user->lang('rli_del_time'), 'jscode' => 'remove_timeframe();'),
-				'rli_swi_dmem' => array('image' => $eqdkp_root_path.'images/gloval/update.png', 'name' => $user->lang('rli_standby_switch'), 'jscode' => 'change_standby();')
-			);
+				'rli_swi_dmem' => array('image' => $eqdkp_root_path.'images/global/update.png', 'name' => $user->lang('rli_standby_switch'), 'jscode' => 'change_standby();')
+			);*/
 			$tpl->assign_vars(array(
-				'CONTEXT_MENU' => $jquery->RightClickMenu('_rli_dmem', '.add_time', $rightc_menu),
+				'CONTEXT_MENU' => true,#$jquery->RightClickMenu('_rli_dmem', '.add_time', $rightc_menu),
 				'PXTIME' => $this->px_time,
 				'HEIGHT' => $this->height)
 			);
-			$this->rightclick_js = $jquery->RightClickMenu('_rli_dmem', '.add_time', $rightc_menu, '170px', true);
+			#$this->rightclick_js = $jquery->RightClickMenu('_rli_dmem', '.add_time', $rightc_menu, '170px', true);
     		$tpl->js_file($eqdkp_root_path.'plugins/raidlogimport/templates/dmem.js');
     		$tpl->css_file($eqdkp_root_path.'plugins/raidlogimport/templates/base_template/dmem.css');
     		$tpl->add_css(".time_scale {
@@ -501,6 +500,17 @@ $('#add_mem_button').click(function() {
 							$('.add_time').live('mouseleave', function() {
 								$('#time_scale_' + member_id).attr('class', 'time_scale_hide');
 							});
+							$('.add_time').live('contextmenu', function(e) {
+								$('<div id=\"rc_overlay\"></div>').css({left : '0px', top : '0px',position: 'absolute', width: '100%', height: '100%', zIndex: '200' }).click(function() {
+									$(this).remove();
+									$('#myrcm').hide();
+								}).bind('contextmenu' , function(){return false;}).appendTo(document.body);
+								$('#myrcm').css({ position: 'absolute', left: e.pageX+'px', top: e.pageY+'px', zIndex: '201' }).show();
+								return false;
+							});
+							$('#rli_add_dmem').click(function() { add_timeframe(); $('#myrcm').hide();$('#rc_overlay').remove();});
+							$('#rli_del_dmem').click(function() { remove_timeframe(); $('#myrcm').hide();$('#rc_overlay').remove();});
+							$('#rli_swi_dmem').click(function() { change_standby(); $('#myrcm').hide();$('#rc_overlay').remove();});
                         });");
     		$this->tpl_assignments = true;
     	}
