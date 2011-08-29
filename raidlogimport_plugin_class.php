@@ -21,13 +21,17 @@ if ( !defined('EQDKP_INC') ) {
 }
 
 class raidlogimport extends plugin_generic {
+	public static function __dependencies() {
+		$dependencies = array('core', 'user', 'db', 'pdh');
+		return array_merge(parent::$dependencies, $dependencies);
+	}
+
 	public $vstatus = 'Stable';
 	public $version = '0.6.0.2';
 	
 	public function pre_install() {
-		global $core;
 		//initialize config
-		$core->config_set($this->create_default_configs(), '', $this->get_data('code'));
+		$this->core->config_set($this->create_default_configs(), '', $this->get_data('code'));
 		$sqls = $this->create_install_sqls();
 		foreach($sqls as $sql) {
 			$this->add_sql(SQL_INSTALL, $sql);
@@ -35,23 +39,20 @@ class raidlogimport extends plugin_generic {
 	}
 	
 	public function pre_uninstall() {
-		global $core;
-		$core->config_del(array_keys($this->create_default_configs()), $this->get_data('code'));
+		$this->core->config_del(array_keys($this->create_default_configs()), $this->get_data('code'));
 		$sqls = $this->create_uninstall_sqls();
 		foreach($sqls as $sql) {
 			$this->add_sql(SQL_UNINSTALL, $sql);
 		}
 	}
 
-	public function __construct($pm) {
-		global $eqdkp_root_path, $user, $SID, $core;
-
-		parent::__construct($pm);
+	public function __construct() {
+		parent::__construct();
 		//Load Game-Specific Language
-		$lang_file = $eqdkp_root_path.'plugins/raidlogimport/language/'.$user->lang_name.'/'.$core->config('default_game').'_lang.php';
+		$lang_file = $this->root_path.'plugins/raidlogimport/language/'.$this->user->lang_name.'/'.$this->core->config('default_game').'_lang.php';
 		if(file_exists($lang_file)) {
 			include($lang_file);
-			$user->add_lang($user->lang_name, $lang);
+			$this->user->add_lang($this->user->lang_name, $lang);
 		}
 
 		$this->add_dependency(array(
@@ -68,18 +69,18 @@ class raidlogimport extends plugin_generic {
 			'template_path' 	=> 'plugins/raidlogimport/templates/',
 			'version'			=> $this->version,
 			'author'			=> 'Hoofy',
-			'description'		=> $user->lang('raidlogimport_short_desc'),
-			'long_description'	=> $user->lang('raidlogimport_long_desc'),
+			'description'		=> $this->user->lang('raidlogimport_short_desc'),
+			'long_description'	=> $this->user->lang('raidlogimport_long_desc'),
 			'homepage'			=> 'http://www.eqdkp-plus.com',
-			'manuallink'		=> ($user->lang_name != 'german') ? false : $eqdkp_root_path . 'plugins/raidlogimport/language/'.$user->lang_name.'/Manual.pdf',
-			'icon'				=> $eqdkp_root_path.'plugins/raidlogimport/images/report.png',
+			'manuallink'		=> ($this->user->lang_name != 'german') ? false : $this->root_path . 'plugins/raidlogimport/language/'.$this->user->lang_name.'/Manual.pdf',
+			'icon'				=> $this->root_path.'plugins/raidlogimport/images/report.png',
 			)
 		);
 
 		//permissions
-		$this->add_permission('a', 'config', 'N', $user->lang('configuration'), array(2,3));
-		$this->add_permission('a', 'dkp', 'N', $user->lang('raidlogimport_dkp'), array(2,3));
-		$this->add_permission('a', 'bz', 'N', $user->lang('raidlogimport_bz'), array(2,3));
+		$this->add_permission('a', 'config', 'N', $this->user->lang('configuration'), array(2,3));
+		$this->add_permission('a', 'dkp', 'N', $this->user->lang('raidlogimport_dkp'), array(2,3));
+		$this->add_permission('a', 'bz', 'N', $this->user->lang('raidlogimport_bz'), array(2,3));
 		
 		//pdh-modules
 		$this->add_pdh_read_module('rli_zone');
@@ -94,7 +95,6 @@ class raidlogimport extends plugin_generic {
 	}
 	
 	private function create_default_configs() {
-		global $user, $core;
 		//create config-data
 		$config_data = array(
 			'new_member_rank' 	=> '1',
@@ -114,8 +114,8 @@ class raidlogimport extends plugin_generic {
 			'ignore_dissed'		=> '',		//ignore disenchanted and bank loot?
 			'member_miss_time' 	=> '300',	//time in secs member can miss without it being tracked
 			's_member_rank'		=> '0',		//show member_rank? (0: no, 1: memberpage, 2: lootpage, 4: adjustmentpage, 3:member+lootpage, 5:adjustments+memberpage, 6: loot+adjustmentpage, 7: overall)
-			'att_note_begin'	=> $user->lang('rli_att').' '.$user->lang('rli_start'),	//note for attendence_start-raid
-			'att_note_end'		=> $user->lang('rli_att').' '.$user->lang('rli_end'),	//  "	"		"	 _end-raid
+			'att_note_begin'	=> $this->user->lang('rli_att').' '.$this->user->lang('rli_start'),	//note for attendence_start-raid
+			'att_note_end'		=> $this->user->lang('rli_att').' '.$this->user->lang('rli_end'),	//  "	"		"	 _end-raid
 			'raid_note_time'	=> '0', 	//0: exact time (20:03:43-21:03:43); 1: hour (1. hour, 2. hour)
 			'timedkp_handle'	=> '0',		//should timedkp be given exactly(0) or fully after x minutes
 			'member_display'	=> '2',		//0: multi-dropdown; 1: checkboxes; 2: detailed join/leave
@@ -124,13 +124,13 @@ class raidlogimport extends plugin_generic {
 			'standby_value'		=> '0',		//value in percent or absolute
 			'standby_att'		=> '0', 	//shall standbys get att start/end?
 			'standby_dkptype'	=> '0',		//which dkp shall standbys get? (1 boss, 2 time, 4 event)
-			'standby_raidnote'	=> $user->lang('standby_raid_note'),		//note for standby-raid
+			'standby_raidnote'	=> $this->user->lang('standby_raid_note'),		//note for standby-raid
 			'member_raid'		=> '50',	//percent which member has to be in raid, to gain assignment to raid
 			'itempool_save'		=> '1',		//save itempool per item & event
 			'del_dbl_times'		=> '0',		//delete double leave/joins
 			'autocomplete'		=> '0',		//auto-complete fields (1 member, 2 items)
 		);
-		if(strtolower($core->config('default_game')) == 'wow') {
+		if(strtolower($this->core->config('default_game')) == 'wow') {
 			$config_data = array_merge($config_data, array(
 				'diff_1'	=> ' (10)',		//suffix for 10-player normal
 				'diff_2'	=> ' (25)', 	//suffix for 25-player normal
@@ -143,7 +143,6 @@ class raidlogimport extends plugin_generic {
 	}
 
 	private function create_install_sqls() {
-		global $core, $db, $eqdkp_root_path, $pdh, $user;
 		$install_sqls = array(
 			"CREATE TABLE IF NOT EXISTS __raidlogimport_boss (
 				`boss_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -178,12 +177,12 @@ class raidlogimport extends plugin_generic {
 			);");
 		
 		//add default bz_data
-		$file = $eqdkp_root_path.'plugins/raidlogimport/games/'.$core->config('default_game').'/bz_sql.php';
+		$file = $this->root_path.'plugins/raidlogimport/games/'.$this->core->config('default_game').'/bz_sql.php';
 		if(is_file($file)) {
 			include_once($file);
-			$data = (!empty(${$user->lang_name})) ? ${$user->lang_name} : $english;
+			$data = (!empty(${$this->user->lang_name})) ? ${$this->user->lang_name} : $english;
 			if (is_array($data)) {
-				$zones = $pdh->aget('event', 'name', 0, array($pdh->get('event', 'id_list')));
+				$zones = $this->pdh->aget('event', 'name', 0, array($this->pdh->get('event', 'id_list')));
 				foreach($data['zone'] as $bz) {
 					$id = 1;
 					foreach($zones as $zid => $zone) {
@@ -195,13 +194,13 @@ class raidlogimport extends plugin_generic {
 					$install_sqls[] = 	"INSERT INTO __raidlogimport_zone
 											(zone_string, zone_event, zone_timebonus, zone_diff, zone_sort)
 										VALUES
-											('".$db->escape($bz[0])."', '".$id."', '".$bz[2]."', '".$bz[3]."', '".$bz[4]."');";
+											('".$this->db->escape($bz[0])."', '".$id."', '".$bz[2]."', '".$bz[3]."', '".$bz[4]."');";
 				}
 				foreach($data['boss'] as $bz) {
 					$install_sqls[] = 	"INSERT INTO __raidlogimport_boss
 											(boss_string, boss_note, boss_bonus, boss_timebonus, boss_diff, boss_tozone, boss_sort)
 										VALUES
-											('".$db->escape($bz[0])."', '".$db->escape($bz[1])."', '".$bz[2]."', '".$bz[3]."', '".$bz[4]."', '".$bz[5]."', '".$bz[6]."');";
+											('".$this->db->escape($bz[0])."', '".$this->db->escape($bz[1])."', '".$bz[2]."', '".$bz[3]."', '".$bz[4]."', '".$bz[5]."', '".$bz[6]."');";
 				}
 			}
 		}
@@ -218,23 +217,22 @@ class raidlogimport extends plugin_generic {
 	}
 	
 	public function gen_admin_menu() {
-		global $user, $SID;
 		return array(array(
 			'icon' => './../../plugins/raidlogimport/images/report.png',
-			'name' => $user->lang('raidlogimport'),
+			'name' => $this->user->lang('raidlogimport'),
 			1 => array(
-				'link' => 'plugins/' . $this->code . '/admin/settings.php'.$SID,
-				'text' => $user->lang('settings'),
+				'link' => 'plugins/' . $this->code . '/admin/settings.php'.$this->SID,
+				'text' => $this->user->lang('settings'),
 				'check' => 'a_raidlogimport_config',
 				'icon' => 'manage_settings.png'),
 			2 => array(
-				'link' => 'plugins/' . $this->code . '/admin/bz.php'.$SID,
-				'text' => $user->lang('raidlogimport_bz'),
+				'link' => 'plugins/' . $this->code . '/admin/bz.php'.$this->SID,
+				'text' => $this->user->lang('raidlogimport_bz'),
 				'check' => 'a_raidlogimport_bz',
 				'icon' => './../../plugins/raidlogimport/images/report_edit.png'),
 			3 => array(
-				'link' => 'plugins/' . $this->code . '/admin/dkp.php'.$SID,
-				'text' => $user->lang('raidlogimport_dkp'),
+				'link' => 'plugins/' . $this->code . '/admin/dkp.php'.$this->SID,
+				'text' => $this->user->lang('raidlogimport_dkp'),
 				'check' => 'a_raidlogimport_dkp',
 				'icon' => './../../plugins/raidlogimport/images/report_add.png')
 		));
