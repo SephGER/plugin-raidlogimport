@@ -131,7 +131,7 @@
 	$lang['rli_miss'] = 'Folgende Nodes fehlen: ';
 	$lang['rli_lgaobk'] = 'Log Guild Attendees on Bosskill muss vor und während des Aufzeichnens deaktiviert sein. Wenn du den Raid trotzdem importieren willst, musst du alle Joins mit der selben Zeit von Bosskills löschen.';
 	$lang['wrong_format'] = 'Der Parser und das Raid-Log stimmen nicht überein.';
-	$lang['eqdkp_format'] = "Bitte stell die Optionen vom CT-Raidtracker auf <img src='$eqdkp_root_path"."plugins/raidlogimport/images/eqdkp_options.png'>";
+	$lang['eqdkp_format'] = "Bitte stell die Optionen vom CT-Raidtracker auf <img src='".registry::get_const('root_path')."plugins/raidlogimport/images/eqdkp_options.png'>";
 	$lang['plus_format'] = 'Bitte stell das Ausgabeformat deines Trackers auf "EQdkpPlus XML Format"';
 	$lang['magicdkp_format'] = 'Es trat ein Fehler auf.';
 	$lang['wrong_game'] = 'Das Raidlog stammt nicht aus dem unter Konfiguration angegebenen Spiel!';
