@@ -22,7 +22,7 @@ if ( !defined('EQDKP_INC') ) {
 
 class raidlogimport extends plugin_generic {
 	public static function __dependencies() {
-		$dependencies = array('core', 'user', 'db', 'pdh');
+		$dependencies = array('core', 'user', 'db', 'pdh', 'config');
 		return array_merge(parent::$dependencies, $dependencies);
 	}
 
@@ -31,7 +31,7 @@ class raidlogimport extends plugin_generic {
 	
 	public function pre_install() {
 		//initialize config
-		$this->core->config_set($this->create_default_configs(), '', $this->get_data('code'));
+		$this->config->set($this->create_default_configs(), '', $this->get_data('code'));
 		$sqls = $this->create_install_sqls();
 		foreach($sqls as $sql) {
 			$this->add_sql(SQL_INSTALL, $sql);
@@ -39,7 +39,7 @@ class raidlogimport extends plugin_generic {
 	}
 	
 	public function pre_uninstall() {
-		$this->core->config_del(array_keys($this->create_default_configs()), $this->get_data('code'));
+		$this->config->del(array_keys($this->create_default_configs()), $this->get_data('code'));
 		$sqls = $this->create_uninstall_sqls();
 		foreach($sqls as $sql) {
 			$this->add_sql(SQL_UNINSTALL, $sql);
@@ -49,7 +49,7 @@ class raidlogimport extends plugin_generic {
 	public function __construct() {
 		parent::__construct();
 		//Load Game-Specific Language
-		$lang_file = $this->root_path.'plugins/raidlogimport/language/'.$this->user->lang_name.'/'.$this->core->config('default_game').'_lang.php';
+		$lang_file = $this->root_path.'plugins/raidlogimport/language/'.$this->user->lang_name.'/'.$this->config->get('default_game').'_lang.php';
 		if(file_exists($lang_file)) {
 			include($lang_file);
 			$this->user->add_lang($this->user->lang_name, $lang);
@@ -130,7 +130,7 @@ class raidlogimport extends plugin_generic {
 			'del_dbl_times'		=> '0',		//delete double leave/joins
 			'autocomplete'		=> '0',		//auto-complete fields (1 member, 2 items)
 		);
-		if(strtolower($this->core->config('default_game')) == 'wow') {
+		if(strtolower($this->config->get('default_game')) == 'wow') {
 			$config_data = array_merge($config_data, array(
 				'diff_1'	=> ' (10)',		//suffix for 10-player normal
 				'diff_2'	=> ' (25)', 	//suffix for 25-player normal
@@ -177,7 +177,7 @@ class raidlogimport extends plugin_generic {
 			);");
 		
 		//add default bz_data
-		$file = $this->root_path.'plugins/raidlogimport/games/'.$this->core->config('default_game').'/bz_sql.php';
+		$file = $this->root_path.'plugins/raidlogimport/games/'.$this->config->get('default_game').'/bz_sql.php';
 		if(is_file($file)) {
 			include_once($file);
 			$data = (!empty(${$this->user->lang_name})) ? ${$this->user->lang_name} : $english;
