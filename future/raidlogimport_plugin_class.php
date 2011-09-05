@@ -242,4 +242,5 @@ class raidlogimport extends plugin_generic {
 		return $this->$varname;
 	}
 }
+if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('dep_raidlogimport', raidlogimport::__dependencies());
 ?>
