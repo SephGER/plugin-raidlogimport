@@ -22,16 +22,19 @@ if(!defined('EQDKP_INC')) {
 }
 
 if(!class_exists('rli_raid')) {
-class rli_raid {
+class rli_raid extends gen_class {
+	public static $dependencies = array('rli', 'in', 'pdh', 'user', 'tpl', 'html', 'jquery', 'time', 'pfh',
+		'member'	=> 'rli_member',
+	);
+
 	private $data = array();
 	private $raids = array();
 	private $hour_count = 0;
 	public $real_ids = array();
 
 	public function __construct() {
-		global $rli;
-		$this->raids = $rli->get_cache_data('raid');
-		$this->data = $rli->get_cache_data('data_raid');
+		$this->raids = $this->rli->get_cache_data('raid');
+		$this->data = $this->rli->get_cache_data('data_raid');
 	}
 	
 	public function reset() {
@@ -40,8 +43,7 @@ class rli_raid {
 	}
 
 	private function config($name) {
-		global $rli;
-		return $rli->config($name);
+		return $this->rli->config($name);
 	}
 	
 	public function flush_data() {
@@ -57,42 +59,40 @@ class rli_raid {
 	}
 
 	public function load_raids() {
-		global $in, $pdh, $time;
 		$this->raids = array();
 		foreach($_POST['raids'] as $key => $raid) {
 			if(!isset($raid['delete'])) {
-				$this->raids[$key]['begin'] = $time->fromformat($in->get('raids:'.$key.':start_date'), 1);
-				$this->raids[$key]['end'] = $time->fromformat($in->get('raids:'.$key.':end_date'), 1);
-				$this->raids[$key]['note'] = $in->get('raids:'.$key.':note');
-				$this->raids[$key]['value'] = runden(floatvalue($in->get('raids:'.$key.':value', '0.0')));
-				$this->raids[$key]['timebonus'] = runden(floatvalue($in->get('raids:'.$key.':timebonus', '0.0')));
-				$this->raids[$key]['event'] = $in->get('raids:'.$key.':event');
-				$this->raids[$key]['bosskill_add'] = $in->get('raids:'.$key.':bosskill_add', 0);
-				$this->raids[$key]['diff'] = $in->get('raids:'.$key.':diff', 0);
+				$this->raids[$key]['begin'] = $this->time->fromformat($this->in->get('raids:'.$key.':start_date'), 1);
+				$this->raids[$key]['end'] = $this->time->fromformat($this->in->get('raids:'.$key.':end_date'), 1);
+				$this->raids[$key]['note'] = $this->in->get('raids:'.$key.':note');
+				$this->raids[$key]['value'] = runden(floatvalue($this->in->get('raids:'.$key.':value', '0.0')));
+				$this->raids[$key]['timebonus'] = runden(floatvalue($this->in->get('raids:'.$key.':timebonus', '0.0')));
+				$this->raids[$key]['event'] = $this->in->get('raids:'.$key.':event');
+				$this->raids[$key]['bosskill_add'] = $this->in->get('raids:'.$key.':bosskill_add', 0);
+				$this->raids[$key]['diff'] = $this->in->get('raids:'.$key.':diff', 0);
 				$bosskills = array();
 				if(is_array($raid['bosskills'])) {
 					foreach($raid['bosskills'] as $u => $bk) {
 						if(!isset($bk['delete'])) {
-							$bosskills[$u]['time'] = $time->fromformat($in->get('raids:'.$key.':bosskills:'.$u.':date'), 1);
-							$bosskills[$u]['bonus'] = runden(floatvalue($in->get('raids:'.$key.':bosskills:'.$u.':bonus', '0.0')));
-							$bosskills[$u]['timebonus'] = runden(floatvalue($in->get('raids:'.$key.':bosskills:'.$u.':timebonus', '0.0')));
-							$bosskills[$u]['id'] = $in->get('raids:'.$key.':bosskills:'.$u.':id');
-							$bosskills[$u]['diff'] = $in->get('raids:'.$key.':bosskills:'.$u.':diff');
+							$bosskills[$u]['time'] = $this->time->fromformat($this->in->get('raids:'.$key.':bosskills:'.$u.':date'), 1);
+							$bosskills[$u]['bonus'] = runden(floatvalue($this->in->get('raids:'.$key.':bosskills:'.$u.':bonus', '0.0')));
+							$bosskills[$u]['timebonus'] = runden(floatvalue($this->in->get('raids:'.$key.':bosskills:'.$u.':timebonus', '0.0')));
+							$bosskills[$u]['id'] = $this->in->get('raids:'.$key.':bosskills:'.$u.':id');
+							$bosskills[$u]['diff'] = $this->in->get('raids:'.$key.':bosskills:'.$u.':diff');
 							if(!is_numeric($bosskills[$u]['id'])) {
-								$id = $pdh->get('rli_boss', 'id_string', array($bosskills[$u]['id'], $bosskills[$u]['diff']));
+								$id = $this->pdh->get('rli_boss', 'id_string', array($bosskills[$u]['id'], $bosskills[$u]['diff']));
 								if($id) $bosskills[$u]['id'] = $id;
 							}
 						}
 					}
 				}
 				$this->raids[$key]['bosskills'] = $bosskills;
-				$this->raids[$key]['timebonus'] = floatvalue($in->get('raids:'.$key.':timebonus', '0.0'));
+				$this->raids[$key]['timebonus'] = floatvalue($this->in->get('raids:'.$key.':timebonus', '0.0'));
 			}
 		}
 	}
 
 	public function create() {
-		global $pdh;
 		$key = 1;
 		foreach( $this->data['zones'] as $zone ) {
 			if( $this->config('raidcount') == 0 ) {
@@ -130,7 +130,7 @@ class rli_raid {
 			if($this->config('attendence_begin') > 0) {
 				$this->raids[0]['begin'] = $this->raids[1]['begin'];
 				$this->raids[0]['end'] = $this->raids[1]['begin'] + $this->config('attendence_time');
-				$this->raids[0]['event'] = $pdh->get('rli_zone', 'eventbystring', array($this->raids[1]['zone']));
+				$this->raids[0]['event'] = $this->pdh->get('rli_zone', 'eventbystring', array($this->raids[1]['zone']));
 				$this->raids[0]['note'] = $this->config('att_note_begin');
 				$this->raids[0]['value'] = $this->config('attendence_begin');
 				$this->data['add']['att_begin_raid'] = 0;
@@ -138,7 +138,7 @@ class rli_raid {
 			if($this->config('attendence_end') > 0) {
 				$this->raids[$key]['begin'] = $this->raids[$key-1]['end'] - $this->config('attendence_time');
 				$this->raids[$key]['end'] = $this->raids[$key-1]['end'];
-				$this->raids[$key]['event'] = $pdh->get('rli_zone', 'eventbystring', array($this->raids[$key-1]['zone']));
+				$this->raids[$key]['event'] = $this->pdh->get('rli_zone', 'eventbystring', array($this->raids[$key-1]['zone']));
 				$this->raids[$key]['note'] = $this->config('att_note_end');
 				$this->raids[$key]['value'] = $this->config('attendence_end');
 				$this->data['add']['att_end_raid'] = $key;
@@ -201,20 +201,18 @@ class rli_raid {
 	}
 
 	public function display($with_form=false) {
-		global $tpl, $html, $core, $rli, $pdh, $user, $jquery, $time;
-		
 		if(!isset($this->event_drop)) {
-			$this->event_drop = $pdh->aget('event', 'name', 0, array($pdh->get('event', 'id_list')));
+			$this->event_drop = $this->pdh->aget('event', 'name', 0, array($this->pdh->get('event', 'id_list')));
 			asort($this->event_drop);
 		}
-		if(!isset($this->diff_drop)) $this->diff_drop = array($user->lang('diff_0'), $user->lang('diff_1'), $user->lang('diff_2'), $user->lang('diff_3'), $user->lang('diff_4'));
+		if(!isset($this->diff_drop)) $this->diff_drop = array($this->user->lang('diff_0'), $this->user->lang('diff_1'), $this->user->lang('diff_2'), $this->user->lang('diff_3'), $this->user->lang('diff_4'));
 		if(!isset($this->bk_list)) {
-			$this->bk_list = $pdh->aget('rli_boss', 'html_note', 0, array($pdh->get('rli_boss', 'id_list'), false));
+			$this->bk_list = $this->pdh->aget('rli_boss', 'html_note', 0, array($this->pdh->get('rli_boss', 'id_list'), false));
 			asort($this->bk_list);
 		}
 		$last_key = 0;
 		ksort($this->raids);
-		$tpl->add_js("var boss_keys = new Array();", 'docready');
+		$this->tpl->add_js("var boss_keys = new Array();", 'docready');
 		foreach($this->raids as $ky => $rai) {
 			if($ky == $this->data['add']['standby_raid'] AND $this->config('standby_raid') == 0) {
 				continue;
@@ -222,24 +220,24 @@ class rli_raid {
 			$bosskills = '';
 			if(!$with_form) {
 				foreach($rai['bosskills'] as $bk) {
-					$note = (!is_numeric($bk['id'])) ? $bk['id'] : $pdh->geth('rli_boss', 'note', array($bk['id']));
+					$note = (!is_numeric($bk['id'])) ? $bk['id'] : $this->pdh->geth('rli_boss', 'note', array($bk['id']));
 					$bosskills .= '<tr><td>'.$note.'</td><td colspan="2">'.date('H:i:s',$bk['time']).'</td><td>'.$bk['bonus'].'</td></tr>';
 				}
 			}
 			if(isset($rai['bosskill_add'])) {
 				$this->new_bosskill($ky, $rai['bosskill_add']);
 			}
-			$begin = $time->user_date($rai['begin'], true, false, false, function_exists('date_create_from_format'));
-			$end = $time->user_date($rai['end'], true, false, false, function_exists('date_create_from_format'));
-			$tpl->assign_block_vars('raids', array(
+			$begin = $this->time->user_date($rai['begin'], true, false, false, function_exists('date_create_from_format'));
+			$end = $this->time->user_date($rai['end'], true, false, false, function_exists('date_create_from_format'));
+			$this->tpl->assign_block_vars('raids', array(
 				'COUNT'     => $ky,
-				'START_DATE'=> ($with_form) ? $jquery->Calendar("raids[".$ky."][start_date]", $begin, '', array('id' => 'raids_'.$ky.'_start_date', 'timepicker' => true, 'class' => 'class="input"')) : $begin,
-				'END_DATE'	=> ($with_form) ? $jquery->Calendar("raids[".$ky."][end_date]", $end, '', array('id' => 'raids_'.$ky.'_end_date', 'timepicker' => true, 'class' => 'class="input"')) : $end,
-				'EVENT'		=> ($with_form) ? $html->DropDown('raids['.$ky.'][event]', $this->event_drop, $rai['event'], '', '', 'input', 'event_raid'.$ky) : $pdh->get('event', 'name', array($rai['event'])),
+				'START_DATE'=> ($with_form) ? $this->jquery->Calendar("raids[".$ky."][start_date]", $begin, '', array('id' => 'raids_'.$ky.'_start_date', 'timepicker' => true, 'class' => 'class="input"')) : $begin,
+				'END_DATE'	=> ($with_form) ? $this->jquery->Calendar("raids[".$ky."][end_date]", $end, '', array('id' => 'raids_'.$ky.'_end_date', 'timepicker' => true, 'class' => 'class="input"')) : $end,
+				'EVENT'		=> ($with_form) ? $this->html->DropDown('raids['.$ky.'][event]', $this->event_drop, $rai['event'], '', '', 'input', 'event_raid'.$ky) : $this->pdh->get('event', 'name', array($rai['event'])),
 				'TIMEBONUS'	=> $rai['timebonus'],
 				'VALUE'		=> $rai['value'],
 				'NOTE'		=> $rai['note'],
-				'DIFF'		=> ($with_form) ? $html->DropDown('raids['.$ky.'][diff]', $this->diff_drop, $rai['diff'], '', '', 'input', 'diff_raid'.$ky) : $user->lang('diff_'.$rai['diff']),
+				'DIFF'		=> ($with_form) ? $this->html->DropDown('raids['.$ky.'][diff]', $this->diff_drop, $rai['diff'], '', '', 'input', 'diff_raid'.$ky) : $this->user->lang('diff_'.$rai['diff']),
 				'BOSSKILLS' => $bosskills,
 				'DELDIS'	=> 'disabled="disabled"')
 			);
@@ -249,9 +247,9 @@ class rli_raid {
 				$options = array(
 					'custom_js' => "$('#'+del_id).css('display', 'none'); $('#'+del_id+'submit').removeAttr('disabled');",
 					'withid' => 'del_id',
-					'message' => $user->lang('rli_delete_raids_warning')
+					'message' => $this->user->lang('rli_delete_raids_warning')
 				);
-				$jquery->Dialog('delete_warning', $user->lang('confirm_deletion'), $options, 'confirm');
+				$this->jquery->Dialog('delete_warning', $this->user->lang('confirm_deletion'), $options, 'confirm');
 
 				if(is_array($rai['bosskills'])) {
 					foreach($rai['bosskills'] as $xy => $bk) {
@@ -259,55 +257,55 @@ class rli_raid {
 						$html_id = 'raid'.$ky.'_boss'.$xy;
 						$name_field = '';
 						if(is_numeric($bk['id'])) {
-							$name_field = $html->DropDown('raids['.$ky.'][bosskills]['.$xy.'][id]', $this->bk_list, $bk['id'], '', '', 'input', 'a'.uniqid());
+							$name_field = $this->html->DropDown('raids['.$ky.'][bosskills]['.$xy.'][id]', $this->bk_list, $bk['id'], '', '', 'input', 'a'.uniqid());
 						} else {
 							$name_field = $bk['id'];
 							$params = "&string=' + $('#id_".$html_id."').val() + '&bonus=' + $('#bonus_".$html_id."').val() + '&timebonus=' + $('#timebonus_".$html_id."').val() + '&diff=' + $('#diff_".$html_id."').val()";
 							$params .= " + '&note=' + $('#id_".$html_id."').val()";
 							$onclosejs = "$('#onclose_submit').removeAttr('disabled'); $('form:first').submit();";
-							$jquery->Dialog($html_id, $user->lang('bz_import_boss'), array('url' => "bz.php?simple_head=simple&upd=true".$params." + '&", 'width' => 1200, 'onclosejs' => $onclosejs));
+							$this->jquery->Dialog($html_id, $this->user->lang('bz_import_boss'), array('url' => "bz.php?simple_head=simple&upd=true".$params." + '&", 'width' => 1200, 'onclosejs' => $onclosejs));
 							$import = true;
 						}
-						$tpl->assign_block_vars('raids.bosskills', array(
+						$this->tpl->assign_block_vars('raids.bosskills', array(
 							'BK_SELECT' => $name_field,
-							'BK_DATE'   => $jquery->Calendar("raids[".$ky."][bosskills][".$xy."][date]", $time->user_date($bk['time'], true, false, false, function_exists('date_create_from_format')), '', array('id' => 'raids_'.$ky.'_boss_'.$xy.'_date', 'timepicker' => true, 'class' => 'class="input"')),
+							'BK_DATE'   => $this->jquery->Calendar("raids[".$ky."][bosskills][".$xy."][date]", $this->time->user_date($bk['time'], true, false, false, function_exists('date_create_from_format')), '', array('id' => 'raids_'.$ky.'_boss_'.$xy.'_date', 'timepicker' => true, 'class' => 'class="input"')),
 							'BK_BONUS'  => $bk['bonus'],
 							'BK_TIMEBONUS' => $bk['timebonus'],
-							'BK_DIFF'	=> $html->DropDown('raids['.$ky.'][bosskills]['.$xy.'][diff]', $this->diff_drop, $bk['diff'], '', '', 'input', 'diff_'.$html_id),
+							'BK_DIFF'	=> $this->html->DropDown('raids['.$ky.'][bosskills]['.$xy.'][diff]', $this->diff_drop, $bk['diff'], '', '', 'input', 'diff_'.$html_id),
 							'BK_KEY'    => $xy,
 							'IMPORT'	=> ($import) ? $html_id : 0,
 							'DELDIS'	=> 'disabled="disabled"')
 						);
 					}
 				}
-				$tpl->add_js("boss_keys[".$ky."] = ".($xy+1).";", 'docready');
-				$tpl->assign_block_vars('raids.bosskills', array(
-					'BK_SELECT'	=> $html->DropDown('raids['.$ky.'][bosskills][99][id]', $this->bk_list, 0, '', '', 'input', 'a'.uniqid()),
+				$this->tpl->add_js("boss_keys[".$ky."] = ".($xy+1).";", 'docready');
+				$this->tpl->assign_block_vars('raids.bosskills', array(
+					'BK_SELECT'	=> $this->html->DropDown('raids['.$ky.'][bosskills][99][id]', $this->bk_list, 0, '', '', 'input', 'a'.uniqid()),
 					'BK_DATE'	=> '<input type="text" name="raids['.$ky.'][bosskills][99][date]" id="raids_'.$ky.'_boss_99_date" size="15" />',
-					'BK_DIFF'	=> $html->DropDown('raids['.$ky.'][bosskills][99][diff]', $this->diff_drop, 0, '', '', 'input', 'diff_raid'.$ky.'_boss99'),
+					'BK_DIFF'	=> $this->html->DropDown('raids['.$ky.'][bosskills][99][diff]', $this->diff_drop, 0, '', '', 'input', 'diff_raid'.$ky.'_boss99'),
 					'BK_KEY'	=> 99,
 					'DISPLAY'	=> 'style="display: none;"'
 				));
 			}
 		}
 		if($with_form) {
-			$tpl->assign_block_vars('raids', array(
+			$this->tpl->assign_block_vars('raids', array(
 				'COUNT'     => 999,
 				'START_DATE'=> '<input type="text" name="raids[999][start_date]" id="raids_999_start_date" size="15" />',
 				'END_DATE'	=> '<input type="text" name="raids[999][end_date]" id="raids_999_end_date" size="15" />',
-				'EVENT'		=> $html->DropDown('raids[999][event]', $this->event_drop, $rai['event'], '', '', 'input', 'a'.uniqid()),
-				'DIFF'		=> $html->DropDown('raids[999][diff]', $this->diff_drop, $rai['diff'], '', '', 'input', 'a'.uniqid()),
+				'EVENT'		=> $this->html->DropDown('raids[999][event]', $this->event_drop, $rai['event'], '', '', 'input', 'a'.uniqid()),
+				'DIFF'		=> $this->html->DropDown('raids[999][diff]', $this->diff_drop, $rai['diff'], '', '', 'input', 'a'.uniqid()),
 				'DISPLAY'	=> 'style="display: none;"'
 			));
-			$tpl->assign_block_vars('raids.bosskills', array(
-				'BK_SELECT'	=> $html->widget(array('type' => 'dropdown', 'name' => 'raids[999][bosskills][99][id]', 'options' => $this->bk_list, 'selected' => 0, 'id' => 'a'.uniqid(), 'no_lang' => true)),
+			$this->tpl->assign_block_vars('raids.bosskills', array(
+				'BK_SELECT'	=> $this->html->widget(array('type' => 'dropdown', 'name' => 'raids[999][bosskills][99][id]', 'options' => $this->bk_list, 'selected' => 0, 'id' => 'a'.uniqid(), 'no_lang' => true)),
 				'BK_DATE'	=> '<input type="text" name="raids[999][bosskills][99][date]" id="raids_999_boss_99_date" size="15" />',
-				'BK_DIFF'	=> $html->widget(array('type' => 'dropdown', 'name' => 'raids[999][bosskills][99][diff]', 'options' => $this->diff_drop, 'selected' => 0, 'id' => 'diff_raid999_boss99', 'no_lang' => true)),
+				'BK_DIFF'	=> $this->html->widget(array('type' => 'dropdown', 'name' => 'raids[999][bosskills][99][diff]', 'options' => $this->diff_drop, 'selected' => 0, 'id' => 'diff_raid999_boss99', 'no_lang' => true)),
 				'BK_KEY'	=> 99,
 				'DISPLAY'	=> 'style="display: none;"'
 			));
-			$functioncall = $jquery->Calendar('n', 0, '', array('timepicker' => true, 'return_function' => true));
-			$tpl->add_js(
+			$functioncall = $this->jquery->Calendar('n', 0, '', array('timepicker' => true, 'return_function' => true));
+			$this->tpl->add_js(
 "var rli_rkey = ".($last_key+1).";
 $('.del_boss').live('click', function() {
 	$(this).removeClass('del_boss');
@@ -371,15 +369,14 @@ $('input[name=\"add_boss_button[]\"]').live('click', function() {
 	}
 	
 	public function insert() {
-		global $rli, $pdh;
 		$raid_attendees = array();
-		foreach($rli->member->raid_members as $member_id => $raid_keys) {
+		foreach($this->member->raid_members as $member_id => $raid_keys) {
 			foreach($raid_keys as $raid_key) {
 				$raid_attendees[$raid_key][] = $member_id;
 			}
 		}
 		foreach($this->raids as $key => $raid) {
-			$this->real_ids[$key] = $pdh->put('raid', 'add_raid', array($raid['begin'], $raid_attendees[$key], $raid['event'], $raid['note'], $raid['value']));
+			$this->real_ids[$key] = $this->pdh->put('raid', 'add_raid', array($raid['begin'], $raid_attendees[$key], $raid['event'], $raid['note'], $raid['value']));
 		}
 		if(in_array(false, $this->real_ids)) {
 			return false;
@@ -459,15 +456,13 @@ $('input[name=\"add_boss_button[]\"]').live('click', function() {
 	}
 
 	public function get_checkraidlist($memberraids, $mkey) {
-		global $eqdkp_root_path, $pfh, $user;
-
 		$td = '';
 		if(!$this->th_raidlist) {
-			$pfh->CheckCreateFolder($pfh->FolderPath('raidlogimport'));
+			$this->pfh->CheckCreateFolder($pfh->FolderPath('raidlogimport'));
 			foreach($this->raids as $rkey => $raid) {
 				$imagefile = $eqdkp_root_path.$pfh->FileLink('image'.$rkey.'.png', 'raidlogimport');
-				if(!$pfh->CheckCreateFile($imagefile, true)) {
-					$this->th_raidlist = '<td colspan="20">'.$user->lang('rli_error_imagecreate').'</td>';
+				if(!$this->pfh->CheckCreateFile($imagefile, true)) {
+					$this->th_raidlist = '<td colspan="20">'.$this->user->lang('rli_error_imagecreate').'</td>';
 				}
 				$image = imagecreate(20, 150);
 				$weiss = imagecolorallocate($image, 0xFF, 0xFF, 0xFF);
@@ -626,12 +621,11 @@ $('input[name=\"add_boss_button[]\"]').live('click', function() {
 	}
 
 	private function get_eventdkp($key) {
-		global $pdh;
 		$eventdkp = 0;
 		if($this->config('use_dkp') & 4 AND $key != $this->data['add']['standby_raid']) {
-			$eventdkp = $pdh->get('event', 'value', array($this->raids[$key]['event']));
+			$eventdkp = $this->pdh->get('event', 'value', array($this->raids[$key]['event']));
 		} elseif($this->config('standby_dkptype') & 4 AND $key == $this->data['add']['standby_raid']) {
-			$eventdkp = $pdh->get('event', 'value', array($this->raids[$key]['event']))*$this->config('standby_value')/100;
+			$eventdkp = $this->pdh->get('event', 'value', array($this->raids[$key]['event']))*$this->config('standby_value')/100;
 		}
 		return $eventdkp;
 	}
@@ -664,15 +658,14 @@ $('input[name=\"add_boss_button[]\"]').live('click', function() {
 	}
 
 	private function get_bosskills($begin, $end) {
-		global $pdh;
 		$bosskills = array();
 		foreach ($this->data['bosskills'] as $b => $bosskill) {
 			if($begin <= $bosskill['time'] AND $bosskill['time'] <= $end) {
-				$id = $pdh->get('rli_boss', 'id_string', array($bosskill['name'], $bosskill['diff']));
+				$id = $this->pdh->get('rli_boss', 'id_string', array($bosskill['name'], $bosskill['diff']));
 				if($id) {
 					$bosskills[$b]['id'] = $id;
-					$bosskills[$b]['bonus'] = $pdh->get('rli_boss', 'bonus', array($id));
-					$bosskills[$b]['timebonus'] = $pdh->get('rli_boss', 'timebonus', array($id));
+					$bosskills[$b]['bonus'] = $this->pdh->get('rli_boss', 'bonus', array($id));
+					$bosskills[$b]['timebonus'] = $this->pdh->get('rli_boss', 'timebonus', array($id));
 				} else {
 					$bosskills[$b]['id'] = $bosskill['name'];
 					$bosskills[$b]['bonus'] = 0;
@@ -712,43 +705,41 @@ $('input[name=\"add_boss_button[]\"]').live('click', function() {
 	}
 
 	private function get_event($key) {
-		global $pdh, $rli;
 		if($this->config('event_boss') & 1 AND count($this->raids[$key]['bosskills']) == 1 AND $this->config('raidcount') & 2) {
-			$id = $pdh->get('rli_boss', 'id_string', array(trim($this->raids[$key]['bosskills'][0]), $this->raids[$key]['diff']));
-			$event = $pdh->get('rli_boss', 'note', array($id));
+			$id = $this->pdh->get('rli_boss', 'id_string', array(trim($this->raids[$key]['bosskills'][0]), $this->raids[$key]['diff']));
+			$event = $this->pdh->get('rli_boss', 'note', array($id));
 			if($this->config('raidcount') & 1) {
 				$this->raids[$key]['timebonus'] = 0;
 			} else {
-				$this->raids[$key]['timebonus'] = $pdh->get('rli_zone', 'timebonus', array($pdh->get('rli_boss', 'tozone', array($id))));
+				$this->raids[$key]['timebonus'] = $this->pdh->get('rli_zone', 'timebonus', array($this->pdh->get('rli_boss', 'tozone', array($id))));
 			}
 		} else {
-			$id = $pdh->get('rli_zone', 'id_string', array(trim($this->raids[$key]['zone']), $this->raids[$key]['diff']));
+			$id = $this->pdh->get('rli_zone', 'id_string', array(trim($this->raids[$key]['zone']), $this->raids[$key]['diff']));
 			if(($this->config('raidcount') & 1 AND $this->config('raidcount') & 2 AND count($this->raids[$key]['bosskills']) == 1) OR !$id) {
 				$this->raids[$key]['timebonus'] = 0;
 			} else {
-				$this->raids[$key]['timebonus'] = $pdh->get('rli_zone', 'timebonus', array($id));
+				$this->raids[$key]['timebonus'] = $this->pdh->get('rli_zone', 'timebonus', array($id));
 			}
 			if(!$id) return false;
-			$event = $pdh->get('rli_zone', 'event', array($id));
+			$event = $this->pdh->get('rli_zone', 'event', array($id));
 		}
 		return $event;
 	}
 
 	private function get_note($key) {
-		global $user, $rli, $pdh;
 		if($this->config('event_boss') == 1 OR count($this->raids[$key]['bosskills']) == 0) {
 			if(count($this->raids[$key]['bosskills']) == 1 OR !$this->config('raid_note_time')) {
 				return date('H:i', $this->raids[$key]['begin']).' - '.date('H:i', $this->raids[$key]['end']);
 			} else {
 				$this->hour_count++;
-				return $this->hour_count.'. '.$user->lang('rli_hour');
+				return $this->hour_count.'. '.$this->user->lang('rli_hour');
 			}
 		} else {
 			foreach ($this->raids[$key]['bosskills'] as $bosskill) {
 				if(!is_numeric($bosskill['id'])) {
-					$bosss[] = $rli->suffix($bosskill['id'], $this->config('dep_match'), $bosskill['diff']);
+					$bosss[] = $this->rli->suffix($bosskill['id'], $this->config('dep_match'), $bosskill['diff']);
 				} else {
-					$bosss[] = $rli->suffix($pdh->get('rli_boss', 'note', array($bosskill['id'])), $this->config('dep_match'), $bosskill['diff']);
+					$bosss[] = $this->rli->suffix($this->pdh->get('rli_boss', 'note', array($bosskill['id'])), $this->config('dep_match'), $bosskill['diff']);
 				}
 			}
 			return implode(', ', $bosss);
@@ -756,10 +747,10 @@ $('input[name=\"add_boss_button[]\"]').live('click', function() {
 	}
 
 	public function __destruct() {
-		global $rli;
-		$rli->add_cache_data('raid', $this->raids);
-		$rli->add_cache_data('data_raid', $this->data);
+		$this->rli->add_cache_data('raid', $this->raids);
+		$this->rli->add_cache_data('data_raid', $this->data);
 	}
 }
 }
+if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('dep_rli_raid', rli_raid::$dependencies);
 ?>

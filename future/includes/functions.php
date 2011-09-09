@@ -27,14 +27,6 @@ if(!function_exists('floatvalue')) {
     }
 }
 
-function __rli_autoload($name) {
-	global $eqdkp_root_path;
-	if(file_exists($eqdkp_root_path.'plugins/raidlogimport/includes/'.$name.'.class.php')) {
-		require_once($eqdkp_root_path.'plugins/raidlogimport/includes/'.$name.'.class.php');
-	}
-}
-spl_autoload_register('__rli_autoload');
-
 if(!function_exists('stripslashes_array')) {
 	function stripslashes_array($array) {
 		return is_array($array) ? array_map('stripslashes_array', $array) : stripslashes($array);

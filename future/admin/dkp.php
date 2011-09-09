@@ -24,9 +24,19 @@ $eqdkp_root_path = './../../../';
 include_once('./../includes/common.php');
 
 class rli_import extends page_generic {
+	public static function __dependencies() {
+		$dependencies = array('user', 'rli', 'in', 'tpl', 'core', 'pm', 'config',
+			'adj'		=> 'rli_adjustment',
+			'item'		=> 'rli_item',
+			'member'	=> 'rli_member',
+			'parser'	=> 'rli_parse',
+			'raid'		=> 'rli_raid',
+		);
+		return array_merge(parent::$dependencies, $dependencies);
+	}
+
 	public function __construct() {
-		global $user, $rli;
-		$user->check_auth('a_raidlogimport_dkp');
+		$this->user->check_auth('a_raidlogimport_dkp');
 		
 		$handler = array(
 			'checkraid'	=> array('process' => 'process_raids'),
@@ -38,134 +48,116 @@ class rli_import extends page_generic {
 			'insert'	=> array('process' => 'insert_log')
 		);
 		parent::__construct(false, $handler);
-		$rli->init_import();
 		$this->process();
 	}
 
 	public function process_raids() {
-		global $core, $user, $tpl, $pm, $rli, $in;
-
-		if($in->exists('log')) {
-			$rli->flush_cache();
+		if($this->in->exists('log')) {
+			$this->rli->flush_cache();
 			$log = simplexml_load_string(utf8_encode(trim(str_replace("&", "and", html_entity_decode($_POST['log'])))));
 			if ($log === false) {
-				message_die($user->lang('xml_error'));
+				message_die($this->user->lang('xml_error'));
 			} else {
-				$rli->parser->parse_string($log);
+				$this->parser->parse_string($log);
 			}
 		}
-		$rli->raid->add_new($in->get('raid_add', 0));
-		if($in->get('checkraid') == $user->lang('rli_calc_note_value')) {
-			$rli->raid->recalc();
+		$this->raid->add_new($this->in->get('raid_add', 0));
+		if($this->in->get('checkraid') == $this->user->lang('rli_calc_note_value')) {
+			$this->raid->recalc();
 		}
 
-		$rli->raid->display(true);
+		$this->raid->display(true);
 
-		$tpl->assign_vars(array(
-			'USE_TIMEDKP' => ($rli->config('use_dkp') & 2),
-			'USE_BOSSDKP' => ($rli->config('use_dkp') & 1))
+		$this->tpl->assign_vars(array(
+			'USE_TIMEDKP' => ($this->rli->config('use_dkp') & 2),
+			'USE_BOSSDKP' => ($this->rli->config('use_dkp') & 1))
 		);
 		//language
-		$tpl->assign_vars(lang2tpl());
+		$this->tpl->assign_vars(lang2tpl());
 
-		$rli->destroy();
-
-		$core->set_vars(array(
-			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config('guildtag'), $core->config('dkp_name')).': '.$user->lang('rli_check_data'),
-			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
+		$this->core->set_vars(array(
+			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $core->config('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_check_data'),
+			'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'raids.html',
 			'display'           => true)
 		);
 	}
 
 	public function process_members() {
-		global $core, $user, $tpl, $pm, $rli, $in;
-
-		$rli->member->add_new($in->get('members_add', 0));
+		$this->member->add_new($this->in->get('members_add', 0));
 
 		//display members
-		$rli->member->display(true);
+		$this->member->display(true);
 
 		//show raids
-		$rli->raid->display();
+		$this->raid->display();
 
 		//language
-		$tpl->assign_vars(lang2tpl());
+		$this->tpl->assign_vars(lang2tpl());
 
-		$tpl->assign_vars(array(
-			'S_ATT_BEGIN'	 => ($rli->config('attendence_begin') > 0 AND !$rli->config('attendence_raid')) ? TRUE : FALSE,
-			'S_ATT_END'		 => ($rli->config('attendence_end') > 0 AND !$rli->config('attendence_raid')) ? TRUE : FALSE,
-			'MEMBER_DISPLAY' => ($rli->config('member_display') == 1) ? $rli->raid->th_raidlist : false,
-			'RAIDCOUNT'		 => ($rli->config('member_display') == 1) ? $rli->raid->count() : 1,
-			'RAIDCOUNT3'	 => ($rli->config('member_display') == 1) ? $rli->raid->count()+2 : 3,
-			'DETAIL_RAIDLIST' =>($rli->config('member_display') == 2) ? true : false)
+		$this->tpl->assign_vars(array(
+			'S_ATT_BEGIN'	 => ($this->rli->config('attendence_begin') > 0 AND !$this->rli->config('attendence_raid')) ? TRUE : FALSE,
+			'S_ATT_END'		 => ($this->rli->config('attendence_end') > 0 AND !$this->rli->config('attendence_raid')) ? TRUE : FALSE,
+			'MEMBER_DISPLAY' => ($this->rli->config('member_display') == 1) ? $this->raid->th_raidlist : false,
+			'RAIDCOUNT'		 => ($this->rli->config('member_display') == 1) ? $this->raid->count() : 1,
+			'RAIDCOUNT3'	 => ($this->rli->config('member_display') == 1) ? $this->raid->count()+2 : 3,
+			'DETAIL_RAIDLIST' =>($this->rli->config('member_display') == 2) ? true : false)
 		);
 
-		$rli->destroy();
-
-		$core->set_vars(array(
-			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config('guildtag'), $core->config('dkp_name')).': '.$user->lang('rli_check_data'),
-			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
+		$this->core->set_vars(array(
+			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_check_data'),
+			'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'members.html',
 			'display'           => true)
 		);
 	}
 
 	public function process_items() {
-		global $core, $user, $tpl, $pm, $rli, $in;
+		$this->item->add_new($this->in->get('items_add', 0));
+		$this->member->display();
+		$this->raid->display();
+		$this->item->display(true);
 		
-		$rli->item->add_new($in->get('items_add', 0));
-		$rli->member->display();
-		$rli->raid->display();
-		$rli->item->display(true);
-		
-		$tpl->assign_vars(array(
-			'S_ATT_BEGIN'	=> ($rli->config('attendence_begin') > 0 AND !$rli->config('attendence_raid')) ? true : false,
-			'S_ATT_END'		=> ($rli->config('attendence_end') > 0 AND !$rli->config('attendence_raid')) ? true : false)
+		$this->tpl->assign_vars(array(
+			'S_ATT_BEGIN'	=> ($this->rli->config('attendence_begin') > 0 AND !$this->rli->config('attendence_raid')) ? true : false,
+			'S_ATT_END'		=> ($this->rli->config('attendence_end') > 0 AND !$this->rli->config('attendence_raid')) ? true : false)
 		);
 
 		//language
-		$tpl->assign_vars(lang2tpl());
-
-		$rli->destroy();
+		$this->tpl->assign_vars(lang2tpl());
 		
-		$core->set_vars(array(
-			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config('guildtag'), $core->config('dkp_name')).': '.$user->lang('rli_check_data'),
-			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
+		$this->core->set_vars(array(
+			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_check_data'),
+			'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'items.html',
 			'display'           => true)
 		);
 	}
 	
 	public function itempool_save() {
-		global $rli;
-		$rli->item->save_itempools();
+		$this->item->save_itempools();
 		$this->process_items();
 	}
 
 	public function process_adjustments() {
-		global $core, $tpl, $user, $pm, $rli, $in;
+		$this->adj->add_new($this->in->get('adjs_add', 0));
 
-		$rli->adj->add_new($in->get('adjs_add', 0));
+		$this->member->display();
+		$this->raid->display();
+		$this->item->display();
+		$this->adj->display(true);
 
-		$rli->member->display();
-		$rli->raid->display();
-		$rli->item->display();
-		$rli->adj->display(true);
-
-		$tpl->assign_vars(array(
-			'S_ATT_BEGIN'	=> ($rli->config('attendence_begin') > 0 AND !$rli->config('attendence_raid')) ? true : false,
-			'S_ATT_END'		=> ($rli->config('attendence_end') > 0 AND !$rli->config('attendence_raid')) ? true : false)
+		$this->tpl->assign_vars(array(
+			'S_ATT_BEGIN'	=> ($this->rli->config('attendence_begin') > 0 AND !$this->rli->config('attendence_raid')) ? true : false,
+			'S_ATT_END'		=> ($this->rli->config('attendence_end') > 0 AND !$this->rli->config('attendence_raid')) ? true : false)
 		);
 
 		//language
-		$tpl->assign_vars(lang2tpl());
-
-		$rli->destroy();
+		$this->tpl->assign_vars(lang2tpl());
 		
-		$core->set_vars(array(
-			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config('guildtag'), $core->config('dkp_name')).': '.$user->lang('rli_check_data'),
-			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
+		$this->core->set_vars(array(
+			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_check_data'),
+			'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'adjustments.html',
 			'display'           => true)
 		);
@@ -175,57 +167,55 @@ class rli_import extends page_generic {
 		global $db, $core, $user, $tpl, $pm, $rli, $pdh;
 		
 		$message = array();
-		$bools = $rli->check_data();
+		$bools = $this->rli->check_data();
 		if(!in_array('miss', $bools) AND !in_array(false, $bools)) {
-			$db->query("START TRANSACTION");
-			$isok = $rli->member->insert();
-			if($isok) $isok = $rli->raid->insert();
-			if($isok) $isok = $rli->item->insert();
-			if($isok && !$rli->config('deactivate_adj')) $isok = $rli->adj->insert();
+			#$this->db->query("START TRANSACTION");
+			$isok = $this->member->insert();
+			if($isok) $isok = $this->raid->insert();
+			if($isok) $isok = $this->item->insert();
+			if($isok && !$this->rli->config('deactivate_adj')) $isok = $this->adj->insert();
 			if($isok) {
-				$db->query("COMMIT;");
-				$pm->do_hooks('/plugins/raidlogimport/admin/dkp.php');
+				#$this->db->query("COMMIT;");
+				$this->pm->do_hooks('/plugins/raidlogimport/admin/dkp.php');
 				$pdh->process_hook_queue();
-				$rli->flush_cache();
-				$message[] = $user->lang('bz_save_suc');
+				$this->rli->flush_cache();
+				$message[] = $this->user->lang('bz_save_suc');
 			} else {
-				$db->query("ROLLBACK;");
-				$rli->destroy();
-				$message[] = $user->lang('rli_error');
+				#$this->db->query("ROLLBACK;");
+				$message[] = $this->user->lang('rli_error');
 			}
 			foreach($message as $answer) {
-				$tpl->assign_block_vars('sucs', array(
+				$this->tpl->assign_block_vars('sucs', array(
 					'PART1'	=> $answer)
 				);
 			}
-			$tpl->assign_vars(array(
-				'L_SUCCESS' => $user->lang('rli_success'),
-				'L_LINKS'	=> $user->lang('links'))
+			$this->tpl->assign_vars(array(
+				'L_SUCCESS' => $this->user->lang('rli_success'),
+				'L_LINKS'	=> $this->user->lang('links'))
 			);
 	
-			$core->set_vars(array(
-				'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config('guildtag'), $core->config('dkp_name')).': '.$user->lang('rli_imp_suc'),
-				'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
+			$this->core->set_vars(array(
+				'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_imp_suc'),
+				'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
 				'template_file'     => 'success.html',
 				'display'           => true)
 			);
 		} else {
 			unset($_POST);
-			$check = $user->lang('rli_missing_values').'<br />';
+			$check = $this->user->lang('rli_missing_values').'<br />';
 			foreach($bools['false'] as $loc => $la) {
 				if($la == 'miss') {
-					$check .= $user->lang('rli_'.$loc.'_needed');
+					$check .= $this->user->lang('rli_'.$loc.'_needed');
 				}
-				$check .= '<input type="submit" name="check'.$loc.'" value="'.$user->lang('rli_check'.$loc).'" class="mainoption" /><br />';
+				$check .= '<input type="submit" name="check'.$loc.'" value="'.$this->user->lang('rli_check'.$loc).'" class="mainoption" /><br />';
 			}
-			$tpl->assign_vars(array(
-				'L_NO_IMP_SUC'	=> $user->lang('rli_imp_no_suc'),
+			$this->tpl->assign_vars(array(
+				'L_NO_IMP_SUC'	=> $this->user->lang('rli_imp_no_suc'),
 				'CHECK'			=> $check)
 			);
-			$rli->destroy();
-			$core->set_vars(array(
-				'page_title'		=> sprintf($user->lang('admin_title_prefix'), $core->config('guildtag'), $core->config('dkp_name')).': '.$user->lang('rli_imp_no_suc'),
-				'template_path'		=> $pm->get_data('raidlogimport', 'template_path'),
+			$this->core->set_vars(array(
+				'page_title'		=> sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_imp_no_suc'),
+				'template_path'		=> $this->pm->get_data('raidlogimport', 'template_path'),
 				'template_file'		=> 'check_input.html',
 				'display'			=> true,
 				)
@@ -234,32 +224,30 @@ class rli_import extends page_generic {
 	}
 
 	public function display($messages=array()) {
-		global $db, $core, $user, $tpl, $pm;
-		global $SID, $myHtml, $rli;
-
 		if($messages) {
 			foreach($messages as $title => $message) {
 				$type = ($title == 'rli_error' or $title == 'rli_no_mem_create') ? 'red' : 'green';
 				if(is_array($message)) {
 					$message = implode(',<br />', $message);
 				}
-				System_Message($message, $user->lang($title).':', $type);
+				$this->core->message($message, $this->user->lang($title).':', $type);
 			}
 		}
-		$tpl->assign_vars(array(
-			'L_INSERT'		 => $user->lang('rli_dkp_insert'),
-			'L_SEND'		 => $user->lang('rli_send'),
+		$this->tpl->assign_vars(array(
+			'L_INSERT'		 => $this->user->lang('rli_dkp_insert'),
+			'L_SEND'		 => $this->user->lang('rli_send'),
 			'S_STEP1'        => true)
 		);
 
-		$core->set_vars(array(
-			'page_title'        => sprintf($user->lang('admin_title_prefix'), $core->config('guildtag'), $core->config('dkp_name')).': '."DKP String",
-			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
+		$this->core->set_vars(array(
+			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '."DKP String",
+			'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'log_insert.html',
 			'display'           => true,
 			)
 		);
 	}
 }
-$raidlogimport = new rli_import;
+if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('dep_rli_import', rli_import::__dependencies());
+registry::register('rli_import');
 ?>

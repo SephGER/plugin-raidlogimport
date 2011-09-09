@@ -22,15 +22,18 @@ if(!defined('EQDKP_INC')) {
 }
 
 if(!class_exists('rli_adjustment')) {
-  class rli_adjustment {
+  class rli_adjustment extends gen_class {
+	public static $dependencies = array('rli', 'in', 'pdh', 'user', 'tpl', 'html',
+		'member'	=> 'rli_member',
+		'raid'		=> 'rli_raid',
+	);
+
 	public function __construct() {
-		global $rli;
-		$this->adjs = $rli->get_cache_data('adj');
+		$this->adjs = $this->rli->get_cache_data('adj');
 	}
 
 	private function config($name) {
-		global $rli;
-		return $rli->config($name);
+		return $this->rli->config($name);
 	}
 	
 	public function reset() {
@@ -59,11 +62,10 @@ if(!class_exists('rli_adjustment')) {
 	}
 	
 	public function load_adjs() {
-		global $in;
 		$this->adjs = array();
 		foreach($_POST['adjs'] as $a => $adj) {
 			if(!(isset($adj['delete']) AND $adj['delete'])) {
-				$this->adjs[$a] = $in->getArray('adjs:'.$a, '');
+				$this->adjs[$a] = $this->in->getArray('adjs:'.$a, '');
 				$this->adjs[$a]['value'] = runden(floatvalue($adj['value']));
 			}
 		}
@@ -71,9 +73,9 @@ if(!class_exists('rli_adjustment')) {
 	
 	public function display($with_form=false) {
 		global $rli, $core, $html, $tpl, $pdh, $user;
-		$members = $rli->member->get_for_dropdown(4);
-		$events = $pdh->aget('event', 'name', 0, array($pdh->get('event', 'id_list')));
-		$raid_select = array_merge(array($user->lang('none')), $rli->raid->raidlist());
+		$members = $this->member->get_for_dropdown(4);
+		$events = $this->pdh->aget('event', 'name', 0, array($this->pdh->get('event', 'id_list')));
+		$raid_select = array_merge(array($this->user->lang('none')), $this->raid->raidlist());
 		if(is_array($this->adjs)) {
 			foreach($this->adjs as $a => $adj) {
 				$ev_sel = (isset($adj['event'])) ? $adj['event'] : 0;
@@ -81,25 +83,25 @@ if(!class_exists('rli_adjustment')) {
 					unset($data['adjs'][$a]);
 					continue;
 				}
-				$tpl->assign_block_vars('adjs', array(
-					'MEMBER'	=> $html->widget(array('type' => 'dropdown', 'name' => 'adjs['.$a.'][member]', 'options' => $members, 'selected' => $adj['member'], 'id' => 'adjs_'.$a.'_member')),
-					'EVENT'		=> $html->widget(array('type' => 'dropdown', 'name' => 'adjs['.$a.'][event]', 'options' => $events, 'selected' => $ev_sel, 'id' => 'adjs_'.$a.'_event')),
+				$this->tpl->assign_block_vars('adjs', array(
+					'MEMBER'	=> $this->html->widget(array('type' => 'dropdown', 'name' => 'adjs['.$a.'][member]', 'options' => $members, 'selected' => $adj['member'], 'id' => 'adjs_'.$a.'_member')),
+					'EVENT'		=> $this->html->widget(array('type' => 'dropdown', 'name' => 'adjs['.$a.'][event]', 'options' => $events, 'selected' => $ev_sel, 'id' => 'adjs_'.$a.'_event')),
 					'NOTE'		=> $adj['reason'],
 					'VALUE'		=> $adj['value'],
-					'RAID'		=> $html->widget(array('type' => 'dropdown', 'name' => 'adjs['.$a.'][raid]', 'options' => $raid_select, 'selected' => $adj['raid'], 'id' => 'adjs_'.$a.'raid')),
+					'RAID'		=> $this->html->widget(array('type' => 'dropdown', 'name' => 'adjs['.$a.'][raid]', 'options' => $raid_select, 'selected' => $adj['raid'], 'id' => 'adjs_'.$a.'raid')),
 					'KEY'		=> $a,
 				));
 			}
 		}
-		$tpl->assign_block_vars('adjs', array(
+		$this->tpl->assign_block_vars('adjs', array(
 			'KEY'		=> 999,
-			'MEMBER'	=> $html->widget(array('type' => 'dropdown', 'name' => 'adjs[999][member]', 'options' => $members, 'selected' => 0, 'id' => 'adjs_999_member')),
-			'EVENT'		=> $html->widget(array('type' => 'dropdown', 'name' => 'adjs[999][event]', 'options' => $events, 'selected' => 0, 'id' => 'adjs_999_event')),
-			'RAID'		=> $html->widget(array('type' => 'dropdown', 'name' => 'adjs[999][raid]', 'options' => $raid_select, 'selected' => 0, 'id' => 'adjs_999_raid')),
+			'MEMBER'	=> $this->html->widget(array('type' => 'dropdown', 'name' => 'adjs[999][member]', 'options' => $members, 'selected' => 0, 'id' => 'adjs_999_member')),
+			'EVENT'		=> $this->html->widget(array('type' => 'dropdown', 'name' => 'adjs[999][event]', 'options' => $events, 'selected' => 0, 'id' => 'adjs_999_event')),
+			'RAID'		=> $this->html->widget(array('type' => 'dropdown', 'name' => 'adjs[999][raid]', 'options' => $raid_select, 'selected' => 0, 'id' => 'adjs_999_raid')),
 			'DISPLAY'	=> 'style="display: none;"',
 			'DELCHK'	=> 'checked="checked"',
 		));
-		$tpl->add_js(
+		$this->tpl->add_js(
 "$('#rli_select_all').click(function() {
 	if($('.rli_select_me').prop('checked')) {
 		$('.rli_select_me').removeAttr('checked');
@@ -143,9 +145,8 @@ $('#add_adj_button').click(function() {
 	}
 	
 	public function insert() {
-		global $pdh, $rli;
 		foreach($this->adjs as $adj) {
-			if(!$pdh->put('adjustment', 'add_adjustment', array($adj['value'], $adj['reason'], array($rli->member->name_ids[$adj['member']]), $adj['event'], $rli->raid->real_ids[$adj['raid']], $adj['time']))) {
+			if(!$this->pdh->put('adjustment', 'add_adjustment', array($adj['value'], $adj['reason'], array($this->member->name_ids[$adj['member']]), $adj['event'], $this->raid->real_ids[$adj['raid']], $adj['time']))) {
 				return false;
 			}
 		}
@@ -153,9 +154,9 @@ $('#add_adj_button').click(function() {
 	}
 	
 	public function __destruct() {
-		global $rli;
-		$rli->add_cache_data('adj', $this->adjs);
+		$this->rli->add_cache_data('adj', $this->adjs);
 	}
   }
 }
+if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('dep_rli_adjustment', rli_adjustment::$dependencies);
 ?>

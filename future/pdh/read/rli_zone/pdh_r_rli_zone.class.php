@@ -22,17 +22,21 @@ if(!defined('EQDKP_INC')) {
 }
 if(!class_exists('pdh_r_rli_zone')) {
 class pdh_r_rli_zone extends pdh_r_generic {
+	public static function __dependencies() {
+		$dependencies = array('pdc', 'db', 'config', 'user', 'game', 'pdh');
+		return array_merge(parent::$dependencies, $dependencies);
+	}
+
 	private $data = array();
 	public $hooks = array('rli_zone_update');
 	
 	public function init() {
-		global $pdc, $db, $core;
-		$this->data = $pdc->get('pdh_rli_zone');
+		$this->data = $this->pdc->get('pdh_rli_zone');
 		if(!$this->data) {
 			$sql = "SELECT zone_id, zone_string, zone_event, zone_timebonus, zone_diff, zone_sort, zone_active FROM __raidlogimport_zone;";
-			if($result = $db->query($sql)) {
-				while($row = $db->fetch_record($result)) {
-					$this->data[$row['zone_id']]['string'] = explode($core->config('bz_parse', 'raidlogimport'), $row['zone_string']);
+			if($result = $this->db->query($sql)) {
+				while($row = $this->db->fetch_record($result)) {
+					$this->data[$row['zone_id']]['string'] = explode($this->config->get('bz_parse', 'raidlogimport'), $row['zone_string']);
 					$this->data[$row['zone_id']]['event'] = $row['zone_event'];
 					$this->data[$row['zone_id']]['timebonus'] = $row['zone_timebonus'];
 					$this->data[$row['zone_id']]['diff'] = $row['zone_diff'];
@@ -43,17 +47,15 @@ class pdh_r_rli_zone extends pdh_r_generic {
 				$this->data = array();
 				return false;
 			}
-			$db->free_result($result);
-			$pdc->put('pdh_rli_zone', $this->data, null);
+			$this->db->free_result($result);
+			$this->pdc->put('pdh_rli_zone', $this->data, null);
 		}
 		return true;
 	}
 	
 	public function reset() {
-		global $pdc;
 		unset($this->data);
-		$pdc->del('pdh_rli_zone');
-		pd(empty($this->data));
+		$this->pdc->del('pdh_rli_zone');
 	}
 	
 	public function get_id_list($active_only=true) {
@@ -89,9 +91,8 @@ class pdh_r_rli_zone extends pdh_r_generic {
 	}
 	
 	public function get_html_event($id, $with_icon=true) {
-		global $pdh, $game;
-		$icon = ($with_icon) ? $game->decorate('events', array($this->get_event($id))) : '';
-		return $icon.$pdh->get('event', 'name', array($this->get_event($id)));
+		$icon = ($with_icon) ? $this->game->decorate('events', array($this->get_event($id))) : '';
+		return $icon.$this->pdh->get('event', 'name', array($this->get_event($id)));
 	}
 	
 	public function get_eventbystring($string) {
@@ -112,8 +113,7 @@ class pdh_r_rli_zone extends pdh_r_generic {
 	}
 	
 	public function get_html_diff($id) {
-		global $user;
-		return ($this->get_diff($id)) ? ' &nbsp; ('.$user->lang('diff_'.$this->get_diff($id)).')' : '';
+		return ($this->get_diff($id)) ? ' &nbsp; ('.$this->user->lang('diff_'.$this->get_diff($id)).')' : '';
 	}
 	
 	public function get_sort($id) {
@@ -125,4 +125,5 @@ class pdh_r_rli_zone extends pdh_r_generic {
 	}
 }
 }
+if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('dep_pdh_r_rli_zone', pdh_r_rli_zone::__dependencies());
 ?>

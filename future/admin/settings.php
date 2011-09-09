@@ -134,7 +134,6 @@ class RLI_Settings extends page_generic {
 				'standby'		=> array('3:standby_dkptype')
 			)
 		);
-
 		$holder = array();
 		foreach($configs as $display_type => $hold) {
 			foreach($hold as $holde => $names) {
@@ -218,7 +217,7 @@ class RLI_Settings extends page_generic {
 					$add = sprintf($add, (extension_loaded('gd')) ? '<span class=\'positive\'>'.$info['GD Version'].'</span>' : $this->user->lang('no_gd_lib'));
 				}
 				if($add != '') {
-					$add = $this->html->ToolTip($add, '<img alt="help" src="'.$eqdkp_root_path.'images/global/info.png" />');
+					$add = $this->html->ToolTip($add, '<img alt="help" src="'.$this->root_path.'images/global/info.png" />');
 				}
 				if($this->user->lang($nava['name'].'_warn', false, false)) {
 					$warn = $this->user->lang($nava['name'].'_warn');
@@ -226,7 +225,7 @@ class RLI_Settings extends page_generic {
 					$warn = '';
 				}
 				if($warn != '') {
-					$warn = $this->html->ToolTip($warn, '<img width="16" height="16" alt="help" src="'.$eqdkp_root_path.'images/global/false.png" />');
+					$warn = $this->html->ToolTip($warn, '<img width="16" height="16" alt="help" src="'.$this->root_path.'images/global/false.png" />');
 				}
 				$this->tpl->assign_block_vars('holder.config', array(
 					'NAME'	=> $this->user->lang($nava['name']).' '.$add.' '.$warn,

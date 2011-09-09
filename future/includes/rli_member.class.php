@@ -23,7 +23,13 @@ if(!defined('EQDKP_INC'))
 }
 
 if(!class_exists('rli_member')) {
-  class rli_member {
+  class rli_member extends gen_class {
+	public static $dependencies = array('rli', 'in', 'pdh', 'user', 'tpl', 'html', 'jquery', 'time', 'pfh',
+		'adj'		=> 'rli_adjustment',
+		'member'	=> 'rli_member',
+		'raid'		=> 'rli_raid',
+	);
+
   	private $members = array();
   	private $timebar_created = false;
 	private $positions = array('up', 'middle', 'down');
@@ -31,8 +37,7 @@ if(!class_exists('rli_member')) {
 	public $raid_members = array();
 
 	public function __construct() {
-		global $rli;
-		$this->members = $rli->get_cache_data('member');
+		$this->members = $this->rli->get_cache_data('member');
 	}
 	
 	public function reset() {
@@ -40,8 +45,7 @@ if(!class_exists('rli_member')) {
 	}
 
 	private function config($name) {
-		global $rli;
-		return $rli->config($name);
+		return $this->config($name);
 	}
 
 	public function add($name, $class=0, $race=0, $lvl=0, $note='') {
@@ -75,8 +79,7 @@ if(!class_exists('rli_member')) {
 	}
 		
 	public function load_members() {
-		global $rli, $in, $user;
-		$globalattraids = $rli->raid->get_attendance_raids();
+		$globalattraids = $this->raid->get_attendance_raids();
 		foreach($_POST['members'] as $k => $mem) {
 			if(!(is_array($this->members) AND in_array($k, array_keys($this->members)))) {
 				$this->members[$k] = array();
@@ -87,40 +90,40 @@ if(!class_exists('rli_member')) {
 						unset($this->members[$key]);
 						continue;
 					}
-					$member['name'] = $in->get('members:'.$key.':name', '');
-					if($rli->config('member_display') == 2) {
+					$member['name'] = $this->in->get('members:'.$key.':name', '');
+					if($this->config('member_display') == 2) {
 						$times = array();
 						foreach($mem['times'] as $tk => $time) {
-							$times[$tk]['join'] = $in->get('members:'.$key.':times:'.$tk.':join', 0);
-							$times[$tk]['leave'] = $in->get('members:'.$key.':times:'.$tk.':leave', 0);
-							$extra = $in->get('members:'.$key.':times:'.$tk.':extra', '');
+							$times[$tk]['join'] = $this->in->get('members:'.$key.':times:'.$tk.':join', 0);
+							$times[$tk]['leave'] = $this->in->get('members:'.$key.':times:'.$tk.':leave', 0);
+							$extra = $this->in->get('members:'.$key.':times:'.$tk.':extra', '');
 							if($extra) $times[$tk][$extra] = 1;
 						}
 						$member['times'] = $times;
-						$member['raid_list'] = $rli->raid->get_memberraids($member['times']);
-						$a = $rli->raid->get_attendance($member['times']);
+						$member['raid_list'] = $this->raid->get_memberraids($member['times']);
+						$a = $this->raid->get_attendance($member['times']);
 						$member['att_begin'] = $a['begin'];
 						$member['att_end'] = $a['end'];
 						unset($a);
 					} else {
-						$member['raid_list'] = $in->getArray('members:'.$key.':raid_list', 'int');
+						$member['raid_list'] = $this->in->getArray('members:'.$key.':raid_list', 'int');
 						$member['att_begin'] = (isset($mem['att_begin'])) ? true : false;
 						$member['att_end'] = (isset($mem['att_end'])) ? true : false;
 					}
 					if($member['raid_list']) {
 						foreach($member['raid_list'] as $raid_id) {
-							if(!$rli->config('attendence_raid') OR ($raid_id != $globalattraids['begin'] AND $raid_id != $globalattraids['end'])) {
-								$dkp = $rli->raid->get_value($raid_id, $member['times'], array($member['att_begin'], $member['att_end']));
+							if(!$this->config('attendence_raid') OR ($raid_id != $globalattraids['begin'] AND $raid_id != $globalattraids['end'])) {
+								$dkp = $this->raid->get_value($raid_id, $member['times'], array($member['att_begin'], $member['att_end']));
 								$dkp = runden($dkp, 2);
-								$raid = $rli->raid->get($raid_id);
+								$raid = $this->raid->get($raid_id);
 								if($dkp <  $raid['value']) {
 									//add an adjustment
 									$dkp -= $raid['value'];
-									$akey = $rli->adj->check_adj_exists($member['name'], $user->lang('rli_partial_raid'), $raid_id);
+									$akey = $this->adj->check_adj_exists($member['name'], $this->user->lang('rli_partial_raid'), $raid_id);
 									if($akey !== false) {
-										$rli->adj->update($akey, array('value' => $dkp));
+										$this->adj->update($akey, array('value' => $dkp));
 									} else {
-										$rli->adj->add($user->lang('rli_partial_raid'), $member['name'], $dkp, $raid['event'], $raid['begin'], $raid_id);
+										$this->adj->add($user->lang('rli_partial_raid'), $member['name'], $dkp, $raid['event'], $raid['begin'], $raid_id);
 									}
 								}
 							}
@@ -132,8 +135,7 @@ if(!class_exists('rli_member')) {
 	}
 
 	public function finish() {
-		global $rli;
-		$begin = $rli->raid->get_start_end();
+		$begin = $this->raid->get_start_end();
 		$end = $begin['end'];
 		$begin = $begin['begin'];
 		$error = '';
@@ -206,7 +208,7 @@ if(!class_exists('rli_member')) {
 	    }
 	    unset($this->members['times']);
 	    if($error != '') {
-	    	message_die($error);
+	    	message_die($error); //TODO: remove message_die
 	    }
   	}
 
@@ -217,17 +219,16 @@ if(!class_exists('rli_member')) {
   	}
 
   	public function display($with_form=false) {
-  		global $tpl, $jquery, $rli, $core, $user, $in, $html;
-		$globalattraids = $rli->raid->get_attendance_raids();
+		$globalattraids = $this->raid->get_attendance_raids();
 		$key = 0;
 		foreach($this->members as $key => $member) {
 			if($with_form) {
 				if($this->config('s_member_rank') & 1) {
 					$member['rank'] = $this->rank_suffix($member['name']);
 				}
-				if($in->get('checkmem') == $user->lang('rli_go_on').' ('.$user->lang('rli_checkmem').')') {
-					$mraids = $rli->raid->get_memberraids($member['times']);
-					$a = $rli->raid->get_attendance($member['times']);
+				if($this->in->get('checkmem') == $this->user->lang('rli_go_on').' ('.$this->user->lang('rli_checkmem').')') {
+					$mraids = $this->raid->get_memberraids($member['times']);
+					$a = $this->raid->get_attendance($member['times']);
 					if(isset($a['begin']) AND !in_array($globalattraids['begin'], $mraids)) {
 						$mraids[] = $globalattraids['begin'];
 					}
@@ -238,13 +239,13 @@ if(!class_exists('rli_member')) {
 					$mraids = $member['raid_list'];
 				}
 				if($this->config('member_display') == 1 AND extension_loaded('gd')) {
-					$raid_list = $rli->raid->get_checkraidlist($mraids, $key);
+					$raid_list = $this->raid->get_checkraidlist($mraids, $key);
 				}
 				elseif($this->config('member_display') == 2 AND extension_loaded('gd')) {
 					$raid_list = '';
 					$detail_raid_list = true;
 				} else {
-					$raid_list = '<td>'.$jquery->MultiSelect('members['.$key.'][raid_list]', $rli->raid->raidlist(), $mraids, '200', '200', array('id' => 'members_'.$key.'_raidlist')).'</td>';
+					$raid_list = '<td>'.$this->jquery->MultiSelect('members['.$key.'][raid_list]', $this->raid->raidlist(), $mraids, '200', '200', array('id' => 'members_'.$key.'_raidlist')).'</td>';
 				}
 				$att_begin = ((isset($member['att_begin']) AND $member['att_begin']) OR (!isset($member['att_begin']) AND $a['begin'])) ? 'checked="checked"' : '';
 				$att_end = ((isset($member['att_end']) AND $member['att_end']) OR (!isset($member['att_end']) AND $a['end'])) ? 'checked="checked"' : '';
@@ -252,21 +253,21 @@ if(!class_exists('rli_member')) {
 				$options = array(
 					'custom_js' => "$('#'+del_id).css('display', 'none'); $('#'+del_id+'submit').removeAttr('disabled');",
 					'withid' => 'del_id',
-					'message' => $user->lang('rli_delete_members_warning')
+					'message' => $this->user->lang('rli_delete_members_warning')
 				);
-				$jquery->Dialog('delete_warning', $user->lang('confirm_deletion'), $options, 'confirm');
+				$this->jquery->Dialog('delete_warning', $this->user->lang('confirm_deletion'), $options, 'confirm');
 			} else {
-				$att_begin = (isset($member['att_begin']) AND $member['att_begin']) ? $user->lang('yes') : $user->lang('no');
-				$att_end = (isset($member['att_end']) AND $member['att_end']) ? $user->lang('yes') : $user->lang('no');
+				$att_begin = (isset($member['att_begin']) AND $member['att_begin']) ? $this->user->lang('yes') : $this->user->lang('no');
+				$att_end = (isset($member['att_end']) AND $member['att_end']) ? $this->user->lang('yes') : $this->user->lang('no');
 				$raid_list = array();
 				if(is_array($member['raid_list'])) {
-					$rli->raid->raidlist();
+					$this->raid->raidlist();
 					foreach($member['raid_list'] as $rkey) {
-						$raid_list[] = $rli->raid->raidlist[$rkey];
+						$raid_list[] = $this->raid->raidlist[$rkey];
 					}
 				}
 			}
-           	$tpl->assign_block_vars('player', array(
+           	$this->tpl->assign_block_vars('player', array(
                	'MITGLIED' => ($with_form) ? $member['name'] : (($key < 9) ? '&nbsp;&nbsp;' : '').($key+1).'&nbsp;'.$member['name'],
                 'RAID_LIST'=> ($with_form) ? $raid_list : implode('; ', $raid_list),
                 'ATT_BEGIN'=> $att_begin,
@@ -282,12 +283,12 @@ if(!class_exists('rli_member')) {
 		if($with_form) {
 			if(!isset($detail_raid_list)) {
 				if($this->config('member_display') == 1 AND extension_loaded('gd')) {
-					$raid_list = $rli->raid->get_checkraidlist(array(), 999);
+					$raid_list = $this->raid->get_checkraidlist(array(), 999);
 				} else {
-					$raid_list = '<td>'.$html->widget(array('type' => 'jq_multiselect', 'name' => 'members[999][raid_list]', 'options' => $rli->raid->raidlist, 'selected' => array(), 'width' => '200', 'height' => '200', 'id' => 'members_999_raidlist', 'no_lang' => true)).'</td>';
+					$raid_list = '<td>'.$this->html->widget(array('type' => 'jq_multiselect', 'name' => 'members[999][raid_list]', 'options' => $this->raid->raidlist, 'selected' => array(), 'width' => '200', 'height' => '200', 'id' => 'members_999_raidlist', 'no_lang' => true)).'</td>';
 				}
 			}
-			$tpl->assign_block_vars('player', array(
+			$this->tpl->assign_block_vars('player', array(
                 'RAID_LIST'	=> (!isset($detai_raid_list)) ? $raid_list : '',
                 'KEY'		=> 999,
 				'DISPLAY'	=> 'style="display: none;"',
@@ -295,8 +296,8 @@ if(!class_exists('rli_member')) {
 			$this->members[999]['times'] = array();
 			if(isset($detail_raid_list)) $this->detailed_times_list(999, array());
 			unset($this->members[999]);
-			$jquery->qtip('#dt_help', $user->lang('rli_help_dt_member'), array('my' => 'center right', 'at' => 'left center'));
-			$tpl->add_js(
+			$this->jquery->qtip('#dt_help', $this->user->lang('rli_help_dt_member'), array('my' => 'center right', 'at' => 'left center'));
+			$this->tpl->add_js(
 "var rli_key = ".($key+1).";
 $('.del_mem').click(function() {
 	$(this).removeClass('del_mem');
@@ -348,11 +349,10 @@ $('#add_mem_button').click(function() {
 	}
 	
 	public function insert() {
-		global $pdh;
-		$members = $pdh->aget('member', 'name', 0, array($pdh->get('member', 'id_list', array(false, false, false))));
+		$members = $this->pdh->aget('member', 'name', 0, array($this->pdh->get('member', 'id_list', array(false, false, false))));
 		foreach($this->members as $member) {
 			if(!($id = array_search($member['name'], $members))) {
-				$id = $pdh->put('member', 'add_member', array($member['name'], $member['level'], $member['race'], $member['class'], $this->config('new_member_rank'), 0));
+				$id = $this->pdh->put('member', 'add_member', array($member['name'], $member['level'], $member['race'], $member['class'], $this->config('new_member_rank'), 0));
 				if(!$id) return false;
 			}
 			$this->raid_members[$id] = $member['raid_list'];
@@ -362,7 +362,6 @@ $('#add_mem_button').click(function() {
 	}
 	
 	private function raid_positions($raids, $begin) {
-		global $rli;
 		if(isset($this->raids_positioned) AND $this->raids_positioned) return true;
 		$suf = '';
 		if($this->updown[0] !== $this->updown[1]) {
@@ -376,7 +375,7 @@ $('#add_mem_button').click(function() {
 			$pos = 1;
 		}
 		foreach($raids as $rkey => $raid) {
-			if($rli->raid->get_standby_raid() == $rkey) {
+			if($this->raid->get_standby_raid() == $rkey) {
 				$pos = 2;
 			} elseif($this->config('raidcount') & 2 AND count($raid['bosskills']) == 1) {
 				$pos = 0;
@@ -406,12 +405,10 @@ $('#add_mem_button').click(function() {
 	}
 
     private function detailed_times_list($key, $mraids) {
-    	global $rli, $tpl, $html, $eqdkp_root_path, $jquery, $user, $pdh, $time;
-
-    	$width = $rli->raid->get_start_end();
+    	$width = $this->raid->get_start_end();
 		$this->init_times_list($width);
 
-        $raids = $rli->raid->get_data();
+        $raids = $this->raid->get_data();
 		$this->raid_positions($raids, $width['begin']);
         foreach($raids as $rkey => $raid) {
         	$w = ($raid['end']-$raid['begin'])/20;
@@ -421,7 +418,7 @@ $('#add_mem_button').click(function() {
 			$w--;
 			$disabled = (in_array($rkey, $mraids)) ? "" : " disabled='disabled'";
 			$active = (in_array($rkey, $mraids)) ? " active" : "";
-			$tpl->assign_block_vars('player.member_raids', array(
+			$this->tpl->assign_block_vars('player.member_raids', array(
 				'KEY'	=> $rkey,
 				'RPOS'	=> $this->rpos[$rkey],
 				'ACTIVE' => $active,
@@ -433,19 +430,19 @@ $('#add_mem_button').click(function() {
 				foreach($raid['bosskills'] as $bkey => $boss) {
 					$m = ($boss['time']-$width['begin'])/20 - 4;
 					settype($m, 'int');
-					$jquery->qtip('.rli_boss', 'return $(".rli_boss_c", this).html();', array('contfunc' => true));
+					$this->jquery->qtip('.rli_boss', 'return $(".rli_boss_c", this).html();', array('contfunc' => true));
 					$this->boss_data[] = array(
 						'KEY' => $bkey,
 						'LEFT' => $m,
 						'NAME' => (is_numeric($boss['id'])) ? $pdh->get('rli_boss', 'note', array($boss['id'])) : $boss['id'],
-						'TIME' => $time->user_date($boss['time'], false, true),
+						'TIME' => $this->time->user_date($boss['time'], false, true),
 						'VALUE'	=> $boss['bonus']
 					);
 				}
 				$this->bosses_done = true;
         	}
 			foreach($this->boss_data as $boss_data) {
-				$tpl->assign_block_vars('player.bosses', $boss_data);
+				$this->tpl->assign_block_vars('player.bosses', $boss_data);
 			}
         }
         $tkey = 0;
@@ -455,7 +452,7 @@ $('#add_mem_button').click(function() {
         	$ml = ($mtime['join']-$width['begin'])/20;
         	settype($w, 'int');
         	settype($ml, 'int');
-			$tpl->assign_block_vars('player.times', array(
+			$this->tpl->assign_block_vars('player.times', array(
 				'KEY'		=> $tkey,
 				'STANDBY'	=> $s,
 				'EXTRA'		=> (!$s) ? '0' : 'standby',
@@ -475,15 +472,15 @@ $('#add_mem_button').click(function() {
 				'rli_del_dmem' => array('image' => $eqdkp_root_path.'images/global/delete.png', 'name' => $user->lang('rli_del_time'), 'jscode' => 'remove_timeframe();'),
 				'rli_swi_dmem' => array('image' => $eqdkp_root_path.'images/global/update.png', 'name' => $user->lang('rli_standby_switch'), 'jscode' => 'change_standby();')
 			);*/
-			$tpl->assign_vars(array(
+			$this->tpl->assign_vars(array(
 				'CONTEXT_MENU' => true,#$jquery->RightClickMenu('_rli_dmem', '.add_time', $rightc_menu),
 				'PXTIME' => $this->px_time,
 				'HEIGHT' => $this->height)
 			);
 			#$this->rightclick_js = $jquery->RightClickMenu('_rli_dmem', '.add_time', $rightc_menu, '170px', true);
-    		$tpl->js_file($eqdkp_root_path.'plugins/raidlogimport/templates/dmem.js');
-    		$tpl->css_file($eqdkp_root_path.'plugins/raidlogimport/templates/base_template/dmem.css');
-    		$tpl->add_css(".time_scale {
+    		$this->tpl->js_file($eqdkp_root_path.'plugins/raidlogimport/templates/dmem.js');
+    		$this->tpl->css_file($eqdkp_root_path.'plugins/raidlogimport/templates/base_template/dmem.css');
+    		$this->tpl->add_css(".time_scale {
 								position: absolute;
 								background-image: url(".$this->timescalefile.");
 								background-repeat: repeat-x;
@@ -492,7 +489,7 @@ $('#add_mem_button').click(function() {
 								margin-top: 10px;
 								z-index: 16;
 							}");
-    		$tpl->add_js("$(document).ready(function() {
+    		$this->tpl->add_js("$(document).ready(function() {
                             $('#member_form').data('raid_start', ".$width['begin'].");
 							$('.add_time').live('mouseenter', function() {
 								$('#time_scale_' + member_id).attr('class', 'time_scale');
@@ -517,7 +514,6 @@ $('#add_mem_button').click(function() {
     }
 
 	private function create_timebar($start, $end) {
-		global $pfh, $eqdkp_root_path;
 		if(!$this->timebar_created) {
 			$px_time = ($this->px_time > 5000) ? 5000 : $this->px_time; //prevent very big images (although 5000 is quite big)
 			$im = imagecreate($px_time, 18);
@@ -544,7 +540,7 @@ $('#add_mem_button').click(function() {
 				$i += 900;
 				$counter++;
 			}
-			$this->timescalefile = $pfh->FilePath('images/time_scale.png', 'raidlogimport');
+			$this->timescalefile = $this->pfh->FilePath('images/time_scale.png', 'raidlogimport');
 			imagepng($im, $this->timescalefile);
 			imagedestroy($im);
 			$this->timebar_created = true;
@@ -552,20 +548,19 @@ $('#add_mem_button').click(function() {
 	}
 
 	private function get_member_ranks() {
-		global $pdh;
 		if(!$this->member_ranks) {
-			$member_id_rank = $pdh->aget('member', 'rank_name', 0, array($pdh->get('member', 'id_list')));
+			$member_id_rank = $this->pdh->aget('member', 'rank_name', 0, array($this->pdh->get('member', 'id_list')));
 			foreach($member_id_rank as $id => $rank) {
-				$this->member_ranks[$pdh->get('member', 'name', array($id))] = $rank;
+				$this->member_ranks[$this->pdh->get('member', 'name', array($id))] = $rank;
 			}
-			$this->member_ranks['new'] = $pdh->get('rank', 'name', array($this->config('new_member_rank')));
+			$this->member_ranks['new'] = $this->pdh->get('rank', 'name', array($this->config('new_member_rank')));
 		}
 	}
 
 	public function __destruct() {
-		global $rli;
-		$rli->add_cache_data('member', $this->members);
+		$this->rli->add_cache_data('member', $this->members);
 	}
   }
 }
+if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('dep_rli_member', rli_member::$dependencies);
 ?>
