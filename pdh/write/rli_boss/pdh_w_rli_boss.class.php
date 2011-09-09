@@ -22,13 +22,13 @@ if(!defined('EQDKP_INC')) {
 }
 if(!class_exists('pdh_w_rli_boss')) {
 class pdh_w_rli_boss extends pdh_w_generic {
-	public function __construct() {
-		parent::pdh_w_generic();
+	public static function __dependencies() {
+		$dependencies = array('pdh', 'config', 'db');
+		return array_merge(parent::$dependencies, $dependencies);
 	}
 	
 	public function add($string, $note, $bonus=0.0, $timebonus=0.0, $diff=0, $tozone=0, $sort=0) {
-		global $db, $pdh;
-		if($db->query("INSERT INTO __raidlogimport_boss :params;", array(
+		if($this->db->query("INSERT INTO __raidlogimport_boss :params;", array(
 						'boss_string'	=> $string,
 						'boss_note'		=> $note,
 						'boss_bonus'	=> $bonus,
@@ -36,8 +36,8 @@ class pdh_w_rli_boss extends pdh_w_generic {
 						'boss_diff'		=> $diff,
 						'boss_tozone'	=> $tozone,
 						'boss_sort'		=> $sort))) {
-			$id = $db->insert_id();
-			$pdh->enqueue_hook('rli_boss_update', array($id));
+			$id = $this->db->insert_id();
+			$this->pdh->enqueue_hook('rli_boss_update', array($id));
 			$log_action = array(
 				'{L_ID}'			=> $id,
 				'{L_BZ_TYPE}'   	=> '{L_BZ_BOSS_S}',
@@ -45,7 +45,7 @@ class pdh_w_rli_boss extends pdh_w_generic {
 				'{L_BZ_BNOTE}'		=> $note,
 				'{L_BZ_BONUS}'		=> $bonus,
 				'{L_BZ_TIMEBONUS}'	=> $timebonus,
-				'{L_BZ_TOZONE}' 	=> ($tozone) ? $pdh->get('rli_zone', 'note', array($tozone)) : '{L_BZ_NO_ZONE}',
+				'{L_BZ_TOZONE}' 	=> ($tozone) ? $this->pdh->get('rli_zone', 'note', array($tozone)) : '{L_BZ_NO_ZONE}',
 				'{L_BZ_DIFF}' 		=> $diff
 			);
 			$this->log_insert('action_raidlogimport_bz_add', $log_action, true, 'raidlogimport');
@@ -55,31 +55,30 @@ class pdh_w_rli_boss extends pdh_w_generic {
 	}
 	
 	public function update($id, $string='', $note='', $bonus=false, $timebonus=false, $diff=false, $tozone=false, $sort=false) {
-		global $db, $pdh, $core;
 		if(!$id) {
 			return false;
 		}
 		$old = array(
-			'string'	=> implode($core->config('bz_parse', 'raidlogimport'), $pdh->get('rli_boss', 'string', array($id))),
-			'note'		=> $pdh->get('rli_boss', 'note', array($id)),
-			'bonus'		=> $pdh->get('rli_boss', 'bonus', array($id)),
-			'timebonus'	=> $pdh->get('rli_boss', 'timebonus', array($id)),
-			'diff'		=> $pdh->get('rli_boss', 'diff', array($id)),
-			'tozone'	=> $pdh->get('rli_boss', 'tozone', array($id)),
-			'sort'		=> $pdh->get('rli_boss', 'sort', array($id))
+			'string'	=> implode($this->config->get('bz_parse', 'raidlogimport'), $this->pdh->get('rli_boss', 'string', array($id))),
+			'note'		=> $this->pdh->get('rli_boss', 'note', array($id)),
+			'bonus'		=> $this->pdh->get('rli_boss', 'bonus', array($id)),
+			'timebonus'	=> $this->pdh->get('rli_boss', 'timebonus', array($id)),
+			'diff'		=> $this->pdh->get('rli_boss', 'diff', array($id)),
+			'tozone'	=> $this->pdh->get('rli_boss', 'tozone', array($id)),
+			'sort'		=> $this->pdh->get('rli_boss', 'sort', array($id))
 		);
 		$data = array(
-			'boss_string'	=> ($string == '') ? $pdh->get('rli_boss', 'string', array($id)) : $string,
-			'boss_note'		=> ($note == '') ? $pdh->get('rli_boss', 'note', array($id)) : $note,
-			'boss_bonus'	=> ($bonus === false) ? $pdh->get('rli_boss', 'bonus', array($id)) : $bonus,
-			'boss_timebonus'=> ($timebonus === false) ? $pdh->get('rli_boss', 'timebonus', array($id)) : $timebonus,
-			'boss_diff'		=> ($diff === false) ? $pdh->get('rli_boss', 'diff', array($id)) : $diff,
-			'boss_tozone'	=> ($tozone === false) ? $pdh->get('rli_boss', 'tozone', array($id)) : $tozone,
-			'boss_sort'		=> ($sort === false) ? $pdh->get('rli_boss', 'sort', array($id)) : $sort
+			'boss_string'	=> ($string == '') ? $this->pdh->get('rli_boss', 'string', array($id)) : $string,
+			'boss_note'		=> ($note == '') ? $this->pdh->get('rli_boss', 'note', array($id)) : $note,
+			'boss_bonus'	=> ($bonus === false) ? $this->pdh->get('rli_boss', 'bonus', array($id)) : $bonus,
+			'boss_timebonus'=> ($timebonus === false) ? $this->pdh->get('rli_boss', 'timebonus', array($id)) : $timebonus,
+			'boss_diff'		=> ($diff === false) ? $this->pdh->get('rli_boss', 'diff', array($id)) : $diff,
+			'boss_tozone'	=> ($tozone === false) ? $this->pdh->get('rli_boss', 'tozone', array($id)) : $tozone,
+			'boss_sort'		=> ($sort === false) ? $this->pdh->get('rli_boss', 'sort', array($id)) : $sort
 		);
 		if($this->changed($old, $data)) {
-			if($db->query("UPDATE __raidlogimport_boss SET :params WHERE boss_id = '".$id."';", $data)) {
-				$pdh->enqueue_hook('rli_boss_update', array($id));
+			if($this->db->query("UPDATE __raidlogimport_boss SET :params WHERE boss_id = '".$id."';", $data)) {
+				$this->pdh->enqueue_hook('rli_boss_update', array($id));
 				$log_action = array(
 					'{L_ID}'			=> $id,
 					'{L_BZ_TYPE}'   	=> '{L_BZ_ZONE_S}',
@@ -88,7 +87,7 @@ class pdh_w_rli_boss extends pdh_w_generic {
 					'{L_BZ_BONUS}'		=> $old['bonus']." => ".$bonus,
 					'{L_BZ_TIMEBONUS}'	=> $old['timebonus']." => ".$timebonus,
 					'{L_BZ_DIFF}' 		=> $old['diff']." => ".$diff,
-					'{L_BZ_TOZONE}' 	=> (($old['tozone']) ? $pdh->get('rli_zone', 'note', array($old['tozone'])) : '{L_BZ_NO_ZONE}').(($tozone) ? $pdh->get('rli_zone', 'note', array($tozone)) : '{L_BZ_NO_ZONE}'),
+					'{L_BZ_TOZONE}' 	=> (($old['tozone']) ? $this->pdh->get('rli_zone', 'note', array($old['tozone'])) : '{L_BZ_NO_ZONE}').(($tozone) ? $this->pdh->get('rli_zone', 'note', array($tozone)) : '{L_BZ_NO_ZONE}'),
 				);
 				$this->log_insert('action_raidlogimport_bz_upd', $log_action, true, 'raidlogimport');
 				return $id;
@@ -100,21 +99,20 @@ class pdh_w_rli_boss extends pdh_w_generic {
 	}
 	
 	public function del($id) {
-		global $db, $pdh;
 		if(!$id) {
 			return false;
 		}
 		$old = array(
-			'string'	=> implode(', ', $pdh->get('rli_boss', 'string', array($id))),
-			'note'		=> $pdh->get('rli_boss', 'note', array($id)),
-			'bonus'		=> $pdh->get('rli_boss', 'bonus', array($id)),
-			'timebonus'	=> $pdh->get('rli_boss', 'timebonus', array($id)),
-			'diff'		=> $pdh->get('rli_boss', 'diff', array($id)),
-			'tozone'	=> $pdh->get('rli_boss', 'tozone', array($id)),
-			'sort'		=> $pdh->get('rli_boss', 'sort', array($id))
+			'string'	=> implode(', ', $this->pdh->get('rli_boss', 'string', array($id))),
+			'note'		=> $this->pdh->get('rli_boss', 'note', array($id)),
+			'bonus'		=> $this->pdh->get('rli_boss', 'bonus', array($id)),
+			'timebonus'	=> $this->pdh->get('rli_boss', 'timebonus', array($id)),
+			'diff'		=> $this->pdh->get('rli_boss', 'diff', array($id)),
+			'tozone'	=> $this->pdh->get('rli_boss', 'tozone', array($id)),
+			'sort'		=> $this->pdh->get('rli_boss', 'sort', array($id))
 		);
-		if($db->query("DELETE FROM __raidlogimport_boss WHERE boss_id = '".$id."';")) {
-			$pdh->enqueue_hook('rli_boss_update', array($id));
+		if($this->db->query("DELETE FROM __raidlogimport_boss WHERE boss_id = '".$id."';")) {
+			$this->pdh->enqueue_hook('rli_boss_update', array($id));
 			$log_action = array(
 				'{L_ID}'			=> $id,
 				'{L_BZ_TYPE}'   	=> '{L_BZ_ZONE_S}',
@@ -123,7 +121,7 @@ class pdh_w_rli_boss extends pdh_w_generic {
 				'{L_BZ_BONUS}'		=> $old['bonus'],
 				'{L_BZ_TIMEBONUS}'	=> $old['timebonus'],
 				'{L_BZ_DIFF}' 		=> $old['diff'],
-				'{L_BZ_TOZONE}' 	=> ($old['tozone']) ? $pdh->get('rli_zone', 'note', array($old['tozone'])) : '{L_BZ_NO_ZONE}',
+				'{L_BZ_TOZONE}' 	=> ($old['tozone']) ? $this->pdh->get('rli_zone', 'note', array($old['tozone'])) : '{L_BZ_NO_ZONE}',
 			);
 			$this->log_insert('action_raidlogimport_bz_del', $log_action, true, 'raidlogimport' );
 			return $id;
@@ -132,10 +130,9 @@ class pdh_w_rli_boss extends pdh_w_generic {
 	}
 	
 	public function set_active($boss_id, $active) {
-		global $db, $pdh;
 		$active = ($active) ? '1' : '0';
-		if($db->query("UPDATE __raidlogimport_boss SET boss_active = '".$active."' WHERE boss_id = '".$boss_id."';")) {
-			$pdh->enqueue_hook('rli_boss_update', array($boss_id));
+		if($this->db->query("UPDATE __raidlogimport_boss SET boss_active = '".$active."' WHERE boss_id = '".$boss_id."';")) {
+			$this->pdh->enqueue_hook('rli_boss_update', array($boss_id));
 			return true;
 		}
 		return false;
@@ -151,4 +148,5 @@ class pdh_w_rli_boss extends pdh_w_generic {
 	}
 }
 }
+if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('dep_pdh_w_rli_boss', pdh_w_rli_boss::__dependencies());
 ?>

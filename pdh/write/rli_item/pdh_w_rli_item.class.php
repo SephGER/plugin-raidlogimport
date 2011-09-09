@@ -22,29 +22,29 @@ if(!defined('EQDKP_INC')) {
 }
 if(!class_exists('pdh_w_rli_item')) {
 class pdh_w_rli_item extends pdh_w_generic {
-	public function __construct() {
-		parent::pdh_w_generic();
+	public static function __dependencies() {
+		$dependencies = array('pdh', 'db');
+		return array_merge(parent::$dependencies, $dependencies);
 	}
 	
 	public function add($item_id, $event_id, $itempool_id) {
-		global $db, $pdh;
 		if($item_id <= 0 || $event_id <= 0 || $itempool_id <= 0) return false;
-		if($pdh->get('rli_item', 'itempool', array($item_id, $event_id))) $this->delete($item_id, $event_id);
-		if($db->query("INSERT INTO __raidlogimport_item2itempool :params;", array('item_id' => $item_id, 'event_id' => $event_id, 'itempool_id' => $itempool_id))) {
-			$pdh->enqueue_hook('rli_item_update');
+		if($this->pdh->get('rli_item', 'itempool', array($item_id, $event_id))) $this->delete($item_id, $event_id);
+		if($this->db->query("INSERT INTO __raidlogimport_item2itempool :params;", array('item_id' => $item_id, 'event_id' => $event_id, 'itempool_id' => $itempool_id))) {
+			$this->pdh->enqueue_hook('rli_item_update');
 			return true;
 		}
 		return false;
 	}
 	
 	public function delete($item_id, $event_id) {
-		global $db, $pdh;
-		if($db->query("DELETE FROM __raidlogimport_item2itempool WHERE event_id = '".$event_id."' AND item_id = '".$item_id."';")) {
-			$pdh->enqueue_hook('rli_item_update');
+		if($this->db->query("DELETE FROM __raidlogimport_item2itempool WHERE event_id = '".$event_id."' AND item_id = '".$item_id."';")) {
+			$this->pdh->enqueue_hook('rli_item_update');
 			return true;
 		}
 		return false;
 	}
 }
 }
+if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('dep_pdh_w_rli_item', pdh_w_rli_item::__dependencies());
 ?>

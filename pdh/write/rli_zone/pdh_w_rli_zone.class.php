@@ -22,12 +22,12 @@ if(!defined('EQDKP_INC')) {
 }
 if(!class_exists('pdh_w_rli_zone')) {
 class pdh_w_rli_zone extends pdh_w_generic {
-	public function __construct() {
-		parent::pdh_w_generic();
+	public static function __dependencies() {
+		$dependencies = array('pdh', 'config', 'db');
+		return array_merge(parent::$dependencies, $dependencies);
 	}
 	
 	public function add($string, $event, $timebonus=0.0, $diff=0, $sort=0) {
-		global $db, $pdh, $user;
 		if(!$string OR !$event) {
 			return false;
 		}
@@ -37,13 +37,13 @@ class pdh_w_rli_zone extends pdh_w_generic {
 						'zone_timebonus'=> $timebonus,
 						'zone_diff'		=> $diff,
 						'zone_sort'		=> $sort))) {
-			$id = $db->insert_id();
-			$pdh->enqueue_hook('rli_zone_update', array($id));
+			$id = $this->db->insert_id();
+			$this->pdh->enqueue_hook('rli_zone_update', array($id));
 			$log_action = array(
 				'{L_ID}'			=> $id,
 				'{L_BZ_TYPE}'   	=> '{L_BZ_ZONE_S}',
 				'{L_BZ_STRING}'		=> $string,
-				'{L_EVENT}'			=> $pdh->get('event', 'name', array($event)),
+				'{L_EVENT}'			=> $this->pdh->get('event', 'name', array($event)),
 				'{L_BZ_TIMEBONUS}'	=> $timebonus,
 				'{L_BZ_DIFF}' 		=> $diff
 			);
@@ -54,16 +54,15 @@ class pdh_w_rli_zone extends pdh_w_generic {
 	}
 	
 	public function update($id, $string='', $event=false, $timebonus=false, $diff=false, $sort=false) {
-		global $db, $pdh, $core;
 		if(!$id) {
 			return false;
 		}
 		$old = array(
-			'string'	=> implode($core->config('bz_parse', 'raidlogimport'), $pdh->get('rli_zone', 'string', array($id))),
-			'event'		=> $pdh->get('rli_zone', 'event', array($id)),
-			'timebonus'	=> $pdh->get('rli_zone', 'timebonus', array($id)),
-			'diff'		=> $pdh->get('rli_zone', 'diff', array($id)),
-			'sort'		=> $pdh->get('rli_zone', 'sort', array($id))
+			'string'	=> implode($this->config->get('bz_parse', 'raidlogimport'), $this->pdh->get('rli_zone', 'string', array($id))),
+			'event'		=> $this->pdh->get('rli_zone', 'event', array($id)),
+			'timebonus'	=> $this->pdh->get('rli_zone', 'timebonus', array($id)),
+			'diff'		=> $this->pdh->get('rli_zone', 'diff', array($id)),
+			'sort'		=> $this->pdh->get('rli_zone', 'sort', array($id))
 		);
 		$data = array(
 			'zone_string'	=> ($string == '') ? $old['string'] : $string,
@@ -73,13 +72,13 @@ class pdh_w_rli_zone extends pdh_w_generic {
 			'zone_sort'		=> ($sort === false) ? $old['sort'] : $sort
 		);
 		if($this->changed($old, $data)) {
-			if($db->query("UPDATE __raidlogimport_zone SET :params WHERE zone_id = '".$id."';", $data)) {
-				$pdh->enqueue_hook('rli_zone_update', array($id));
+			if($this->db->query("UPDATE __raidlogimport_zone SET :params WHERE zone_id = '".$id."';", $data)) {
+				$this->pdh->enqueue_hook('rli_zone_update', array($id));
 				$log_action = array(
 					'{L_ID}'			=> $id,
 					'{L_BZ_TYPE}'   	=> '{L_BZ_ZONE_S}',
 					'{L_BZ_STRING}'		=> $old['string']." => ".$string,
-					'{L_EVENT}'			=> $pdh->get('event', 'name', array($old['event']))." => ".$pdh->get('event', 'name', array($event)),
+					'{L_EVENT}'			=> $this->pdh->get('event', 'name', array($old['event']))." => ".$this->pdh->get('event', 'name', array($event)),
 					'{L_BZ_TIMEBONUS}'	=> $old['timebonus']." => ".$timebonus,
 					'{L_BZ_DIFF}' 		=> $old['diff']." => ".$diff,
 				);
@@ -93,24 +92,23 @@ class pdh_w_rli_zone extends pdh_w_generic {
 	}
 	
 	public function del($id) {
-		global $db, $pdh;
 		if(!$id) {
 			return false;
 		}
 		$old = array(
-			'string'	=> implode(', ', $pdh->get('rli_zone', 'string', array($id))),
-			'event'		=> $pdh->get('rli_zone', 'event', array($id)),
-			'timebonus'	=> $pdh->get('rli_zone', 'timebonus', array($id)),
-			'diff'		=> $pdh->get('rli_zone', 'diff', array($id)),
-			'sort'		=> $pdh->get('rli_zone', 'sort', array($id))
+			'string'	=> implode(', ', $this->pdh->get('rli_zone', 'string', array($id))),
+			'event'		=> $this->pdh->get('rli_zone', 'event', array($id)),
+			'timebonus'	=> $this->pdh->get('rli_zone', 'timebonus', array($id)),
+			'diff'		=> $this->pdh->get('rli_zone', 'diff', array($id)),
+			'sort'		=> $this->pdh->get('rli_zone', 'sort', array($id))
 		);
-		if($db->query("DELETE FROM __raidlogimport_zone WHERE zone_id = '".$id."';")) {
-			$pdh->enqueue_hook('rli_zone_update', array($id));
+		if($this->db->query("DELETE FROM __raidlogimport_zone WHERE zone_id = '".$id."';")) {
+			$this->pdh->enqueue_hook('rli_zone_update', array($id));
 			$log_action = array(
 				'{L_ID}'			=> $id,
 				'{L_BZ_TYPE}'   	=> '{L_BZ_ZONE_S}',
 				'{L_BZ_STRING}'		=> $old['string'],
-				'{L_EVENT}'			=> $pdh->get('event', 'name', array($old['event'])),
+				'{L_EVENT}'			=> $this->pdh->get('event', 'name', array($old['event'])),
 				'{L_BZ_TIMEBONUS}'	=> $old['timebonus'],
 				'{L_BZ_DIFF}' 		=> $old['diff'],
 			);
@@ -121,14 +119,13 @@ class pdh_w_rli_zone extends pdh_w_generic {
 	}
 	
 	public function switch_inactive($zone_id) {
-		global $db, $pdh;
-		$active = ($pdh->get('rli_zone', 'active', array($zone_id))) ? '0' : '1';
-		if($db->query("UPDATE __raidlogimport_zone SET zone_active = '".$active."' WHERE zone_id = '".$zone_id."'")) {
-			$bosses = $pdh->get('rli_boss', 'bosses2zone', array($zone_id));
+		$active = ($this->pdh->get('rli_zone', 'active', array($zone_id))) ? '0' : '1';
+		if($this->db->query("UPDATE __raidlogimport_zone SET zone_active = '".$active."' WHERE zone_id = '".$zone_id."'")) {
+			$bosses = $this->pdh->get('rli_boss', 'bosses2zone', array($zone_id));
 			foreach($bosses as $boss_id) {
-				$pdh->put('rli_boss', 'set_active', array($boss_id, $active));
+				$this->pdh->put('rli_boss', 'set_active', array($boss_id, $active));
 			}
-			$pdh->enqueue_hook('rli_zone_update', array($zone_id));
+			$this->pdh->enqueue_hook('rli_zone_update', array($zone_id));
 			return true;
 		}
 		return false;
@@ -144,4 +141,5 @@ class pdh_w_rli_zone extends pdh_w_generic {
 	}
 }
 }
+if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('dep_pdh_w_rli_zone', pdh_w_rli_zone::__dependencies());
 ?>

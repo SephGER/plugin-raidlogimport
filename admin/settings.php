@@ -21,39 +21,40 @@ define('IN_ADMIN', true);
 $eqdkp_root_path = './../../../';
 include_once('./../includes/common.php');
 
-class RLI_Settings extends page_generic
-{
+class RLI_Settings extends page_generic {
+	public static function __dependencies() {
+		$dependencies = array('user', 'in', 'rli', 'config', 'core', 'html', 'pdh', 'pm');
+		return array_merge(parent::$dependencies, $dependencies);
+	}
+
 	public function __construct() {
-		global $user;
-		$user->check_auth('a_raidlogimport_config');
+		$this->user->check_auth('a_raidlogimport_config');
 		parent::__construct(false);
 		$this->process();
 	}
 
 	public function update() {
-		global $core, $rli, $in;
-
 		$messages = array();
 		$bytes = array('s_member_rank', 'use_dkp', 'event_boss', 'standby_dkptype', 'autocomplete');
 		$floats = array('member_start', 'attendence_begin', 'attendence_end', 'am_value');
-		$copy_config = $rli->config();
+		$copy_config = $this->rli->config();
 		foreach($copy_config as $old_name => $old_value) {
 			if(in_array($old_name, $bytes)) {
 				$val = 0;
-				if(is_array($in->getArray($old_name, 'int'))) {
-					foreach($in->getArray($old_name, 'int') as $pos) {
+				if(is_array($this->in->getArray($old_name, 'int'))) {
+					foreach($this->in->getArray($old_name, 'int') as $pos) {
 						$val += $pos;
 					}
 				}
 				$data[$old_name] = $val;
 			} elseif(in_array($old_name, $floats)) {
-				$data[$old_name] = number_format(floatvalue($in->get($old_name)), 2, '.', '');
+				$data[$old_name] = number_format(floatvalue($this->in->get($old_name)), 2, '.', '');
 			} else {
-				$data[$old_name] = $in->get($old_name, '');
+				$data[$old_name] = $this->in->get($old_name, '');
 			}
 			if(isset($data[$old_name]) AND $data[$old_name] != $old_value) { //Update
-				$core->config_set($old_name, $data[$old_name], 'raidlogimport');
-				$rli->reload_config();
+				$this->config->set($old_name, $data[$old_name], 'raidlogimport');
+				$this->rli->reload_config();
 				$messages[] = $old_name;
 			}
 		}
@@ -61,43 +62,42 @@ class RLI_Settings extends page_generic
 	}
 
 	public function display($messages=array()) {
-		global $user, $tpl, $core, $pm, $rli, $html, $jquery, $pdh, $eqdkp_root_path;
 		if($messages) {
-			$rli->__construct();
+			$this->rli->__construct();
 			foreach($messages as $name) {
-				$core->message($name, $user->lang('bz_save_suc'), 'green');
+				$this->core->message($name, $this->user->lang('bz_save_suc'), 'green');
 			}
 		}
 		//select ranks
-		$new_member_rank = $pdh->aget('rank', 'name', 0, array($pdh->get('rank', 'id_list')));
+		$new_member_rank = $this->pdh->aget('rank', 'name', 0, array($this->pdh->get('rank', 'id_list')));
 
 		//select parsers
 		$parser = array(
-			'eqdkp' => $user->lang('parser_eqdkp'),
-			'plus' => $user->lang('parser_plus'),
-			'magicdkp' => $user->lang('parser_magicdkp')
+			'eqdkp' => $this->user->lang('parser_eqdkp'),
+			'plus' => $this->user->lang('parser_plus'),
+			'magicdkp' => $this->user->lang('parser_magicdkp')
 		);
 
 		//select raidcount
 		$raidcount = array();
 		for($i=0; $i<=3; $i++) {
-			$raidcount[$i] = $user->lang('raidcount_'.$i);
+			$raidcount[$i] = $this->user->lang('raidcount_'.$i);
 		}
 
 		//select null_sum & standbyraidoptions
 		$standby_raid = array();
 		for($i=0; $i<=2; $i++) {
-			$standby_raid[$i] = $user->lang('standby_raid_'.$i);
+			$standby_raid[$i] = $this->user->lang('standby_raid_'.$i);
 		}
 
 		//select member_start_event
-		$member_start_event = $pdh->aget('event', 'name', 0, array($pdh->get('event', 'id_list')));
+		$member_start_event = $this->pdh->aget('event', 'name', 0, array($this->pdh->get('event', 'id_list')));
 
 		//select member_display
-		$member_display = array(0 => $user->lang('member_display_0'), 1 => $user->lang('member_display_1'), 2 => $user->lang('member_display_2'));
+		$member_display = array(0 => $this->user->lang('member_display_0'), 1 => $this->user->lang('member_display_1'), 2 => $this->user->lang('member_display_2'));
 
 		//select raid_note_time
-		$raid_note_time = array(0 => $user->lang('raid_note_time_0'), 1 => $user->lang('raid_note_time_1'));
+		$raid_note_time = array(0 => $this->user->lang('raid_note_time_0'), 1 => $this->user->lang('raid_note_time_1'));
 
 		$k = 2;
 		$configs = array(
@@ -141,7 +141,7 @@ class RLI_Settings extends page_generic
 				foreach($names as $name) {
 					switch($display_type) {
 						case 'select':
-							$holder[$holde][$k]['value'] = $html->DropDown($name, $$name, $rli->config($name));
+							$holder[$holde][$k]['value'] = $this->html->DropDown($name, $$name, $this->rli->config($name));
 							$holder[$holde][$k]['name'] = $name;
 							break;
 
@@ -152,13 +152,13 @@ class RLI_Settings extends page_generic
 							}
 							$check_1 = '';
 							$check_0 = '';
-							if($rli->config($name)) {
+							if($this->rli->config($name)) {
 								$check_1 = "checked='checked'";
 							} else {
 								$check_0 = "checked='checked'";
 							}
-							$holder[$holde][$k]['value'] = "<input type='radio' name='".$name."' value='1' ".$check_1." />".$user->lang('yes')."&nbsp;&nbsp;&nbsp;";
-							$holder[$holde][$k]['value'] .= "&nbsp;&nbsp;&nbsp;<input type='radio' name='".$name."' value='0' ".$check_0." />".$user->lang('no');
+							$holder[$holde][$k]['value'] = "<input type='radio' name='".$name."' value='1' ".$check_1." />".$this->user->lang('yes')."&nbsp;&nbsp;&nbsp;";
+							$holder[$holde][$k]['value'] .= "&nbsp;&nbsp;&nbsp;<input type='radio' name='".$name."' value='0' ".$check_0." />".$this->user->lang('no');
 							$holder[$holde][$k]['name'] = $name;
 							$k = $a;
 							break;
@@ -167,27 +167,27 @@ class RLI_Settings extends page_generic
 							$a = $k;
 							if($name == 'rli_inst_version') {
 								$k = 0;
-								$holder[$holde][$k]['value'] = $pm->get_data('raidlogimport', 'version');
+								$holder[$holde][$k]['value'] = $this->pm->get_data('raidlogimport', 'version');
 							} else {
-								$holder[$holde][$k]['value'] = $rli->config($name);
+								$holder[$holde][$k]['value'] = $this->rli->config($name);
 							}
 							$holder[$holde][$k]['name'] = $name;
 							$k = $a;
 							break;
 
 						case 'text':
-							$holder[$holde][$k]['value'] = "<input type='text' name='".$name."' value='".$rli->config($name)."' class='maininput' />";
+							$holder[$holde][$k]['value'] = "<input type='text' name='".$name."' value='".$this->rli->config($name)."' class='maininput' />";
 							$holder[$holde][$k]['name'] = $name;
 							break;
 
 						case 'special':
 							list($num_of_opt, $name) = explode(':', $name);
-							$value = $rli->config($name);
+							$value = $this->rli->config($name);
 							$pv = array(0,1,2,4,8,16,32);
 							$holder[$holde][$k]['value'] = '';
 							for($i=1; $i<=$num_of_opt; $i++) {
 								$checked = ($value & $pv[$i]) ? 'checked="checked"' : '';
-								$holder[$holde][$k]['value'] .= "<span class='nowrap'><input type='checkbox' name='".$name."[]' value='".$pv[$i]."' ".$checked." />".$user->lang($name.'_'.$pv[$i])."</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+								$holder[$holde][$k]['value'] .= "<span class='nowrap'><input type='checkbox' name='".$name."[]' value='".$pv[$i]."' ".$checked." />".$this->user->lang($name.'_'.$pv[$i])."</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 							}
 							$holder[$holde][$k]['name'] = $name;
 							break;
@@ -203,53 +203,54 @@ class RLI_Settings extends page_generic
 		$num = 1;
 		foreach($holder as $type => $hold) {
 			ksort($hold);
-			if($type == 'difficulty' AND $core->config('default_game') != 'wow') {
+			if($type == 'difficulty' AND $this->config->get('default_game') != 'wow') {
 				continue;
 			}
-			$tpl->assign_block_vars('holder', array(
-				'TITLE'	=> $user->lang('title_'.$type),
+			$this->tpl->assign_block_vars('holder', array(
+				'TITLE'	=> $this->user->lang('title_'.$type),
 				'NUM'	=> $num)
 			);
 			$num++;
 			foreach($hold as $nava) {
-				$add = ($user->lang($nava['name'].'_help', false, false)) ? $user->lang($nava['name'].'_help') : '';
+				$add = ($this->user->lang($nava['name'].'_help', false, false)) ? $this->user->lang($nava['name'].'_help') : '';
 				if($nava['name'] == 'member_display') {
 					$info = gd_info();
-					$add = sprintf($add, (extension_loaded('gd')) ? '<span class=\'positive\'>'.$info['GD Version'].'</span>' : $user->lang('no_gd_lib'));
+					$add = sprintf($add, (extension_loaded('gd')) ? '<span class=\'positive\'>'.$info['GD Version'].'</span>' : $this->user->lang('no_gd_lib'));
 				}
 				if($add != '') {
-					$add = $html->ToolTip($add, '<img alt="help" src="'.$eqdkp_root_path.'images/global/info.png" />');
+					$add = $this->html->ToolTip($add, '<img alt="help" src="'.$eqdkp_root_path.'images/global/info.png" />');
 				}
-				if($user->lang($nava['name'].'_warn', false, false)) {
-					$warn = $user->lang($nava['name'].'_warn');
+				if($this->user->lang($nava['name'].'_warn', false, false)) {
+					$warn = $this->user->lang($nava['name'].'_warn');
 				} else {
 					$warn = '';
 				}
 				if($warn != '') {
-					$warn = $html->ToolTip($warn, '<img width="16" height="16" alt="help" src="'.$eqdkp_root_path.'images/global/false.png" />');
+					$warn = $this->html->ToolTip($warn, '<img width="16" height="16" alt="help" src="'.$eqdkp_root_path.'images/global/false.png" />');
 				}
-				$tpl->assign_block_vars('holder.config', array(
-					'NAME'	=> $user->lang($nava['name']).' '.$add.' '.$warn,
+				$this->tpl->assign_block_vars('holder.config', array(
+					'NAME'	=> $this->user->lang($nava['name']).' '.$add.' '.$warn,
 					'VALUE' => $nava['value'])
 				);
 			}
 		}
-		$tpl->assign_vars(array(
-			'L_CONFIG' => $user->lang('raidlogimport').' '.$user->lang('settings'),
-			'L_SAVE'	 => $user->lang('bz_save'),
-			'L_MANUAL'	=> $user->lang('rli_manual'),
-			#'S_GERMAN'	=> ($user->lang_name == 'german') ? true : false,
-			'TAB_JS'	=> $jquery->Tab_header('rli_config'))
+		$this->tpl->assign_vars(array(
+			'L_CONFIG' => $this->user->lang('raidlogimport').' '.$this->user->lang('settings'),
+			'L_SAVE'	 => $this->user->lang('bz_save'),
+			'L_MANUAL'	=> $this->user->lang('rli_manual'),
+			#'S_GERMAN'	=> ($this->user->lang_name == 'german') ? true : false,
+			'TAB_JS'	=> $this->jquery->Tab_header('rli_config'))
 		);
 
-		$core->set_vars(array(
-			'page_title' 		=> sprintf($user->lang('admin_title_prefix'), $core->config('guildtag'), $core->config('dkp_name')).': '.$user->lang('configuration'),
-			'template_path'     => $pm->get_data('raidlogimport', 'template_path'),
+		$this->core->set_vars(array(
+			'page_title' 		=> sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('configuration'),
+			'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'settings.html',
 			'display'           => true,
 			)
 		);
 	}
 }
-$rli_settings = new RLI_Settings;
+if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('dep_RLI_Settings', RLI_Settings::__dependencies());
+registry::register('RLI_Settings');
 ?>
