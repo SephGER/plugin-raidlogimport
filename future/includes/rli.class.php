@@ -23,8 +23,8 @@ if(!defined('EQDKP_INC'))
 }
 if(!class_exists('rli'))
 {
-class rli
-{
+class rli extends gen_class {
+	public static $dependencies = array('cconfig' => 'config');
 	private $bonus = array();
 	private $config = array();
 	private $bk_list = array();
@@ -38,17 +38,15 @@ class rli
 	public $adj = false;
 
 	public function __construct() {
-		global $core;
-		$this->config = $core->config('raidlogimport');
+		$this->config = $this->cconfig->get('raidlogimport');
 		if(empty($this->config['bz_parse'])) {
 			$this->config['bz_parse'] = ',';
-			$core->config_set('bz_parse', ',', 'raidlogimport');
+			$this->cconfig->set('bz_parse', ',', 'raidlogimport');
 		}
 	}
 	
 	public function reload_config() {
-		global $core;
-		$this->config = $core->config('raidlogimport');
+		$this->config = $this->cconfig->get('raidlogimport');
 	}
 
 	public function init_import() {

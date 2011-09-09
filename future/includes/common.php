@@ -22,17 +22,14 @@ if(!defined('EQDKP_INC'))
 	exit;
 }
 
-
-global $eqdkp_root_path, $libloader;
-
 include_once($eqdkp_root_path.'common.php');
 if(!version_compare(phpversion(), '5.1.2', '>='))
 {
     message_die('This Plugin needs at least PHP-Version 5.1.2. Your Version is: '.phpversion().'.');
 }
-if (!$pm->check('raidlogimport', PLUGIN_INSTALLED) ) {
+if (!registry::register('plugin_manager')->check('raidlogimport', PLUGIN_INSTALLED) ) {
     message_die('The Raid-Log-Import plugin is not installed.');
 }
 require_once($eqdkp_root_path.'plugins/raidlogimport/includes/functions.php');
-$rli = new rli;
+registry::register('rli');
 ?>
