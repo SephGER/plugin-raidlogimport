@@ -22,32 +22,35 @@ if(!defined('EQDKP_INC')) {
 }
 if(!class_exists('pdh_r_rli_item')) {
 class pdh_r_rli_item extends pdh_r_generic {
+	public static function __dependencies() {
+		$dependencies = array('pdc', 'db');
+		return array_merge(parent::$dependencies, $dependencies);
+	}
+
 	private $data = array();
 	public $hooks = array('rli_item_update');
 	
 	public function init() {
-		global $pdc, $db, $core;
-		$this->data = $pdc->get('pdh_rli_item');
+		$this->data = $this->pdc->get('pdh_rli_item');
 		if(!$this->data) {
 			$sql = "SELECT item_id, itempool_id, event_id FROM __raidlogimport_item2itempool;";
-			if($result = $db->query($sql)) {
-				while($row = $db->fetch_record($result)) {
+			if($result = $this->db->query($sql)) {
+				while($row = $this->db->fetch_record($result)) {
 					$this->data[$row['item_id']][$row['event_id']] = $row['itempool_id'];
 				}
 			} else {
 				$this->data = array();
 				return false;
 			}
-			$db->free_result($result);
-			$pdc->put('pdh_rli_item', $this->data, null);
+			$this->db->free_result($result);
+			$this->pdc->put('pdh_rli_item', $this->data, null);
 		}
 		return true;
 	}
 	
 	public function reset() {
-		global $pdc;
 		unset($this->data);
-		$pdc->del('pdh_rli_item');
+		$this->pdc->del('pdh_rli_item');
 		$this->init();
 	}
 	
@@ -61,4 +64,5 @@ class pdh_r_rli_item extends pdh_r_generic {
 	}
 }
 }
+if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('dep_pdh_r_rli_item', pdh_r_rli_item::__dependencies());
 ?>

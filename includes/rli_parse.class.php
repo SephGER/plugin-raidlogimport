@@ -23,15 +23,21 @@ if(!defined('EQDKP_INC'))
 }
 
 if(!class_exists('rli_parse')) {
-class rli_parse {
+class rli_parse extends gen_class {
+	public static $dependencies = array('rli', 'in', 'config', 'user',
+		'adj'		=> 'rli_adjustment',
+		'item'		=> 'rli_item',
+		'member'	=> 'rli_member',
+		'raid'		=> 'rli_raid',
+	);
+
 	private $toload = array();
 
 	public function __construct() {
-		global $rli, $in;
-		if($in->exists('adjs')) $rli->adj->load_adjs();
-		if($in->exists('loots'))  $rli->item->load_items();
-		if($in->exists('members')) $rli->member->load_members();
-		if($in->exists('raids')) $rli->raid->load_raids();
+		if($in->exists('adjs')) $this->adj->load_adjs();
+		if($in->exists('loots'))  $this->item->load_items();
+		if($in->exists('members')) $this->member->load_members();
+		if($in->exists('raids')) $this->raid->load_raids();
 	}
 
 	/**
@@ -141,36 +147,34 @@ class rli_parse {
 	}
 
 	private function parse_plus_string($xml) {
-		global $core, $user, $rli;
-
-		if(	(trim($xml->head->gameinfo->game) == 'Runes of Magic' AND $core->config('default_game') != 'rom') OR
-			(trim($xml->head->gameinfo->game) == 'World of Warcraft' AND $core->config('default_game') != 'wow')) {
-				message_die($user->lang('wrong_game'));
+		if(	(trim($xml->head->gameinfo->game) == 'Runes of Magic' AND $this->config->get('default_game') != 'rom') OR
+			(trim($xml->head->gameinfo->game) == 'World of Warcraft' AND $this->config->get('default_game') != 'wow')) {
+				message_die($this->user->lang('wrong_game'));
 		}
 		$lang = trim($xml->head->gameinfo->language);
-		$rli->add_data['log_lang'] = substr($lang, 0, 2);
+		$this->rli->add_data['log_lang'] = substr($lang, 0, 2);
 		$xml = $xml->raiddata;
 		foreach($xml->zones->children() as $zone) {
-			$rli->raid->add_zone(trim(utf8_decode($zone->name)), (int) trim($zone->enter), (int) trim($zone->leave), (int) trim($zone->difficulty));
+			$this->raid->add_zone(trim(utf8_decode($zone->name)), (int) trim($zone->enter), (int) trim($zone->leave), (int) trim($zone->difficulty));
 		}
 		foreach($xml->bosskills->children() as $bosskill) {
-			$rli->raid->add_bosskill(trim(utf8_decode($bosskill->name)), (int) trim($bosskill->time));
+			$this->raid->add_bosskill(trim(utf8_decode($bosskill->name)), (int) trim($bosskill->time));
 		}
 		foreach($xml->members->children() as $xmember) {
 			$name = trim(utf8_decode($xmember->name));
 			$note = (isset($xmember->note)) ? trim(utf8_decode($xmember->note)) : '';
-			$rli->member->add($name, trim(utf8_decode($xmember->class)), trim(utf8_decode($xmember->race)), trim($xmember->level), $note);
+			$this->member->add($name, trim(utf8_decode($xmember->class)), trim(utf8_decode($xmember->race)), trim($xmember->level), $note);
 			foreach($xmember->times->children() as $time) {
 				$attrs = $time->attributes();
 				$type = $attrs['type'];
 				$extra = $attrs['extra'];
-				$rli->member->add_time($name, $time, $type, $extra);
+				$this->member->add_time($name, $time, $type, $extra);
 			}
 		}
 		foreach($xml->items->children() as $xitem) {
 			$cost = (isset($xitem->cost)) ? trim($xitem->cost) : '';
 			$id = (isset($xitem->itemid)) ? trim($xitem->itemid) : '';
-			$rli->item->add(trim(utf8_decode($xitem->name)), trim(utf8_decode($xitem->member)), $cost, (int) $id, (int) trim($xitem->time));
+			$this->item->add(trim(utf8_decode($xitem->name)), trim(utf8_decode($xitem->member)), $cost, (int) $id, (int) trim($xitem->time));
 		}
 	}
 
@@ -279,27 +283,25 @@ class rli_parse {
 	}
 
 	private function parse_eqdkp_string($xml, $magic=false) {
-		global $user, $rli;
-
-		$rli->raid->add_zone(trim($xml->zone), strtotime($xml->start), strtotime($xml->end), trim($xml->difficulty));
+		$this->raid->add_zone(trim($xml->zone), strtotime($xml->start), strtotime($xml->end), trim($xml->difficulty));
 		foreach ($xml->BossKills->children() as $bosskill) {
-			$rli->raid->add_bosskill(trim($bosskill->name), strtotime($bosskill->time));
+			$this->raid->add_bosskill(trim($bosskill->name), strtotime($bosskill->time));
 		}
 		foreach($xml->Loot->children() as $loot) {
 			$player = utf8_decode(trim($loot->Player));
 			$cost = (array_key_exists('Costs', $loot)) ? (int) $loot->Costs : (int) $loot->Note;
-			$rli->item->add(utf8_decode(trim($loot->ItemName)), $player, $cost, substr(trim($loot->ItemID), 0, 5), strtotime($loot->Time));
+			$this->item->add(utf8_decode(trim($loot->ItemName)), $player, $cost, substr(trim($loot->ItemID), 0, 5), strtotime($loot->Time));
 		}
 		if(!$magic) {
 			foreach($xml->PlayerInfos->children() as $xmember) {
-				$rli->member->add(trim(utf8_decode($xmember->name)), trim(utf8_decode($xmember->class)), trim(utf8_decode($xmember->race)), trim($xmember->level), trim(utf8_decode($xmember->note)));
+				$this->member->add(trim(utf8_decode($xmember->name)), trim(utf8_decode($xmember->class)), trim(utf8_decode($xmember->race)), trim($xmember->level), trim(utf8_decode($xmember->note)));
 			}
 		}
 		foreach ($xml->Join->children() as $joiner) {
-			$rli->member->add_time(utf8_decode(trim($joiner->player)), strtotime($joiner->time), 'join');
+			$this->member->add_time(utf8_decode(trim($joiner->player)), strtotime($joiner->time), 'join');
 		}
 		foreach ($xml->Leave->children() as $leaver) {
-			$rli->member->add_time(utf8_decode(trim($leaver->player)), strtotime($leaver->time), 'leave');
+			$this->member->add_time(utf8_decode(trim($leaver->player)), strtotime($leaver->time), 'leave');
 		}
 	}
 
@@ -312,21 +314,19 @@ class rli_parse {
 	}
 
 	public function parse_string($xml) {
-		global $user, $eqdkp_root_path, $rli;
-
-		if(method_exists($this, 'parse_'.$rli->config('parser').'_string')) {
-			$back = call_user_func(array($this, 'check_'.$rli->config('parser').'_format'), $xml);
+		if(method_exists($this, 'parse_'.$this->rli->config('parser').'_string')) {
+			$back = call_user_func(array($this, 'check_'.$this->rli->config('parser').'_format'), $xml);
 			if($back[1]) {
-				$rli->raid->flush_data();
-				call_user_func(array($this, 'parse_'.$rli->config('parser').'_string'), $xml);
-				$rli->raid->create();
-				$rli->raid->recalc(true);
-				$rli->member->finish();
+				$this->raid->flush_data();
+				call_user_func(array($this, 'parse_'.$this->rli->config('parser').'_string'), $xml);
+				$this->raid->create();
+				$this->raid->recalc(true);
+				$this->member->finish();
 			} else {
-				message_die($user->lang('wrong_format').' '.$user->lang($rli->config('parser').'_format').'<br />'.$user->lang('rli_miss').implode(', ', $back[2]));
+				message_die($this->user->lang('wrong_format').' '.$this->user->lang($this->rli->config('parser').'_format').'<br />'.$this->user->lang('rli_miss').implode(', ', $back[2]));
 			}
 		} else {
-			message_die($user->lang('no_parser'));
+			message_die($this->user->lang('no_parser'));
 		}
 	}
 
@@ -334,4 +334,5 @@ class rli_parse {
 	}
 }
 }
+if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('dep_rli_parse', rli_parse::$dependencies);
 ?>

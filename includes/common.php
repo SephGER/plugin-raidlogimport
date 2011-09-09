@@ -31,5 +31,11 @@ if (!registry::register('plugin_manager')->check('raidlogimport', PLUGIN_INSTALL
     message_die('The Raid-Log-Import plugin is not installed.');
 }
 require_once($eqdkp_root_path.'plugins/raidlogimport/includes/functions.php');
+require_once($eqdkp_root_path.'plugins/raidlogimport/includes/rli_adjustment.class.php');
+require_once($eqdkp_root_path.'plugins/raidlogimport/includes/rli_item.class.php');
+require_once($eqdkp_root_path.'plugins/raidlogimport/includes/rli_member.class.php');
+require_once($eqdkp_root_path.'plugins/raidlogimport/includes/rli_parse.class.php');
+require_once($eqdkp_root_path.'plugins/raidlogimport/includes/rli_raid.class.php');
+require_once($eqdkp_root_path.'plugins/raidlogimport/includes/rli.class.php');
 registry::register('rli');
 ?>

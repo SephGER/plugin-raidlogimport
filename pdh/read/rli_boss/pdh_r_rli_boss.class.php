@@ -22,17 +22,22 @@ if(!defined('EQDKP_INC')) {
 }
 if(!class_exists('pdh_r_rli_boss')) {
 class pdh_r_rli_boss extends pdh_r_generic {
+	public static function __dependencies() {
+		$dependencies = array('pdc', 'db', 'config', 'user', 'game', 'pdh');
+		return array_merge(parent::$dependencies, $dependencies);
+	}
+
 	private $data = array();
 	public $hooks = array('rli_boss_update');
 	
 	public function init() {
 		global $pdc, $db, $core;
-		$this->data = $pdc->get('pdh_rli_boss');
+		$this->data = $this->pdc->get('pdh_rli_boss');
 		if(!$this->data) {
 			$sql = "SELECT boss_id, boss_string, boss_note, boss_bonus, boss_timebonus, boss_diff, boss_tozone, boss_sort, boss_active FROM __raidlogimport_boss;";
-			if($result = $db->query($sql)) {
-				while($row = $db->fetch_record($result)) {
-					$this->data[$row['boss_id']]['string'] = explode($core->config('bz_parse', 'raidlogimport'), $row['boss_string']);
+			if($result = $this->db->query($sql)) {
+				while($row = $this->db->fetch_record($result)) {
+					$this->data[$row['boss_id']]['string'] = explode($this->config->get('bz_parse', 'raidlogimport'), $row['boss_string']);
 					$this->data[$row['boss_id']]['note'] = $row['boss_note'];
 					$this->data[$row['boss_id']]['bonus'] = $row['boss_bonus'];
 					$this->data[$row['boss_id']]['timebonus'] = $row['boss_timebonus'];
@@ -45,16 +50,15 @@ class pdh_r_rli_boss extends pdh_r_generic {
 				$this->data = array();
 				return false;
 			}
-			$db->free_result($result);
-			$pdc->put('pdh_rli_boss', $this->data, null);
+			$this->db->free_result($result);
+			$this->pdc->put('pdh_rli_boss', $this->data, null);
 		}
 		return true;
 	}
 	
 	public function reset() {
-		global $pdc;
 		unset($this->data);
-		$pdc->del('pdh_rli_boss');
+		$this->pdc->del('pdh_rli_boss');
 	}
 	
 	public function get_id_list($active_only=true) {
@@ -69,12 +73,11 @@ class pdh_r_rli_boss extends pdh_r_generic {
 	}
 	
 	public function get_id_string($string, $diff) {
-		global $pdh;
 		foreach($this->data as $id => $data) {
 			if(in_array($string, $data['string']) AND ($diff == 0 OR $data['diff'] == 0 OR $diff == $data['diff'])) {
 				if(!$data['active'] && $data['tozone']) {
-					$pdh->put('rli_zone', 'switch_inactive', array($data['tozone']));
-					$pdh->process_hook_queue();
+					$this->pdh->put('rli_zone', 'switch_inactive', array($data['tozone']));
+					$this->pdh->process_hook_queue();
 				}
 				return $id;
 			}
@@ -95,12 +98,11 @@ class pdh_r_rli_boss extends pdh_r_generic {
 	}
 	
 	public function get_html_note($id, $with_icon=true) {
-		global $core, $pdh, $game;
-		if(($core->config('event_boss', 'raidlogimport') & 1) AND is_numeric($id)) {
-			$icon = ($with_icon) ? $game->decorate('events', array($this->get_note($id))) : '';
-			return $icon.$pdh->get('event', 'name', array($this->get_note($id)));
+		if(($this->config->get('event_boss', 'raidlogimport') & 1) AND is_numeric($id)) {
+			$icon = ($with_icon) ? $this->game->decorate('events', array($this->get_note($id))) : '';
+			return $icon.$this->pdh->get('event', 'name', array($this->get_note($id)));
 		}
-		$suffix = ($this->get_diff($id) AND $core->config('dep_match', 'raidlogimport') AND $game->get_game() == 'wow') ? $core->config('diff_'.$this->get_diff($id), 'raidlogimport') : '';
+		$suffix = ($this->get_diff($id) AND $this->config->get('dep_match', 'raidlogimport') AND $this->game->get_game() == 'wow') ? $this->config->get('diff_'.$this->get_diff($id), 'raidlogimport') : '';
 		return $this->get_note($id).$suffix;
 	}
 	
@@ -117,8 +119,7 @@ class pdh_r_rli_boss extends pdh_r_generic {
 	}
 	
 	public function get_html_diff($id) {
-		global $user;
-		return ($this->get_diff($id)) ? ' &nbsp; ('.$user->lang('diff_'.$this->get_diff($id)).')' : '';
+		return ($this->get_diff($id)) ? ' &nbsp; ('.$this->user->lang('diff_'.$this->get_diff($id)).')' : '';
 	}
 	
 	public function get_tozone($id) {
@@ -140,4 +141,5 @@ class pdh_r_rli_boss extends pdh_r_generic {
 	}
 }
 }
+if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('dep_pdh_r_rli_boss', pdh_r_rli_boss::__dependencies());
 ?>
