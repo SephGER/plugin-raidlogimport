@@ -245,7 +245,7 @@ if(!class_exists('rli_member')) {
 					$raid_list = '';
 					$detail_raid_list = true;
 				} else {
-					$raid_list = '<td>'.$this->jquery->MultiSelect('members['.$key.'][raid_list]', $this->raid->raidlist(), $mraids, '200', '200', array('id' => 'members_'.$key.'_raidlist')).'</td>';
+					$raid_list = '<td>'.$this->jquery->MultiSelect('members['.$key.'][raid_list]', $this->raid->raidlist(), $mraids, array('id' => 'members_'.$key.'_raidlist')).'</td>';
 				}
 				$att_begin = ((isset($member['att_begin']) AND $member['att_begin']) OR (!isset($member['att_begin']) AND $a['begin'])) ? 'checked="checked"' : '';
 				$att_end = ((isset($member['att_end']) AND $member['att_end']) OR (!isset($member['att_end']) AND $a['end'])) ? 'checked="checked"' : '';
