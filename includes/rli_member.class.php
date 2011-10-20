@@ -489,8 +489,7 @@ $('#add_mem_button').click(function() {
 								margin-top: 10px;
 								z-index: 16;
 							}");
-    		$this->tpl->add_js("$(document).ready(function() {
-                            $('#member_form').data('raid_start', ".$width['begin'].");
+    		$this->tpl->add_js("$('#member_form').data('raid_start', ".$width['begin'].");
 							$('.add_time').live('mouseenter', function() {
 								$('#time_scale_' + member_id).attr('class', 'time_scale');
 							});
@@ -507,8 +506,7 @@ $('#add_mem_button').click(function() {
 							});
 							$('#rli_add_dmem').click(function() { add_timeframe(); $('#myrcm').hide();$('#rc_overlay').remove();});
 							$('#rli_del_dmem').click(function() { remove_timeframe(); $('#myrcm').hide();$('#rc_overlay').remove();});
-							$('#rli_swi_dmem').click(function() { change_standby(); $('#myrcm').hide();$('#rc_overlay').remove();});
-                        });");
+							$('#rli_swi_dmem').click(function() { change_standby(); $('#myrcm').hide();$('#rc_overlay').remove();});", 'docready');
     		$this->tpl_assignments = true;
     	}
     }
