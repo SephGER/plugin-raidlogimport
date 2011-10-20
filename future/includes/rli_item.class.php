@@ -31,7 +31,7 @@ class rli_item extends gen_class {
 	private $items = array();
 
 	public function __construct() {
-		$this->items = $this->get_cache_data('item');
+		$this->items = $this->rli->get_cache_data('item');
 	}
 	
 	public function reset() {
