@@ -34,10 +34,10 @@ class rli_parse extends gen_class {
 	private $toload = array();
 
 	public function __construct() {
-		if($in->exists('adjs')) $this->adj->load_adjs();
-		if($in->exists('loots'))  $this->item->load_items();
-		if($in->exists('members')) $this->member->load_members();
-		if($in->exists('raids')) $this->raid->load_raids();
+		if($this->in->exists('adjs')) $this->adj->load_adjs();
+		if($this->in->exists('loots'))  $this->item->load_items();
+		if($this->in->exists('members')) $this->member->load_members();
+		if($this->in->exists('raids')) $this->raid->load_raids();
 	}
 
 	/**
