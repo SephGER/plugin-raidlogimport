@@ -39,7 +39,7 @@ class rli_item extends gen_class {
 	}
 
 	private function config($name) {
-		return $this->config($name);
+		return $this->rli->config($name);
 	}
 	
 	public function add($name, $member, $value, $id=0, $time=0, $raid=0, $itempool=0) {
@@ -234,6 +234,7 @@ $('#add_item_button').click(function() {
 		} else {
 			$bools['false']['item'] = 'miss';
 		}
+		return $bools;
 	}
 	
 	public function insert() {

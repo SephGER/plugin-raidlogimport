@@ -19,7 +19,6 @@
 // EQdkp required files/vars
 define('EQDKP_INC', true);
 define('IN_ADMIN', true);
-
 $eqdkp_root_path = './../../../';
 include_once('./../includes/common.php');
 
@@ -73,10 +72,10 @@ class rli_import extends page_generic {
 			'USE_BOSSDKP' => ($this->rli->config('use_dkp') & 1))
 		);
 		//language
-		$this->tpl->assign_vars(lang2tpl());
+		lang2tpl();
 
 		$this->core->set_vars(array(
-			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $core->config('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_check_data'),
+			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_check_data'),
 			'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'raids.html',
 			'display'           => true)
@@ -93,7 +92,7 @@ class rli_import extends page_generic {
 		$this->raid->display();
 
 		//language
-		$this->tpl->assign_vars(lang2tpl());
+		lang2tpl();
 
 		$this->tpl->assign_vars(array(
 			'S_ATT_BEGIN'	 => ($this->rli->config('attendence_begin') > 0 AND !$this->rli->config('attendence_raid')) ? TRUE : FALSE,
@@ -124,7 +123,7 @@ class rli_import extends page_generic {
 		);
 
 		//language
-		$this->tpl->assign_vars(lang2tpl());
+		lang2tpl();
 		
 		$this->core->set_vars(array(
 			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_check_data'),
@@ -153,7 +152,7 @@ class rli_import extends page_generic {
 		);
 
 		//language
-		$this->tpl->assign_vars(lang2tpl());
+		lang2tpl();
 		
 		$this->core->set_vars(array(
 			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_check_data'),
