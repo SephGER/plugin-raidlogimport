@@ -45,7 +45,7 @@ if(!class_exists('rli_member')) {
 	}
 
 	private function config($name) {
-		return $this->config($name);
+		return $this->rli->config($name);
 	}
 
 	public function add($name, $class=0, $race=0, $lvl=0, $note='') {
@@ -346,6 +346,7 @@ $('#add_mem_button').click(function() {
 		} else {
 			$bools['false']['mem'] = 'miss';
 		}
+		return $bools;
 	}
 	
 	public function insert() {

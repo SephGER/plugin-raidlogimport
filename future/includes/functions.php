@@ -77,10 +77,9 @@ function deep_in_array($search, $array) {
 }
 
 function lang2tpl() {
-	global $user, $core;
-	$la_ar = array(
-        'L_DIFFICULTY' 	=> ($core->config('default_game') == 'wow') ? $user->lang('difficulty') : false,
-	);
-	return $la_ar;
+	return;
+	register('tpl')->assign_vars(array(
+        'L_DIFFICULTY' 	=> (register('config')->get('default_game') == 'wow') ? register('user')->lang('difficulty') : false,
+	));
 }
 ?>

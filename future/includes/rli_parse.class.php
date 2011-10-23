@@ -152,7 +152,7 @@ class rli_parse extends gen_class {
 				message_die($this->user->lang('wrong_game'));
 		}
 		$lang = trim($xml->head->gameinfo->language);
-		$this->rli->add_data['log_lang'] = substr($lang, 0, 2);
+		#$this->rli->add_data['log_lang'] = substr($lang, 0, 2);
 		$xml = $xml->raiddata;
 		foreach($xml->zones->children() as $zone) {
 			$this->raid->add_zone(trim(utf8_decode($zone->name)), (int) trim($zone->enter), (int) trim($zone->leave), (int) trim($zone->difficulty));

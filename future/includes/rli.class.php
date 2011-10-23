@@ -21,8 +21,7 @@ if(!defined('EQDKP_INC'))
 	header('HTTP/1.0 Not Found');
 	exit;
 }
-if(!class_exists('rli'))
-{
+
 class rli extends gen_class {
 	public static $dependencies = array('cconfig' => 'config', 'game', 'db',
 		'adj'		=> 'rli_adjustment',
@@ -74,10 +73,10 @@ class rli extends gen_class {
 
 	public function check_data() {
 		$bools = array();
-		$this->raid->check(&$bools);
-		$this->member->check(&$bools);
-		$this->item->check(&$bools);
-		$this->adj->check(&$bools);
+		$bools = $this->raid->check($bools);
+		$bools = $this->member->check($bools);
+		$bools = $this->item->check($bools);
+		$bools = $this->adj->check($bools);
 		return $bools;
 	}
 	
@@ -109,6 +108,6 @@ class rli extends gen_class {
 		parent::__destruct();
 	}
 }//class
-}//class exist
+
 if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('dep_rli', rli::$dependencies);
 ?>

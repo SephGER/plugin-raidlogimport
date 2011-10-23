@@ -142,6 +142,7 @@ $('#add_adj_button').click(function() {
 		} else {
 			$bools['false']['adj'] = 'miss';
 		}
+		return $bools;
 	}
 	
 	public function insert() {

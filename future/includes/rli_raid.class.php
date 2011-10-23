@@ -366,6 +366,7 @@ $('input[name=\"add_boss_button[]\"]').live('click', function() {
 		} else {
 			$bools['false']['raid'] = 'miss';
 		}
+		return $bools;
 	}
 	
 	public function insert() {
