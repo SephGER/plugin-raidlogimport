@@ -76,6 +76,7 @@ if(!class_exists('rli_adjustment')) {
 		$members = $this->member->get_for_dropdown(4);
 		$events = $this->pdh->aget('event', 'name', 0, array($this->pdh->get('event', 'id_list')));
 		$raid_select = array_merge(array($this->user->lang('none')), $this->raid->raidlist());
+		$a = 0;
 		if(is_array($this->adjs)) {
 			foreach($this->adjs as $a => $adj) {
 				$ev_sel = (isset($adj['event'])) ? $adj['event'] : 0;

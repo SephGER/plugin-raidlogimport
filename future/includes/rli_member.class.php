@@ -35,6 +35,7 @@ if(!class_exists('rli_member')) {
   	private $timebar_created = false;
 	private $positions = array('up', 'middle', 'down');
 	private $rpos = array();
+	private $boss_data = array();
 	public $raid_members = array();
 
 	public function __construct() {
@@ -436,7 +437,7 @@ $('#add_mem_button').click(function() {
 					$this->boss_data[] = array(
 						'KEY' => $bkey,
 						'LEFT' => $m,
-						'NAME' => (is_numeric($boss['id'])) ? $pdh->get('rli_boss', 'note', array($boss['id'])) : $boss['id'],
+						'NAME' => (is_numeric($boss['id'])) ? $this->pdh->get('rli_boss', 'note', array($boss['id'])) : $boss['id'],
 						'TIME' => $this->time->user_date($boss['time'], false, true),
 						'VALUE'	=> $boss['bonus']
 					);
@@ -480,8 +481,8 @@ $('#add_mem_button').click(function() {
 				'HEIGHT' => $this->height)
 			);
 			#$this->rightclick_js = $jquery->RightClickMenu('_rli_dmem', '.add_time', $rightc_menu, '170px', true);
-    		$this->tpl->js_file($eqdkp_root_path.'plugins/raidlogimport/templates/dmem.js');
-    		$this->tpl->css_file($eqdkp_root_path.'plugins/raidlogimport/templates/base_template/dmem.css');
+    		$this->tpl->js_file($this->root_path.'plugins/raidlogimport/templates/dmem.js');
+    		$this->tpl->css_file($this->root_path.'plugins/raidlogimport/templates/base_template/dmem.css');
     		$this->tpl->add_css(".time_scale {
 								position: absolute;
 								background-image: url(".$this->timescalefile.");
