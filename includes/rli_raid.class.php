@@ -31,6 +31,8 @@ class rli_raid extends gen_class {
 	private $data = array();
 	private $raids = array();
 	private $hour_count = 0;
+	public $raidevents = array();
+	public $raidlist = array();
 	public $real_ids = array();
 
 	public function __construct() {
@@ -401,7 +403,7 @@ $('input[name=\"add_boss_button[]\"]').live('click', function() {
 		}
 		if(is_array($times)) {
 			foreach ($times as $time) {
-				if(!$standby OR ($standby == 1 AND (!isset($time['standby']) OR !$time['standby'])) OR ($standby == 2 AND $time['standby'])) {
+				if(!$standby OR ($standby == 1 AND empty($time['standby'])) OR ($standby == 2 AND (isset($time['standby']) && $time['standby']))) {
 					if($time['join'] < $this->raids[$key]['end'] AND $time['leave'] > $this->raids[$key]['begin']) {
 						if($time['leave'] > $this->raids[$key]['end']) {
 							$in_raid += $this->raids[$key]['end'];
