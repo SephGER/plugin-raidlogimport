@@ -23,10 +23,11 @@ if(!defined('EQDKP_INC')) {
 
 if(!class_exists('rli_item')) {
 class rli_item extends gen_class {
-	public static $dependencies = array('rli', 'in', 'pdh', 'user', 'tpl', 'html', 'jquery', 'core',
+	public static $shortcuts = array('rli', 'in', 'pdh', 'user', 'tpl', 'html', 'jquery', 'core',
 		'member'	=> 'rli_member',
 		'raid'		=> 'rli_raid',
 	);
+	public static $dependencies = array('rli');
 
 	private $items = array();
 
@@ -248,8 +249,12 @@ $('#add_item_button').click(function() {
 	
 	public function __destruct() {
 		$this->rli->add_cache_data('item', $this->items);
+		parent::__destruct();
 	}
 }
 }
-if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('dep_rli_item', rli_item::$dependencies);
+if(version_compare(PHP_VERSION, '5.3.0', '<')) {
+	registry::add_const('short_rli_item', rli_item::$shortcuts);
+	registry::add_const('dep_rli_item', rli_item::$dependencies);
+}
 ?>

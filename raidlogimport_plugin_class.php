@@ -21,9 +21,9 @@ if ( !defined('EQDKP_INC') ) {
 }
 
 class raidlogimport extends plugin_generic {
-	public static function __dependencies() {
-		$dependencies = array('core', 'user', 'db', 'pdh', 'config');
-		return array_merge(parent::$dependencies, $dependencies);
+	public static function __shortcuts() {
+		$shortcuts = array('core', 'user', 'db', 'pdh', 'config');
+		return array_merge(parent::$shortcuts, $shortcuts);
 	}
 
 	public $vstatus = 'Stable';
@@ -241,5 +241,5 @@ class raidlogimport extends plugin_generic {
 		return $this->$varname;
 	}
 }
-if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('dep_raidlogimport', raidlogimport::__dependencies());
+if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('short_raidlogimport', raidlogimport::__shortcuts());
 ?>

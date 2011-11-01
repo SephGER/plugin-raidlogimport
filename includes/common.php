@@ -37,5 +37,4 @@ require_once($eqdkp_root_path.'plugins/raidlogimport/includes/rli_member.class.p
 require_once($eqdkp_root_path.'plugins/raidlogimport/includes/rli_parse.class.php');
 require_once($eqdkp_root_path.'plugins/raidlogimport/includes/rli_raid.class.php');
 require_once($eqdkp_root_path.'plugins/raidlogimport/includes/rli.class.php');
-#registry::register('rli');
 ?>

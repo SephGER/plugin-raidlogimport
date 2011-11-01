@@ -23,15 +23,15 @@ $eqdkp_root_path = './../../../';
 include_once('./../includes/common.php');
 
 class rli_import extends page_generic {
-	public static function __dependencies() {
-		$dependencies = array('user', 'rli', 'in', 'tpl', 'core', 'pm', 'config',
+	public static function __shortcuts() {
+		$shortcuts = array('user', 'rli', 'in', 'tpl', 'core', 'pm', 'config',
 			'adj'		=> 'rli_adjustment',
 			'item'		=> 'rli_item',
 			'member'	=> 'rli_member',
 			'parser'	=> 'rli_parse',
 			'raid'		=> 'rli_raid',
 		);
-		return array_merge(parent::$dependencies, $dependencies);
+		return array_merge(parent::$shortcuts, $shortcuts);
 	}
 
 	public function __construct() {
@@ -247,6 +247,6 @@ class rli_import extends page_generic {
 		);
 	}
 }
-if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('dep_rli_import', rli_import::__dependencies());
+if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('short_rli_import', rli_import::__shortcuts());
 registry::register('rli_import');
 ?>

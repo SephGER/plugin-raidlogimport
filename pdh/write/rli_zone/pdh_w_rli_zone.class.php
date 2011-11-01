@@ -22,9 +22,9 @@ if(!defined('EQDKP_INC')) {
 }
 if(!class_exists('pdh_w_rli_zone')) {
 class pdh_w_rli_zone extends pdh_w_generic {
-	public static function __dependencies() {
-		$dependencies = array('pdh', 'config', 'db');
-		return array_merge(parent::$dependencies, $dependencies);
+	public static function __shortcuts() {
+		$shortcuts = array('pdh', 'config', 'db');
+		return array_merge(parent::$shortcuts, $shortcuts);
 	}
 	
 	public function add($string, $event, $timebonus=0.0, $diff=0, $sort=0) {
@@ -141,5 +141,5 @@ class pdh_w_rli_zone extends pdh_w_generic {
 	}
 }
 }
-if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('dep_pdh_w_rli_zone', pdh_w_rli_zone::__dependencies());
+if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('short_pdh_w_rli_zone', pdh_w_rli_zone::__shortcuts());
 ?>

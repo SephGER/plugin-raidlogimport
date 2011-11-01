@@ -23,9 +23,10 @@ if(!defined('EQDKP_INC')) {
 
 if(!class_exists('rli_raid')) {
 class rli_raid extends gen_class {
-	public static $dependencies = array('rli', 'in', 'pdh', 'user', 'tpl', 'html', 'jquery', 'time', 'pfh',
+	public static $shortcuts = array('rli', 'in', 'pdh', 'user', 'tpl', 'html', 'jquery', 'time', 'pfh',
 		'member'	=> 'rli_member',
 	);
+	public static $dependencies = array('rli');
 
 	private $data = array();
 	private $raids = array();
@@ -750,8 +751,12 @@ $('input[name=\"add_boss_button[]\"]').live('click', function() {
 	public function __destruct() {
 		$this->rli->add_cache_data('raid', $this->raids);
 		$this->rli->add_cache_data('data_raid', $this->data);
+		parent::__destruct();
 	}
 }
 }
-if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('dep_rli_raid', rli_raid::$dependencies);
+if(version_compare(PHP_VERSION, '5.3.0', '<')) {
+	registry::add_const('short_rli_raid', rli_raid::$shortcuts);
+	registry::add_const('dep_rli_raid', rli_raid::$dependencies);
+}
 ?>

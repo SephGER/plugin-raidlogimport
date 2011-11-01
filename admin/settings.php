@@ -22,9 +22,9 @@ $eqdkp_root_path = './../../../';
 include_once('./../includes/common.php');
 
 class RLI_Settings extends page_generic {
-	public static function __dependencies() {
-		$dependencies = array('user', 'in', 'rli', 'config', 'core', 'html', 'pdh', 'pm');
-		return array_merge(parent::$dependencies, $dependencies);
+	public static function __shortcuts() {
+		$shortcuts = array('user', 'in', 'rli', 'config', 'core', 'html', 'pdh', 'pm');
+		return array_merge(parent::$shortcuts, $shortcuts);
 	}
 
 	public function __construct() {
@@ -250,6 +250,6 @@ class RLI_Settings extends page_generic {
 		);
 	}
 }
-if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('dep_RLI_Settings', RLI_Settings::__dependencies());
+if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('short_RLI_Settings', RLI_Settings::__shortcuts());
 registry::register('RLI_Settings');
 ?>

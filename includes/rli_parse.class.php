@@ -24,7 +24,7 @@ if(!defined('EQDKP_INC'))
 
 if(!class_exists('rli_parse')) {
 class rli_parse extends gen_class {
-	public static $dependencies = array('rli', 'in', 'config', 'user',
+	public static $shortcuts = array('rli', 'in', 'config', 'user',
 		'adj'		=> 'rli_adjustment',
 		'item'		=> 'rli_item',
 		'member'	=> 'rli_member',
@@ -329,10 +329,7 @@ class rli_parse extends gen_class {
 			message_die($this->user->lang('no_parser'));
 		}
 	}
-
-	public function __destruct() {
-	}
 }
 }
-if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('dep_rli_parse', rli_parse::$dependencies);
+if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('short_rli_parse', rli_parse::$shortcuts);
 ?>
