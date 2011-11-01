@@ -23,10 +23,11 @@ if(!defined('EQDKP_INC')) {
 
 if(!class_exists('rli_adjustment')) {
   class rli_adjustment extends gen_class {
-	public static $dependencies = array('rli', 'in', 'pdh', 'user', 'tpl', 'html',
+	public static $shortcuts = array('rli', 'in', 'pdh', 'user', 'tpl', 'html',
 		'member'	=> 'rli_member',
 		'raid'		=> 'rli_raid',
 	);
+	public static $dependencies = array('rli');
 
 	public function __construct() {
 		$this->adjs = $this->rli->get_cache_data('adj');
@@ -72,7 +73,6 @@ if(!class_exists('rli_adjustment')) {
 	}
 	
 	public function display($with_form=false) {
-		global $rli, $core, $html, $tpl, $pdh, $user;
 		$members = $this->member->get_for_dropdown(4);
 		$events = $this->pdh->aget('event', 'name', 0, array($this->pdh->get('event', 'id_list')));
 		$raid_select = array_merge(array($this->user->lang('none')), $this->raid->raidlist());
@@ -156,8 +156,12 @@ $('#add_adj_button').click(function() {
 	
 	public function __destruct() {
 		$this->rli->add_cache_data('adj', $this->adjs);
+		parent::__destruct();
 	}
   }
 }
-if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('dep_rli_adjustment', rli_adjustment::$dependencies);
+if(version_compare(PHP_VERSION, '5.3.0', '<')) {
+	registry::add_const('short_rli_adjustment', rli_adjustment::$shortcuts);
+	registry::add_const('dep_rli_adjustment', rli_adjustment::$dependencies);
+}
 ?>

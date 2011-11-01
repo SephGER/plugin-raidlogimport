@@ -24,11 +24,12 @@ if(!defined('EQDKP_INC'))
 
 if(!class_exists('rli_member')) {
   class rli_member extends gen_class {
-	public static $dependencies = array('rli', 'in', 'pdh', 'user', 'tpl', 'html', 'jquery', 'time', 'pfh',
+	public static $shortcuts = array('rli', 'in', 'pdh', 'user', 'tpl', 'html', 'jquery', 'time', 'pfh',
 		'adj'		=> 'rli_adjustment',
 		'member'	=> 'rli_member',
 		'raid'		=> 'rli_raid',
 	);
+	public static $dependencies = array('rli');
 
   	private $members = array();
   	private $timebar_created = false;
@@ -558,8 +559,12 @@ $('#add_mem_button').click(function() {
 
 	public function __destruct() {
 		$this->rli->add_cache_data('member', $this->members);
+		parent::__destruct();
 	}
   }
 }
-if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('dep_rli_member', rli_member::$dependencies);
+if(version_compare(PHP_VERSION, '5.3.0', '<')) {
+	registry::add_const('short_rli_member', rli_member::$shortcuts);
+	registry::add_const('dep_rli_member', rli_member::$dependencies);
+}
 ?>

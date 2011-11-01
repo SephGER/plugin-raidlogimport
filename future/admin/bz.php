@@ -25,9 +25,9 @@ $eqdkp_root_path = './../../../';
 include_once('./../includes/common.php');
 
 class rli_Bz extends page_generic {
-	public static function __dependencies() {
-		$dependencies = array('in', 'user', 'core', 'tpl', 'pdh', 'config', 'pm', 'html', 'jquery', 'game');
-		return array_merge(parent::$dependencies, $dependencies);
+	public static function __shortcuts() {
+		$shortcuts = array('in', 'user', 'core', 'tpl', 'pdh', 'config', 'pm', 'html', 'jquery', 'game');
+		return array_merge(parent::$shortcuts, $shortcuts);
 	}
 
 	public function __construct() {
@@ -349,5 +349,5 @@ class rli_Bz extends page_generic {
 		}
 	}
 }
-if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('dep_rli_Bz', rli_Bz::__dependencies());
+if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('short_rli_Bz', rli_Bz::__shortcuts());
 registry::register('rli_Bz');

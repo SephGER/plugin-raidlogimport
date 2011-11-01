@@ -23,18 +23,22 @@ if(!defined('EQDKP_INC'))
 }
 
 class rli extends gen_class {
-	public static $dependencies = array('cconfig' => 'config', 'game', 'db',
+	public static $shortcuts = array('cconfig' => 'config', 'game', 'db',
 		'adj'		=> 'rli_adjustment',
 		'item'		=> 'rli_item',
 		'member'	=> 'rli_member',
 		'raid'		=> 'rli_raid',
 	);
+	public static $dependencies = array('db', 'cconfig' => 'config');
+
 	private $bonus = array();
 	private $config = array();
 	private $bk_list = array();
 	private $events = array();
 	private $member_ranks = array();
 	private $data = array();
+	
+	private $destruct_called = false;
 
 	public function __construct() {
 		$this->config = $this->cconfig->get('raidlogimport');
@@ -92,7 +96,7 @@ class rli extends gen_class {
 		return $this->db->query("TRUNCATE __raidlogimport_cache;");
 	}
 
-	public function __destruct() {		
+	public function __destruct() {
 		$this->db->query("TRUNCATE __raidlogimport_cache;");
 		$sql = "INSERT INTO __raidlogimport_cache
 				(cache_class, cache_data)
@@ -109,5 +113,8 @@ class rli extends gen_class {
 	}
 }//class
 
-if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('dep_rli', rli::$dependencies);
+if(version_compare(PHP_VERSION, '5.3.0', '<')) {
+	registry::add_const('short_rli', rli::$shortcuts);
+	registry::add_const('dep_rli', rli::$dependencies);
+}
 ?>

@@ -22,9 +22,9 @@ if(!defined('EQDKP_INC')) {
 }
 if(!class_exists('pdh_r_rli_item')) {
 class pdh_r_rli_item extends pdh_r_generic {
-	public static function __dependencies() {
-		$dependencies = array('pdc', 'db');
-		return array_merge(parent::$dependencies, $dependencies);
+	public static function __shortcuts() {
+		$shortcuts = array('pdc', 'db');
+		return array_merge(parent::$shortcuts, $shortcuts);
 	}
 
 	private $data = array();
@@ -64,5 +64,5 @@ class pdh_r_rli_item extends pdh_r_generic {
 	}
 }
 }
-if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('dep_pdh_r_rli_item', pdh_r_rli_item::__dependencies());
+if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('short_pdh_r_rli_item', pdh_r_rli_item::__shortcuts());
 ?>
