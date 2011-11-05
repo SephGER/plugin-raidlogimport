@@ -31,6 +31,7 @@ if(!class_exists('rli_adjustment')) {
 
 	public function __construct() {
 		$this->adjs = $this->rli->get_cache_data('adj');
+		if($this->in->exists('adjs')) $this->load_adjs();
 	}
 
 	private function config($name) {
@@ -85,20 +86,20 @@ if(!class_exists('rli_adjustment')) {
 					continue;
 				}
 				$this->tpl->assign_block_vars('adjs', array(
-					'MEMBER'	=> $this->html->widget(array('type' => 'dropdown', 'name' => 'adjs['.$a.'][member]', 'options' => $members, 'selected' => $adj['member'], 'id' => 'adjs_'.$a.'_member')),
-					'EVENT'		=> $this->html->widget(array('type' => 'dropdown', 'name' => 'adjs['.$a.'][event]', 'options' => $events, 'selected' => $ev_sel, 'id' => 'adjs_'.$a.'_event')),
+					'MEMBER'	=> $this->html->widget(array('type' => 'dropdown', 'name' => 'adjs['.$a.'][member]', 'options' => $members, 'selected' => $adj['member'], 'id' => 'adjs_'.$a.'_member', 'no_lang' => true)),
+					'EVENT'		=> $this->html->widget(array('type' => 'dropdown', 'name' => 'adjs['.$a.'][event]', 'options' => $events, 'selected' => $ev_sel, 'id' => 'adjs_'.$a.'_event', 'no_lang' => true)),
 					'NOTE'		=> $adj['reason'],
 					'VALUE'		=> $adj['value'],
-					'RAID'		=> $this->html->widget(array('type' => 'dropdown', 'name' => 'adjs['.$a.'][raid]', 'options' => $raid_select, 'selected' => $adj['raid'], 'id' => 'adjs_'.$a.'raid')),
+					'RAID'		=> $this->html->widget(array('type' => 'dropdown', 'name' => 'adjs['.$a.'][raid]', 'options' => $raid_select, 'selected' => $adj['raid'], 'id' => 'adjs_'.$a.'raid', 'no_lang' => true)),
 					'KEY'		=> $a,
 				));
 			}
 		}
 		$this->tpl->assign_block_vars('adjs', array(
 			'KEY'		=> 999,
-			'MEMBER'	=> $this->html->widget(array('type' => 'dropdown', 'name' => 'adjs[999][member]', 'options' => $members, 'selected' => 0, 'id' => 'adjs_999_member')),
-			'EVENT'		=> $this->html->widget(array('type' => 'dropdown', 'name' => 'adjs[999][event]', 'options' => $events, 'selected' => 0, 'id' => 'adjs_999_event')),
-			'RAID'		=> $this->html->widget(array('type' => 'dropdown', 'name' => 'adjs[999][raid]', 'options' => $raid_select, 'selected' => 0, 'id' => 'adjs_999_raid')),
+			'MEMBER'	=> $this->html->widget(array('type' => 'dropdown', 'name' => 'adjs[999][member]', 'options' => $members, 'selected' => 0, 'id' => 'adjs_999_member', 'no_lang' => true)),
+			'EVENT'		=> $this->html->widget(array('type' => 'dropdown', 'name' => 'adjs[999][event]', 'options' => $events, 'selected' => 0, 'id' => 'adjs_999_event', 'no_lang' => true)),
+			'RAID'		=> $this->html->widget(array('type' => 'dropdown', 'name' => 'adjs[999][raid]', 'options' => $raid_select, 'selected' => 0, 'id' => 'adjs_999_raid', 'no_lang' => true)),
 			'DISPLAY'	=> 'style="display: none;"',
 			'DELCHK'	=> 'checked="checked"',
 		));

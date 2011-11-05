@@ -33,13 +33,6 @@ class rli_parse extends gen_class {
 
 	private $toload = array();
 
-	public function __construct() {
-		if($this->in->exists('adjs')) $this->adj->load_adjs();
-		if($this->in->exists('loots'))  $this->item->load_items();
-		if($this->in->exists('members')) $this->member->load_members();
-		if($this->in->exists('raids')) $this->raid->load_raids();
-	}
-
 	/**
 	*	checks wether all nodes are available (if not optional) and complete.
 	*	returns an array(1 => bool, 2 => array( contains strings of missing/wrong nodes ))

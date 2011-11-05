@@ -37,6 +37,7 @@ class rli_raid extends gen_class {
 
 	public function __construct() {
 		$this->raids = $this->rli->get_cache_data('raid');
+		if($this->in->exists('raids')) $this->load_raids();
 		$this->data = $this->rli->get_cache_data('data_raid');
 	}
 	
@@ -149,7 +150,7 @@ class rli_raid extends gen_class {
 			}
 		}
 		$this->data['add']['standby_raid'] = -1;
-		if($this->config('standby_raid') <= 1) {
+		if($this->config('standby_raid') == 1) {
 			$this->raids[$key]['begin'] = $this->raids[1]['begin'];
 			$this->raids[$key]['end'] = $this->raids[$key-1]['end'];
 			$this->raids[$key]['diff'] = $this->raids[1]['diff'];
@@ -485,7 +486,7 @@ $('input[name=\"add_boss_button[]\"]').live('click', function() {
 	}
 
 	public function raidlist($with_event=false) {
-		if(!isset($this->raidlist) OR ($with_event AND !isset($this->raidevents))) {
+		if(empty($this->raidlist) OR ($with_event AND empty($this->raidevents))) {
 			foreach($this->raids as $key => $raid) {
 				$this->raidlist[$key] = $raid['note'];
 				if($with_event) $this->raidevents[$key] = $raid['event'];
