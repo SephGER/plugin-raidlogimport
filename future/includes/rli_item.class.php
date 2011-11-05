@@ -33,6 +33,7 @@ class rli_item extends gen_class {
 
 	public function __construct() {
 		$this->items = $this->rli->get_cache_data('item');
+		if($this->in->exists('loots')) $this->load_items();
 	}
 	
 	public function reset() {

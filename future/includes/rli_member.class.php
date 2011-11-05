@@ -37,9 +37,11 @@ if(!class_exists('rli_member')) {
 	private $rpos = array();
 	private $boss_data = array();
 	public $raid_members = array();
+	public $name_ids = array();
 
 	public function __construct() {
 		$this->members = $this->rli->get_cache_data('member');
+		if($this->in->exists('members')) $this->load_members();
 	}
 	
 	public function reset() {
@@ -57,8 +59,11 @@ if(!class_exists('rli_member')) {
 		if($race == 'BloodElf' || $race == 'BLOODELF') {
 			$race = 'Blood Elf';
 		}
-		if($race == 'DEATHKNIGHT' || $race == 'DeathKnight') {
-			$race = 'Death Knight';
+		if($class == 'DEATHKNIGHT' || $class == 'DeathKnight') {
+			$class = 'Death Knight';
+		}
+		if($class == 'DRUID') {
+			$class = 'Druid';
 		}
 		if(!deep_in_array($name, $this->members)) $this->members[] = array('name' => $name, 'class' => $class, 'race' => $race, 'level' => $lvl, 'note' => $note);
 	}
@@ -125,7 +130,7 @@ if(!class_exists('rli_member')) {
 									if($akey !== false) {
 										$this->adj->update($akey, array('value' => $dkp));
 									} else {
-										$this->adj->add($user->lang('rli_partial_raid'), $member['name'], $dkp, $raid['event'], $raid['begin'], $raid_id);
+										$this->adj->add($this->user->lang('rli_partial_raid'), $member['name'], $dkp, $raid['event'], $raid['begin'], $raid_id);
 									}
 								}
 							}
@@ -365,7 +370,7 @@ $('#add_mem_button').click(function() {
 	}
 	
 	private function raid_positions($raids, $begin) {
-		if(isset($this->raids_positioned) AND $this->raids_positioned) return true;
+		if(!empty($this->raids_positioned)) return true;
 		$suf = '';
 		if($this->updown[0] !== $this->updown[1]) {
 			$suf = ' half';
