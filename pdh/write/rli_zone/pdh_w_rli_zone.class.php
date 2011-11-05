@@ -31,7 +31,7 @@ class pdh_w_rli_zone extends pdh_w_generic {
 		if(!$string OR !$event) {
 			return false;
 		}
-		if($db->query("INSERT INTO __raidlogimport_zone :params", array(
+		if($this->db->query("INSERT INTO __raidlogimport_zone :params", array(
 						'zone_string'	=> $string,
 						'zone_event'	=> $event,
 						'zone_timebonus'=> $timebonus,
