@@ -311,11 +311,11 @@ class rli_raid extends gen_class {
 			$functioncall = $this->jquery->Calendar('n', 0, '', array('timepicker' => true, 'return_function' => true));
 			$this->tpl->add_js(
 "var rli_rkey = ".($last_key+1).";
-$('.del_boss').live('click', function() {
+$(document).on('click', '.del_boss', function(){
 	$(this).removeClass('del_boss');
 	delete_warning($(this).attr('class'));
 });
-$('.del_raid').live('click', function() {
+$(document).on('click', '.del_raid', function(){
 	$(this).removeClass('del_raid');
 	delete_warning($(this).attr('class'));
 });
@@ -331,7 +331,7 @@ $('#add_raid_button').click(function() {
 	boss_keys[rli_rkey] = 0;
 	rli_rkey++;
 });
-$('input[name=\"add_boss_button[]\"]').live('click', function() {
+$(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 	var raid_key = $(this).attr('id').substr(-1);
 	var boss = $('#raid_'+raid_key+'_boss_99').clone(true);
 	boss.find('#raid_'+raid_key+'_boss_99submit').attr('disabled', 'disabled');

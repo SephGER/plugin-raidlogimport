@@ -498,10 +498,10 @@ $('#add_mem_button').click(function() {
 								z-index: 16;
 							}");
     		$this->tpl->add_js("$('#member_form').data('raid_start', ".$width['begin'].");
-							$('.add_time').live('mouseenter', function() {
+							$(document).on('mouseenter', '.add_time', function(){
 								$('#time_scale_' + member_id).attr('class', 'time_scale');
 							});
-							$('.add_time').live('mouseleave', function() {
+							$(document).on('mouseleave', '.add_time', function(){
 								$('#time_scale_' + member_id).attr('class', 'time_scale_hide');
 							});
 							$('.add_time').live('contextmenu', function(e) {
