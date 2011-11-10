@@ -198,9 +198,11 @@ function add_timeframe() {
 	} else if(type == 'prepend') {
 		$(selector).prepend(object_to_add);
 	}
-	change_id_of_input('times_' + member_id + '_99', new_time_key);                             
-    $('#times_' + member_id + '_' + new_time_key + 'j').attr('value', $('#member_form').data('raid_start') + (left[1]+2)*20);
-	$('#times_' + member_id + '_' + new_time_key + 'l').attr('value', $('#member_form').data('raid_start') + (left[1] + right[1])*20);
+	change_id_of_input('times_' + member_id + '_99', new_time_key);  
+
+	$('#times_' + member_id + '_' + new_time_key + 'j').val($('#member_form').data('raid_start') + (left[1]+2)*20);
+	$('#times_' + member_id + '_' + new_time_key + 'j').val($('#member_form').data('raid_start') + (left[1]+2)*20);
+	$('#times_' + member_id + '_' + new_time_key + 'l').val($('#member_form').data('raid_start') + (left[1] + right[1])*20);
 	$('#times_' + member_id + '_' + new_time_key + 'l').removeAttr('disabled');
 	$('#times_' + member_id + '_' + new_time_key + 'j').removeAttr('disabled');
 	$('#times_' + member_id + '_' + new_time_key + 's').removeAttr('disabled');
@@ -220,7 +222,7 @@ function remove_timeframe() {
 
 function change_standby() {
 	var input_id = 'times_' + member_id + '_' + time_id;
-	if($('#' + input_id + 's').attr('value') == 'standby') {
+	if($('#' + input_id + 's').val() == 'standby') {
 		$('#' + input_id + 's').attr('value', '0');
 		$('#' + input_id).attr('class', 'time');
 	} else {
