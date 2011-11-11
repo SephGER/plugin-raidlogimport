@@ -257,12 +257,14 @@ if(!class_exists('rli_member')) {
 				$att_begin = ((isset($member['att_begin']) AND $member['att_begin']) OR (!isset($member['att_begin']) AND $a['begin'])) ? 'checked="checked"' : '';
 				$att_end = ((isset($member['att_end']) AND $member['att_end']) OR (!isset($member['att_end']) AND $a['end'])) ? 'checked="checked"' : '';
 				//js deletion
-				$options = array(
-					'custom_js' => "$('#'+del_id).css('display', 'none'); $('#'+del_id+'submit').removeAttr('disabled');",
-					'withid' => 'del_id',
-					'message' => $this->user->lang('rli_delete_members_warning')
-				);
-				$this->jquery->Dialog('delete_warning', $this->user->lang('confirm_deletion'), $options, 'confirm');
+				if(!$this->rli->config('no_del_warn')) {
+					$options = array(
+						'custom_js' => "$('#'+del_id).css('display', 'none'); $('#'+del_id+'submit').removeAttr('disabled');",
+						'withid' => 'del_id',
+						'message' => $this->user->lang('rli_delete_members_warning')
+					);
+					$this->jquery->Dialog('delete_warning', $this->user->lang('confirm_deletion'), $options, 'confirm');
+				}
 			} else {
 				$att_begin = (isset($member['att_begin']) AND $member['att_begin']) ? $this->user->lang('yes') : $this->user->lang('no');
 				$att_end = (isset($member['att_end']) AND $member['att_end']) ? $this->user->lang('yes') : $this->user->lang('no');
@@ -308,7 +310,8 @@ if(!class_exists('rli_member')) {
 "var rli_key = ".($key+1).";
 $('.del_mem').click(function() {
 	$(this).removeClass('del_mem');
-	delete_warning($(this).attr('class'));
+	".($this->rli->config('no_del_warn') ? "$('#'+$(this).attr('class')).css('display', 'none');
+	$('#'+$(this).attr('class')+'submit').removeAttr('disabled');" : "delete_warning($(this).attr('class'));")."
 });
 $('#add_mem_button').click(function() {
 	var mem = $('#memberrow_999').clone(true);
@@ -318,10 +321,6 @@ $('#add_mem_button').click(function() {
 	mem.removeAttr('style');
 	mem.find('td:first').html((rli_key+1)+$.trim(mem.find('td:first').html()));
 	$('#memberrow_'+(rli_key-1)).after(mem);
-	$('#memberrow_'+rli_key+'submit').prev().click(function() {
-		$(this).removeClass('del_mem');
-		delete_warning($(this).attr('class'));
-	});
 	rli_key++;
 });", 'docready');
 		}

@@ -248,12 +248,14 @@ class rli_raid extends gen_class {
 			$last_key = $ky;
 			if($with_form) {
 				//js deletion
-				$options = array(
-					'custom_js' => "$('#'+del_id).css('display', 'none'); $('#'+del_id+'submit').removeAttr('disabled');",
-					'withid' => 'del_id',
-					'message' => $this->user->lang('rli_delete_raids_warning')
-				);
-				$this->jquery->Dialog('delete_warning', $this->user->lang('confirm_deletion'), $options, 'confirm');
+				if(!$this->rli->config('no_del_warn')) {
+					$options = array(
+						'custom_js' => "$('#'+del_id).css('display', 'none'); $('#'+del_id+'submit').removeAttr('disabled');",
+						'withid' => 'del_id',
+						'message' => $this->user->lang('rli_delete_raids_warning')
+					);
+					$this->jquery->Dialog('delete_warning', $this->user->lang('confirm_deletion'), $options, 'confirm');
+				}
 
 				if(is_array($rai['bosskills'])) {
 					foreach($rai['bosskills'] as $xy => $bk) {
@@ -313,11 +315,13 @@ class rli_raid extends gen_class {
 "var rli_rkey = ".($last_key+1).";
 $(document).on('click', '.del_boss', function(){
 	$(this).removeClass('del_boss');
-	delete_warning($(this).attr('class'));
+	".($this->rli->config('no_del_warn') ? "$('#'+$(this).attr('class')).css('display', 'none');
+	$('#'+$(this).attr('class')+'submit').removeAttr('disabled');" : "delete_warning($(this).attr('class'));")."
 });
 $(document).on('click', '.del_raid', function(){
 	$(this).removeClass('del_raid');
-	delete_warning($(this).attr('class'));
+	".($this->rli->config('no_del_warn') ? "$('#'+$(this).attr('class')).css('display', 'none');
+	$('#'+$(this).attr('class')+'submit').removeAttr('disabled');" : "delete_warning($(this).attr('class'));")."
 });
 $('#add_raid_button').click(function() {
 	var raid = $('#raid_999').clone(true);
