@@ -22,6 +22,42 @@ $eqdkp_root_path = './../../../';
 include_once('./../includes/common.php');
 
 class RLI_Settings extends page_generic {
+	
+	private $configs = array(
+			'select' 	=> array(
+				'general' 		=> array('raidcount', 'raid_note_time', 'parser'),
+				'member'		=> array('new_member_rank', 'member_display'), #, 'member_start_event'),
+				'standby'		=> array('standby_raid')
+			),
+			'yes_no'	=> array(
+				'general'		=> array('rli_upd_check', 'deactivate_adj', 'itempool_save', 'no_del_warn'),
+				'difficulty' 	=> array('dep_match'),
+				'att'		 	=> array('attendence_raid'),
+				#'am'			=> array('auto_minus', 'am_value_raids', 'am_allxraids'),
+				'standby'		=> array('standby_absolute', 'standby_att'),
+				'member'		=> array('del_dbl_times')
+			),
+			'text'		=> array(
+				'general'		=> array('timedkp_handle', 'bz_parse', 'loottime', 'ignore_dissed'),
+				'member'		=> array('member_miss_time', 'member_raid'), #'member_start'),
+				#'am'			=> array('am_raidnum', 'am_value'),
+				'att'			=> array('attendence_begin', 'attendence_end', 'attendence_time', 'att_note_begin', 'att_note_end'),
+				'difficulty'	=> array('diff_1', 'diff_2', 'diff_3', 'diff_4'),
+				'standby'		=> array('standby_value', 'standby_raidnote')
+			),
+			'normal' 	=> array(
+				'general'		=> array('rli_inst_version')
+			),
+			'ignore'	=> array(
+				'ignore'		=> array('rlic_data', 'rlic_lastcheck', 'rli_inst_build')
+			),
+			'special'	=> array(
+				'general'		=> array('3:use_dkp', '2:event_boss', '2:autocomplete'),
+				'member'		=> array('3:s_member_rank'),
+				'standby'		=> array('3:standby_dkptype')
+			)
+		);
+
 	public static function __shortcuts() {
 		$shortcuts = array('user', 'in', 'rli', 'config', 'core', 'html', 'pdh', 'pm');
 		return array_merge(parent::$shortcuts, $shortcuts);
@@ -100,42 +136,8 @@ class RLI_Settings extends page_generic {
 		$raid_note_time = array(0 => $this->user->lang('raid_note_time_0'), 1 => $this->user->lang('raid_note_time_1'));
 
 		$k = 2;
-		$configs = array(
-			'select' 	=> array(
-				'general' 		=> array('raidcount', 'raid_note_time', 'parser'),
-				'member'		=> array('new_member_rank', 'member_display'), #, 'member_start_event'),
-				'standby'		=> array('standby_raid')
-			),
-			'yes_no'	=> array(
-				'general'		=> array('rli_upd_check', 'deactivate_adj', 'itempool_save'),
-				'difficulty' 	=> array('dep_match'),
-				'att'		 	=> array('attendence_raid'),
-				#'am'			=> array('auto_minus', 'am_value_raids', 'am_allxraids'),
-				'standby'		=> array('standby_absolute', 'standby_att'),
-				'member'		=> array('del_dbl_times')
-			),
-			'text'		=> array(
-				'general'		=> array('timedkp_handle', 'bz_parse', 'loottime', 'ignore_dissed'),
-				'member'		=> array('member_miss_time', 'member_raid'), #'member_start'),
-				#'am'			=> array('am_raidnum', 'am_value'),
-				'att'			=> array('attendence_begin', 'attendence_end', 'attendence_time', 'att_note_begin', 'att_note_end'),
-				'difficulty'	=> array('diff_1', 'diff_2', 'diff_3', 'diff_4'),
-				'standby'		=> array('standby_value', 'standby_raidnote')
-			),
-			'normal' 	=> array(
-				'general'		=> array('rli_inst_version')
-			),
-			'ignore'	=> array(
-				'ignore'		=> array('rlic_data', 'rlic_lastcheck', 'rli_inst_build')
-			),
-			'special'	=> array(
-				'general'		=> array('3:use_dkp', '2:event_boss', '2:autocomplete'),
-				'member'		=> array('3:s_member_rank'),
-				'standby'		=> array('3:standby_dkptype')
-			)
-		);
 		$holder = array();
-		foreach($configs as $display_type => $hold) {
+		foreach($this->configs as $display_type => $hold) {
 			foreach($hold as $holde => $names) {
 				foreach($names as $name) {
 					switch($display_type) {

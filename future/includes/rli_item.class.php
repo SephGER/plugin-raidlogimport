@@ -156,12 +156,14 @@ class rli_item extends gen_class {
 			}
 			if($with_form) {
 				//js deletion
-				$options = array(
-					'custom_js' => "$('#'+del_id).css('display', 'none'); $('#'+del_id+'submit').removeAttr('disabled');",
-					'withid' => 'del_id',
-					'message' => $this->user->lang('rli_delete_items_warning')
-				);
-				$this->jquery->Dialog('delete_warning', $this->user->lang('confirm_deletion'), $options, 'confirm');
+				if(!$this->rli->config('no_del_warn')) {
+					$options = array(
+						'custom_js' => "$('#'+del_id).css('display', 'none'); $('#'+del_id+'submit').removeAttr('disabled');",
+						'withid' => 'del_id',
+						'message' => $this->user->lang('rli_delete_items_warning')
+					);
+					$this->jquery->Dialog('delete_warning', $this->user->lang('confirm_deletion'), $options, 'confirm');
+				}
 				
 				//js addition
 				$this->tpl->assign_block_vars('loots', array(
@@ -176,7 +178,8 @@ class rli_item extends gen_class {
 "var rli_key = ".($key+1).";
 $('.del_item').click(function() {
 	$(this).removeClass('del_item');
-	delete_warning($(this).attr('class'));
+	".($this->rli->config('no_del_warn') ? "$('#'+$(this).attr('class')).css('display', 'none');
+	$('#'+$(this).attr('class')+'submit').removeAttr('disabled');" : "delete_warning($(this).attr('class'));")."
 });
 $('#add_item_button').click(function() {
 	var item = $('#item_999').clone(true);
@@ -185,10 +188,6 @@ $('#add_item_button').click(function() {
 	item.attr('id', 'item_'+rli_key);
 	item.removeAttr('style');
 	$('#item_'+(rli_key-1)).after(item);
-	$('#item_'+rli_key+'submit').prev().click(function() {
-		$(this).removeClass('del_item');
-		delete_warning($(this).attr('class'));
-	});
 	rli_key++;
 });", 'docready');
 			}

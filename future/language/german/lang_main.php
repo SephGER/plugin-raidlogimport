@@ -252,6 +252,7 @@
 	$lang['autocomplete'] = 'Felder mit autocomplete-Funktion versehen?';
 	$lang['autocomplete_1'] = 'Mitgliedsname';
 	$lang['autocomplete_2'] = 'Itemname';
+	$lang['no_del_warn'] = 'Keine Warnung beim Löschen anzeigen';
 
     //portal
     $lang['p_rli_zone_display'] = 'Welche Zonen sollen angezeigt werden?';
