@@ -24,7 +24,7 @@ if(!defined('EQDKP_INC'))
 
 if(!class_exists('rli_member')) {
   class rli_member extends gen_class {
-	public static $shortcuts = array('rli', 'in', 'pdh', 'user', 'tpl', 'html', 'jquery', 'time', 'pfh',
+	public static $shortcuts = array('rli', 'in', 'pdh', 'user', 'tpl', 'html', 'jquery', 'time', 'pfh', 'game',
 		'adj'		=> 'rli_adjustment',
 		'member'	=> 'rli_member',
 		'raid'		=> 'rli_raid',
@@ -359,7 +359,14 @@ $('#add_mem_button').click(function() {
 		$members = $this->pdh->aget('member', 'name', 0, array($this->pdh->get('member', 'id_list', array(false, false, false))));
 		foreach($this->members as $member) {
 			if(!($id = array_search($member['name'], $members))) {
-				$id = $this->pdh->put('member', 'add_member', array($member['name'], $member['level'], $member['race'], $member['class'], $this->config('new_member_rank'), 0));
+				$data = array(
+					'name' 		=> $member['name'],
+					'lvl' 		=> $member['level'],
+					'raceid'	=> $this->game->get_id('races', $member['race']),
+					'classid'	=> $this->game->get_id('classes', $member['class']),
+					'rankid'	=> $this->config('new_member_rank')
+				);
+				$id = $this->pdh->put('member', 'addorupdate_member', array(0, $data));
 				if(!$id) return false;
 			}
 			$this->raid_members[$id] = $member['raid_list'];
