@@ -53,7 +53,7 @@ class rli_import extends page_generic {
 	public function process_raids() {
 		if($this->in->exists('log')) {
 			$this->rli->flush_cache();
-			$log = simplexml_load_string(utf8_encode(trim(str_replace("&", "and", html_entity_decode($_POST['log'])))));
+			$log = simplexml_load_string(utf8_encode(trim(str_replace("&", "and", stripslashes(html_entity_decode($_POST['log']))))));
 			if ($log === false) {
 				message_die($this->user->lang('xml_error'));
 			} else {
