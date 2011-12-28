@@ -84,7 +84,7 @@ class RLI_Settings extends page_generic {
 				}
 				$data[$old_name] = $val;
 			} elseif(in_array($old_name, $floats)) {
-				$data[$old_name] = number_format(floatvalue($this->in->get($old_name)), 2, '.', '');
+				$data[$old_name] = number_format($this->in->get($old_name), 2, '.', '');
 			} else {
 				$data[$old_name] = $this->in->get($old_name, '');
 			}
