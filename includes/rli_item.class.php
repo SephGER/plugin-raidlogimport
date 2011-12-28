@@ -75,13 +75,13 @@ class rli_item extends gen_class {
 							continue;
 						}
 						$this->items[$key] = $this->in->getArray('loots:'.$key, '');
-						$this->items[$key]['value'] = floatvalue($this->in->get('loots:'.$key.':value', '0.0'));
+						$this->items[$key]['value'] = $this->in->get('loots:'.$key.':value', 0.0);
 						$this->items[$key]['time'] = $item['time'];
 					}
 				}
 			} elseif(!isset($loot['delete'])) {
 				$this->items[$k] = $this->in->getArray('loots:'.$k, '');
-				$this->items[$k]['value'] = floatvalue($this->in->get('loots:'.$k.':value', '0.0'));
+				$this->items[$k]['value'] = $this->in->get('loots:'.$k.':value', 0.0);
 				if(!isset($begin_end)) $begin_end = $this->raid->get_start_end();
 				$this->items[$k]['time'] = $begin_end['begin'];
 			}

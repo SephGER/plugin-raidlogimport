@@ -21,12 +21,6 @@ if(!defined('EQDKP_INC')) {
 	exit;
 }
 
-if(!function_exists('floatvalue')) {
-    function floatvalue($value) {
-        return floatval(preg_replace('#^([-]*[0-9\.,]+?)((\.|,)([0-9-]+))*$#e', "str_replace(array('.', ','), '', '\\1') . '.\\4'", $value));
-    }
-}
-
 if(!function_exists('stripslashes_array')) {
 	function stripslashes_array($array) {
 		return is_array($array) ? array_map('stripslashes_array', $array) : stripslashes($array);

@@ -44,19 +44,21 @@ class rli_Bz extends page_generic {
 	
 	private function prepare_data($type, $id, $method='add') {
 		$data = array();
+		pd($this->in->get('timebonus:'.$id, 0.0));
+		pd(0.1);
 		if($type == 'zone') {
 			$data = array(
 				$this->in->get('string:'.$id, ''),
 				$this->in->get('event:'.$id, 0),
-				runden(floatvalue($this->in->get('timebonus:'.$id, '0.0'))),
+				runden($this->in->get('timebonus:'.$id, 0.0)),
 				$this->in->get('diff:'.$id, 0),
 				$this->in->get('sort:'.$id, 0));
 		} else {
 			$data = array(
 				$this->in->get('string:'.$id, ''),
 				(($this->config->get('event_boss', 'raidlogimport') & 1) ? $this->in->get('event:'.$id, 0) : $this->in->get('note:'.$id, '')),
-				runden(floatvalue($this->in->get('bonus:'.$id, '0.0'))),
-				runden(floatvalue($this->in->get('timebonus:'.$id, '0.0'))),
+				runden($this->in->get('bonus:'.$id, 0.0)),
+				runden($this->in->get('timebonus:'.$id, 0.0)),
 				$this->in->get('diff:'.$id, 0),
 				$this->in->get('tozone:'.$id, 0),
 				$this->in->get('sort:'.$id, 0));
