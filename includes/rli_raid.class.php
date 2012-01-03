@@ -290,7 +290,8 @@ class rli_raid extends gen_class {
 					'BK_DATE'	=> '<input type="text" name="raids['.$ky.'][bosskills][99][date]" id="raids_'.$ky.'_boss_99_date" size="15" />',
 					'BK_DIFF'	=> $this->html->DropDown('raids['.$ky.'][bosskills][99][diff]', $this->diff_drop, 0, '', '', 'input', 'diff_raid'.$ky.'_boss99'),
 					'BK_KEY'	=> 99,
-					'DISPLAY'	=> 'style="display: none;"'
+					'DISPLAY'	=> 'style="display: none;"',
+					'IMPORT'	=> 0
 				));
 			}
 		}
