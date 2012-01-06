@@ -97,7 +97,6 @@ class rli extends gen_class {
 	}
 
 	public function __destruct() {
-		echo "destruct rli ...";
 		$this->db->query("TRUNCATE __raidlogimport_cache;");
 		$sql = "INSERT INTO __raidlogimport_cache
 				(cache_class, cache_data)
@@ -108,8 +107,7 @@ class rli extends gen_class {
 				$sqls[] = "('".$type."', '".$this->db->escape($data)."')";
 			}
 			$sql .= implode(", ", $sqls).";";
-			echo "<br />fertiger query: ".$sql."<br /><br />result: ";
-			var_dump($this->db->query($sql));
+			$this->db->query($sql);
 		}
 		parent::__destruct();
 	}
