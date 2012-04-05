@@ -147,6 +147,7 @@ $('#add_adj_button').click(function() {
 		return $bools;
 	}
 	
+	//TODO: try and group adjustments
 	public function insert() {
 		foreach($this->adjs as $adj) {
 			if(!$this->pdh->put('adjustment', 'add_adjustment', array($adj['value'], $adj['reason'], array($this->member->name_ids[$adj['member']]), $adj['event'], $this->raid->real_ids[$adj['raid']], $adj['time']))) {

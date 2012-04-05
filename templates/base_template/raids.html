@@ -52,8 +52,8 @@
 					<!-- ENDIF -->
 					<td>{L_date}: {raids.bosskills.BK_DATE}</td>
 					<!-- IF USE_BOSSDKP -->
-					<td>{L_value}: <input id="raid_{raids.COUNT}_bonus_{raids.bosskills.BK_KEY}" type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][bonus]" value="{raids.bosskills.BK_BONUS}" size="5" class="input" /></td>
-					<td>{L_rli_t_points}: <input id="raid_{raids.COUNT}_timebonus_{raids.bosskills.BK_KEY}" type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][timebonus]" value="{raids.bosskills.BK_TIMEBONUS}" size="5" class="input" /></td>
+					<td>{L_value}: <input id="bonus_raid{raids.COUNT}_boss{raids.bosskills.BK_KEY}" type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][bonus]" value="{raids.bosskills.BK_BONUS}" size="5" class="input" /></td>
+					<td>{L_rli_t_points}: <input id="timebonus_raid{raids.COUNT}_boss{raids.bosskills.BK_KEY}" type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][timebonus]" value="{raids.bosskills.BK_TIMEBONUS}" size="5" class="input" /></td>
 					<!-- ENDIF -->
 					<!-- IF L_DIFFICULTY -->
 					<td>{L_DIFFICULTY}: {raids.bosskills.BK_DIFF}</td>

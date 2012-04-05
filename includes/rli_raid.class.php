@@ -23,7 +23,7 @@ if(!defined('EQDKP_INC')) {
 
 if(!class_exists('rli_raid')) {
 class rli_raid extends gen_class {
-	public static $shortcuts = array('rli', 'in', 'pdh', 'user', 'tpl', 'html', 'jquery', 'time', 'pfh',
+	public static $shortcuts = array('rli', 'in', 'pdh', 'user', 'tpl', 'html', 'jquery', 'time', 'pfh', 'config',
 		'member'	=> 'rli_member',
 	);
 	public static $dependencies = array('rli');
@@ -312,6 +312,7 @@ class rli_raid extends gen_class {
 				'DISPLAY'	=> 'style="display: none;"'
 			));
 			$functioncall = $this->jquery->Calendar('n', 0, '', array('timepicker' => true, 'return_function' => true));
+			$this->tpl->assign_var('L_DIFFICULTY', ($this->config->get('default_game') == 'wow') ? $this->user->lang('difficulty') : false);
 			$this->tpl->add_js(
 "var rli_rkey = ".($last_key+1).";
 $(document).on('click', '.del_boss', function(){

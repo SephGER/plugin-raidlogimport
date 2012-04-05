@@ -34,6 +34,7 @@ if(!class_exists('rli_member')) {
   	private $members = array();
   	private $timebar_created = false;
 	private $positions = array('up', 'middle', 'down');
+	private $updown = array(false,false);
 	private $rpos = array();
 	private $boss_data = array();
 	public $raid_members = array();
@@ -391,7 +392,7 @@ $('#add_mem_button').click(function() {
 		foreach($raids as $rkey => $raid) {
 			if($this->raid->get_standby_raid() == $rkey) {
 				$pos = 2;
-			} elseif($this->config('raidcount') & 2 AND count($raid['bosskills']) == 1) {
+			} elseif($this->config('raidcount') & 1 && $this->config('raidcount') & 2 AND count($raid['bosskills']) == 1) {
 				$pos = 0;
 			}
 			$this->rpos[$rkey] = $this->positions[$pos].$suf;
@@ -405,7 +406,6 @@ $('#add_mem_button').click(function() {
 			$this->px_time = (($width['end'] - $width['begin']) / 20);
 			settype($px_time, 'int');
 			$bars = 1;
-			$this->updown = array(false, false);
 			if($this->config('standby_raid') == 1) {
 				$bars++;
 				$this->updown[0] = true;
@@ -445,6 +445,7 @@ $('#add_mem_button').click(function() {
 					$m = ($boss['time']-$width['begin'])/20 - 4;
 					settype($m, 'int');
 					$this->jquery->qtip('.rli_boss', 'return $(".rli_boss_c", this).html();', array('contfunc' => true));
+					pd((is_numeric($boss['id'])) ? $this->pdh->get('rli_boss', 'note', array($boss['id'])) : $boss['id']);
 					$this->boss_data[] = array(
 						'KEY' => $bkey,
 						'LEFT' => $m,
@@ -453,12 +454,12 @@ $('#add_mem_button').click(function() {
 						'VALUE'	=> $boss['bonus']
 					);
 				}
-				$this->bosses_done = true;
         	}
-			foreach($this->boss_data as $boss_data) {
-				$this->tpl->assign_block_vars('player.bosses', $boss_data);
-			}
         }
+		$this->bosses_done = true;
+		foreach($this->boss_data as $boss_data) {
+			$this->tpl->assign_block_vars('player.bosses', $boss_data);
+		}
         $tkey = 0;
         foreach($this->members[$key]['times'] as $mtime) {
         	$s = (isset($mtime['standby']) AND $mtime['standby']) ? 'standby' : '';
