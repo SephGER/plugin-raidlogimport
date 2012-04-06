@@ -118,7 +118,9 @@ class rli_raid extends gen_class {
 			}
 			if( $this->config('raidcount') & 2) {
 				foreach($this->data['bosskills'] as $b => $bosskill) {
-					$temp = $this->get_bosskill_raidtime($zone['enter'], $zone['leave'], $bosskill['time'], @$this->data['bosskills'][$b-1]['time'], @$this->data['bosskills'][$b+1]['time']);
+					$before = isset($this->data['bosskills'][$b-1]['time']) ? $this->data['bosskills'][$b-1]['time'] : null;
+					$next = isset($this->data['bosskills'][$b+1]['time']) ? $this->data['bosskills'][$b+1]['time'] : null;
+					$temp = $this->get_bosskill_raidtime($zone['enter'], $zone['leave'], $bosskill['time'], $before, $next);
 					$this->raids[$key]['begin'] = $temp['begin'];
 					$this->raids[$key]['end'] = $temp['end'];
 					$this->raids[$key]['zone'] = $zone['name'];
@@ -591,7 +593,7 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 			//absolute bossdkp
 			if($times !== false) {
 				foreach ($times as $time) {
-					if(isset($time['standby']) AND $standby == $time['standby']) {
+					if((!isset($time['standby']) && !$standby) || (isset($time['standby']) AND $standby == $time['standby'])) {
 						if($time['join'] < $bosskill['time'] AND $time['leave'] > $bosskill['time']) {
 							$bossdkp += $bosskill['bonus'];
 							break;

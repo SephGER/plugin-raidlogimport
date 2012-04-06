@@ -122,7 +122,7 @@ if(!class_exists('rli_member')) {
 						foreach($member['raid_list'] as $raid_id) {
 							if(!$this->config('attendence_raid') OR ($raid_id != $globalattraids['begin'] AND $raid_id != $globalattraids['end'])) {
 								$dkp = $this->raid->get_value($raid_id, $member['times'], array($member['att_begin'], $member['att_end']));
-								$dkp = runden($dkp, 2);
+								$dkp = runden($dkp);
 								$raid = $this->raid->get($raid_id);
 								if($dkp <  $raid['value']) {
 									//add an adjustment
@@ -445,7 +445,6 @@ $('#add_mem_button').click(function() {
 					$m = ($boss['time']-$width['begin'])/20 - 4;
 					settype($m, 'int');
 					$this->jquery->qtip('.rli_boss', 'return $(".rli_boss_c", this).html();', array('contfunc' => true));
-					pd((is_numeric($boss['id'])) ? $this->pdh->get('rli_boss', 'note', array($boss['id'])) : $boss['id']);
 					$this->boss_data[] = array(
 						'KEY' => $bkey,
 						'LEFT' => $m,
