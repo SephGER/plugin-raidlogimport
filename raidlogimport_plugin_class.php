@@ -70,7 +70,7 @@ class raidlogimport extends plugin_generic {
 			'author'			=> 'Hoofy',
 			'description'		=> $this->user->lang('raidlogimport_short_desc'),
 			'long_description'	=> $this->user->lang('raidlogimport_long_desc'),
-			'homepage'			=> 'http://www.eqdkp-plus.com',
+			'homepage'			=> EQDKP_PROJECT_URL,
 			'manuallink'		=> ($this->user->lang_name != 'german') ? false : $this->root_path . 'plugins/raidlogimport/language/'.$this->user->lang_name.'/Manual.pdf',
 			'icon'				=> $this->root_path.'plugins/raidlogimport/images/report.png',
 			)
