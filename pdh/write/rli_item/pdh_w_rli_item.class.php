@@ -38,7 +38,7 @@ class pdh_w_rli_item extends pdh_w_generic {
 	}
 	
 	public function delete($item_id, $event_id) {
-		if($this->db->query("DELETE FROM __raidlogimport_item2itempool WHERE event_id = '".$event_id."' AND item_id = '".$item_id."';")) {
+		if($this->db->query("DELETE FROM __raidlogimport_item2itempool WHERE event_id = '".$this->db->escape($event_id)."' AND item_id = '".$this->db->escape($item_id)."';")) {
 			$this->pdh->enqueue_hook('rli_item_update');
 			return true;
 		}
