@@ -72,7 +72,7 @@ class pdh_w_rli_zone extends pdh_w_generic {
 			'zone_sort'		=> ($sort === false) ? $old['sort'] : $sort
 		);
 		if($this->changed($old, $data)) {
-			if($this->db->query("UPDATE __raidlogimport_zone SET :params WHERE zone_id = '".$id."';", $data)) {
+			if($this->db->query("UPDATE __raidlogimport_zone SET :params WHERE zone_id = ?;", $data, $id)) {
 				$this->pdh->enqueue_hook('rli_zone_update', array($id));
 				$log_action = array(
 					'{L_ID}'			=> $id,
@@ -102,7 +102,7 @@ class pdh_w_rli_zone extends pdh_w_generic {
 			'diff'		=> $this->pdh->get('rli_zone', 'diff', array($id)),
 			'sort'		=> $this->pdh->get('rli_zone', 'sort', array($id))
 		);
-		if($this->db->query("DELETE FROM __raidlogimport_zone WHERE zone_id = '".$id."';")) {
+		if($this->db->query("DELETE FROM __raidlogimport_zone WHERE zone_id = ?;", false, $id)) {
 			$this->pdh->enqueue_hook('rli_zone_update', array($id));
 			$log_action = array(
 				'{L_ID}'			=> $id,
@@ -120,7 +120,7 @@ class pdh_w_rli_zone extends pdh_w_generic {
 	
 	public function switch_inactive($zone_id) {
 		$active = ($this->pdh->get('rli_zone', 'active', array($zone_id))) ? '0' : '1';
-		if($this->db->query("UPDATE __raidlogimport_zone SET zone_active = '".$active."' WHERE zone_id = '".$zone_id."'")) {
+		if($this->db->query("UPDATE __raidlogimport_zone SET zone_active = '".$this->db->escape($active)."' WHERE zone_id = ?", false, $zone_id)) {
 			$bosses = $this->pdh->get('rli_boss', 'bosses2zone', array($zone_id));
 			foreach($bosses as $boss_id) {
 				$this->pdh->put('rli_boss', 'set_active', array($boss_id, $active));
