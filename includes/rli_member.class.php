@@ -357,7 +357,7 @@ $('#add_mem_button').click(function() {
 	}
 	
 	public function insert() {
-		$members = $this->pdh->aget('member', 'name', 0, array($this->pdh->get('member', 'id_list', array(false, false, false))));
+		$members = $this->pdh->aget('member', 'name', 0, array($this->pdh->get('member', 'id_list')));
 		foreach($this->members as $member) {
 			if(!($id = array_search($member['name'], $members))) {
 				$data = array(
@@ -373,6 +373,11 @@ $('#add_mem_button').click(function() {
 			$this->raid_members[$id] = $member['raid_list'];
 			$this->name_ids[$member['name']] = $id;
 		}
+		// add disenchanted / bank to name_ids array
+		$dis_id = array_search('disenchanted', $members);
+		$bank_id = array_search('bank', $members);
+		if($dis_id) $this->name_ids[$members[$dis_id]] = $dis_id;
+		if($bank_id) $this->name_ids[$members[$bank_id]] = $bank_id;
 		return true;
 	}
 	
