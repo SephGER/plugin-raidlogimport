@@ -71,7 +71,9 @@
 	$lang['bz_active_suc'] = 'Aktiv/Inaktiv für markierte Zonen umgeschaltet';
 
 	//dkp
-	$lang['rli_dkp_insert'] = 'Raid-Log einfügen';
+	$lang['rli_dkp_insert'] = 'Neues Raid-Log einfügen';
+	$lang['rli_data_source'] = 'Daten-Quelle wählen';
+	$lang['rli_continue_old'] = 'Vorherigen Importvorgang fortsetzen';
 	$lang['rli_send'] = 'Absenden';
 	$lang['rli_raidinfo'] = 'Raid Infos';
 	$lang['rli_start'] = 'Start';
@@ -147,6 +149,11 @@
 	$lang['rli_itempool_nosave'] = 'Nicht gespeicherte Items';
 	$lang['rli_help'] = 'Hilfe?';
 	$lang['rli_help_dt_member'] = 'rudimentäre Hilfe (Alpha!): öhm ja, das ist die anzeige um die zeiten editieren zu können: der schwarze balken ist die zeit, wenn du mouseoverst bekommst auch ne anzeige der uhrzeit und der totenkopf ist n bosskill (mouseover mit info), der hintergrund ist grün/rot je nachdem ob der member die raidteilnahme kriegt oder nicht. Den schwarzen balken kannst verschieben zum ändern der zeit, außerdem kann man über rechtsklick n menü aufrufen.';
+	$lang['rli_member_refresh_for_view'] = 'Drücke Aktualisieren, um den Raidslider anzuzeigen.';
+	
+	// error messages
+	$lang['rli_error_no_raid'] = 'Es muss mindestens ein Raid erstellt werden.';
+	$lang['rli_error_no_attendant']  = 'Es muss mindestens einen Raidteilnehmer geben.';
 
 	//config
 	$lang['new_member_rank'] = 'Standard-Rang bei automatischer Erstellung';
@@ -234,7 +241,6 @@
     $lang['standby_raid_0'] = 'Nein, keinem.';
     $lang['standby_raid_1'] = 'Ja, einen Extra-Raid anlegen.';
     $lang['standby_raid_2'] = 'Ja, dem (den) normalem/n Raid(s).';
-    $lang['standby_raid_note'] = 'Raid Notiz des Ersatzbankraids';
     $lang['standby_absolute'] = 'Absolute Punkte für die Ersatzbank vergeben?';
     $lang['standby_value'] = 'Wie viel Prozent der Punkte, bzw. wie viele Punkte absolut, sollen Ersatzbankspieler bekommen?';
 	$lang['standby_att'] = 'Sollen Ersatzbankspieler Einlade/Ende-Punkte bekommen?';

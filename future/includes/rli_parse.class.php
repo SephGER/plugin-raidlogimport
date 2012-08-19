@@ -299,11 +299,11 @@ class rli_parse extends gen_class {
 	}
 
 	private function parse_magicdkp_string($xml) {
-		return parse_eqdkp_string($xml, true);
+		return $this->parse_eqdkp_string($xml, true);
 	}
 
 	private function check_magicdkp_format($xml) {
-		return parse_eqdkp_format($xml, true);
+		return $this->check_eqdkp_format($xml, true);
 	}
 
 	public function parse_string($xml) {

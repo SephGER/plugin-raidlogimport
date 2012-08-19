@@ -88,6 +88,7 @@ if(!class_exists('rli_member')) {
 		
 	public function load_members() {
 		$globalattraids = $this->raid->get_attendance_raids();
+		$one_attendant = false;
 		foreach($_POST['members'] as $k => $mem) {
 			if(!(is_array($this->members) AND in_array($k, array_keys($this->members)))) {
 				$this->members[$k] = array();
@@ -120,6 +121,7 @@ if(!class_exists('rli_member')) {
 					}
 					if($member['raid_list']) {
 						foreach($member['raid_list'] as $raid_id) {
+							$one_attendant = true;
 							if(!$this->config('attendence_raid') OR ($raid_id != $globalattraids['begin'] AND $raid_id != $globalattraids['end'])) {
 								$dkp = $this->raid->get_value($raid_id, $member['times'], array($member['att_begin'], $member['att_end']));
 								$dkp = runden($dkp);
@@ -139,6 +141,9 @@ if(!class_exists('rli_member')) {
 					}
 				}
 			}
+		}
+		if(!$one_attendant) {
+			$this->rli->error('process_members', $this->user->lang('rli_error_no_attendant'));
 		}
 	}
 
@@ -299,7 +304,7 @@ if(!class_exists('rli_member')) {
 				}
 			}
 			$this->tpl->assign_block_vars('player', array(
-                'RAID_LIST'	=> (!isset($detai_raid_list)) ? $raid_list : '',
+                'RAID_LIST'	=> (!isset($detai_raid_list)) ? $raid_list : '<td>'.$this->user->lang('rli_member_refresh_for_view').'</td>',
                 'KEY'		=> 999,
 				'DISPLAY'	=> 'style="display: none;"',
 			));
@@ -308,7 +313,7 @@ if(!class_exists('rli_member')) {
 			unset($this->members[999]);
 			$this->jquery->qtip('#dt_help', $this->user->lang('rli_help_dt_member'), array('my' => 'center right', 'at' => 'left center'));
 			$this->tpl->add_js(
-"var rli_key = ".($key+1).";
+"var rli_key = ".(($key) ? $key+1 : $key).";
 $('.del_mem').click(function() {
 	$(this).removeClass('del_mem');
 	".($this->rli->config('no_del_warn') ? "$('#'+$(this).attr('class')).css('display', 'none');
@@ -316,12 +321,13 @@ $('.del_mem').click(function() {
 });
 $('#add_mem_button').click(function() {
 	var mem = $('#memberrow_999').clone(true);
+	console.log(mem);
 	mem.find('#memberrow_999submit').attr('disabled', 'disabled');
 	mem.html(mem.html().replace(/999/g, rli_key));
 	mem.attr('id', 'memberrow_'+rli_key);
 	mem.removeAttr('style');
 	mem.find('td:first').html((rli_key+1)+$.trim(mem.find('td:first').html()));
-	$('#memberrow_'+(rli_key-1)).after(mem);
+	$('#memberrow_999').before(mem);
 	rli_key++;
 });", 'docready');
 		}
@@ -357,7 +363,7 @@ $('#add_mem_button').click(function() {
 	}
 	
 	public function insert() {
-		$members = $this->pdh->aget('member', 'name', 0, array($this->pdh->get('member', 'id_list')));
+		$members = $this->pdh->aget('member', 'name', 0, array($this->pdh->get('member', 'id_list', array(false, false, false))));
 		foreach($this->members as $member) {
 			if(!($id = array_search($member['name'], $members))) {
 				$data = array(

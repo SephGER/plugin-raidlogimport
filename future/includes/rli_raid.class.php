@@ -94,6 +94,9 @@ class rli_raid extends gen_class {
 				$this->raids[$key]['timebonus'] = $this->in->get('raids:'.$key.':timebonus', 0.0);
 			}
 		}
+		if(empty($this->raids)) {
+			$this->rli->error('process_raids', $this->user->lang('rli_error_no_raid'));
+		}
 	}
 
 	public function create() {
@@ -183,7 +186,7 @@ class rli_raid extends gen_class {
 					$this->raids[$key]['bosskills'] = $bosskills;
 					$this->raids[$key]['event'] = $this->get_event($key);
 				}
-				$this->raids[$key]['note'] = ($key == $this->data['add']['standby_raid']) ? $this->config('standby_raidnote') : $this->get_note($key);
+				$this->raids[$key]['note'] = (isset($this->data['add']) && $key == $this->data['add']['standby_raid']) ? $this->config('standby_raidnote') : $this->get_note($key);
 				$this->raids[$key]['value'] = runden($this->get_value($key, false));
 			}
 		}
@@ -194,7 +197,7 @@ class rli_raid extends gen_class {
 	}
 
 	public function get_value($key, $times=false, $attdkp_force=array(-1,-1)) {
-		if($key == $this->data['add']['standby_raid'] AND $this->config('standby_absolute')) {
+		if(isset($this->data['add']) && $key == $this->data['add']['standby_raid'] && $this->config('standby_absolute')) {
 			return $this->config('standby_value');
 		}
 		$timedkp = $this->get_timedkp($key, $times);
@@ -220,7 +223,7 @@ class rli_raid extends gen_class {
 		ksort($this->raids);
 		$this->tpl->add_js("var boss_keys = new Array();", 'docready');
 		foreach($this->raids as $ky => $rai) {
-			if($ky == $this->data['add']['standby_raid'] AND $this->config('standby_raid') == 0) {
+			if(isset($this->data['add']) && $ky == $this->data['add']['standby_raid'] && $this->config('standby_raid') == 0) {
 				continue;
 			}
 			$bosskills = '';
@@ -302,8 +305,8 @@ class rli_raid extends gen_class {
 				'COUNT'     => 999,
 				'START_DATE'=> '<input type="text" name="raids[999][start_date]" id="raids_999_start_date" size="15" />',
 				'END_DATE'	=> '<input type="text" name="raids[999][end_date]" id="raids_999_end_date" size="15" />',
-				'EVENT'		=> $this->html->DropDown('raids[999][event]', $this->event_drop, $rai['event'], '', '', 'input', 'a'.uniqid()),
-				'DIFF'		=> $this->html->DropDown('raids[999][diff]', $this->diff_drop, $rai['diff'], '', '', 'input', 'a'.uniqid()),
+				'EVENT'		=> $this->html->DropDown('raids[999][event]', $this->event_drop, 0, '', '', 'input', 'a'.uniqid()),
+				'DIFF'		=> $this->html->DropDown('raids[999][diff]', $this->diff_drop, 0, '', '', 'input', 'a'.uniqid()),
 				'DISPLAY'	=> 'style="display: none;"'
 			));
 			$this->tpl->assign_block_vars('raids.bosskills', array(
@@ -615,12 +618,12 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 
 	private function get_bossdkp($key, $times) {
 		$bossdkp = 0;
-		if(	$this->config('standby_raid') <= 1 AND (
-				($this->config('standby_dkptype') & 1 AND $key == $this->data['add']['standby_raid']) OR 
-				($this->config('use_dkp') & 1 AND $key != $this->data['add']['standby_raid'])
+		if(	$this->config('standby_raid') <= 1 && (
+				($this->config('standby_dkptype') & 1 && (isset($this->data['add']) && $key == $this->data['add']['standby_raid'])) || 
+				($this->config('use_dkp') & 1 && (!isset($this->data['add']) || $key != $this->data['add']['standby_raid']))
 			)) {
-			$standby = ($key == $this->data['add']['standby_raid']) ? true : false;
-			$standby1 = ($key == $this->data['add']['standby_raid']) ? 2 : 1;
+			$standby = (isset($this->data['add']) && $key == $this->data['add']['standby_raid']) ? true : false;
+			$standby1 = (isset($this->data['add']) && $key == $this->data['add']['standby_raid']) ? 2 : 1;
 			$bossdkp = ($standby) ? $this->calc_bossdkp($key, $times, $standby, $standby1)*$this->config('standby_value')/100 : $this->calc_bossdkp($key, $times, $standby, $standby1);
 		} elseif($this->config('standby_raid') == 2) {
 			if($this->config('use_dkp') & 1) {
@@ -635,9 +638,9 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 
 	private function get_eventdkp($key) {
 		$eventdkp = 0;
-		if($this->config('use_dkp') & 4 AND $key != $this->data['add']['standby_raid']) {
+		if($this->config('use_dkp') & 4 && (!isset($this->data['add']) || $key != $this->data['add']['standby_raid'])) {
 			$eventdkp = $this->pdh->get('event', 'value', array($this->raids[$key]['event']));
-		} elseif($this->config('standby_dkptype') & 4 AND $key == $this->data['add']['standby_raid']) {
+		} elseif($this->config('standby_dkptype') & 4 && (isset($this->data['add']) && $key == $this->data['add']['standby_raid'])) {
 			$eventdkp = $this->pdh->get('event', 'value', array($this->raids[$key]['event']))*$this->config('standby_value')/100;
 		}
 		return $eventdkp;

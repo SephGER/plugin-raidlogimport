@@ -23,7 +23,7 @@ if(!defined('EQDKP_INC'))
 }
 
 class rli extends gen_class {
-	public static $shortcuts = array('cconfig' => 'config', 'game', 'db',
+	public static $shortcuts = array('cconfig' => 'config', 'game', 'db', 'user',
 		'adj'		=> 'rli_adjustment',
 		'item'		=> 'rli_item',
 		'member'	=> 'rli_member',
@@ -37,6 +37,8 @@ class rli extends gen_class {
 	private $events = array();
 	private $member_ranks = array();
 	private $data = array();
+	private $errors = array();
+	private $process_order = array('process_raids', 'process_members', 'process_items', 'process_adjustments', 'process_views');
 	
 	private $destruct_called = false;
 
@@ -46,6 +48,8 @@ class rli extends gen_class {
 			$this->config['bz_parse'] = ',';
 			$this->cconfig->set('bz_parse', ',', 'raidlogimport');
 		}
+		// load cache_data
+		$this->get_cache_data('');
 	}
 	
 	public function reload_config() {
@@ -62,6 +66,30 @@ class rli extends gen_class {
 		}
 		return $string;
 	}
+	
+	public function error_check() {
+		return count($this->errors);
+	}
+	
+	public function error($process, $message) {
+		$this->errors[] = array('process' => $process, 'message' => array('title' => $this->user->lang('error'), 'text' => $message, 'color' => 'red'));
+	}
+	
+	public function get_error() {
+		$data = array();
+		foreach($this->process_order as $process) {
+			foreach($this->errors as $error) {
+				if($process == $error['process']) {
+					$data['process'] = $process;
+					break 2;
+				}
+			}
+		}
+		foreach($this->errors as $error) {
+			$data['messages'][] = $error['message'];
+		}
+		return $data;
+	}
 
 	public function get_cache_data($type) {
 		if(!$this->data) {
@@ -73,6 +101,10 @@ class rli extends gen_class {
 			$this->data['fetched'] = true;
 		}
 		return (isset($this->data[$type])) ? $this->data[$type] : null;
+	}
+	
+	public function data_available() {
+		return !empty($this->data);
 	}
 
 	public function check_data() {
