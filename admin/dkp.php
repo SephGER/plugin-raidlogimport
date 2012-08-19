@@ -43,21 +43,40 @@ class rli_import extends page_generic {
 			'checkitem'	=> array('process' => 'process_items'),
 			'save_itempools' => array('process' => 'itempool_save'),
 			'checkadj'	=> array('process' => 'process_adjustments'),
-			'viewall'	=> array('process' => 'process_views'),
+#			'viewall'	=> array('process' => 'process_views'),
 			'insert'	=> array('process' => 'insert_log')
 		);
 		parent::__construct(false, $handler);
+		// save template state to return to if errors occur
+		$this->tpl->save_state('rli_start');
 		$this->process();
 	}
+	
+	private function process_error($main_process) {
+		if($this->rli->error_check()) {
+			$error = $this->rli->get_error();
+			if(!empty($error['process']) && $error['process'] != $main_process) {
+				$this->tpl->load_state('rli_start');
+			}
+			if(is_array($error['messages'])) {
+				$this->core->messages($error['messages']);
+			}
+			if(!empty($error['process']) && $error['process'] != $main_process) {
+				$this->$error['process'](false);
+			}
+		}
+	}
 
-	public function process_raids() {
-		if($this->in->exists('log')) {
+	public function process_raids($error_out=true) {
+		if($this->in->get('checkraid') == $this->user->lang('rli_send')) {
 			$this->rli->flush_cache();
-			$log = simplexml_load_string(utf8_encode(trim(str_replace("&", "and", stripslashes(html_entity_decode($_POST['log']))))));
-			if ($log === false) {
-				message_die($this->user->lang('xml_error'));
-			} else {
-				$this->parser->parse_string($log);
+			if($this->in->exists('log') && $this->rli->config('parser') != 'empty') {
+				$log = simplexml_load_string(utf8_encode(trim(str_replace("&", "and", stripslashes(html_entity_decode($_POST['log']))))));
+				if ($log === false) {
+					message_die($this->user->lang('xml_error'));
+				} else {
+					$this->parser->parse_string($log);
+				}
 			}
 		}
 		$this->raid->add_new($this->in->get('raid_add', 0));
@@ -73,6 +92,9 @@ class rli_import extends page_generic {
 		);
 		//language
 		lang2tpl();
+		
+		// error processing
+		if($error_out) $this->process_error('process_raids');
 
 		$this->core->set_vars(array(
 			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_check_data'),
@@ -82,17 +104,20 @@ class rli_import extends page_generic {
 		);
 	}
 
-	public function process_members() {
+	public function process_members($error_out=true) {
 		$this->member->add_new($this->in->get('members_add', 0));
 
 		//display members
 		$this->member->display(true);
 
-		//show raids
+		// show raids
 		$this->raid->display();
 
 		//language
 		lang2tpl();
+		
+		// error processing
+		if($error_out) $this->process_error('process_members');
 
 		$this->tpl->assign_vars(array(
 			'S_ATT_BEGIN'	 => ($this->rli->config('attendence_begin') > 0 AND !$this->rli->config('attendence_raid')) ? TRUE : FALSE,
@@ -111,7 +136,7 @@ class rli_import extends page_generic {
 		);
 	}
 
-	public function process_items() {
+	public function process_items($error_out=true) {
 		$this->item->add_new($this->in->get('items_add', 0));
 		$this->member->display();
 		$this->raid->display();
@@ -124,6 +149,9 @@ class rli_import extends page_generic {
 
 		//language
 		lang2tpl();
+		
+		// error processing
+		if($error_out) $this->process_error('process_items');
 		
 		$this->core->set_vars(array(
 			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_check_data'),
@@ -138,7 +166,7 @@ class rli_import extends page_generic {
 		$this->process_items();
 	}
 
-	public function process_adjustments() {
+	public function process_adjustments($error_out=true) {
 		$this->adj->add_new($this->in->get('adjs_add', 0));
 
 		$this->member->display();
@@ -153,6 +181,9 @@ class rli_import extends page_generic {
 
 		//language
 		lang2tpl();
+		
+		// error processing
+		if($error_out) $this->process_error('process_adjustments');
 		
 		$this->core->set_vars(array(
 			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_check_data'),
@@ -181,6 +212,7 @@ class rli_import extends page_generic {
 				$message[] = $this->user->lang('bz_save_suc');
 			} else {
 				#$this->db->query("ROLLBACK;");
+				$this->pdh->process_hook_queue();
 				$message[] = $this->user->lang('rli_error');
 			}
 			foreach($message as $answer) {
@@ -233,10 +265,15 @@ class rli_import extends page_generic {
 			}
 		}
 		$this->tpl->assign_vars(array(
+			'L_DATA_SOURCE'	 => $this->user->lang('rli_data_source'),
+			'L_CONTINUE_OLD' => $this->user->lang('rli_continue_old'),
 			'L_INSERT'		 => $this->user->lang('rli_dkp_insert'),
 			'L_SEND'		 => $this->user->lang('rli_send'),
+			'DISABLED'		 => ($this->rli->data_available()) ? '' : 'disabled="disabled"',
 			'S_STEP1'        => true)
 		);
+		
+		$this->tpl->add_js("\$('#show_log_form').click(function() {\$('#log_form').show(200)});",'docready');
 
 		$this->core->set_vars(array(
 			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '."DKP String",

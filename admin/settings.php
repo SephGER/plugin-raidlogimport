@@ -111,7 +111,8 @@ class RLI_Settings extends page_generic {
 		$parser = array(
 			'eqdkp' => $this->user->lang('parser_eqdkp'),
 			'plus' => $this->user->lang('parser_plus'),
-			'magicdkp' => $this->user->lang('parser_magicdkp')
+			'magicdkp' => $this->user->lang('parser_magicdkp'),
+			'empty' => $this->user->lang('parser_empty')
 		);
 
 		//select raidcount
