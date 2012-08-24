@@ -46,6 +46,10 @@ $english = array(
 		 26 => array("Blackwing Descent", "Blackwing Descent", "5", "4", "25"),
 		 27 => array("Baradin Hold", "Baradin Hold", "5", "4", "26"),
 		 28 => array("The Throne of the Four Winds", "The Throne of the Four Winds", "5", "4", "27"),
+	//	-------------------- MOP --------------------------------------
+		 29	=> array("Mogu'shan Vaults", "Mogu'shan", "5", "0", "28"),
+		 30 => array("Terrace of endless spring", "Terrace", "5", "0", "29"),
+		 31 => array("Heart of Fear", "Heart of Fear", "5", "0", "30"),
 	),
 	'boss' => array(
 			#		string	| note	| bonus | timebonus | diff | tozone | sort
@@ -178,6 +182,25 @@ $english = array(
 		127 => array("Al'Akir", "Al'Akir", "2", "0", "4", "28", "1"),
 		128 => array("Sinestra", "Sinestra", "3", "0", "3", "21", "4"),
 		129 => array("Sinestra", "Sinestra", "3", "0", "4", "25", "4"),
+	//	-------------------- MOP --------------------------------------
+		130 => array("Sha of Anger", "Sha of Anger", "0", "0", "0", "0", "0"),
+		131 => array("Galleon", "Galleon", "0", "0", "0", "0", "1"),
+		132	=> array("The Stone Guard", "Stone Guard", "1", "1", "0", "29", "0"),
+		133 => array("Feng the Accursed", "Feng", "1", "1", "0", "29", "1"),
+		134 => array("Gara'jal the Spiritbinder", "Gara'jal", "1", "1", "0", "29", "2"),
+		135 => array("The Spirit Emporers", "Spirit Emporers", "1", "1", "0", "29", "3"),
+		136 => array("Elegon", "Elegon", "1", "1", "0", "29", "4"),
+		137 => array("Will of the Emperor", "Will of the Emporer", "1", "1", "0", "29", "5"),
+		138 => array("Protectors of the Endless", "Protectors", "1", "1", "0", "30", "0"),
+		139 => array("Tsulong", "Tsulong", "1", "1", "0", "30", "1"),
+		140 => array("Lei Shi", "Lei Shi", "1", "1", "0", "30", "2"),
+		141 => array("Sha of Fear", "Sha of Fear", "1", "1", "0", "30", "3"),
+		142 => array("Imperial Vizier Zor'lok", "Zor'lok", "1", "1", "0", "31", "0"),
+		143 => array("Blade Lord Ta'yak", "Ta'yak", "1", "1", "0", "31", "1"),
+		144 => array("Garalon", "Garalon", "1", "1", "31", "0", "2"),
+		145 => array("Wind Lord Mel'jarak", "Mel'jarak", "1", "1", "0", "31", "3"),
+		146 => array("Amber Shaper Un'sok", "Un'sok", "1", "1", "0", "31", "4"),
+		147 => array("Grand Emporer Shek'zeer", "Shek'zeer", "1", "1", "0", "31", "5"),
 	)
 );
 
@@ -211,6 +234,10 @@ $german = array(
 		 26 => array("Blackwing Descent", "Pechschwingenabstieg", "5", "4", "25"),
 		 27 => array("Baradin Hold", "Baradinfestung", "5", "4", "26"),
 		 28 => array("The Throne of the Four Winds", "Thron der Vier Winde", "5", "4", "27"),
+	//	-------------------- MOP --------------------------------------
+		 29	=> array("Mogu'shan Vaults", "Mogu'shan", "5", "0", "28"),
+		 30 => array("Terrace of endless spring", "Terrasse", "5", "0", "29"),
+		 31 => array("Heart of Fear", "Herz der Angst", "5", "0", "30"),
 	),
 	'boss' => array(
 		  1 => array("Loatheb", "Loatheb", "2", "0", "0", "1", "5"),
@@ -342,6 +369,23 @@ $german = array(
 		127 => array("Al'Akir", "Al'Akir", "2", "0", "4", "28", "1"),
 		128 => array("Sinestra", "Sinestra", "3", "0", "3", "21", "4"),
 		129 => array("Sinestra", "Sinestra", "3", "0", "4", "25", "4"),
+	//	-------------------- MOP --------------------------------------
+		130 => array("The Stone Guard", "Steinwache", "1", "1", "0", "29", "0"),
+		131 => array("Feng the Accursed", "Feng", "1", "1", "0", "29", "1"),
+		132 => array("Gara'jal the Spiritbinder", "Gara'jal", "1", "1", "0", "29", "2"),
+		133 => array("The Spirit Emporers", "Geisterkönige", "1", "1", "0", "29", "3"),
+		134 => array("Elegon", "Elegon", "1", "1", "0", "29", "4"),
+		135 => array("Will of the Emperor", "Wille des Kaisers", "1", "1", "0", "29", "5"),
+		136 => array("Protectors of the Endless", "Beschützer", "1", "1", "0", "30", "0"),
+		137 => array("Tsulong", "Tsulong", "1", "1", "0", "30", "1"),
+		138 => array("Lei Shi", "Lei Shi", "1", "1", "0", "30", "2"),
+		139 => array("Sha of Fear", "Sha der Angst", "1", "1", "0", "30", "3"),
+		140 => array("Imperial Vizier Zor'lok", "Zor'lok", "1", "1", "0", "31", "0"),
+		141 => array("Blade Lord Ta'yak", "Ta'yak", "1", "1", "0", "31", "1"),
+		142 => array("Garalon", "Garalon", "1", "1", "0", "31", "2"),
+		143 => array("Wind Lord Mel'jarak", "Mel'jarak", "1", "1", "0", "31", "3"),
+		144 => array("Amber Shaper Un'sok", "Un'sok", "1", "1", "0", "31", "4"),
+		145 => array("Grand Emporer Shek'zeer", "Shek'zeer", "1", "1", "0", "31", "5"),
 	)
 );
 //$spanish = array();
