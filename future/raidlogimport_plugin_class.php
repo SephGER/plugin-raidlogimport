@@ -27,7 +27,7 @@ class raidlogimport extends plugin_generic {
 	}
 
 	public $vstatus = 'Stable';
-	public $version = '0.6.0.2';
+	public $version = '0.6.0.4';
 	
 	public function pre_install() {
 		//initialize config
@@ -153,7 +153,7 @@ class raidlogimport extends plugin_generic {
 				`boss_tozone` INT NOT NULL DEFAULT 0,
 				`boss_sort` INT NOT NULL DEFAULT 0,
 				`boss_active` INT(1) NOT NULL DEFAULT 1
-			);",
+			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin;",
 			"CREATE TABLE IF NOT EXISTS __raidlogimport_zone (
 				`zone_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 				`zone_string` VARCHAR(255) NOT NULL,
@@ -162,18 +162,18 @@ class raidlogimport extends plugin_generic {
 				`zone_diff` INT NOT NULL DEFAULT 0,
 				`zone_sort` INT NOT NULL DEFAULT 0,
 				`zone_active` INT(1) NOT NULL DEFAULT 1
-			);",
+			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin;",
 			"CREATE TABLE IF NOT EXISTS __raidlogimport_cache (
 				`cache_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 				`cache_class` VARCHAR(255) NOT NULL,
 				`cache_data` BLOB DEFAULT NULL
-			);",
+			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin;",
 			"CREATE TABLE IF NOT EXISTS __raidlogimport_item2itempool (
 				`item_id` INT NOT NULL,
 				`event_id` INT NOT NULL,
 				`itempool_id` INT NOT NULL,
 				PRIMARY KEY (`item_id`, `event_id`)
-			);");
+			) DEFAULT CHARSET=utf8 COLLATE=utf8_bin;");
 		
 		//add default bz_data
 		$file = $this->root_path.'plugins/raidlogimport/games/'.$this->config->get('default_game').'/bz_sql.php';
