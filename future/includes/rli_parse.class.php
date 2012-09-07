@@ -148,15 +148,15 @@ class rli_parse extends gen_class {
 		#$this->rli->add_data['log_lang'] = substr($lang, 0, 2);
 		$xml = $xml->raiddata;
 		foreach($xml->zones->children() as $zone) {
-			$this->raid->add_zone(trim(utf8_decode($zone->name)), (int) trim($zone->enter), (int) trim($zone->leave), (int) trim($zone->difficulty));
+			$this->raid->add_zone(trim($zone->name), (int) trim($zone->enter), (int) trim($zone->leave), (int) trim($zone->difficulty));
 		}
 		foreach($xml->bosskills->children() as $bosskill) {
-			$this->raid->add_bosskill(trim(utf8_decode($bosskill->name)), (int) trim($bosskill->time));
+			$this->raid->add_bosskill(trim($bosskill->name), (int) trim($bosskill->time));
 		}
 		foreach($xml->members->children() as $xmember) {
-			$name = trim(utf8_decode($xmember->name));
-			$note = (isset($xmember->note)) ? trim(utf8_decode($xmember->note)) : '';
-			$this->member->add($name, trim(utf8_decode($xmember->class)), trim(utf8_decode($xmember->race)), trim($xmember->level), $note);
+			$name = trim($xmember->name);
+			$note = (isset($xmember->note)) ? trim($xmember->note) : '';
+			$this->member->add($name, trim($xmember->class), trim($xmember->race), trim($xmember->level), $note);
 			foreach($xmember->times->children() as $time) {
 				$attrs = $time->attributes();
 				$type = $attrs['type'];
@@ -167,7 +167,7 @@ class rli_parse extends gen_class {
 		foreach($xml->items->children() as $xitem) {
 			$cost = (isset($xitem->cost)) ? trim($xitem->cost) : '';
 			$id = (isset($xitem->itemid)) ? trim($xitem->itemid) : '';
-			$this->item->add(trim(utf8_decode($xitem->name)), trim(utf8_decode($xitem->member)), $cost, (int) $id, (int) trim($xitem->time));
+			$this->item->add(trim(($xitem->name)), trim(($xitem->member)), $cost, (int) $id, (int) trim($xitem->time));
 		}
 	}
 
@@ -281,20 +281,20 @@ class rli_parse extends gen_class {
 			$this->raid->add_bosskill(trim($bosskill->name), strtotime($bosskill->time));
 		}
 		foreach($xml->Loot->children() as $loot) {
-			$player = utf8_decode(trim($loot->Player));
+			$player = (trim($loot->Player));
 			$cost = (array_key_exists('Costs', $loot)) ? (int) $loot->Costs : (int) $loot->Note;
-			$this->item->add(utf8_decode(trim($loot->ItemName)), $player, $cost, substr(trim($loot->ItemID), 0, 5), strtotime($loot->Time));
+			$this->item->add((trim($loot->ItemName)), $player, $cost, substr(trim($loot->ItemID), 0, 5), strtotime($loot->Time));
 		}
 		if(!$magic) {
 			foreach($xml->PlayerInfos->children() as $xmember) {
-				$this->member->add(trim(utf8_decode($xmember->name)), trim(utf8_decode($xmember->class)), trim(utf8_decode($xmember->race)), trim($xmember->level), trim(utf8_decode($xmember->note)));
+				$this->member->add(trim(($xmember->name)), trim(($xmember->class)), trim(($xmember->race)), trim($xmember->level), trim(($xmember->note)));
 			}
 		}
 		foreach ($xml->Join->children() as $joiner) {
-			$this->member->add_time(utf8_decode(trim($joiner->player)), strtotime($joiner->time), 'join');
+			$this->member->add_time((trim($joiner->player)), strtotime($joiner->time), 'join');
 		}
 		foreach ($xml->Leave->children() as $leaver) {
-			$this->member->add_time(utf8_decode(trim($leaver->player)), strtotime($leaver->time), 'leave');
+			$this->member->add_time((trim($leaver->player)), strtotime($leaver->time), 'leave');
 		}
 	}
 
