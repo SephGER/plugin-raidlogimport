@@ -32,6 +32,7 @@ if(!class_exists('rli_member')) {
 	public static $dependencies = array('rli');
 
   	private $members = array();
+  	private $member_ranks = array();
   	private $timebar_created = false;
 	private $positions = array('up', 'middle', 'down');
 	private $updown = array(false,false);
@@ -44,7 +45,7 @@ if(!class_exists('rli_member')) {
 		$this->members = $this->rli->get_cache_data('member');
 		if($this->in->exists('members')) $this->load_members();
 	}
-	
+
 	public function reset() {
 		$this->members = array();
 	}
@@ -85,7 +86,7 @@ if(!class_exists('rli_member')) {
 			}
 		}
 	}
-		
+
 	public function load_members() {
 		$globalattraids = $this->raid->get_attendance_raids();
 		$one_attendant = false;
@@ -338,7 +339,7 @@ $('#add_mem_button').click(function() {
         $rank = (isset($this->member_ranks[$mname])) ? $this->member_ranks[$mname] : $this->member_ranks['new'];
         return ' ('.$rank.')';
     }
-	
+
 	public function get_for_dropdown($rank_page) {
 		$members = array();
 		foreach($this->members as $member) {
@@ -361,7 +362,7 @@ $('#add_mem_button').click(function() {
 		}
 		return $bools;
 	}
-	
+
 	public function insert() {
 		$members = $this->pdh->aget('member', 'name', 0, array($this->pdh->get('member', 'id_list', array(false, false, false))));
 		foreach($this->members as $member) {
@@ -386,7 +387,7 @@ $('#add_mem_button').click(function() {
 		if($bank_id) $this->name_ids[$members[$bank_id]] = $bank_id;
 		return true;
 	}
-	
+
 	private function raid_positions($raids, $begin) {
 		if(!empty($this->raids_positioned)) return true;
 		$suf = '';
@@ -411,7 +412,7 @@ $('#add_mem_button').click(function() {
 		$this->raids_positioned = true;
 		return true;
 	}
-	
+
 	private function init_times_list($width) {
 		if(!isset($this->px_time)) {
 			$this->px_time = (($width['end'] - $width['begin']) / 20);
@@ -572,7 +573,7 @@ $('#add_mem_button').click(function() {
 
 	private function get_member_ranks() {
 		if(!$this->member_ranks) {
-			$member_id_rank = $this->pdh->aget('member', 'rank_name', 0, array($this->pdh->get('member', 'id_list')));
+			$member_id_rank = $this->pdh->aget('member', 'rankname', 0, array($this->pdh->get('member', 'id_list')));
 			foreach($member_id_rank as $id => $rank) {
 				$this->member_ranks[$this->pdh->get('member', 'name', array($id))] = $rank;
 			}
