@@ -382,9 +382,12 @@ $('#add_mem_button').click(function() {
 		}
 		// add disenchanted / bank to name_ids array
 		$dis_id = array_search('disenchanted', $members);
+		if (!$dis_id) $dis_id = array_search('Disenchanted', $members);
 		$bank_id = array_search('bank', $members);
+		if (!$bank_id) $bank_id = array_search('Bank', $members);
 		if($dis_id) $this->name_ids[$members[$dis_id]] = $dis_id;
 		if($bank_id) $this->name_ids[$members[$bank_id]] = $bank_id;
+
 		return true;
 	}
 
