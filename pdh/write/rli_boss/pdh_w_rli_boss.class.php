@@ -35,7 +35,8 @@ class pdh_w_rli_boss extends pdh_w_generic {
 						'boss_timebonus'=> $timebonus,
 						'boss_diff'		=> $diff,
 						'boss_tozone'	=> $tozone,
-						'boss_sort'		=> $sort))) {
+						'boss_sort'		=> $sort,
+						'boss_active'	=> '1'))) {
 			$id = $this->db->insert_id();
 			$this->pdh->enqueue_hook('rli_boss_update', array($id));
 			$log_action = array(
