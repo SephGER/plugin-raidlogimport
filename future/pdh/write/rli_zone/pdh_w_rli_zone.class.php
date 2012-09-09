@@ -36,7 +36,8 @@ class pdh_w_rli_zone extends pdh_w_generic {
 						'zone_event'	=> $event,
 						'zone_timebonus'=> $timebonus,
 						'zone_diff'		=> $diff,
-						'zone_sort'		=> $sort))) {
+						'zone_sort'		=> $sort,
+						'zone_active'	=> '1'))) {
 			$id = $this->db->insert_id();
 			$this->pdh->enqueue_hook('rli_zone_update', array($id));
 			$log_action = array(
