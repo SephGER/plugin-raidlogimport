@@ -24,7 +24,7 @@ include_once('./../includes/common.php');
 
 class rli_import extends page_generic {
 	public static function __shortcuts() {
-		$shortcuts = array('user', 'rli', 'in', 'tpl', 'core', 'pm', 'config',
+		$shortcuts = array('user', 'rli', 'in', 'tpl', 'core', 'pm', 'config', 'jquery',
 			'adj'		=> 'rli_adjustment',
 			'item'		=> 'rli_item',
 			'member'	=> 'rli_member',
@@ -80,6 +80,7 @@ class rli_import extends page_generic {
 					$this->parser->parse_string($log);
 				}
 			}
+			$this->rli->add_cache_data('progress', 'members');
 		}
 		$this->raid->add_new($this->in->get('raid_add', 0));
 		if($this->in->get('checkraid') == $this->user->lang('rli_calc_note_value')) {
@@ -97,6 +98,7 @@ class rli_import extends page_generic {
 		
 		// error processing
 		if($error_out) $this->process_error('process_raids');
+		$this->rli->nav(0);
 
 		$this->core->set_vars(array(
 			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_check_data'),
@@ -120,6 +122,7 @@ class rli_import extends page_generic {
 		
 		// error processing
 		if($error_out) $this->process_error('process_members');
+		$this->rli->nav(1);
 
 		$this->tpl->assign_vars(array(
 			'S_ATT_BEGIN'	 => ($this->rli->config('attendence_begin') > 0 AND !$this->rli->config('attendence_raid')) ? TRUE : FALSE,
@@ -154,6 +157,7 @@ class rli_import extends page_generic {
 		
 		// error processing
 		if($error_out) $this->process_error('process_items');
+		$this->rli->nav(2);
 		
 		$this->core->set_vars(array(
 			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_check_data'),
@@ -186,6 +190,7 @@ class rli_import extends page_generic {
 		
 		// error processing
 		if($error_out) $this->process_error('process_adjustments');
+		$this->rli->nav(3);
 		
 		$this->core->set_vars(array(
 			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_check_data'),
@@ -246,6 +251,7 @@ class rli_import extends page_generic {
 				'L_NO_IMP_SUC'	=> $this->user->lang('rli_imp_no_suc'),
 				'CHECK'			=> $check)
 			);
+			$this->rli->nav(4);
 			$this->core->set_vars(array(
 				'page_title'		=> sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_imp_no_suc'),
 				'template_path'		=> $this->pm->get_data('raidlogimport', 'template_path'),

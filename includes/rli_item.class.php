@@ -89,10 +89,16 @@ class rli_item extends gen_class {
 	}
 	
 	public function display($with_form=false) {
+		if($this->config('deactivate_adj')) {
+			if($this->rli->get_cache_data('progress') == 'items') $this->rli->add_cache_data('progress', 'finish');
+		} else {
+			if($this->rli->get_cache_data('progress') == 'items') $this->rli->add_cache_data('progress', 'adjustments');
+		}
+		
 		$p = count($this->items);
 		$start = 0;
 		$end = $p+1;
-		if($vars = ini_get('suhosin.post.max_vars')) {
+		if(false && $vars = ini_get('suhosin.post.max_vars')) { //Disabled for now, not yet working with new tab-layout
 			$vars = $vars - 5;
 			$dic = $vars/7;
 			settype($dic, 'int');
@@ -238,6 +244,14 @@ $('#add_item_button').click(function() {
 	
 	public function insert() {
 		foreach($this->items as $item) {
+			if(!isset($this->member->name_ids[$item['member']])) {
+				$this->rli->error('process_items', $this->user->lang('rli_no_buyer'));
+				return false;
+			}
+			if(!isset($this->raid->real_ids[$item['raid']])) {
+				$this->rli->error('process_items', $this->user->lang('rli_item_no_raid'));
+				return false;
+			}
 			if(!$this->pdh->put('item', 'add_item', array($item['name'], array($this->member->name_ids[$item['member']]), $this->raid->real_ids[$item['raid']], $item['game_id'], $item['value'], $item['itempool'], $item['time']))) {
 				return false;
 			}

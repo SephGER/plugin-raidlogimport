@@ -273,7 +273,7 @@ class rli_raid extends gen_class {
 							$name_field = $bk['id'];
 							$params = "&string=' + $('#id_".$html_id."').val() + '&bonus=' + $('#bonus_".$html_id."').val() + '&timebonus=' + $('#timebonus_".$html_id."').val() + '&diff=' + $('#diff_".$html_id."').val()";
 							$params .= " + '&note=' + $('#id_".$html_id."').val()";
-							$onclosejs = "$('#onclose_submit').removeAttr('disabled'); $('form:first').submit();";
+							$onclosejs = "$('#onclose_submit').removeAttr('disabled'); $('#form_rli_bz').submit();";
 							$this->jquery->Dialog($html_id, $this->user->lang('bz_import_boss'), array('url' => "bz.php?simple_head=simple&upd=true".$params." + '&", 'width' => 1200, 'onclosejs' => $onclosejs));
 							$import = true;
 						}
@@ -474,9 +474,9 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 	public function get_checkraidlist($memberraids, $mkey) {
 		$td = '';
 		if(!$this->th_raidlist) {
-			$this->pfh->CheckCreateFolder($pfh->FolderPath('raidlogimport'));
+			$this->pfh->CheckCreateFolder($this->pfh->FolderPath('raidlogimport'));
 			foreach($this->raids as $rkey => $raid) {
-				$imagefile = $eqdkp_root_path.$pfh->FileLink('image'.$rkey.'.png', 'raidlogimport');
+				$imagefile = $this->root_path.$this->pfh->FileLink('image'.$rkey.'.png', 'raidlogimport');
 				if(!$this->pfh->CheckCreateFile($imagefile, true)) {
 					$this->th_raidlist = '<td colspan="20">'.$this->user->lang('rli_error_imagecreate').'</td>';
 				}
@@ -677,7 +677,14 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 		$bosskills = array();
 		foreach ($this->data['bosskills'] as $b => $bosskill) {
 			if($begin <= $bosskill['time'] AND $bosskill['time'] <= $end) {
-				$id = $this->pdh->get('rli_boss', 'id_string', array($bosskill['name'], $bosskill['diff']));
+				$bosskills[$b]['time'] = $bosskill['time'];
+				$bosskills[$b]['diff'] = $bosskill['diff'];
+				$id = 0;
+				if($this->diff && !$bosskill['diff']) {
+					$id = $this->pdh->get('rli_boss', 'id_string', array($bosskill['name'], $this->diff));
+					$bosskills[$b]['diff'] = $this->diff;
+				}
+				if(!$id) $id = $this->pdh->get('rli_boss', 'id_string', array($bosskill['name'], $bosskill['diff']));
 				if($id) {
 					$bosskills[$b]['id'] = $id;
 					$bosskills[$b]['bonus'] = $this->pdh->get('rli_boss', 'bonus', array($id));
@@ -687,8 +694,6 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 					$bosskills[$b]['bonus'] = 0;
 					$bosskills[$b]['timebonus'] = 0;
 				}
-				$bosskills[$b]['time'] = $bosskill['time'];
-				$bosskills[$b]['diff'] = $bosskill['diff'];
 			}
 		}
 		return $bosskills;

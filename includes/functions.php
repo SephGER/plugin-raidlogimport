@@ -74,6 +74,7 @@ function lang2tpl() {
 	return;
 	register('tpl')->assign_vars(array(
         'L_DIFFICULTY' 	=> (register('config')->get('default_game') == 'wow') ? register('user')->lang('difficulty') : false,
+		'S_DEACTIVATE_ADJ' => (register('rli')->config('deactivate_adj')) ? true : false
 	));
 }
 ?>
