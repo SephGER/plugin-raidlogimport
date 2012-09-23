@@ -474,10 +474,10 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 	public function get_checkraidlist($memberraids, $mkey) {
 		$td = '';
 		if(!$this->th_raidlist) {
-			$this->pfh->CheckCreateFolder($this->pfh->FolderPath('raidlogimport'));
+			$this->pfh->CheckCreateFolder('', 'raidlogimport');
 			foreach($this->raids as $rkey => $raid) {
-				$imagefile = $this->root_path.$this->pfh->FileLink('image'.$rkey.'.png', 'raidlogimport');
-				if(!$this->pfh->CheckCreateFile($imagefile, true)) {
+				$imagefile = $this->pfh->FileLink('image'.$rkey.'.png', 'raidlogimport', 'relative');
+				if(!$this->pfh->CheckCreateFile($imagefile, false, true)) {
 					$this->th_raidlist = '<td colspan="20">'.$this->user->lang('rli_error_imagecreate').'</td>';
 				}
 				$image = imagecreate(20, 150);
