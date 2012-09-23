@@ -74,6 +74,7 @@ if(!class_exists('rli_adjustment')) {
 	}
 	
 	public function display($with_form=false) {
+		if($this->rli->get_cache_data('progress') == 'adjustments') $this->rli->add_cache_data('progress', 'finish');
 		$members = $this->member->get_for_dropdown(4);
 		$events = $this->pdh->aget('event', 'name', 0, array($this->pdh->get('event', 'id_list')));
 		$raid_select = array_merge(array($this->user->lang('none')), $this->raid->raidlist());

@@ -61,6 +61,9 @@ if(!class_exists('rli_member')) {
 		if($race == 'BloodElf' || $race == 'BLOODELF') {
 			$race = 'Blood Elf';
 		}
+		if($race == 'NightElf' || $race == 'NIGHTELF') {
+			$race = 'Night Elf';
+		}
 		if($class == 'DEATHKNIGHT' || $class == 'DeathKnight') {
 			$class = 'Death Knight';
 		}
@@ -235,12 +238,17 @@ if(!class_exists('rli_member')) {
   	public function display($with_form=false) {
 		$globalattraids = $this->raid->get_attendance_raids();
 		$key = 0;
+		$first_run = false;
+		if($this->rli->get_cache_data('progress') == 'members') {
+			$first_run = true;
+			$this->rli->add_cache_data('progress', 'items');
+		}
 		foreach($this->members as $key => $member) {
 			if($with_form) {
 				if($this->config('s_member_rank') & 1) {
 					$member['rank'] = $this->rank_suffix($member['name']);
 				}
-				if($this->in->get('checkmem') == $this->user->lang('rli_go_on').' ('.$this->user->lang('rli_checkmem').')') {
+				if($first_run) {
 					$mraids = $this->raid->get_memberraids($member['times']);
 					$a = $this->raid->get_attendance($member['times']);
 					if(isset($a['begin']) AND !in_array($globalattraids['begin'], $mraids)) {

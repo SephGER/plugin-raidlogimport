@@ -23,7 +23,7 @@ if(!defined('EQDKP_INC'))
 }
 
 class rli extends gen_class {
-	public static $shortcuts = array('cconfig' => 'config', 'game', 'db', 'user',
+	public static $shortcuts = array('cconfig' => 'config', 'game', 'db', 'user', 'jquery', 'tpl',
 		'adj'		=> 'rli_adjustment',
 		'item'		=> 'rli_item',
 		'member'	=> 'rli_member',
@@ -101,6 +101,36 @@ class rli extends gen_class {
 			$this->data['fetched'] = true;
 		}
 		return (isset($this->data[$type])) ? $this->data[$type] : null;
+	}
+	
+	public function nav($selection) {
+		$this->jquery->Tab_header('rli_nav_tabs');
+		$this->jquery->Tab_Select('rli_nav_tabs', $selection);
+		
+		if($this->config('deactivate_adj')) {
+			$ids = array('rli_nav_raids', 'rli_nav_members', 'rli_nav_items', 'rli_nav_finish');
+			$progress = array('members' => 1, 'items' => 2, 'finish' => 3);
+		} else {
+			$ids = array('rli_nav_raids', 'rli_nav_members', 'rli_nav_items', 'rli_nav_adjustments', 'rli_nav_finish');
+			$progress = array('members' => 1, 'items' => 2, 'adjustments' => 3, 'finish' => 4);
+		}
+		$position = $progress[$this->data['progress']];
+		for($i=0;$i<=$position;$i++) {
+			$this->tpl->add_js('$("#'.$ids[$i].'").click(function(){
+	$("#'.$ids[$i].' ~ input").removeAttr("disabled");
+	$("#rli_import_form").submit();
+});','docready');
+		}
+		pd($this->data['progress']);
+		pd($position);
+		pd(count($ids));
+		if($position+1 < count($ids)) {
+			$str = $position+1;
+			for($i=$position+2;$i<count($ids);$i++) {
+				$str .= ', '.$i;
+			}
+			$this->tpl->add_js('$("#rli_nav_tabs").tabs(\'option\', \'disabled\', ['.$str.']);', 'docready');
+		}
 	}
 	
 	public function data_available() {
