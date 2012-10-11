@@ -216,8 +216,12 @@ class RLI_Settings extends page_generic {
 			foreach($hold as $nava) {
 				$add = ($this->user->lang($nava['name'].'_help', false, false)) ? $this->user->lang($nava['name'].'_help') : '';
 				if($nava['name'] == 'member_display') {
-					$info = gd_info();
-					$add = sprintf($add, (extension_loaded('gd')) ? '<span class=\'positive\'>'.$info['GD Version'].'</span>' : $this->user->lang('no_gd_lib'));
+					if(extension_loaded('gd')) {
+						$info = gd_info();
+						$add = sprintf($add, '<span class=\'positive\'>'.$info['GD Version'].'</span>');
+					} else {
+						$add = sprintf($add, $this->user->lang('no_gd_lib'));
+					}
 				}
 				if($add != '') {
 					$add = $this->html->ToolTip($add, '<img alt="help" src="'.$this->root_path.'images/global/info.png" />');
