@@ -32,16 +32,16 @@ class rli_Bz extends page_generic {
 
 	public function __construct() {
 		$this->user->check_auth('a_raidlogimport_bz');
-		
+
 		$handler = array(
-			'save' => array('process' => 'save', 'session_key' => true),
-			'copy' => array('process' => 'copy', 'session_key' => true),
-			'inactive' => array('process' => 'switch_inactive', 'session_key' => true)
+			'save' => array('process' => 'save', 'csrf' => true),
+			'copy' => array('process' => 'copy', 'csrf' => true),
+			'inactive' => array('process' => 'switch_inactive', 'csrf' => true)
 		);
 		parent::__construct(false, $handler, false, null, 'bz_ids[]');
 		$this->process();
 	}
-	
+
 	private function prepare_data($type, $id, $method='add') {
 		$data = array();
 		if($type == 'zone') {
@@ -92,7 +92,7 @@ class rli_Bz extends page_generic {
 		}
 		$this->display($message);
 	}
-	
+
 	public function copy() {
 		$zones = $this->in->getArray('zone_id', 'int');
 		foreach($zones as $id) {
@@ -124,7 +124,7 @@ class rli_Bz extends page_generic {
 		}
 		$this->display($message);
 	}
-	
+
 	public function switch_inactive() {
 		$ids = $this->in->getArray('bz_ids', 'string');
 		foreach($ids as $id) {
@@ -163,7 +163,7 @@ class rli_Bz extends page_generic {
 		}
 		$this->display($message);
 	}
-	
+
 	private function get_upd_data($type, $id) {
 		return array(
 				'ID'			=> $type.'_'.$id,
@@ -180,11 +180,11 @@ class rli_Bz extends page_generic {
 				'EVENTS'		=> $this->html->DropDown("event[".$type."_".$id."]", $this->event_drop, (($type == 'zone') ? $this->pdh->get('rli_zone', 'event', array($id)) : $this->pdh->get('rli_boss', 'note', array($id))))
 		);
 	}
-	
+
 	private function prepare_diff_drop() {
 		if(!isset($this->diff_drop)) $this->diff_drop = array($this->user->lang('diff_0'), $this->user->lang('diff_1'), $this->user->lang('diff_2'), $this->user->lang('diff_3'), $this->user->lang('diff_4'));
 	}
-	
+
 	public function update() {
 		if(empty($this->zone_drop)) {
 			$this->zone_drop = $this->pdh->aget('rli_zone', 'html_string', 0, array($this->pdh->get('rli_zone', 'id_list')));
@@ -326,7 +326,7 @@ class rli_Bz extends page_generic {
 			)
 		);
 	}
-	
+
 	private function assign2tpl($zone_id, $sorting, $tozone) {
 		$this->jquery->Collapse('#zone_'.$zone_id);
 		$inactive = ($this->pdh->get('rli_zone', 'active', array($zone_id))) ? '' : 'inactive_';
