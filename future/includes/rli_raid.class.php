@@ -40,7 +40,7 @@ class rli_raid extends gen_class {
 		if($this->in->exists('raids')) $this->load_raids();
 		$this->data = $this->rli->get_cache_data('data_raid');
 	}
-	
+
 	public function reset() {
 		$this->raids = array();
 		$this->data = array();
@@ -49,7 +49,7 @@ class rli_raid extends gen_class {
 	private function config($name) {
 		return $this->rli->config($name);
 	}
-	
+
 	public function flush_data() {
 		$this->data = array();
 	}
@@ -274,7 +274,7 @@ class rli_raid extends gen_class {
 							$params = "&string=' + $('#id_".$html_id."').val() + '&bonus=' + $('#bonus_".$html_id."').val() + '&timebonus=' + $('#timebonus_".$html_id."').val() + '&diff=' + $('#diff_".$html_id."').val()";
 							$params .= " + '&note=' + $('#id_".$html_id."').val()";
 							$onclosejs = "$('#onclose_submit').removeAttr('disabled'); $('#form_rli_bz').submit();";
-							$this->jquery->Dialog($html_id, $this->user->lang('bz_import_boss'), array('url' => "bz.php?simple_head=simple&upd=true".$params." + '&", 'width' => 1200, 'onclosejs' => $onclosejs));
+							$this->jquery->Dialog($html_id, $this->user->lang('bz_import_boss'), array('url' => "bz.php".$this->SID."&simple_head=simple&upd=true".$params." + '&", 'width' => 1200, 'onclosejs' => $onclosejs));
 							$import = true;
 						}
 						$this->tpl->assign_block_vars('raids.bosskills', array(
@@ -366,7 +366,7 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 	public function get_data() {
 		return $this->raids;
 	}
-	
+
 	public function get($raid_key) {
 		return $this->raids[$raid_key];
 	}
@@ -383,7 +383,7 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 		}
 		return $bools;
 	}
-	
+
 	public function insert() {
 		$raid_attendees = array();
 		foreach($this->member->raid_members as $member_id => $raid_keys) {
@@ -399,7 +399,7 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 		}
 		return true;
 	}
-	
+
 	/*
 	 * get seconds the member was in the raid
 	 * @int $key: key of the raid
@@ -522,7 +522,7 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 		}
 		return $attendance;
 	}
-	
+
 	public function item_in_raid($key, $time) {
 		if($this->raids[$key]['begin'] < $time AND $this->raids[$key]['end'] > $time) {
 			return true;
@@ -541,11 +541,11 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 		}
 		return $att_ra;
 	}
-	
+
 	public function get_standby_raid() {
 		return $this->data['add']['standby_raid'];
 	}
-	
+
 	private function calc_timedkp($key, $in_raid) {
 		$timedkp = $in_raid['hours'] * $this->raids[$key]['timebonus'];
 		if($this->config('timedkp_handle')) {
@@ -559,7 +559,7 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 	private function get_timedkp($key, $times) {
 		$timedkp = 0;
 		if(	$this->config('standby_raid') <= 1 AND (
-				($this->config('standby_dkptype') & 2 AND $key == $this->data['add']['standby_raid']) OR 
+				($this->config('standby_dkptype') & 2 AND $key == $this->data['add']['standby_raid']) OR
 				($this->config('use_dkp') & 2 AND $key != $this->data['add']['standby_raid'])
 			)) {
 			$standby = ($key == $this->data['add']['standby_raid']) ? 2 : 1;
@@ -579,7 +579,7 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 		}
 		return $timedkp;
 	}
-	
+
 	private function calc_timebossdkp($bonus, $in_raid) {
 		$timedkp = $in_raid['hours'] * $bonus;
 		if($this->config('timedkp_handle')) {
@@ -589,7 +589,7 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 		}
 		return $timedkp;
 	}
-	
+
 	private function calc_bossdkp($key, $times, $standby, $standby1=0) {
 		$bossdkp = 0;
 		foreach ($this->raids[$key]['bosskills'] as $b => $bosskill) {
@@ -619,7 +619,7 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 	private function get_bossdkp($key, $times) {
 		$bossdkp = 0;
 		if(	$this->config('standby_raid') <= 1 && (
-				($this->config('standby_dkptype') & 1 && (isset($this->data['add']) && $key == $this->data['add']['standby_raid'])) || 
+				($this->config('standby_dkptype') & 1 && (isset($this->data['add']) && $key == $this->data['add']['standby_raid'])) ||
 				($this->config('use_dkp') & 1 && (!isset($this->data['add']) || $key != $this->data['add']['standby_raid']))
 			)) {
 			$standby = (isset($this->data['add']) && $key == $this->data['add']['standby_raid']) ? true : false;
@@ -645,11 +645,11 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 		}
 		return $eventdkp;
 	}
-	
+
 	private function get_attdkp($key, $times=false, $force=array(-1,-1)) {
 		return $this->calc_attdkp($key, 'begin', $times, $force) + $this->calc_attdkp($key, 'end', $times, $force);
 	}
-	
+
 	private function calc_attdkp($key, $type, $times=false, $force=array(-1,-1)) {
 		$att_raids = $this->get_attendance_raids(true);
 		if($this->config('attendance_'.$type) && $key == $att_raids[$type]) {
@@ -659,7 +659,7 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 					foreach($times as $time) {
 						if($force[0] > 0 OR ($force[0] < 0 AND ($time['join'] < $ct AND (($time['standby'] AND $this->config('standby_att')) OR !$time['standby']))))
 							return $this->config('attendance_begin');
-					}	
+					}
 				} elseif($type == 'end') {
 					$ct = $this->raids[$key]['end'] - $this->config('attendence_time');
 					foreach($times as $time) {
