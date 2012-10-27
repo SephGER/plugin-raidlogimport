@@ -153,7 +153,6 @@
 	$lang['rli_go_on'] = 'Forward';
 
 	//config
-	$lang['multidkp_need'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                    Activate for functionality with MultiDKP!                  </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='".registry::get_const('root_path')."images/global/info.png' alt='help' /></a>";
 	$lang['new_member_rank'] = 'Default rank for automatic created members.';
 	$lang['raidcount'] = 'How should the raids be created?';
 	$lang['raidcount_0'] = 'One raid for everything';
@@ -191,14 +190,15 @@
 	$lang['null_sum_1'] = 'Every member in the raid gets the DKP';
 	$lang['null_sum_2'] = 'Every member in the system gehts the DKP';
 	$lang['item_save_lang'] = 'In which language should the items be saved in the DB?';
-	$lang['deactivate_adj'] = "Deactivate Adjustments? <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                   This removes partially gain of DKP per member! Everyone gets all or nothing!                 </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='".registry::get_const('root_path')."images/error.gif' alt='warn'></a>";
-	$lang['addinfo_am'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'>                  <div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'>                  <tr><td>                   This setting allows automatic minus-DKP if the member has not joined the given number of Raids. If you use a null-sum-system the DKP will be draw off by an item.                </td>                  </tr>                  </table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='".registry::get_const('root_path')."images/error.gif' alt='warn'></a>";
+	$lang['deactivate_adj'] = "Deactivate Adjustments?";
+	$lang['deactivate_adj_warn'] = "This removes partially gain of DKP per member! Everyone gets all or nothing!";
 	$lang['auto_minus'] = 'Activate automatic minus?'.$lang['addinfo_am'];
+	$lang['auto_minus_help'] = "When used, member, who did not join the last x raids, loose an amount of DKP. If you use zero-sum the member will be awarded an item, else he gets an adjustment.";
 	$lang['am_raidnum'] = 'Number of raids for automatic minus';
 	$lang['am_value'] = 'Amount of DKP drawn off';
 	$lang['am_value_raids'] = 'DKP value = DKP of last number of raids';
-	$lang['am_allxraids'] = "Reset raidcount on Minus-DKP? <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td>Example: A member looses DKP after 3 Raids of not being there. The 4th Raid he is missing again. If this option is deactivated, the member will loose DKP again. If its activated he will loose the DKP on his 6th Raid of not being there. </td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='".registry::get_const('root_path')."images/global/info.png' alt='help' /></a>";
-	$lang['addinfo_am'] = "<a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td> When used, member, who did not join the last x raids, loose an amount of DKP. If you use zero-sum the member will be awarded an item, else he gets an adjustment. <td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='".registry::get_const('root_path')."images/global/info.png' alt='help' /></a>";
+	$lang['am_allxraids'] = "Reset raidcount on Minus-DKP?";
+	$lang['am_allxraids_help'] = "Example: A member looses DKP after 3 Raids of not being there. The 4th Raid he is missing again. If this option is deactivated, the member will loose DKP again. If its activated he will loose the DKP on his 6th Raid of not being there.";
 	$lang['am_name'] = 'lack of participation';
 	$lang['title_am'] = 'Automatic Minus';
 	$lang['title_adj'] = 'Adjustments';
@@ -225,12 +225,13 @@
 	$lang['raid_note_time']	= 'raid note of the raids per hour';
 	$lang['raid_note_time_0'] = '20:00-21:00, 21:00-22:00, etc.';
 	$lang['raid_note_time_1'] = '1.Hour, 2.Hour, etc.';
-	$lang['timedkp_handle']	= "Calculation of Timedkp <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td> 0: exactly calculation per minute <br /> >0: minutes, after the member gains full dkp of the hour </td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='".registry::get_const('root_path')."images/global/info.png' alt='help' /></a>";
+	$lang['timedkp_handle']	= "Calculation of Timedkp";
+	$lang['timedkp_handle_help'] = "0: exact calculation per minute <br /> &gt;0: minutes, after the member gains full dkp of the hour";
 	$lang['member_display'] = 'How should the member-list be displayed?';
 	$lang['member_display_1'] = 'Multiple Checkboxes';
 	$lang['member_display_0'] = 'Multi-Select';
 	$lang['member_display_2'] = 'Detailed Join/Leave Information';
-    $lang['member_display_add'] = " <a onmouseover=\"return overlib('<div class=\'pk_tt_help\' style=\'display:block\'><div class=\'pktooldiv\'>                  <table cellpadding=\'0\' border=\'0\' class=\'borderless\'><tr><td>If you want to use <nobr>".$lang['member_display_1']."</nobr>, you must have the GD-lib (PHP-Extension).<br /> You are running the following GD-lib version:<br />%s</td></tr></table></div></div>', MOUSEOFF, HAUTO, VAUTO,  FULLHTML, WRAP);\" onmouseout=\"return nd();\"><img src='".registry::get_const('root_path')."images/error.gif' alt='warn'></a>";
+    $lang['member_display_add'] = "If you want to use '".$lang['member_display_1']."' or '".$lang['member_display_2']."' you must have the GD-lib (PHP-Extension). You are running the following GD-lib version: %s";
 	$lang['no_gd_lib'] = '<span class="negative">no GD-lib found</span>';
     $lang['title_standby'] = 'Standby-Settings';
     $lang['standby_raid'] = 'Shall the standby-members be assigned to a raid?';

@@ -23,7 +23,7 @@ if(!defined('EQDKP_INC'))
 }
 
 class rli extends gen_class {
-	public static $shortcuts = array('cconfig' => 'config', 'game', 'db', 'user', 'jquery', 'tpl',
+	public static $shortcuts = array('cconfig' => 'config', 'game', 'db', 'user', 'jquery', 'tpl', 'pdh',
 		'adj'		=> 'rli_adjustment',
 		'item'		=> 'rli_item',
 		'member'	=> 'rli_member',
@@ -39,6 +39,8 @@ class rli extends gen_class {
 	private $data = array();
 	private $errors = array();
 	private $process_order = array('process_raids', 'process_members', 'process_items', 'process_adjustments', 'process_views');
+	
+	private $pdh_queue = array();
 	
 	private $destruct_called = false;
 
@@ -121,9 +123,6 @@ class rli extends gen_class {
 	$("#rli_import_form").submit();
 });','docready');
 		}
-		pd($this->data['progress']);
-		pd($position);
-		pd(count($ids));
 		if($position+1 < count($ids)) {
 			$str = $position+1;
 			for($i=$position+2;$i<count($ids);$i++) {
@@ -144,6 +143,26 @@ class rli extends gen_class {
 		$bools = $this->item->check($bools);
 		$bools = $this->adj->check($bools);
 		return $bools;
+	}
+	
+	public function pdh_queue($type, $key, $module, $tag, $params, $id_insert=false) {
+		$this->pdh_queue[] = array('type' => $type, 'key' => $key, 'module' => $module, 'tag' => $tag, 'params' => $params, 'id_insert' => $id_insert);
+	}
+	
+	public function process_pdh_queue() {
+		foreach($this->pdh_queue as $data) {
+			if($data['id_insert']) $data['params'][$data['id_insert']['param']] = ${$data['id_insert']['type']}[$data['params'][$data['id_insert']['param']]];
+			/* foreach($data['id_insert'] as $id_insert) {
+				if(is_array($data['params'][$id_insert['param']])) {
+					foreach($data['params'][$id_insert['param']] as &$val) {
+						$val = ${$id_insert['type']}[$val];
+					}
+				} else {
+					
+				}
+			} */
+			${$data['type']}[$data['key']] = $this->pdh->put($data['module'], $data['tag'], $data['params']);
+		}
 	}
 	
 	public function add_cache_data($type, $data) {
