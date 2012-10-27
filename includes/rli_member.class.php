@@ -24,7 +24,7 @@ if(!defined('EQDKP_INC'))
 
 if(!class_exists('rli_member')) {
   class rli_member extends gen_class {
-	public static $shortcuts = array('rli', 'in', 'pdh', 'user', 'tpl', 'html', 'jquery', 'time', 'pfh', 'game',
+	public static $shortcuts = array('cconfig' => 'config', 'rli', 'in', 'pdh', 'user', 'tpl', 'html', 'jquery', 'time', 'pfh', 'game',
 		'adj'		=> 'rli_adjustment',
 		'member'	=> 'rli_member',
 		'raid'		=> 'rli_raid',
@@ -370,6 +370,19 @@ $('#add_mem_button').click(function() {
 		}
 		return $bools;
 	}
+	
+	public function check_special($name) {
+		$special_chars = unserialize($this->cconfig->get('special_members'));
+		if(in_array($name, $this->pdh->aget('member', 'name', 0, array($special_chars)))) return true;
+		$members = $this->pdh->aget('member', 'name', 0, array($this->pdh->get('member', 'id_list', array(false, false, false))));
+		if(!($id = array_search($name, $members))) {
+			$data = array('name' => $name);
+			$id = $this->pdh->put('member', 'addorupdate_member', array(0, $data));
+		}
+		$special_chars[] = $id;
+		$this->cconfig->set('special_members', serialize($special_chars));
+		return true;
+	}
 
 	public function insert() {
 		$members = $this->pdh->aget('member', 'name', 0, array($this->pdh->get('member', 'id_list', array(false, false, false))));
@@ -388,6 +401,7 @@ $('#add_mem_button').click(function() {
 			$this->raid_members[$id] = $member['raid_list'];
 			$this->name_ids[$member['name']] = $id;
 		}
+		$this->pdh->process_hook_queue();
 		// add disenchanted / bank to name_ids array
 		$dis_id = array_search('disenchanted', $members);
 		if (!$dis_id) $dis_id = array_search('Disenchanted', $members);

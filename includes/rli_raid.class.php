@@ -392,10 +392,7 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 			}
 		}
 		foreach($this->raids as $key => $raid) {
-			$this->real_ids[$key] = $this->pdh->put('raid', 'add_raid', array($raid['begin'], $raid_attendees[$key], $raid['event'], $raid['note'], $raid['value']));
-		}
-		if(in_array(false, $this->real_ids)) {
-			return false;
+			$this->rli->pdh_queue('raids', $key, 'raid', 'add_raid', array($raid['begin'], $raid_attendees[$key], $raid['event'], $raid['note'], $raid['value']));
 		}
 		return true;
 	}

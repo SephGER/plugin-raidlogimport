@@ -156,6 +156,8 @@
 	// error messages
 	$lang['rli_error_no_raid'] = 'Es muss mindestens ein Raid erstellt werden.';
 	$lang['rli_error_no_attendant']  = 'Es muss mindestens einen Raidteilnehmer geben.';
+	$lang['rli_error_no_buyer'] = 'Item-Käufer des Items %s nicht in der Datenbank oder im Raid gefunden.';
+	$lang['rli_error_item_no_raid'] = 'Das Item %s wurde keinem Raid zugewiesen.';
 
 	//config
 	$lang['new_member_rank'] = 'Standard-Rang bei automatischer Erstellung';
@@ -237,7 +239,7 @@
 	$lang['member_display_0'] = 'Multi-Select';
 	$lang['member_display_1'] = 'Mehrere Checkboxen';
 	$lang['member_display_2'] = 'Detaillierte Join/Leave Infos';
-    $lang['member_display_help'] = "Um die Ansicht '".$lang['member_display_1']."' zu verwenden, muss die GD-Lib vorhanden sein (PHP-Extension). Folgende GD-Lib wurde gefunden:<br />%s";
+    $lang['member_display_help'] = "Um die Ansicht '".$lang['member_display_1']."' oder '".$lang['member_display_2']."' zu verwenden, muss die GD-Lib vorhanden sein (PHP-Extension). Folgende GD-Lib wurde gefunden:<br />%s";
     $lang['no_gd_lib'] = "<span class='negative'>keine GD-Lib gefunden</span>";
     $lang['title_standby'] = 'Ersatzbank-Einstellungen';
     $lang['standby_raid'] = 'Sollen Ersatzbank-Mitglieder einem Raid zugeordnet werden?';

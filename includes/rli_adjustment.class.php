@@ -150,10 +150,8 @@ $('#add_adj_button').click(function() {
 	
 	//TODO: try and group adjustments
 	public function insert() {
-		foreach($this->adjs as $adj) {
-			if(!$this->pdh->put('adjustment', 'add_adjustment', array($adj['value'], $adj['reason'], array($this->member->name_ids[$adj['member']]), $adj['event'], $this->raid->real_ids[$adj['raid']], $adj['time']))) {
-				return false;
-			}
+		foreach($this->adjs as $key => $adj) {
+			$this->rli->pdh_queue('adjustments', $key, 'adjustment', 'add_adjustment', array($adj['value'], $adj['reason'], array($this->member->name_ids[$adj['member']]), $adj['event'], $adj['raid'], $adj['time']), array('param' => 4, 'type' => 'raids'));
 		}
 		return true;
 	}

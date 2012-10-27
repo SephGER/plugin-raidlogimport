@@ -114,9 +114,15 @@ class rli_item extends gen_class {
 			$end = $start+$dic;
 		}
 		$members = $this->member->get_for_dropdown(2);
-		//add disenchanted and bank
-		$members['disenchanted'] = 'disenchanted';
-		$members['bank'] = 'bank';
+		//add disenchanted and bank if not ignored
+		if(empty($this->toignore) || !in_array('disenchanted', $this->toignore)) {
+			$members['disenchanted'] = 'disenchanted';
+			$this->member->check_special('disenchanted');
+		}
+		if(empty($this->toignore) || !in_array('bank', $this->toignore)) {
+			$members['bank'] = 'bank';
+			$this->member->check_special('bank');
+		}
 		ksort($members);
 		$members = array_merge(array($this->user->lang('rli_choose_mem')), $members);
 		$itempools = $this->pdh->aget('itempool', 'name', 0, array($this->pdh->get('itempool', 'id_list')));
@@ -243,18 +249,17 @@ $('#add_item_button').click(function() {
 	}
 	
 	public function insert() {
-		foreach($this->items as $item) {
+		$raid_keys = array_keys($this->raid->get_data());
+		foreach($this->items as $key => $item) {
 			if(!isset($this->member->name_ids[$item['member']])) {
-				$this->rli->error('process_items', $this->user->lang('rli_no_buyer'));
+				$this->rli->error('process_items', sprintf($this->user->lang('rli_error_no_buyer'), $item['name']));
 				return false;
 			}
-			if(!isset($this->raid->real_ids[$item['raid']])) {
-				$this->rli->error('process_items', $this->user->lang('rli_item_no_raid'));
+			if(!in_array($item['raid'], $raid_keys)) {
+				$this->rli->error('process_items', sprintf($this->user->lang('rli_error_item_no_raid'), $item['name']));
 				return false;
 			}
-			if(!$this->pdh->put('item', 'add_item', array($item['name'], array($this->member->name_ids[$item['member']]), $this->raid->real_ids[$item['raid']], $item['game_id'], $item['value'], $item['itempool'], $item['time']))) {
-				return false;
-			}
+			$this->rli->pdh_queue('items', $key, 'item', 'add_item', array($item['name'], array($this->member->name_ids[$item['member']]), $item['raid'], $item['game_id'], $item['value'], $item['itempool'], $item['time']), array('param' => 2, 'type' => 'raids'));
 		}
 		return true;
 	}

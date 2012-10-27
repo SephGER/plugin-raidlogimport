@@ -130,7 +130,7 @@ class rli_import extends page_generic {
 			'MEMBER_DISPLAY' => ($this->rli->config('member_display') == 1) ? $this->raid->th_raidlist : false,
 			'RAIDCOUNT'		 => ($this->rli->config('member_display') == 1) ? $this->raid->count() : 1,
 			'RAIDCOUNT3'	 => ($this->rli->config('member_display') == 1) ? $this->raid->count()+2 : 3,
-			'DETAIL_RAIDLIST' =>($this->rli->config('member_display') == 2) ? true : false)
+			'DETAIL_RAIDLIST' =>($this->rli->config('member_display') == 2 && extension_loaded('gd')) ? true : false)
 		);
 
 		$this->core->set_vars(array(
@@ -207,21 +207,16 @@ class rli_import extends page_generic {
 		$bools = $this->rli->check_data();
 		if(!in_array('miss', $bools) AND !in_array(false, $bools)) {
 			#$this->db->query("START TRANSACTION");
-			$isok = $this->member->insert();
-			if($isok) $isok = $this->raid->insert();
-			if($isok) $isok = $this->item->insert();
-			if($isok && !$this->rli->config('deactivate_adj')) $isok = $this->adj->insert();
-			if($isok) {
-				#$this->db->query("COMMIT;");
-				$this->pm->do_hooks('/plugins/raidlogimport/admin/dkp.php');
-				$this->pdh->process_hook_queue();
-				$this->rli->flush_cache();
-				$message[] = $this->user->lang('bz_save_suc');
-			} else {
-				#$this->db->query("ROLLBACK;");
-				$this->pdh->process_hook_queue();
-				$message[] = $this->user->lang('rli_error');
-			}
+			$this->member->insert();
+			$this->raid->insert();
+			$this->item->insert();
+			if(!$this->rli->config('deactivate_adj')) $this->adj->insert();
+			$this->process_error('insert_log');
+			$this->rli->process_pdh_queue();
+			$this->pm->do_hooks('/plugins/raidlogimport/admin/dkp.php');
+			$this->pdh->process_hook_queue();
+			$this->rli->flush_cache();
+			$message[] = $this->user->lang('bz_save_suc');
 			foreach($message as $answer) {
 				$this->tpl->assign_block_vars('sucs', array(
 					'PART1'	=> $answer)
