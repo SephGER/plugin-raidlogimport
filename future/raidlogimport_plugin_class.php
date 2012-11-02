@@ -26,8 +26,8 @@ class raidlogimport extends plugin_generic {
 		return array_merge(parent::$shortcuts, $shortcuts);
 	}
 
-	public $vstatus = 'Stable';
-	public $version = '0.6.0.4';
+	public $vstatus = 'Beta';
+	public $version = '0.6.1.0';
 	
 	public function pre_install() {
 		//initialize config
