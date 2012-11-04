@@ -16,44 +16,22 @@
  * $Id: lang_main.php 4868 2009-05-15 16:51:52Z hoofy_leon $
  */
 	$lang['raidlogimport'] = 'Raid-Log-Import';
-	$lang['action_raidlogimport_dkp'] = 'DKP';
 	$lang['action_raidlogimport_bz_upd'] = 'Boss / Zone edited';
 	$lang['action_raidlogimport_bz_add'] = 'Boss / Zone added';
 	$lang['action_raidlogimport_bz_del'] = 'Boss / Zone deleted';
-	$lang['action_raidlogimport_alias_upd'] = 'Alias edited';
-	$lang['action_raidlogimport_alias_add'] = 'Alias added';
-	$lang['action_raidlogimport_alias_del'] = 'Alias deleted';
-	$lang['action_raidlogimport_config'] = 'DKP-Importer Settings';
-	$lang['raidlogimport_long_desc'] = '';
+	$lang['raidlogimport_long_desc'] = 'The plugin enables you to import most types of data in formatted text strings and create a raid from it. You can award points per boss and per hour.';
 	$lang['raidlogimport_short_desc'] = 'Imports DKP-Strings';
     $lang['links'] = 'Links';
 
 	//permissions
 	$lang['raidlogimport_bz'] = 'Boss/Zone Management';
-	$lang['raidlogimport_dkp'] = 'Import DKP';
-	$lang['raidlogimport_alias'] = 'Alias Management';
-
-	//Aliase
-	$lang['rli_addalias'] = 'Add Alias';
-	$lang['rli_showalias'] = 'Show, Edit or Delete Aliase';
-	$lang['rli_earner'] = 'Member, who gets the DKP';
-	$lang['rli_replace'] = 'Name, which will be replaced in raids.';
-	$lang['rli_alias_exists'] = 'Alias already exists!';
-	$lang['rli_of'] = 'The DKP of';
-	$lang['rli_get'] = 'gets';
-	$lang['rli_edit'] = 'Edit Alias';
-	$lang['rli_alias_no_delete'] = 'Alias could not be deleted!';
-	$lang['rli_alias_delete'] = 'Alias deleted.';
-	$lang['rli_alias_no_update'] = 'Alias could not be saved!';
-	$lang['rli_alias_update'] = 'Alias saved.';
-	$lang['rli_del']	= 'Delete Alias';
-	$lang['rli_upd'] = 'Update Alias';
-	$lang['rli_menu_alias'] = 'Manage Aliase';
-	$lang['rli_suc'] = 'Alias Success';
-
+	$lang['raidlogimport_dkp'] = 'Import a raid-log';
+	
 
 	//Bz
 	$lang['rli_bz_bz'] = 'Bosses / Zones';
+	$lang['rli_bz_abz'] = 'Active Bosses / Zones';
+	$lang['rli_bz_ibz'] = 'Inactive Bosses / Zones';
 	$lang['bz_boss'] = 'Bosses';
 	$lang['bz_boss_s'] = 'Boss';
 	$lang['bz_boss_oz'] = 'Bosses without Zone';
@@ -63,6 +41,8 @@
 	$lang['bz_string'] = 'String';
 	$lang['bz_bnote'] = 'Note';
 	$lang['bz_bonus'] = 'Bonus-DKP / DKP/h';
+	$lang['bz_timebonus'] = 'Punkte pro Stunde';
+	$lang['bz_diff'] = 'Schwierigkeit';
 	$lang['bz_zevent'] = 'Event';
 	$lang['bz_update'] = 'Add new / Edit marked';
 	$lang['bz_delete'] = 'Delete marked';
@@ -72,6 +52,7 @@
 	$lang['bz_save'] = 'Save';
 	$lang['bz_yes'] = 'Yes!';
 	$lang['bz_no'] = 'No!';
+	$lang['bz_no_id'] = 'Nothing selected.';
 	$lang['bz_del'] = 'Delete Bosses / Zones';
 	$lang['bz_confirm_del'] = 'Do you really want to delete this?';
 	$lang['bz_no_del'] = 'Data not deleted!';
@@ -82,9 +63,17 @@
 	$lang['bz_suc'] = 'Bosses / Zones Success';
 	$lang['bz_missing_values'] = 'All fields have to be filled in.';
 	$lang['bz_sort'] = 'Order';
+	$lang['bz_copy_zone'] = 'Copy marked zone (including bosses) to difficulty: ';
+	$lang['bz_copy_suc'] = 'Copy successful.';
+	$lang['bz_no_copy'] = 'Copy failed!';
+	$lang['bz_import_boss'] = 'Import boss';
+	$lang['bz_set_inactive'] = 'Toggle active/inactive for marked zones (including bosses)';
+	$lang['bz_active_suc'] = 'Active/inactive toggled for marked zones.';
 
 	//dkp
 	$lang['rli_dkp_insert'] = 'Insert DKP-String';
+	$lang['rli_data_source'] = 'Select data-source';
+	$lang['rli_continue_old'] = 'Continue previous import';
 	$lang['rli_send'] = 'Send';
 	$lang['rli_raidinfo'] = 'Raid Infos';
 	$lang['rli_start'] = 'Start';
@@ -96,11 +85,12 @@
 	$lang['rli_no_mem_create'] = ' could not be created. Please add him manually!';
 	$lang['rli_mem_auto'] = ' was automatically created.';
 	$lang['rli_raid_to'] = 'Raid to %1$s on %2$s';
-	$lang['rli_t_dkp'] = 'Time-DKP';
+	$lang['rli_t_points'] = 'Time-DKP';
 	$lang['rli_b_dkp'] = 'Boss-DKP';
 	$lang['rli_looter'] = 'Looter';
 	$lang['xml_error'] = 'XML-Error. Please check the log!';
 	$lang['parse_error'] = 'Parsing-Error!';
+	$lang['rli_check_data'] = 'Check data';
 	$lang['rli_clock'] = '';
 	$lang['rli_hour'] = 'hour';
 	$lang['rli_att'] = 'Attendence';
@@ -118,10 +108,18 @@
 	$lang['rli_partial_raid'] = 'Partial Raidattendence';
 	$lang['rli_add_raid'] = 'Add raid';
 	$lang['rli_add_raids'] = 'Add raids';
+	$lang['rli_delete_raids_warning'] = 'Do you really want to delete the raid/boss?';
 	$lang['rli_add_mem'] = 'Add member';
 	$lang['rli_add_mems'] = 'Add members';
+	$lang['rli_delete_members_warning'] = 'Do you really want to delete the member?';
+	$lang['rli_add_time'] = 'Add a timebar';
+	$lang['rli_del_time'] = 'Delete timebar';
+	$lang['rli_standby_switch'] = 'Toggle standby';
+	$lang['rli_bossname'] = 'Name of the boss:';
+	$lang['rli_bosstime'] = 'Killtime:';
+	$lang['rli_bossvalue'] = 'Value / Bonus:';
 	$lang['rli_add_item'] = 'Add item';
-	$lang['rli_add_items'] = 'Add items';
+	$lang['rli_delete_items_warning'] = 'Do you really want to delete the item?';
 	$lang['rli_item_id'] = 'Item-ID';
 	$lang['rli_add_adj'] = 'Add adjustment';
 	$lang['rli_add_adjs'] = 'Add adjustments';
@@ -140,18 +138,27 @@
 	$lang['magicdkp_format'] = 'An error occured.';
 	$lang['wrong_game'] = 'The game from which you exported the log and the game you specified in the configuration are not the same!';
 	$lang['rli_process'] = 'Process';
-	$lang['translate_items'] = 'Translate items';
-	$lang['get_itemid'] = 'Load Item-ID';
-	$lang['translate_items_tip'] = 'After translation please press "Update" to fill the new item-data into the formular.';
-	$lang['raidval_nullsum_later'] = 'With null-sum-system the raid-value wil be entered later.';
-	$lang['check_raidval'] = 'Check Raid-Values';
-	$lang['rli_log_lang'] = 'In which Language are the items in the log?';
-	$lang['form_null_sum'] = 'Formula: Item-Costs / Number of Members ';
-	$lang['form_null_sum_1'] = $lang['form_null_sum'].'in the Raid';
-	$lang['form_null_sum_2'] = $lang['form_null_sum'].'in the System';
+	$lang['check_raidval'] = 'Check raid values';
 	$lang['rli_choose_mem'] = 'Choose a Member ...';
 	$lang['rli_go_on'] = 'Forward';
+	$lang['rli_raidatt_upd'] = 'Click on "Update" to show the raid attendance for the new times.';
+	$lang['rli_error_imagecreate'] = 'Error while creating image file.';
+	$lang['rli_save_itempool'] = 'Save itempool for marked items.';
+	$lang['rli_itempool_saved'] = 'Itempools saved!';
+	$lang['rli_itempool_partial_save'] = 'Itempools saved only partially.';
+	$lang['rli_itempool_nosave'] = 'Not saved Items';
+	$lang['rli_help'] = 'Help?';
+	$lang['rli_help_dt_member'] = 'help text NYI';
+	$lang['rli_member_refresh_for_view'] = 'Press update to show the Raidslider.';
+	$lang['rli_loading'] = 'Please wait';
+	$lang['rli_finish'] = 'Finish';
 
+	// error messages
+	$lang['rli_error_no_raid'] = 'At least one raid needs to be created.';
+	$lang['rli_error_no_attendant']  = 'The must be at least one member participating the raid.';
+	$lang['rli_error_no_buyer'] = 'Could not find the buyer of the Item %s in the raid or database.';
+	$lang['rli_error_item_no_raid'] = 'Item %s have not been assigned to a raid.';
+	
 	//config
 	$lang['new_member_rank'] = 'Default rank for automatic created members.';
 	$lang['raidcount'] = 'How should the raids be created?';
@@ -159,10 +166,12 @@
 	$lang['raidcount_1'] = 'One raid per hour';
 	$lang['raidcount_2'] = 'One raid per boss';
 	$lang['raidcount_3'] = 'One raid per hour and per boss';
+	//moved from dkp
 	$lang['wrong_settings'] = '<img src="$eqdkp_root_path'.'images/global/false.png" alt="error" width="32"> Wrong Settings!';
 	$lang['wrong_settings_1'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_1'].' with no Time-DKP.';
 	$lang['wrong_settings_2'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_2'].' with no Boss-DKP.';
 	$lang['wrong_settings_3'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_3'].' with no Boss- and/or Time-DKP.';
+	
 	$lang['attendence_begin'] = 'Bonus for attendence during raidbegin';
 	$lang['attendence_end'] = 'Bonus for attendence during raidend';
 	$lang['config_success'] = 'Configuration Success';
@@ -173,12 +182,12 @@
 	$lang['loottime'] = 'Time in seconds, the loot belongs to the boss before.';
 	$lang['attendence_time'] = 'Time in seconds, the invite / end of raid lasts.';
 	$lang['rli_inst_version'] = 'Installed version';
-	$lang['adj_parse'] = 'Delimiter between reason and value of an adjustment';
 	$lang['bz_parse'] = 'Delimiter between the Strings, which belong to one "event".';
 	$lang['parser'] = 'In which XML-Format is the string?';
 	$lang['parser_eqdkp'] = 'MLDKP 1.1 / EQdkp Plugin';
 	$lang['parser_plus'] = 'EQdkpPlus XML Format';
 	$lang['parser_magicdkp'] = 'MagicDKP';
+	$lang['parser_empty'] = 'Empty String';
 	$lang['rli_man_db_up'] = 'Force DB-Update';
 	$lang['rli_upd_check'] = 'Enable Update Check?';
 	$lang['use_dkp'] = 'Which DKP shall be used?';
@@ -189,7 +198,6 @@
 	$lang['null_sum_0'] = 'No';
 	$lang['null_sum_1'] = 'Every member in the raid gets the DKP';
 	$lang['null_sum_2'] = 'Every member in the system gehts the DKP';
-	$lang['item_save_lang'] = 'In which language should the items be saved in the DB?';
 	$lang['deactivate_adj'] = "Deactivate Adjustments?";
 	$lang['deactivate_adj_warn'] = "This removes partially gain of DKP per member! Everyone gets all or nothing!";
 	$lang['auto_minus'] = 'Activate automatic minus?'.$lang['addinfo_am'];
@@ -209,8 +217,7 @@
 	$lang['title_hnh_suffix'] = 'Heroic / Non-Heroic';
 	$lang['title_member'] = 'Member Settings';
 	$lang['ignore_dissed'] = 'Ignore disenchanted and bank loot?';
-	$lang['ignore_dissed_1'] = 'Ignore disenchanted';
-	$lang['ignore_dissed_2'] = 'Ignore bank';
+	$lang['ignore_dissed_help'] = 'e.g. Disenchanted or bank. Separarated by commata.';
 	$lang['member_miss_time'] = 'Time in seconds a member can miss without it being tracked.';
 	$lang['s_member_rank'] = 'Show member rank?';
 	$lang['s_member_rank_1'] = 'Members-Overview';
@@ -249,6 +256,13 @@
 	$lang['standby_dkptype_4'] = $lang['use_dkp_4'];
 	$lang['standby_raidnote'] = 'Note for standby-raid';
 	$lang['standby_raid_note'] = 'Standby';
+	$lang['itempool_save'] = 'Itempools can be saved per item and event.';
+	$lang['itempool_save_help'] = 'At the item-import-page the itempool can be saved for all displayed items. On the next import of the raid the itempool is automatically selected for that item.';
+	$lang['del_dbl_times'] = 'Shall double times be deleted? The latter time for joins, the earlier one for leaves.';
+	$lang['autocomplete'] = 'Add autocomplete function to the following fields?';
+	$lang['autocomplete_1'] = 'Charactername';
+	$lang['autocomplete_2'] = 'Itemname';
+	$lang['no_del_warn'] = 'Dont show warnings on deletion?';
 
     //portal
     $lang['p_rli_zone_display'] = 'Which zones shall be displayed?';
