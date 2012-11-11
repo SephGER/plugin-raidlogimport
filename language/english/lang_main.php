@@ -5,15 +5,15 @@
  * Link:		http://creativecommons.org/licenses/by-nc-sa/3.0/
  * -----------------------------------------------------------------------
  * Began:       2008
- * Date:        $Date: 2009-05-15 18:51:52 +0200 (Fr, 15 Mai 2009) $
+ * Date:        $Date$
  * -----------------------------------------------------------------------
- * @author      $Author: hoofy_leon $
+ * @author      $Author$
  * @copyright   2008-2009 hoofy_leon
  * @link        http://eqdkp-plus.com
  * @package     raidlogimport
- * @version     $Rev: 4868 $
+ * @version     $Rev$
  *
- * $Id: lang_main.php 4868 2009-05-15 16:51:52Z hoofy_leon $
+ * $Id$
  */
 	$lang['raidlogimport'] = 'Raid-Log-Import';
 	$lang['action_raidlogimport_bz_upd'] = 'Boss / Zone edited';

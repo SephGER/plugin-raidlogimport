@@ -5,15 +5,15 @@
 * Link:		http://creativecommons.org/licenses/by-nc-sa/3.0/
 * -----------------------------------------------------------------------
 * Began:       2008
-* Date:        $Date: 2009-07-04 16:06:06 +0200 (Sa, 04 Jul 2009) $
+* Date:        $Date$
 * -----------------------------------------------------------------------
-* @author      $Author: hoofy_leon $
+* @author      $Author$
 * @copyright   2008-2009 hoofy_leon
 * @link        http://eqdkp-plus.com
 * @package     raidlogimport
-* @version     $Rev: 5166 $
+* @version     $Rev$
 *
-* $Id: dkp.php 5166 2009-07-04 14:06:06Z hoofy_leon $
+* $Id$
 */
 
 // EQdkp required files/vars
