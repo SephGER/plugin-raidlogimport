@@ -5,15 +5,15 @@
  * Link:		http://creativecommons.org/licenses/by-nc-sa/3.0/
  * -----------------------------------------------------------------------
  * Began:       2008
- * Date:        $Date: 2009-05-07 17:52:03 +0200 (Do, 07 Mai 2009) $
+ * Date:        $Date$
  * -----------------------------------------------------------------------
- * @author      $Author: hoofy_leon $
+ * @author      $Author$
  * @copyright   2008-2009 hoofy_leon
  * @link        http://eqdkp-plus.com
  * @package     raidlogimport
- * @version     $Rev: 4786 $
+ * @version     $Rev$
  *
- * $Id: common.php 4786 2009-05-07 15:52:03Z hoofy_leon $
+ * $Id$
  */
 
 if(!defined('EQDKP_INC'))
