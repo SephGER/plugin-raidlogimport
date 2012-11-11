@@ -119,7 +119,7 @@ $('#add_adj_button').click(function() {
 	adj.html(adj.html().replace(/999/g, rli_key));
 	adj.attr('id', 'adj_'+rli_key);
 	adj.removeAttr('style');
-	$('#adj_'+(rli_key-1)).after(adj);
+	$('#adj_999').before(adj);
 	rli_key++;
 });", 'docready');
 	}
