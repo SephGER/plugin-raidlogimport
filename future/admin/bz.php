@@ -35,7 +35,8 @@ class rli_Bz extends page_generic {
 
 		$handler = array(
 			'save' => array('process' => 'save', 'csrf' => true),
-			'copy' => array('process' => 'copy', 'csrf' => true),
+			'copy' => array('process' => 'copy'),
+			'upd'  => array('process' => 'update', 'csrf' => false),
 			'inactive' => array('process' => 'switch_inactive', 'csrf' => true)
 		);
 		parent::__construct(false, $handler, false, null, 'bz_ids[]');
@@ -329,7 +330,7 @@ class rli_Bz extends page_generic {
 
 	private function assign2tpl($zone_id, $sorting, $tozone) {
 		$this->jquery->Collapse('#zone_'.$zone_id);
-		$inactive = ($this->pdh->get('rli_zone', 'active', array($zone_id))) ? '' : 'inactive_';
+		$inactive = (!$zone_id || $this->pdh->get('rli_zone', 'active', array($zone_id))) ? '' : 'inactive_';
 		$this->tpl->assign_block_vars($inactive.'zone_list', array(
 			'ZID'		=> $zone_id,
 			'ZSTRING'	=> ($zone_id) ? $this->pdh->geth('rli_zone', 'string', array($zone_id)) : $this->user->lang('bz_boss_oz'),

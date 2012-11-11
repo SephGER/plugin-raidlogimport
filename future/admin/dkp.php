@@ -213,7 +213,6 @@ class rli_import extends page_generic {
 			if(!$this->rli->config('deactivate_adj')) $this->adj->insert();
 			$this->process_error('insert_log');
 			$this->rli->process_pdh_queue();
-			$this->pm->do_hooks('/plugins/raidlogimport/admin/dkp.php');
 			$this->pdh->process_hook_queue();
 			$this->rli->flush_cache();
 			$message[] = $this->user->lang('bz_save_suc');
