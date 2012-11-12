@@ -547,7 +547,7 @@ $('#add_mem_button').click(function() {
 							$(document).on('mouseleave', '.add_time', function(){
 								$('#time_scale_' + member_id).attr('class', 'time_scale_hide');
 							});
-							$('.add_time').live('contextmenu', function(e) {
+							$(document).on('contextmenu', '.add_time', function(e) {
 								$('<div id=\"rc_overlay\"></div>').css({left : '0px', top : '0px',position: 'absolute', width: '100%', height: '100%', zIndex: '200' }).click(function() {
 									$(this).remove();
 									$('#myrcm').hide();
