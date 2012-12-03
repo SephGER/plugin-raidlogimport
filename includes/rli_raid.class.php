@@ -197,7 +197,7 @@ class rli_raid extends gen_class {
 	}
 
 	public function get_value($key, $times=false, $attdkp_force=array(-1,-1)) {
-		if(isset($this->data['add']) && $key == $this->data['add']['standby_raid'] && $this->config('standby_absolute')) {
+		if($this->config('standby_absolute') && isset($this->data['add']) && $key == $this->data['add']['standby_raid']) {
 			return $this->config('standby_value');
 		}
 		$timedkp = $this->get_timedkp($key, $times);
@@ -555,11 +555,11 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 
 	private function get_timedkp($key, $times) {
 		$timedkp = 0;
+		$standby = ($key == $this->data['add']['standby_raid']) ? 2 : 1;
 		if(	$this->config('standby_raid') <= 1 AND (
 				($this->config('standby_dkptype') & 2 AND $key == $this->data['add']['standby_raid']) OR
 				($this->config('use_dkp') & 2 AND $key != $this->data['add']['standby_raid'])
 			)) {
-			$standby = ($key == $this->data['add']['standby_raid']) ? 2 : 1;
 			$in_raid = format_duration($this->in_raid($key, $times, $standby));
 			$timedkp = ($standby == 2) ? $this->calc_timedkp($key, $in_raid)*$this->config('standby_value')/100 : $this->calc_timedkp($key, $in_raid);
 		} elseif($this->config('standby_raid') == 2) {
@@ -572,7 +572,9 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 				$in_raid[1] = format_duration($this->in_raid($key, $times, 2));
 				$in_raid[1] = $this->calc_timedkp($key, $in_raid[1]);
 			}
-			$timedkp = $in_raid[0] + $in_raid[1]*$this->config('standby_value')/100;
+			$timedkp = $in_raid[0];
+			//only add the dkp from standby if we are in member-dkp-calculation
+			if(is_array($times)) $timedkp += $in_raid[1]*$this->config('standby_value')/100;
 		}
 		return $timedkp;
 	}
