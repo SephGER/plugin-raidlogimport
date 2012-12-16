@@ -26,7 +26,12 @@
 	//permissions
 	$lang['raidlogimport_bz'] = 'Boss/Zonen Verwaltung';
 	$lang['raidlogimport_dkp'] = 'Raid-Log importieren';
-
+	
+	//messages
+	$lang['rli_no_save'] = 'Daten nicht gespeichert!';
+	$lang['rli_save_suc'] = 'Daten erfolgereich gespeichert.';
+	$lang['rli_no_del'] = 'Daten nicht gelöscht!';
+	$lang['rli_del_suc'] = 'Daten erfolgreich gelöscht.';
 
 	//Bz
 	$lang['rli_bz_bz'] = 'Bosse / Zonen';
@@ -49,17 +54,12 @@
 	$lang['bz_upd'] = 'Bosse / Zonen bearbeiten';
 	$lang['bz_type'] = 'Art';
 	$lang['bz_note_event'] = 'Notiz / Event';
-	$lang['bz_save'] = 'Speichern';
 	$lang['bz_yes'] = 'Ja!';
 	$lang['bz_no'] = 'Nein!';
 	$lang['bz_no_id'] = 'Nichts ausgewählt.';
 	$lang['bz_del'] = 'Bosse / Zonen löschen';
 	$lang['bz_confirm_del'] = 'Wollen Sie wirklich Folgendes löschen?';
-	$lang['bz_no_del'] = 'Daten nicht gelöscht!';
-	$lang['bz_del_suc'] = 'Daten erfolgreich gelöscht.';
 	$lang['bz_tozone'] = 'In Zone';
-	$lang['bz_no_save'] = 'Daten nicht gespeichert!';
-	$lang['bz_save_suc'] = 'Daten erfolgereich gespeichert.';
 	$lang['bz_suc'] = 'Boss / Zonen Erfolg';
 	$lang['bz_missing_values'] = 'Es müssen alle Felder ausgefüllt sein.';
 	$lang['bz_sort'] = 'Reihenfolge';

@@ -240,7 +240,7 @@ if(!class_exists('rli_member')) {
 		$key = 0;
 		$first_run = false;
 		if($this->rli->get_cache_data('progress') == 'members') {
-			$first_run = true;
+			$this->create_memberraids();
 			$this->rli->add_cache_data('progress', 'items');
 		}
 		foreach($this->members as $key => $member) {
@@ -248,26 +248,14 @@ if(!class_exists('rli_member')) {
 				if($this->config('s_member_rank') & 1) {
 					$member['rank'] = $this->rank_suffix($member['name']);
 				}
-				if($first_run) {
-					$mraids = $this->raid->get_memberraids($member['times']);
-					$a = $this->raid->get_attendance($member['times']);
-					if(isset($a['begin']) AND !in_array($globalattraids['begin'], $mraids)) {
-						$mraids[] = $globalattraids['begin'];
-					}
-					if(isset($a['end']) AND !in_array($globalattraids['end'], $mraids)) {
-						$mraids[] = $globalattraids['end'];
-					}
-				} else {
-					$mraids = $member['raid_list'];
-				}
 				if($this->config('member_display') == 1 AND extension_loaded('gd')) {
-					$raid_list = $this->raid->get_checkraidlist($mraids, $key);
+					$raid_list = $this->raid->get_checkraidlist($member['raid_list'], $key);
 				}
 				elseif($this->config('member_display') == 2 AND extension_loaded('gd')) {
 					$raid_list = '';
 					$detail_raid_list = true;
 				} else {
-					$raid_list = '<td>'.$this->jquery->MultiSelect('members['.$key.'][raid_list]', $this->raid->raidlist(), $mraids, array('id' => 'members_'.$key.'_raidlist')).'</td>';
+					$raid_list = '<td>'.$this->jquery->MultiSelect('members['.$key.'][raid_list]', $this->raid->raidlist(), $member['raid_list'], array('id' => 'members_'.$key.'_raidlist')).'</td>';
 				}
 				$att_begin = ((isset($member['att_begin']) AND $member['att_begin']) OR (!isset($member['att_begin']) AND $a['begin'])) ? 'checked="checked"' : '';
 				$att_end = ((isset($member['att_end']) AND $member['att_end']) OR (!isset($member['att_end']) AND $a['end'])) ? 'checked="checked"' : '';
@@ -301,7 +289,7 @@ if(!class_exists('rli_member')) {
                 'RANK'	   => ($this->config('s_member_rank') & 1) ? $this->rank_suffix($member['name']) : '',
 				'DELDIS'	=> 'disabled="disabled"',
            	));
-			if(isset($detail_raid_list)) $this->detailed_times_list($key, $mraids);
+			if(isset($detail_raid_list)) $this->detailed_times_list($key, $member['raid_list']);
         }//foreach members
 		//a member to copy from for js-addition
 		if($with_form) {
@@ -411,6 +399,19 @@ $('#add_mem_button').click(function() {
 		if($bank_id) $this->name_ids[$members[$bank_id]] = $bank_id;
 
 		return true;
+	}
+	
+	private function create_memberraids() {
+		foreach($this->members as &$member) {
+			$member['raid_list'] = $this->raid->get_memberraids($member['times']);
+			$a = $this->raid->get_attendance($member['times']);
+			if(isset($a['begin']) AND !in_array($globalattraids['begin'], $member['raid_list'])) {
+				$member['raid_list'][] = $globalattraids['begin'];
+			}
+			if(isset($a['end']) AND !in_array($globalattraids['end'], $member['raid_list'])) {
+				$member['raid_list'][] = $globalattraids['end'];
+			}
+		}
 	}
 
 	private function raid_positions($raids, $begin) {

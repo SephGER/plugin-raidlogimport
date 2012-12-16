@@ -1,16 +1,16 @@
 <form method="post" action="{ACTION}" id="form_rli_bz">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="colorswitch">
       <tr>
-      	<th align="center" width="100%" colspan="8">{L_BZ_UPD}</th>
+      	<th align="center" width="100%" colspan="8">{L_bz_upd}</th>
       </tr>
       <tr>
-      	<th>{L_TYPE}</th><th>{L_STRING}</th><th>{L_NOTE_EVENT}</th><th>{L_TIMEBONUS}</th><th>{L_BONUS}</th><!-- IF S_DIFF --><th>{L_DIFF}</th><!-- ENDIF --><th>{L_TOZONE}</th><th>{L_SORT}</th>
+      	<th>{L_bz_type}</th><th>{L_bz_string}</th><th>{L_bz_note_event}</th><th>{L_bz_timebonus}</th><th>{L_bz_bonus}</th><!-- IF S_DIFF --><th>{L_difficulty}</th><!-- ENDIF --><th>{L_bz_tozone}</th><th>{L_bz_sort}</th>
       </tr>
       <!-- BEGIN upd_list -->
       <tr>
       	<td><select name="type[{upd_list.ID}]" id="type_{upd_list.ID}" class="boss_zone_type">
-      		<option value="boss" {upd_list.BSELECTED}>{L_BOSS}</option>
-      		<option value="zone" {upd_list.ZSELECTED}>{L_ZONE}</option>
+      		<option value="boss" {upd_list.BSELECTED}>{L_bz_boss_s}</option>
+      		<option value="zone" {upd_list.ZSELECTED}>{L_bz_zone_s}</option>
       		</select>
       	</td>
       	<td><input type="text" name="string[{upd_list.ID}]" value="{upd_list.STRING}" /></td>
@@ -37,7 +37,7 @@
       </tr>
       <!-- END upd_list -->
       <tr>
-      	<th colspan="8"><input type="submit" name="save" value="{L_SAVE}" class="mainoption" /></th>
+      	<th colspan="8"><input type="submit" name="save" value="{L_save}" class="mainoption" /></th>
       </tr>
     </table>
 {CSRF_TOKEN}

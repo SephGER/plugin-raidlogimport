@@ -5,6 +5,7 @@
 			<li><a href="#members" id="rli_nav_members"><span>{L_members}</span></a><input type="hidden" name="checkmem" value="{L_update}" disabled="disabled" /></li>
 			<li><a href="#items" id="rli_nav_items"><span>{L_items}</span></a><input type="hidden" name="checkitem" value="{L_update}" disabled="disabled" /></li>
 			<li><a href="#adjustments" id="rli_nav_adjustments"><span>{L_adjustments}</span></a><input type="hidden" name="checkadj" value="{L_update}" disabled="disabled" /></li>
+			<li><a href="#viewall" id="rli_nav_viewall"><span>{L_rli_check_data}</span></a><input type="hidden" name="viewall" value="{L_update}" disabled="disabled" /></li>
 			<li><a href="#finish" id="rli_nav_finish"><span>{L_rli_finish}</span></a><input type="hidden" name="insert" value="{L_update}" disabled="disabled" /></li>
 		</ul>
 		<div id="raids">
@@ -17,9 +18,6 @@
 				<span><img src="{EQDKP_IMAGE_PATH}global/loading.gif" alt="..." /> {L_rli_loading} </span>
 		</div>
 		<div id="adjustments">
-			<!-- INCLUDE raid_display.html -->
-			<!-- INCLUDE member_display.html -->
-			<!-- INCLUDE item_display.html -->
 			<table width="100%" cellspacing="1" cellpadding="1" border="0" id="adj" class="colorswitch">
 			<tr>
 				<th colspan="6">{L_rli_adjs}</th>
@@ -46,10 +44,13 @@
 			<tr>
 				<th colspan="6">
 					<input type="submit" name="checkadj" value="{L_update}" class="mainoption" />
-					<input type="submit" name="insert" value="{L_rli_insert}" class="mainoption" />
+					<input type="submit" name="insert" value="{L_rli_go_on}" class="mainoption" />
 				</th>
 			</tr>
 			</table>
+		</div>
+		<div id="viewall">
+				<span><img src="{EQDKP_IMAGE_PATH}global/loading.gif" alt="..." /> {L_rli_loading} </span>
 		</div>
 		<div id="finish">
 				<span><img src="{EQDKP_IMAGE_PATH}global/loading.gif" alt="..." /> {L_rli_loading} </span>

@@ -7,6 +7,7 @@
 			<!-- IF not S_DEACTIVATE_ADJ -->
 				<li><a href="#adjustments" id="rli_nav_adjustments"><span>{L_adjustments}</span></a><input type="hidden" name="checkadj" value="{L_update}" disabled="disabled" /></li>
 			<!-- ENDIF -->
+			<li><a href="#viewall" id="rli_nav_viewall"><span>{L_rli_check_data}</span></a><input type="hidden" name="viewall" value="{L_update}" disabled="disabled" /></li>
 			<li><a href="#finsh" id="rli_nav_finish"><span>{L_rli_finish}</span></a><input type="hidden" name="insert" value="{L_update}" disabled="disabled" /></li>
 		</ul>
 		<div id="raids">
@@ -21,15 +22,11 @@
 		<div id="adjustments">
 				<span><img src="{EQDKP_IMAGE_PATH}global/loading.gif" alt="..." /> {L_rli_loading} </span>
 		</div>
+		<div id="viewall">
+			
+		</div>
 		<div id="finish">
-			<table width="100%" border="0" cellpadding="2" cellspacing="1">
-				<tr>
-					<th>{L_rli_imp_no_suc}</th>
-				</tr>
-				<tr class="row1">
-					<td>{CHECK}</td>
-				</tr>
-			</table>
+				<span><img src="{EQDKP_IMAGE_PATH}global/loading.gif" alt="..." /> {L_rli_loading} </span>
 		</div>
 	</div>
 </form>

@@ -27,6 +27,11 @@
 	$lang['raidlogimport_bz'] = 'Boss/Zone Management';
 	$lang['raidlogimport_dkp'] = 'Import a raid-log';
 	
+	//messages
+	$lang['rli_no_save'] = 'Data not savedt!';
+	$lang['rli_save_suc'] = 'Data successfully saved.';
+	$lang['rli_no_del'] = 'Data not deleted!';
+	$lang['rli_del_suc'] = 'Data successfully deleted.';
 
 	//Bz
 	$lang['rli_bz_bz'] = 'Bosses / Zones';
@@ -49,17 +54,12 @@
 	$lang['bz_upd'] = 'Edit Bosses / Zones';
 	$lang['bz_type'] = 'Type';
 	$lang['bz_note_event'] = 'Note / Event';
-	$lang['bz_save'] = 'Save';
 	$lang['bz_yes'] = 'Yes!';
 	$lang['bz_no'] = 'No!';
 	$lang['bz_no_id'] = 'Nothing selected.';
 	$lang['bz_del'] = 'Delete Bosses / Zones';
 	$lang['bz_confirm_del'] = 'Do you really want to delete this?';
-	$lang['bz_no_del'] = 'Data not deleted!';
-	$lang['bz_del_suc'] = 'Data successfully deleted.';
 	$lang['bz_tozone'] = 'In zone';
-	$lang['bz_no_save'] = 'Data not savedt!';
-	$lang['bz_save_suc'] = 'Data successfully saved.';
 	$lang['bz_suc'] = 'Bosses / Zones Success';
 	$lang['bz_missing_values'] = 'All fields have to be filled in.';
 	$lang['bz_sort'] = 'Order';

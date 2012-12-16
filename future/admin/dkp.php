@@ -43,7 +43,7 @@ class rli_import extends page_generic {
 			'checkitem'	=> array('process' => 'process_items'),
 			'save_itempools' => array('process' => 'itempool_save'),
 			'checkadj'	=> array('process' => 'process_adjustments'),
-#			'viewall'	=> array('process' => 'process_views'),
+			'viewall'	=> array('process' => 'process_views'),
 			'insert'	=> array('process' => 'insert_log')
 		);
 		parent::__construct(false, $handler);
@@ -98,7 +98,7 @@ class rli_import extends page_generic {
 		
 		// error processing
 		if($error_out) $this->process_error('process_raids');
-		$this->rli->nav(0);
+		$this->rli->nav('raids');
 
 		$this->core->set_vars(array(
 			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_check_data'),
@@ -122,7 +122,7 @@ class rli_import extends page_generic {
 		
 		// error processing
 		if($error_out) $this->process_error('process_members');
-		$this->rli->nav(1);
+		$this->rli->nav('members');
 
 		$this->tpl->assign_vars(array(
 			'S_ATT_BEGIN'	 => ($this->rli->config('attendence_begin') > 0 AND !$this->rli->config('attendence_raid')) ? TRUE : FALSE,
@@ -157,7 +157,7 @@ class rli_import extends page_generic {
 		
 		// error processing
 		if($error_out) $this->process_error('process_items');
-		$this->rli->nav(2);
+		$this->rli->nav('items');
 		
 		$this->core->set_vars(array(
 			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_check_data'),
@@ -190,7 +190,7 @@ class rli_import extends page_generic {
 		
 		// error processing
 		if($error_out) $this->process_error('process_adjustments');
-		$this->rli->nav(3);
+		$this->rli->nav('adjustments');
 		
 		$this->core->set_vars(array(
 			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_check_data'),
@@ -199,10 +199,30 @@ class rli_import extends page_generic {
 			'display'           => true)
 		);
 	}
+	
+	public function process_views() {
+			
+		$this->member->display();
+		$this->raid->display();
+		$this->item->display();
+		$this->adj->display();
+		
+		//language
+		lang2tpl();
+		
+		// error processing
+		if($error_out) $this->process_error('process_views');
+		$this->rli->nav('viewall');
+		
+		$this->core->set_vars(array(
+			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_check_data'),
+			'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
+			'template_file'     => 'viewall.html',
+			'display'           => true)
+		);
+	}
 
 	public function insert_log() {
-		global $db, $core, $user, $tpl, $pm, $rli, $pdh;
-		
 		$message = array();
 		$bools = $this->rli->check_data();
 		if(!in_array('miss', $bools) AND !in_array(false, $bools)) {
@@ -215,21 +235,12 @@ class rli_import extends page_generic {
 			$this->rli->process_pdh_queue();
 			$this->pdh->process_hook_queue();
 			$this->rli->flush_cache();
-			$message[] = $this->user->lang('bz_save_suc');
-			foreach($message as $answer) {
-				$this->tpl->assign_block_vars('sucs', array(
-					'PART1'	=> $answer)
-				);
-			}
-			$this->tpl->assign_vars(array(
-				'L_SUCCESS' => $this->user->lang('rli_success'),
-				'L_LINKS'	=> $this->user->lang('links'))
-			);
 	
+			$this->rli->nav('finish');
 			$this->core->set_vars(array(
 				'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_imp_suc'),
 				'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
-				'template_file'     => 'success.html',
+				'template_file'     => 'finish.html',
 				'display'           => true)
 			);
 		} else {
@@ -245,7 +256,7 @@ class rli_import extends page_generic {
 				'L_NO_IMP_SUC'	=> $this->user->lang('rli_imp_no_suc'),
 				'CHECK'			=> $check)
 			);
-			$this->rli->nav(4);
+			$this->rli->nav('finish');
 			$this->core->set_vars(array(
 				'page_title'		=> sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_imp_no_suc'),
 				'template_path'		=> $this->pm->get_data('raidlogimport', 'template_path'),

@@ -70,8 +70,8 @@ class rli_Bz extends page_generic {
 	}
 
 	public function save() {
-		$message = array('bz_no_save' => array(), 'bz_save_suc' => array());
-		if($this->in->get('save') == $this->user->lang('bz_save')) {
+		$message = array('rli_no_save' => array(), 'rli_save_suc' => array());
+		if($this->in->get('save') == $this->user->lang('save')) {
 			$data = $this->in->getArray('type', 'string');
 			foreach($data as $id => $type) {
 				$method = ($id == 'neu') ? 'add' : 'update';
@@ -84,9 +84,9 @@ class rli_Bz extends page_generic {
 					if($save) $save = $this->pdh->put('rli_'.$type, 'add', $this->prepare_data($type, $id, 'add'));
 				}
 				if($save) {
-					$message['bz_save_suc'][] = $this->in->get('string:'.$id, '');
+					$message['rli_save_suc'][] = $this->in->get('string:'.$id, '');
 				} else {
-					$message['bz_no_save'][] = $this->in->get('string:'.$id, '');
+					$message['rli_no_save'][] = $this->in->get('string:'.$id, '');
 				}
 			}
 			$this->pdh->process_hook_queue();
@@ -145,22 +145,22 @@ class rli_Bz extends page_generic {
 					$id = substr($id, 1);
 					$note = $this->pdh->get('rli_boss', 'note', array($id));
 					if($this->pdh->put('rli_boss', 'del', array($id))) {
-						$message['bz_save_suc'][] = $note;
+						$message['rli_del_suc'][] = $note;
 					} else {
-						$message['bz_no_save'][] = $note;
+						$message['rli_no_del'][] = $note;
 					}
 				} else {
 					$id = substr($id, 1);
 					$event = $this->pdh->get('rli_zone', 'event', array($id, false));
 					if($this->pdh->put('rli_zone', 'del', array($id))) {
-						$message['bz_save_suc'][] = $event;
+						$message['rli_del_suc'][] = $event;
 					} else {
-						$message['bz_no_save'][] = $event;
+						$message['rli_no_del'][] = $event;
 					}
 				}
 			}
 		} else {
-			$message['bz_no_save'][] = $this->user->lang('bz_no_id');
+			$message['rli_no_del'][] = $this->user->lang('bz_no_id');
 		}
 		$this->display($message);
 	}
@@ -222,19 +222,7 @@ class rli_Bz extends page_generic {
 		$this->tpl->assign_vars(array(
 			'S_DIFF'		=> ($this->game->get_game() == 'wow') ? true : false,
 			'S_BOSSEVENT'	=> ($this->config->get('event_boss', 'raidlogimport')  & 1) ? true : false,
-			'L_BZ_UPD'		=> $this->user->lang('bz_upd'),
-			'L_TYPE'		=> $this->user->lang('bz_type'),
-			'L_STRING'		=> $this->user->lang('bz_string'),
-			'L_NOTE_EVENT'	=> $this->user->lang('bz_note_event'),
-			'L_BONUS'		=> $this->user->lang('bz_bonus'),
-			'L_TIMEBONUS'	=> $this->user->lang('bz_timebonus'),
-			'L_DIFF'		=> $this->user->lang('difficulty'),
-			'L_SAVE'		=> $this->user->lang('bz_save'),
-			'L_ZONE'		=> $this->user->lang('bz_zone_s'),
-			'L_BOSS'		=> $this->user->lang('bz_boss_s'),
-			'L_TOZONE'		=> $this->user->lang('bz_tozone'),
-			'L_SORT'		=> $this->user->lang('bz_sort'))
-		);
+		));
 		$js = '
 			$(".boss_zone_type").change(function(){
 				var id = $(this).attr("id").substr(5);

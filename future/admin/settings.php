@@ -101,7 +101,7 @@ class RLI_Settings extends page_generic {
 		if($messages) {
 			$this->rli->__construct();
 			foreach($messages as $name) {
-				$this->core->message($name, $this->user->lang('bz_save_suc'), 'green');
+				$this->core->message($name, $this->user->lang('rli_save_suc'), 'green');
 			}
 		}
 		//select ranks
@@ -242,8 +242,6 @@ class RLI_Settings extends page_generic {
 		}
 		$this->tpl->assign_vars(array(
 			'L_CONFIG' => $this->user->lang('raidlogimport').' '.$this->user->lang('settings'),
-			'L_SAVE'	 => $this->user->lang('bz_save'),
-			'L_MANUAL'	=> $this->user->lang('rli_manual'),
 			#'S_GERMAN'	=> ($this->user->lang_name == 'german') ? true : false,
 			'TAB_JS'	=> $this->jquery->Tab_header('rli_config'))
 		);

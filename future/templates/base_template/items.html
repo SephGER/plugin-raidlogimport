@@ -7,6 +7,7 @@
 			<!-- IF not S_DEACTIVATE_ADJ -->
 				<li><a href="#adjustments" id="rli_nav_adjustments"><span>{L_adjustments}</span></a><input type="hidden" name="checkadj" value="{L_update}" disabled="disabled" /></li>
 			<!-- ENDIF -->
+			<li><a href="#viewall" id="rli_nav_viewall"><span>{L_rli_check_data}</span></a><input type="hidden" name="viewall" value="{L_update}" disabled="disabled" /></li>
 			<li><a href="#finish" id="rli_nav_finish"><span>{L_rli_finish}</span></a><input type="hidden" name="insert" value="{L_update}" disabled="disabled" /></li>
 		</ul>
 		<div id="raids">
@@ -16,8 +17,6 @@
 				<span><img src="{EQDKP_IMAGE_PATH}global/loading.gif" alt="..." /> {L_rli_loading} </span>
 		</div>
 		<div id="items">
-			<!-- INCLUDE raid_display.html -->
-			<!-- INCLUDE member_display.html -->
 			<table width="100%" border="0" cellspacing="1" cellpadding="2" class="colorswitch">
 				<tr>
 					<th colspan="2">{L_item}</th>
@@ -67,10 +66,13 @@
 				<span><img src="{EQDKP_IMAGE_PATH}global/loading.gif" alt="..." /> {L_rli_loading} </span>
 			</div>
 		<!-- ELSE -->
-			<div id="finish">
+			<div id="viewall">
 				<span><img src="{EQDKP_IMAGE_PATH}global/loading.gif" alt="..." /> {L_rli_loading} </span>
 			</div>
 		<!-- ENDIF -->
+		<div id="finish">
+			<span><img src="{EQDKP_IMAGE_PATH}global/loading.gif" alt="..." /> {L_rli_loading} </span>
+		</div>
 	</div>
 </form>
 

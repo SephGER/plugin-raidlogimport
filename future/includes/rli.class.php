@@ -107,15 +107,15 @@ class rli extends gen_class {
 	
 	public function nav($selection) {
 		$this->jquery->Tab_header('rli_nav_tabs');
-		$this->jquery->Tab_Select('rli_nav_tabs', $selection);
 		
 		if($this->config('deactivate_adj')) {
-			$ids = array('rli_nav_raids', 'rli_nav_members', 'rli_nav_items', 'rli_nav_finish');
-			$progress = array('members' => 1, 'items' => 2, 'finish' => 3);
+			$ids = array('rli_nav_raids', 'rli_nav_members', 'rli_nav_items', 'rli_nav_viewall', 'rli_nav_finish');
+			$progress = array('raids' => 0, 'members' => 1, 'items' => 2, 'viewall' => 3, 'finish' => 4);
 		} else {
-			$ids = array('rli_nav_raids', 'rli_nav_members', 'rli_nav_items', 'rli_nav_adjustments', 'rli_nav_finish');
-			$progress = array('members' => 1, 'items' => 2, 'adjustments' => 3, 'finish' => 4);
+			$ids = array('rli_nav_raids', 'rli_nav_members', 'rli_nav_items', 'rli_nav_adjustments', 'rli_nav_viewall', 'rli_nav_finish');
+			$progress = array('raids' => 0, 'members' => 1, 'items' => 2, 'adjustments' => 3, 'viewall' => 4, 'finish' => 5);
 		}
+		$this->jquery->Tab_Select('rli_nav_tabs', $progress[$selection]);
 		$position = $progress[$this->data['progress']];
 		for($i=0;$i<=$position;$i++) {
 			$this->tpl->add_js('$("#'.$ids[$i].'").click(function(){
