@@ -17,6 +17,7 @@
  */
 $lang['hero'] = 'Suffix for Heroic Events';
 $lang['non_hero'] = 'Suffix for Non-Heroic Events';
+$lang['title_difficulty'] = 'Difficulty settings';
 $lang['difficulty'] = 'Difficulty';
 $lang['diff_1'] = '10 player normal';
 $lang['diff_2'] = '25 player normal';
