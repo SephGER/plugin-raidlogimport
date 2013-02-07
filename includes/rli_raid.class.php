@@ -101,6 +101,7 @@ class rli_raid extends gen_class {
 
 	public function create() {
 		$key = 1;
+		pd($this->data['bosskills']);
 		foreach( $this->data['zones'] as $zone ) {
 			if( $this->config('raidcount') == 0 ) {
 				$this->raids[$key]['begin'] = $zone['enter'];
@@ -127,7 +128,7 @@ class rli_raid extends gen_class {
 					$this->raids[$key]['begin'] = $temp['begin'];
 					$this->raids[$key]['end'] = $temp['end'];
 					$this->raids[$key]['zone'] = $zone['name'];
-					$this->raids[$key]['diff'] = $zone['diff'];
+					$this->raids[$key]['diff'] = $bosskill['diff'];
 					$this->raids[$key]['bosskills'][$b] = $bosskill['name'];
 					$key++;
 				}

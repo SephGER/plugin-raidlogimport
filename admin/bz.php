@@ -95,7 +95,14 @@ class rli_Bz extends page_generic {
 	}
 
 	public function copy() {
-		$zones = $this->in->getArray('zone_id', 'int');
+		$bz_ids = $this->in->getArray('bz_ids', '');
+		$zones = array();
+		pd($bz_ids);
+		foreach($bz_ids as $bz_id) {
+			if(strpos($bz_id, 'z') !== 0) continue;
+			$zones[] = substr($bz_id, 1);
+		}
+		pd($zones);
 		foreach($zones as $id) {
 			$data = array(
 				implode($this->config->get('bz_parse', 'raidlogimport'), $this->pdh->get('rli_zone', 'string', array($id))),
