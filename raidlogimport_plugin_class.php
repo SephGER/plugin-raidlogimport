@@ -56,8 +56,7 @@ class raidlogimport extends plugin_generic {
 		}
 
 		$this->add_dependency(array(
-			'plus_version' => '0.7',
-			'games'	=> array('wow', 'eq', 'rom'))
+			'plus_version' => '0.7')
 		);
 
 		$this->add_data(array(
