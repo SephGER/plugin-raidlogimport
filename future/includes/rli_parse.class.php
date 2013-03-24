@@ -151,7 +151,7 @@ class rli_parse extends gen_class {
 			$this->raid->add_zone(trim($zone->name), (int) trim($zone->enter), (int) trim($zone->leave), (int) trim($zone->difficulty));
 		}
 		foreach($xml->bosskills->children() as $bosskill) {
-			$this->raid->add_bosskill(trim($bosskill->name), (int) trim($bosskill->time));
+			$this->raid->add_bosskill(trim($bosskill->name), (int) trim($bosskill->time), (int) trim($bosskill->difficulty));
 		}
 		foreach($xml->members->children() as $xmember) {
 			$name = trim($xmember->name);

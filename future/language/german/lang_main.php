@@ -154,6 +154,7 @@
 	$lang['rli_finish'] = 'Abschluss';
 	
 	// error messages
+	$lang['rli_error_member_create'] = 'Erstellung des Charakters %s schlug fehl.';
 	$lang['rli_error_no_raid'] = 'Es muss mindestens ein Raid erstellt werden.';
 	$lang['rli_error_no_attendant']  = 'Es muss mindestens einen Raidteilnehmer geben.';
 	$lang['rli_error_no_buyer'] = 'Item-Käufer des Items %s nicht in der Datenbank oder im Raid gefunden.';

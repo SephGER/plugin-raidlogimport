@@ -122,7 +122,7 @@ class pdh_w_rli_boss extends pdh_w_generic {
 				'{L_BZ_BONUS}'		=> $old['bonus'],
 				'{L_BZ_TIMEBONUS}'	=> $old['timebonus'],
 				'{L_BZ_DIFF}' 		=> $old['diff'],
-				'{L_BZ_TOZONE}' 	=> ($old['tozone']) ? $this->pdh->get('rli_zone', 'note', array($old['tozone'])) : '{L_BZ_NO_ZONE}',
+				'{L_BZ_TOZONE}' 	=> ($old['tozone']) ? $this->pdh->geth('rli_zone', 'event', array($old['tozone'], false)) : '{L_BZ_NO_ZONE}',
 			);
 			$this->log_insert('action_raidlogimport_bz_del', $log_action, true, 'raidlogimport' );
 			return $id;

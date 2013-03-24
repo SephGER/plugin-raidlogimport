@@ -384,7 +384,10 @@ $('#add_mem_button').click(function() {
 					'rankid'	=> $this->config('new_member_rank')
 				);
 				$id = $this->pdh->put('member', 'addorupdate_member', array(0, $data));
-				if(!$id) return false;
+				if(!$id) {
+					$this->rli->error('process_members', sprintf($this->user->lang('rli_error_member_create'), $member['name']));
+					return false;
+				}
 			}
 			$this->raid_members[$id] = $member['raid_list'];
 			$this->name_ids[$member['name']] = $id;
