@@ -104,36 +104,40 @@ class RLI_Settings extends page_generic {
 				$this->core->message($name, $this->user->lang('rli_save_suc'), 'green');
 			}
 		}
-		//select ranks
+		// select ranks
 		$new_member_rank = $this->pdh->aget('rank', 'name', 0, array($this->pdh->get('rank', 'id_list')));
 
-		//select parsers
-		$parser = array(
-			'eqdkp' => $this->user->lang('parser_eqdkp'),
-			'plus' => $this->user->lang('parser_plus'),
-			'magicdkp' => $this->user->lang('parser_magicdkp'),
-			'empty' => $this->user->lang('parser_empty')
-		);
+		// select parsers
+		$parse_path = $this->root_path.'plugins/raidlogimport/includes/parser/';
+		include_once($parse_path.'parser.aclass.php');
+		$parse_ext = '.parser.class.php';
+		$parser_classes = sdir($parse_path, '*'.$parse_ext, $parse_ext);
+		$parser = array();
+		foreach($parser_classes as $parser_class) {
+			include_once($parse_path.$parser_class.$parse_ext);
+			$parser[$parser_class] = $parser_class::$name;
+		}
+		$parser['empty'] = $this->user->lang('parser_empty');
 
-		//select raidcount
+		// select raidcount
 		$raidcount = array();
 		for($i=0; $i<=3; $i++) {
 			$raidcount[$i] = $this->user->lang('raidcount_'.$i);
 		}
 
-		//select null_sum & standbyraidoptions
+		// select null_sum & standbyraidoptions
 		$standby_raid = array();
 		for($i=0; $i<=2; $i++) {
 			$standby_raid[$i] = $this->user->lang('standby_raid_'.$i);
 		}
 
-		//select member_start_event
+		// select member_start_event
 		$member_start_event = $this->pdh->aget('event', 'name', 0, array($this->pdh->get('event', 'id_list')));
 
-		//select member_display
+		// select member_display
 		$member_display = array(0 => $this->user->lang('member_display_0'), 1 => $this->user->lang('member_display_1'), 2 => $this->user->lang('member_display_2'));
 
-		//select raid_note_time
+		// select raid_note_time
 		$raid_note_time = array(0 => $this->user->lang('raid_note_time_0'), 1 => $this->user->lang('raid_note_time_1'));
 
 		$k = 2;

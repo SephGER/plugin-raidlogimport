@@ -132,10 +132,7 @@
 	$lang['rli_missing_values'] = 'Es fehlen einige Werte. Bitte überprüfe: ';
 	$lang['rli_miss'] = 'Folgende Nodes fehlen: ';
 	$lang['rli_lgaobk'] = 'Log Guild Attendees on Bosskill muss vor und während des Aufzeichnens deaktiviert sein. Wenn du den Raid trotzdem importieren willst, musst du alle Joins mit der selben Zeit von Bosskills löschen.';
-	$lang['wrong_format'] = 'Der Parser und das Raid-Log stimmen nicht überein.';
-	$lang['eqdkp_format'] = "Bitte stell die Optionen vom CT-Raidtracker auf <img src='".registry::get_const('root_path')."plugins/raidlogimport/images/eqdkp_options.png'>";
-	$lang['plus_format'] = 'Bitte stell das Ausgabeformat deines Trackers auf "EQdkpPlus XML Format"';
-	$lang['magicdkp_format'] = 'Es trat ein Fehler auf.';
+	$lang['wrong_format'] = 'Der eingestellte Parser (%s) und das Raid-Log stimmen nicht überein.';
 	$lang['wrong_game'] = 'Das Raidlog stammt nicht aus dem unter Konfiguration angegebenen Spiel!';
 	$lang['rli_process'] = 'Ausführen';
 	$lang['check_raidval'] = 'Raid-Werte überprüfen';
@@ -185,9 +182,6 @@
 	$lang['rli_inst_version'] = 'Installierte Version';
 	$lang['bz_parse'] = 'Trennzeichen zwischen den Strings die zu einem "Event" gehören';
 	$lang['parser'] = 'Welches XML-Format hat der String?';
-	$lang['parser_eqdkp'] = 'MLDKP 1.1 / EQdkp Plugin';
-	$lang['parser_plus'] = 'EQdkpPlus XML Format';
-	$lang['parser_magicdkp'] = 'MagicDKP';
 	$lang['parser_empty'] = 'Leerer String';
 	$lang['rli_man_db_up'] = 'DB-Update erzwingen';
 	$lang['rli_upd_check'] = 'Update-Check aktivieren?';
