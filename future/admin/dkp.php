@@ -73,12 +73,7 @@ class rli_import extends page_generic {
 			if($this->in->exists('log') && $this->rli->config('parser') != 'empty') {
 				$log = trim(str_replace("&", "and", stripslashes(html_entity_decode($_POST['log']))));
 				$log = (is_utf8($log)) ? $log : utf8_encode($log);
-				$log = simplexml_load_string($log);
-				if ($log === false) {
-					message_die($this->user->lang('xml_error'));
-				} else {
-					$this->parser->parse_string($log);
-				}
+				$this->parser->parse_string($log);
 			}
 			$this->rli->add_cache_data('progress', 'members');
 		}

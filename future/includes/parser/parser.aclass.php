@@ -27,6 +27,9 @@ abstract class rli_parser {
 	// name of this parser, to identify it in settings
 	public static $name = 'name not set';
 	
+	// flag wether the log is xml
+	public static $xml = true;
+	
 	/* 	array to check for correct xml-input and allow for outputting problems to user, leave empty for non-xml based parsers.
 	 *	array, which describes the xml: array(node => array(node => ''));
 	 *		if prefix is "optional:", the node is only checked for completion
@@ -65,7 +68,7 @@ abstract class rli_parser {
 	 *					if prefix is "optional:", the node is only checked for completion
 	 *					if prefix is "multiple:", all occuring nodes are checked
 	 */
-	private static function check_xml_format($xml, $xml_form, $back=array(1 => true), $pre='') {
+	protected static function check_xml_format($xml, $xml_form, $back=array(1 => true), $pre='') {
 		foreach($xml_form as $name => $val) {
 			$optional = false;
 			if(strpos($name, 'optional:') !== false) {
@@ -92,7 +95,7 @@ abstract class rli_parser {
 						if(isset($xml->$name)) {
 							if(is_array($vval)) {
 								foreach($xml->$name->children() as $child) {
-									$back = $this->check_xml_format($child, $vval, $back, $pre);
+									$back = self::check_xml_format($child, $vval, $back, $pre);
 								}
 								$pre = substr($pre, 0, -(strlen($nname)+2));
 							} else {
@@ -117,7 +120,7 @@ abstract class rli_parser {
 				} else {
 					if(is_array($val)) {
 						$pre .= $name.'->';
-						$back = $this->check_xml_format($xml->$name, $val, $back, $pre);
+						$back = self::check_xml_format($xml->$name, $val, $back, $pre);
 						$pre = '';
 					}
 				}

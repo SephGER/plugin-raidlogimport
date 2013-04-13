@@ -33,32 +33,38 @@ class rli_parse extends gen_class {
 
 	private $toload = array();
 
-	public function parse_string($xml) {
+	public function parse_string($log) {
 		$parser = $this->rli->config('parser');
 		$path = $this->root_path.'plugins/raidlogimport/includes/parser/';
 		if(is_file($path.$parser.'.parser.class.php')) {
 			include_once($path.'parser.aclass.php');
 			include_once($path.$parser.'.parser.class.php');
-			$back = $parser::check($xml);
+			if($parser::$xml) {
+				$log = @simplexml_load_string($log);
+				if ($log === false) {
+					message_die($this->user->lang('xml_error'));
+				}
+			}
+			$back = $parser::check($log);
 			if($back[1]) {
 				$this->raid->flush_data();
-				$data = $parser::parse($xml);
+				$data = $parser::parse($log);
 				foreach($data as $type => $ddata) {
 					switch($type) {
 						case 'zones':
-							foreach($ddata as $args) {call_user_func(array($this->raid, 'add_zone'), $args);}
+							foreach($ddata as $args) {call_user_func_array(array($this->raid, 'add_zone'), $args);}
 							break;
 						case 'bosses':
-							foreach($ddata as $args) {call_user_func(array($this->raid, 'add_bosskill'), $args);}
+							foreach($ddata as $args) {call_user_func_array(array($this->raid, 'add_bosskill'), $args);}
 							break;
 						case 'members':
-							foreach($ddata as $args) {call_user_func(array($this->member, 'add_member'), $args);}
+							foreach($ddata as $args) {call_user_func_array(array($this->member, 'add'), $args);}
 							break;
-						case 'members':
-							foreach($ddata as $args) {call_user_func(array($this->member, 'add_time'), $args);}
+						case 'times':
+							foreach($ddata as $args) {call_user_func_array(array($this->member, 'add_time'), $args);}
 							break;
-						case 'members':
-							foreach($ddata as $args) {call_user_func(array($this->item, 'add_item'), $args);}
+						case 'items':
+							foreach($ddata as $args) {call_user_func_array(array($this->item, 'add'), $args);}
 							break;
 					}
 				}
@@ -66,7 +72,7 @@ class rli_parse extends gen_class {
 				$this->raid->recalc(true);
 				$this->member->finish();
 			} else {
-				message_die($this->user->lang('wrong_format').' '.$paser::$name.'<br />'.$this->user->lang('rli_miss').implode(', ', $back[2]));
+				message_die(sprintf($this->user->lang('wrong_format'), $parser::$name).'<br />'.$this->user->lang('rli_miss').implode(', ', $back[2]));
 			}
 		} else {
 			message_die($this->user->lang('no_parser'));

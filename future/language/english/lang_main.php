@@ -195,8 +195,8 @@
 	$lang['null_sum_2'] = 'Every member in the system gehts the DKP';
 	$lang['deactivate_adj'] = "Deactivate Adjustments?";
 	$lang['deactivate_adj_warn'] = "This removes partially gain of DKP per member! Everyone gets all or nothing!";
-	$lang['auto_minus'] = 'Activate automatic minus?'.$lang['addinfo_am'];
-	$lang['auto_minus_help'] = "When used, member, who did not join the last x raids, loose an amount of DKP. If you use zero-sum the member will be awarded an item, else he gets an adjustment.";
+	$lang['auto_minus'] = 'Activate automatic minus?';
+	$lang['auto_minus_help'] = "When used, member, who did not join the last x raids, lose an amount of DKP. If you use zero-sum the member will be awarded an item, else he gets an adjustment.";
 	$lang['am_raidnum'] = 'Number of raids for automatic minus';
 	$lang['am_value'] = 'Amount of DKP drawn off';
 	$lang['am_value_raids'] = 'DKP value = DKP of last number of raids';

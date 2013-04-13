@@ -101,7 +101,6 @@ class rli_raid extends gen_class {
 
 	public function create() {
 		$key = 1;
-		pd($this->data['bosskills']);
 		foreach( $this->data['zones'] as $zone ) {
 			if( $this->config('raidcount') == 0 ) {
 				$this->raids[$key]['begin'] = $zone['enter'];
