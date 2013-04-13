@@ -130,23 +130,23 @@ class eqdkp_format extends rli_parser {
 	}
 
 	public static function parse($xml) {
-		$this->raid->add_zone(trim($xml->zone), strtotime($xml->start), strtotime($xml->end), trim($xml->difficulty));
+		$data['zones'][] = array(trim($xml->zone), strtotime($xml->start), strtotime($xml->end), trim($xml->difficulty));
 		foreach ($xml->BossKills->children() as $bosskill) {
-			$this->raid->add_bosskill(trim($bosskill->name), strtotime($bosskill->time));
+			$data['bosses'][] = array(trim($bosskill->name), strtotime($bosskill->time));
 		}
 		foreach($xml->Loot->children() as $loot) {
 			$player = (trim($loot->Player));
 			$cost = (array_key_exists('Costs', $loot)) ? (int) $loot->Costs : (int) $loot->Note;
-			$this->item->add((trim($loot->ItemName)), $player, $cost, substr(trim($loot->ItemID), 0, 5), strtotime($loot->Time));
+			$data['items'][] = array(trim($loot->ItemName), $player, $cost, substr(trim($loot->ItemID), 0, 5), strtotime($loot->Time));
 		}
 		foreach($xml->PlayerInfos->children() as $xmember) {
-			$this->member->add(trim(($xmember->name)), trim(($xmember->class)), trim(($xmember->race)), trim($xmember->level), trim(($xmember->note)));
+			$data['members'][] = array(trim($xmember->name), trim($xmember->class), trim($xmember->race), trim($xmember->level), trim($xmember->note));
 		}
 		foreach ($xml->Join->children() as $joiner) {
-			$this->member->add_time((trim($joiner->player)), strtotime($joiner->time), 'join');
+			$data['times'][] = array(trim($joiner->player), strtotime($joiner->time), 'join');
 		}
 		foreach ($xml->Leave->children() as $leaver) {
-			$this->member->add_time((trim($leaver->player)), strtotime($leaver->time), 'leave');
+			$data['times'][] = array(trim($leaver->player), strtotime($leaver->time), 'leave');
 		}
 	}
 }

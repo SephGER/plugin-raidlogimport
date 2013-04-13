@@ -28,9 +28,9 @@ class plus_format extends rli_parser {
 	public static $name = 'EQdkpPlus XML Format';
 	
 	public static function parse($input) {
-		if(	(trim($input->head->gameinfo->game) == 'Runes of Magic' AND $this->config->get('default_game') != 'rom') OR
-			(trim($input->head->gameinfo->game) == 'World of Warcraft' AND $this->config->get('default_game') != 'wow')) {
-				message_die($this->user->lang('wrong_game'));
+		if(	(trim($input->head->gameinfo->game) == 'Runes of Magic' AND register('config')->get('default_game') != 'rom') OR
+			(trim($input->head->gameinfo->game) == 'World of Warcraft' AND register('config')->get('default_game') != 'wow')) {
+				message_die(register('user')->lang('wrong_game'));
 		}
 		$lang = trim($input->head->gameinfo->language);
 		#$this->rli->add_data['log_lang'] = substr($lang, 0, 2);
@@ -48,15 +48,15 @@ class plus_format extends rli_parser {
 			$data['members'][] = array($name, trim($xmember->class), trim($xmember->race), trim($xmember->level), $note);
 			foreach($xmember->times->children() as $time) {
 				$attrs = $time->attributes();
-				$type = $attrs['type'];
-				$extra = $attrs['extra'];
-				$data['times'][] = array($name, $time, $type, $extra);
+				$type = (string) $attrs['type'];
+				$extra = isset($attrs['extra']) ? (string) $attrs['extra'] : '';
+				$data['times'][] = array($name, (int) $time, $type, $extra);
 			}
 		}
 		foreach($xml->items->children() as $xitem) {
 			$cost = (isset($xitem->cost)) ? trim($xitem->cost) : '';
 			$id = (isset($xitem->itemid)) ? trim($xitem->itemid) : '';
-			$data['items'][] = array(trim(($xitem->name)), trim(($xitem->member)), $cost, (int) $id, (int) trim($xitem->time));
+			$data['items'][] = array(trim($xitem->name), trim($xitem->member), (int) $cost, (int) $id, (int) trim($xitem->time));
 		}
 		return $data;
 	}
@@ -90,7 +90,7 @@ class plus_format extends rli_parser {
 				)
 			)
 		);
-		return self::check_format($input, $check_array);
+		return self::check_xml_format($input->raiddata, $check_array);
 	}
 }
 }
