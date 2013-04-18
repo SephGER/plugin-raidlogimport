@@ -464,7 +464,11 @@ $('#add_mem_button').click(function() {
 
         $raids = $this->raid->get_data();
 		$this->raid_positions($raids, $width['begin']);
+		$abs_begin = 9999999999999;
+		$abs_end = 0;
         foreach($raids as $rkey => $raid) {
+			if($abs_end < $raid['end']) $abs_end = $raid['end'];
+			if($abs_begin > $raid['begin']) $abs_begin = $raid['begin'];
         	$w = ($raid['end']-$raid['begin'])/20;
         	$m = ($raid['begin']-$width['begin'])/20;
         	settype($w, 'int');
@@ -501,6 +505,9 @@ $('#add_mem_button').click(function() {
 		}
         $tkey = 0;
         foreach($this->members[$key]['times'] as $mtime) {
+			//ensure times to be within display range
+			if($mtime['join'] < $abs_begin) $mtime['join'] = $abs_begin;
+			if($mtime['leave'] > $abs_end) $mtime['leave'] = $abs_end;
         	$s = (isset($mtime['standby']) AND $mtime['standby']) ? 'standby' : '';
         	$w = ($mtime['leave']-$mtime['join'])/20;
         	$ml = ($mtime['join']-$width['begin'])/20;

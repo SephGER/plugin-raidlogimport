@@ -46,7 +46,7 @@ function scale_start(type) {
 	scale_object = document.getElementById(element_id);
 	joiner = document.getElementById(element_id + "j");
 	leaver = document.getElementById(element_id + "l");
-	oldx = posx - scale_object.offsetLeft;
+	oldx = parseInt(scale_object.style.marginLeft);
 	startx = posx;
 	corner = type;
     var after = document.getElementById("times_" + member_id + "_" + (time_id+1));
@@ -77,14 +77,14 @@ function scale(ereignis) {
 	posx = document.all ? window.event.clientX : ereignis.pageX;
 	if(scale_object != null) {
 		if(corner == "left") {
-			set_left((posx - oldx - posi_null), 1);
+			set_left((posx - posi_null), 1);
         	if(scale_object != null) set_width((parseInt(scale_object.style.width) + (startx - posx)), true);
 		}
 		if(corner == "right") {
 			set_width(parseInt(scale_object.style.width) + (posx - startx));
 		}
 		if(corner == "middle") {
-			set_left((posx - oldx - posi_null));
+			set_left((parseInt(scale_object.style.marginLeft) + posx - startx));
 		}
         startx = posx;
 	}
@@ -117,7 +117,7 @@ function set_width(w, nostopper) {
 
 function set_left(l, nostopper) {
 	var stopper = false;
-	if(l >= min_left) {
+	if(l >= (min_left-1)) {
 		if(l > max_right - posi_null - parseInt(scale_object.style.width)) {
 			l = max_right - posi_null - parseInt(scale_object.style.width);
 			stopper = 2;
