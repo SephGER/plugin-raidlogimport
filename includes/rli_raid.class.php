@@ -456,7 +456,7 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 				continue;
 			}
 			$standby = 1;
-			if($key == $this->data['add']['standby_raid'] AND $this->config('standby_raid') <= 1) {
+			if($this->config('standby_raid') <= 1 && !empty($this->data['add']['standby_raid']) && $key == $this->data['add']['standby_raid']) {
 				$standby = 2;
 			} elseif($this->config('standby_raid') == 2) {
 				$standby = 0;
@@ -540,7 +540,7 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 	}
 
 	public function get_standby_raid() {
-		return $this->data['add']['standby_raid'];
+		return (!empty($this->data['add']['standby_raid'])) ? $this->data['add']['standby_raid'] : 0;
 	}
 
 	private function calc_timedkp($key, $in_raid) {
@@ -555,7 +555,7 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 
 	private function get_timedkp($key, $times) {
 		$timedkp = 0;
-		$standby = ($key == $this->data['add']['standby_raid']) ? 2 : 1;
+		$standby = (!empty($this->data['add']['standby_raid']) && $key == $this->data['add']['standby_raid']) ? 2 : 1;
 		if(	$this->config('standby_raid') <= 1 AND (
 				($this->config('standby_dkptype') & 2 AND $key == $this->data['add']['standby_raid']) OR
 				($this->config('use_dkp') & 2 AND $key != $this->data['add']['standby_raid'])
@@ -595,7 +595,7 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 			//absolute bossdkp
 			if($times !== false) {
 				foreach ($times as $time) {
-					if((!isset($time['standby']) && !$standby) || (isset($time['standby']) AND $standby == $time['standby'])) {
+					if((empty($time['standby']) && !$standby) || (isset($time['standby']) AND $standby1 == $time['standby'])) {
 						if($time['join'] < $bosskill['time'] AND $time['leave'] > $bosskill['time']) {
 							$bossdkp += $bosskill['bonus'];
 							break;

@@ -53,7 +53,7 @@ class vanguard_soh extends rli_parser {
 			$class = (isset($match['class'])) ? trim($match['class']) : '';
 			$data['members'][] = array(trim($match['name']), $class, '', $lvl);
 			$data['times'][] = array(trim($match['name']), strtotime($match['time']), 'join');
-			$data['times'][] = array(trim($match['name']), strtotime($match['time'])+1, 'leave');
+			$data['times'][] = array(trim($match['name']), strtotime($match['time'])+86400, 'leave'); //leave one day later (no one raids longer than a day!)
 		}
 		return $data;
 	}
