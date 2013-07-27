@@ -22,10 +22,10 @@ if(!defined('EQDKP_INC'))
 	exit;
 }
 
-if(!class_exists('vanguard_soh')) {
-class vanguard_soh extends rli_parser {
+if(!class_exists('everquest')) {
+class everquest extends rli_parser {
 
-	public static $name = 'Vanguard - Saga of Heroes';
+	public static $name = 'Everquest';
 	public static $xml = false;
 
 	public static function check($text) {
@@ -35,25 +35,14 @@ class vanguard_soh extends rli_parser {
 	}
 	
 	public static function parse($text) {
-		$timestamp_regex = '[0-9]{2}:[0-9]{2}:[0-9]{2}';
-		$lvl_class_regex = ': Level (?<lvl>[0-9]{1,2}) (?<class>.*),';
-		$regex = '~\[(?<time>'.$timestamp_regex.')\]\h(?:'.$timestamp_regex.'\h){0,1}(?<name>\w*)(?:'.$lvl_class_regex.'){0,1}~';
+		$regex = '~[0-9]\h(?<name>\w*)\h(?<lvl>[0-9]{1,3})\h(?<class>\w*(?(?!\hGroup|\hRaid)\h\w*){0,1})~';
 		preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
-		if(empty($matches[0]['name'])) {
-			//delete all even entries of matches
-			$max = max(array_keys($matches));
-			for($i=0;$i<$max;$i+=2) {
-				unset($matches[$i]);
-			}
-			$matches = array_values($matches);
-		}
-		$data['zones'][] = array('zone-name', strtotime($matches[0]['time']), strtotime($matches[0]['time'])+10);
 		foreach($matches as $match) {
 			$lvl = (isset($match['lvl'])) ? trim($match['lvl']) : 0;
 			$class = (isset($match['class'])) ? trim($match['class']) : '';
 			$data['members'][] = array(trim($match['name']), $class, '', $lvl);
-			$data['times'][] = array(trim($match['name']), strtotime($match['time']), 'join');
-			$data['times'][] = array(trim($match['name']), strtotime($match['time'])+86400, 'leave'); //leave one day later (no one raids longer than a day!)
+			$data['times'][] = array(trim($match['name']), 0, 'join');
+			$data['times'][] = array(trim($match['name']), time(), 'leave');
 		}
 		return $data;
 	}
