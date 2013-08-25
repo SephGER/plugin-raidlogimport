@@ -89,7 +89,7 @@ class raidlogimport extends plugin_generic {
 		$this->add_pdh_write_module('rli_item');
 
 		//menu
-		$this->add_menu('admin_menu', $this->gen_admin_menu());
+		$this->add_menu('admin', $this->gen_admin_menu());
 	}
 	
 	private function create_default_configs() {
