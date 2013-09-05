@@ -651,16 +651,17 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 
 	private function calc_attdkp($key, $type, $times=false, $force=array(-1,-1)) {
 		$att_raids = $this->get_attendance_raids(true);
-		if($this->config('attendance_'.$type) && $key == $att_raids[$type]) {
+		$begend = $this->get_start_end();
+		if($this->config('attendance_'.$type) && ($key == $att_raids[$type] || !$this->config('attendance_raid'))) {
 			if($times !== false) {
 				if($type == 'begin') {
-					$ct = $this->config('attendence_time') + $this->raids[$key]['begin'];
+					$ct = $this->config('attendence_time') + $begend['begin'];
 					foreach($times as $time) {
 						if($force[0] > 0 OR ($force[0] < 0 AND ($time['join'] < $ct AND (($time['standby'] AND $this->config('standby_att')) OR !$time['standby']))))
 							return $this->config('attendance_begin');
 					}
 				} elseif($type == 'end') {
-					$ct = $this->raids[$key]['end'] - $this->config('attendence_time');
+					$ct = $begend['end'] - $this->config('attendence_time');
 					foreach($times as $time) {
 						if($force[1] > 0 OR ($force[1] < 0 AND ($time['leave'] > $ct AND (($time['standby'] AND $this->config('standby_att')) OR !$time['standby']))))
 							return $this->config('attendance_end');
