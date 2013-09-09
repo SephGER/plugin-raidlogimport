@@ -23,7 +23,7 @@ if(!defined('EQDKP_INC')) {
 if(!class_exists('pdh_r_rli_boss')) {
 class pdh_r_rli_boss extends pdh_r_generic {
 	public static function __shortcuts() {
-		$shortcuts = array('pdc', 'db', 'config', 'user', 'game', 'pdh');
+		$shortcuts = array('pdc', 'db2', 'config', 'user', 'game', 'pdh');
 		return array_merge(parent::$shortcuts, $shortcuts);
 	}
 
@@ -35,8 +35,9 @@ class pdh_r_rli_boss extends pdh_r_generic {
 		$this->data = $this->pdc->get('pdh_rli_boss');
 		if(!$this->data) {
 			$sql = "SELECT boss_id, boss_string, boss_note, boss_bonus, boss_timebonus, boss_diff, boss_tozone, boss_sort, boss_active FROM __raidlogimport_boss;";
-			if($result = $this->db->query($sql)) {
-				while($row = $this->db->fetch_record($result)) {
+			$objQuery = $this->db2->query($sql);
+			if ($objQuery){
+				while($row = $objQuery->fetchAssoc()) {
 					$this->data[$row['boss_id']]['string'] = explode($this->config->get('bz_parse', 'raidlogimport'), $row['boss_string']);
 					$this->data[$row['boss_id']]['note'] = $row['boss_note'];
 					$this->data[$row['boss_id']]['bonus'] = $row['boss_bonus'];
@@ -50,7 +51,7 @@ class pdh_r_rli_boss extends pdh_r_generic {
 				$this->data = array();
 				return false;
 			}
-			$this->db->free_result($result);
+			
 			$this->pdc->put('pdh_rli_boss', $this->data, null);
 		}
 		return true;

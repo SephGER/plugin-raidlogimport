@@ -23,7 +23,7 @@ if(!defined('EQDKP_INC')) {
 if(!class_exists('pdh_r_rli_item')) {
 class pdh_r_rli_item extends pdh_r_generic {
 	public static function __shortcuts() {
-		$shortcuts = array('pdc', 'db');
+		$shortcuts = array('pdc', 'db2');
 		return array_merge(parent::$shortcuts, $shortcuts);
 	}
 
@@ -34,15 +34,16 @@ class pdh_r_rli_item extends pdh_r_generic {
 		$this->data = $this->pdc->get('pdh_rli_item');
 		if(!$this->data) {
 			$sql = "SELECT item_id, itempool_id, event_id FROM __raidlogimport_item2itempool;";
-			if($result = $this->db->query($sql)) {
-				while($row = $this->db->fetch_record($result)) {
+			$objQuery = $this->db2->query($sql);
+			if ($objQuery){
+				while($row = $objQuery->fetchAssoc()) {
 					$this->data[$row['item_id']][$row['event_id']] = $row['itempool_id'];
 				}
 			} else {
 				$this->data = array();
 				return false;
 			}
-			$this->db->free_result($result);
+			
 			$this->pdc->put('pdh_rli_item', $this->data, null);
 		}
 		return true;

@@ -24,7 +24,7 @@ include_once('./../includes/common.php');
 
 class rli_import extends page_generic {
 	public static function __shortcuts() {
-		$shortcuts = array('user', 'rli', 'in', 'tpl', 'core', 'pm', 'config', 'jquery',
+		$shortcuts = array('user', 'rli', 'in', 'tpl', 'core', 'pm', 'config', 'jquery', 'db2',
 			'adj'		=> 'rli_adjustment',
 			'item'		=> 'rli_item',
 			'member'	=> 'rli_member',
@@ -221,7 +221,7 @@ class rli_import extends page_generic {
 		$message = array();
 		$bools = $this->rli->check_data();
 		if(!in_array('miss', $bools) AND !in_array(false, $bools)) {
-			#$this->db->query("START TRANSACTION");
+			#$this->db2->beginTransaction();
 			$this->member->insert();
 			$this->raid->insert();
 			$this->item->insert();
