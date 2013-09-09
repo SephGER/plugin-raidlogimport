@@ -187,7 +187,7 @@ class rli extends gen_class {
 		if($this->data) {
 			foreach($this->data as $type => $data) {
 				$data = ($this->cconfig->get('enable_gzip')) ? gzcompress(serialize($data)) : serialize($data);
-				$sqls[] = "('".$type."', '".$this->db2->escapeString($data)."')";
+				$sqls[] = "('".$type."', ".$this->db2->escapeString($data).")";
 			}
 			$sql .= implode(", ", $sqls).";";
 			$this->db2->query($sql);
