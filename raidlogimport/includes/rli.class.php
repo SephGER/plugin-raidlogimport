@@ -23,13 +23,13 @@ if(!defined('EQDKP_INC'))
 }
 
 class rli extends gen_class {
-	public static $shortcuts = array('cconfig' => 'config', 'game', 'db2', 'user', 'jquery', 'tpl', 'pdh',
+	public static $shortcuts = array('cconfig' => 'config', 'game', 'db', 'user', 'jquery', 'tpl', 'pdh',
 		'adj'		=> 'rli_adjustment',
 		'item'		=> 'rli_item',
 		'member'	=> 'rli_member',
 		'raid'		=> 'rli_raid',
 	);
-	public static $dependencies = array('db2', 'cconfig' => 'config');
+	public static $dependencies = array('db', 'cconfig' => 'config');
 
 	private $bonus = array();
 	private $config = array();
@@ -96,7 +96,7 @@ class rli extends gen_class {
 	public function get_cache_data($type) {
 		if(!$this->data) {
 			$sql = "SELECT cache_class, cache_data FROM __raidlogimport_cache;";
-			$result = $this->db2->query($sql);
+			$result = $this->db->query($sql);
 			if ($result){
 				while ( $row = $result->fetchAssoc() ) {
 					$this->data[$row['cache_class']] = ($this->cconfig->get('enable_gzip')) ? unserialize(gzuncompress($row['cache_data'])) : unserialize($row['cache_data']);
@@ -176,21 +176,21 @@ class rli extends gen_class {
 		$this->member->reset();
 		$this->item->reset();
 		$this->adj->reset();
-		return $this->db2->query("TRUNCATE __raidlogimport_cache;");
+		return $this->db->query("TRUNCATE __raidlogimport_cache;");
 	}
 
 	public function __destruct() {
-		$this->db2->query("TRUNCATE __raidlogimport_cache;");
+		$this->db->query("TRUNCATE __raidlogimport_cache;");
 		$sql = "INSERT INTO __raidlogimport_cache
 				(cache_class, cache_data)
 				VALUES ";
 		if($this->data) {
 			foreach($this->data as $type => $data) {
 				$data = ($this->cconfig->get('enable_gzip')) ? gzcompress(serialize($data)) : serialize($data);
-				$sqls[] = "('".$type."', ".$this->db2->escapeString($data).")";
+				$sqls[] = "('".$type."', ".$this->db->escapeString($data).")";
 			}
 			$sql .= implode(", ", $sqls).";";
-			$this->db2->query($sql);
+			$this->db->query($sql);
 		}
 		parent::__destruct();
 	}

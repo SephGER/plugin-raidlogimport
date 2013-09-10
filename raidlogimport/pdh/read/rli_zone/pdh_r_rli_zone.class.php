@@ -23,7 +23,7 @@ if(!defined('EQDKP_INC')) {
 if(!class_exists('pdh_r_rli_zone')) {
 class pdh_r_rli_zone extends pdh_r_generic {
 	public static function __shortcuts() {
-		$shortcuts = array('pdc', 'db2', 'config', 'user', 'game', 'pdh');
+		$shortcuts = array('pdc', 'db', 'config', 'user', 'game', 'pdh');
 		return array_merge(parent::$shortcuts, $shortcuts);
 	}
 
@@ -34,7 +34,7 @@ class pdh_r_rli_zone extends pdh_r_generic {
 		$this->data = $this->pdc->get('pdh_rli_zone');
 		if(!$this->data) {
 			$sql = "SELECT zone_id, zone_string, zone_event, zone_timebonus, zone_diff, zone_sort, zone_active FROM __raidlogimport_zone;";
-			$objQuery = $this->db2->query($sql);
+			$objQuery = $this->db->query($sql);
 			if ($objQuery){
 				while($row = $objQuery->fetchAssoc()) {
 					$this->data[$row['zone_id']]['string'] = explode($this->config->get('bz_parse', 'raidlogimport'), $row['zone_string']);

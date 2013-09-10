@@ -23,12 +23,12 @@ if(!defined('EQDKP_INC')) {
 if(!class_exists('pdh_w_rli_boss')) {
 class pdh_w_rli_boss extends pdh_w_generic {
 	public static function __shortcuts() {
-		$shortcuts = array('pdh', 'config', 'db2');
+		$shortcuts = array('pdh', 'config', 'db');
 		return array_merge(parent::$shortcuts, $shortcuts);
 	}
 	
 	public function add($string, $note, $bonus=0.0, $timebonus=0.0, $diff=0, $tozone=0, $sort=0) {
-		$objQuery = $this->db2->prepare("INSERT INTO __raidlogimport_boss :p")->set(array(
+		$objQuery = $this->db->prepare("INSERT INTO __raidlogimport_boss :p")->set(array(
 						'boss_string'	=> $string,
 						'boss_note'		=> $note,
 						'boss_bonus'	=> $bonus,
@@ -80,7 +80,7 @@ class pdh_w_rli_boss extends pdh_w_generic {
 			'boss_sort'		=> ($sort === false) ? $this->pdh->get('rli_boss', 'sort', array($id)) : $sort
 		);
 		if($this->changed($old, $data)) {
-			$objQuery = $this->db2->prepare("UPDATE __raidlogimport_boss :p WHERE boss_id = ?")->set($data)->execute($id);
+			$objQuery = $this->db->prepare("UPDATE __raidlogimport_boss :p WHERE boss_id = ?")->set($data)->execute($id);
 			
 			if($objQuery) {
 				$this->pdh->enqueue_hook('rli_boss_update', array($id));
@@ -116,7 +116,7 @@ class pdh_w_rli_boss extends pdh_w_generic {
 			'tozone'	=> $this->pdh->get('rli_boss', 'tozone', array($id)),
 			'sort'		=> $this->pdh->get('rli_boss', 'sort', array($id))
 		);
-		$objQuery = $this->db2->prepare("DELETE FROM __raidlogimport_boss WHERE boss_id = ?;")->execute($id);
+		$objQuery = $this->db->prepare("DELETE FROM __raidlogimport_boss WHERE boss_id = ?;")->execute($id);
 		if($objQuery) {
 			$this->pdh->enqueue_hook('rli_boss_update', array($id));
 			$log_action = array(
@@ -137,7 +137,7 @@ class pdh_w_rli_boss extends pdh_w_generic {
 	
 	public function set_active($boss_id, $active) {
 		$active = ($active) ? '1' : '0';
-		$objQuery = $this->db2->prepare("UPDATE __raidlogimport_boss SET boss_active = ? WHERE boss_id = ?;")->execute($active, $boss_id);
+		$objQuery = $this->db->prepare("UPDATE __raidlogimport_boss SET boss_active = ? WHERE boss_id = ?;")->execute($active, $boss_id);
 		if($objQuery) {
 			$this->pdh->enqueue_hook('rli_boss_update', array($boss_id));
 			return true;
