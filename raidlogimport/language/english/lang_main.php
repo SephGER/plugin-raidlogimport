@@ -165,7 +165,7 @@
 	$lang['raidcount_2'] = 'One raid per boss';
 	$lang['raidcount_3'] = 'One raid per hour and per boss';
 	//moved from dkp
-	$lang['wrong_settings'] = '<img src="$eqdkp_root_path'.'images/global/false.png" alt="error" width="32"> Wrong Settings!';
+	$lang['wrong_settings'] = '<i class="icon-warning-sign icon-2x"></i> Wrong Settings!';
 	$lang['wrong_settings_1'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_1'].' with no Time-DKP.';
 	$lang['wrong_settings_2'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_2'].' with no Boss-DKP.';
 	$lang['wrong_settings_3'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_3'].' with no Boss- and/or Time-DKP.';

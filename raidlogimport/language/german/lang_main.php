@@ -165,7 +165,7 @@
 	$lang['raidcount_2'] = 'Ein Raid pro Boss';
 	$lang['raidcount_3'] = 'Ein Raid pro Stunde und pro Boss';
 	//moved from dkp
-	$lang['wrong_settings'] = '<img src="$eqdkp_root_path'.'images/global/false.png" alt="error" width="32"> Verkehrte Einstellungen!';
+	$lang['wrong_settings'] = '<i class="icon-warning-sign icon-2x"></i> Verkehrte Einstellungen!';
 	$lang['wrong_settings_1'] = $lang['wrong_settings'].' '.$lang['raidcount_1'].' kann nicht mit keinen Zeit-Punkten kombiniert werden.';
 	$lang['wrong_settings_2'] = $lang['wrong_settings'].' '.$lang['raidcount_2'].' kann nicht mit keinen Boss-Punkten kombiniert werden.';
 	$lang['wrong_settings_3'] = $lang['wrong_settings'].' '.$lang['raidcount_3'].' kann nicht mit keinen Boss- und/oder Zeit-Punkten kombiniert werden.';

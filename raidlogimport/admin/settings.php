@@ -236,7 +236,7 @@ class RLI_Settings extends page_generic {
 					$warn = '';
 				}
 				if($warn != '') {
-					$warn = $this->html->ToolTip($warn, '<img width="16" height="16" alt="help" src="'.$this->root_path.'images/global/false.png" />');
+					$warn = $this->html->ToolTip($warn, '<i class="icon-warning-sign"></i>');
 				}
 				$this->tpl->assign_block_vars('holder.config', array(
 					'NAME'	=> $this->user->lang($nava['name']).' '.$add.' '.$warn,
