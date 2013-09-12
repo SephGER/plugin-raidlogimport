@@ -228,7 +228,7 @@ class RLI_Settings extends page_generic {
 					}
 				}
 				if($add != '') {
-					$add = $this->html->ToolTip($add, '<img alt="help" src="'.$this->root_path.'images/global/info.png" />');
+					$add = $this->html->ToolTip($add, '<i class="icon-info-sign icon-large"></i>');
 				}
 				if($this->user->lang($nava['name'].'_warn', false, false)) {
 					$warn = $this->user->lang($nava['name'].'_warn');

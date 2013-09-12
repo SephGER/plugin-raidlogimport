@@ -15,7 +15,7 @@
 			<table width="100%" border="0" cellspacing="1" cellpadding="2" id="raid_{raids.COUNT}" {raids.DISPLAY} class="colorswitch">
 			  <tr>
 				<th <!-- IF not L_DIFFICULTY -->colspan="2"<!-- ENDIF -->>
-					<img src="{EQDKP_IMAGE_PATH}global/delete.png" alt="{L_delete}" title="{L_delete}" class="del_raid raid_{raids.COUNT}" />
+					<i class="icon-trash icon-large del_raid raid_{raids.COUNT}" title="{L_delete}"></i>
 					<input type="hidden" id="raid_{raids.COUNT}submit" name="raids[{raids.COUNT}][delete]" value="true" {raids.DELDIS} />
 					&nbsp;&nbsp;{raids.COUNT}. {L_raid}:
 				</th>
@@ -46,13 +46,13 @@
 					<!-- BEGIN bosskills -->
 						<tr id="raid_{raids.COUNT}_boss_{raids.bosskills.BK_KEY}" {raids.bosskills.DISPLAY}>
 							<td width="20">
-								<img src="{EQDKP_IMAGE_PATH}global/delete.png" alt="{L_delete}" title="{L_delete}" class="del_boss raid_{raids.COUNT}_boss_{raids.bosskills.BK_KEY}" />
+								<i class="icon-trash icon-large del_boss raid_{raids.COUNT}_boss_{raids.bosskills.BK_KEY}" title="{L_delete}"></i>
 								<input type="hidden" id="raid_{raids.COUNT}_boss_{raids.bosskills.BK_KEY}submit" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][delete]" value="true" {raids.bosskills.DELDIS} />
 							</td>
 							<!-- IF raids.bosskills.IMPORT -->
 								<td>
 									<input type="text" id="id_raid{raids.COUNT}_boss{raids.bosskills.BK_KEY}" class="input" value="{raids.bosskills.BK_SELECT}" size="22" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][id]" />
-									<img src="./../images/add.png" alt="{L_bz_import_boss}" title="{L_bz_import_boss}" onclick="javascript:{raids.bosskills.IMPORT}();" style="cursor:pointer;" />
+									<i class="icon-plus icon-large hand" title="{L_bz_import_boss}" onclick="javascript:{raids.bosskills.IMPORT}();">
 								</td>
 							<!-- ELSE -->
 								<td>{raids.bosskills.BK_SELECT}</td>
@@ -93,21 +93,21 @@
 			</table>
 		</div>
 		<div id="members">
-			<span><img src="{EQDKP_IMAGE_PATH}global/loading.gif" alt="..." /> {L_rli_loading} </span>
+			<span><i class="icon-refresh icon-large icon-spin"></i> {L_rli_loading} </span>
 		</div>
 		<div id="items">
-			<span><img src="{EQDKP_IMAGE_PATH}global/loading.gif" alt="..." /> {L_rli_loading} </span>
+			<span><i class="icon-refresh icon-large icon-spin"></i> {L_rli_loading} </span>
 		</div>
 		<!-- IF not S_DEACTIVATE_ADJ -->
 			<div id="adjustments">
-				<span><img src="{EQDKP_IMAGE_PATH}global/loading.gif" alt="..." /> {L_rli_loading} </span>
+				<span><i class="icon-refresh icon-large icon-spin"></i> {L_rli_loading} </span>
 			</div>
 		<!-- ENDIF -->
 		<div id="viewall">
-			<span><img src="{EQDKP_IMAGE_PATH}global/loading.gif" alt="..." /> {L_rli_loading} </span>
+			<span><i class="icon-refresh icon-large icon-spin"></i> {L_rli_loading} </span>
 		</div>
 		<div id="finish">
-			<span><img src="{EQDKP_IMAGE_PATH}global/loading.gif" alt="..." /> {L_rli_loading} </span>
+			<span><i class="icon-refresh icon-large icon-spin"></i> {L_rli_loading} </span>
 		</div>
 	</div>
 </form>
