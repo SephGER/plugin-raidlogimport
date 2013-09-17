@@ -521,7 +521,7 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 	}
 
 	public function item_in_raid($key, $time) {
-		if($this->raids[$key]['begin'] < $time AND $this->raids[$key]['end'] > $time) {
+		if($this->raids[$key]['begin'] < $time && $this->raids[$key]['end'] > $time && $key != $this->get_standby_raid()) {
 			return true;
 		}
 		return false;

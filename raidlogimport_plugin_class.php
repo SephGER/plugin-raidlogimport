@@ -27,7 +27,7 @@ class raidlogimport extends plugin_generic {
 	}
 
 	public $vstatus = 'Beta';
-	public $version = '0.6.2.2';
+	public $version = '0.6.3.0';
 	
 	public function pre_install() {
 		//initialize config

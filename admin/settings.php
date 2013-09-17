@@ -34,8 +34,7 @@ class RLI_Settings extends page_generic {
 				'difficulty' 	=> array('dep_match'),
 				'att'		 	=> array('attendence_raid'),
 				#'am'			=> array('auto_minus', 'am_value_raids', 'am_allxraids'),
-				'standby'		=> array('standby_absolute', 'standby_att'),
-				'member'		=> array('del_dbl_times')
+				'standby'		=> array('standby_absolute', 'standby_att')
 			),
 			'text'		=> array(
 				'general'		=> array('timedkp_handle', 'bz_parse', 'loottime', 'ignore_dissed'),
