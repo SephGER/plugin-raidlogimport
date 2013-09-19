@@ -40,8 +40,8 @@
 	$lang['bz_no_zone'] = 'no Zone';
 	$lang['bz_string'] = 'String';
 	$lang['bz_bnote'] = 'Note';
-	$lang['bz_bonus'] = 'Bonus-DKP / DKP/h';
-	$lang['bz_timebonus'] = 'Punkte pro Stunde';
+	$lang['bz_bonus'] = 'Bonus points';
+	$lang['bz_timebonus'] = 'Points per hour';
 	$lang['bz_diff'] = 'Schwierigkeit';
 	$lang['bz_zevent'] = 'Event';
 	$lang['bz_update'] = 'Add new / Edit marked';
@@ -85,8 +85,10 @@
 	$lang['rli_no_mem_create'] = ' could not be created. Please add him manually!';
 	$lang['rli_mem_auto'] = ' was automatically created.';
 	$lang['rli_raid_to'] = 'Raid to %1$s on %2$s';
-	$lang['rli_t_points'] = 'Time-DKP';
-	$lang['rli_b_dkp'] = 'Boss-DKP';
+	$lang['rli_raid_value'] = 'Raid value';
+	$lang['rli_t_points'] = 'Time points';
+	$lang['rli_e_points'] = 'Event points';
+	$lang['rli_b_dkp'] = 'Boss points';
 	$lang['rli_looter'] = 'Looter';
 	$lang['xml_error'] = 'XML-Error. Please check the log!';
 	$lang['parse_error'] = 'Parsing-Error!';
@@ -105,7 +107,7 @@
     $lang['rli_calc_note_value'] = 'Recalculate raidvalue and raidnote';
 	$lang['rli_insert'] = 'Insert DKP';
 	$lang['rli_adjs'] = 'Adjustments';
-	$lang['rli_partial_raid'] = 'Partial Raidattendence';
+	$lang['rli_partial_raid'] = 'Partial Raidattendance';
 	$lang['rli_add_raid'] = 'Add raid';
 	$lang['rli_add_raids'] = 'Add raids';
 	$lang['rli_delete_raids_warning'] = 'Do you really want to delete the raid/boss?';
@@ -170,15 +172,15 @@
 	$lang['wrong_settings_2'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_2'].' with no Boss-DKP.';
 	$lang['wrong_settings_3'] = $lang['wrong_settings'].' You cannot combine '.$lang['raidcount_3'].' with no Boss- and/or Time-DKP.';
 	
-	$lang['attendence_begin'] = 'Bonus for attendence during raidbegin';
-	$lang['attendence_end'] = 'Bonus for attendence during raidend';
+	$lang['attendance_begin'] = 'Bonus for attendance during raidbegin';
+	$lang['attendance_end'] = 'Bonus for attendance during raidend';
 	$lang['config_success'] = 'Configuration Success';
 	$lang['event_boss'] = 'Exists an event for each boss?';
 	$lang['event_boss_1'] = 'Yes';
 	$lang['event_boss_2'] = 'Use the name of the boss as raid-note';
-	$lang['attendence_raid'] = 'Should an extra raid be created for attendency?';
+	$lang['attendance_raid'] = 'Should an extra raid be created for attendency?';
 	$lang['loottime'] = 'Time in seconds, the loot belongs to the boss before.';
-	$lang['attendence_time'] = 'Time in seconds, the invite / end of raid lasts.';
+	$lang['attendance_time'] = 'Time in seconds, the invite / end of raid lasts.';
 	$lang['rli_inst_version'] = 'Installed version';
 	$lang['bz_parse'] = 'Delimiter between the Strings, which belong to one "event".';
 	$lang['parser'] = 'In which XML-Format is the string?';
@@ -222,8 +224,8 @@
 	$lang['member_start_name'] = 'Start-DKP'; //value is used for reason of adjustment
 	$lang['member_start_event'] = 'Event for Start-DKP';
 	$lang['member_raid'] = 'How many % of attendance do a member need to get the particiaption in the raid?';
-	$lang['att_note_begin'] = 'raid note of the start-attendence-raid';
-	$lang['att_note_end'] = 'raid note of the end-attendence-raid';
+	$lang['att_note_begin'] = 'raid note of the start-attendance-raid';
+	$lang['att_note_end'] = 'raid note of the end-attendance-raid';
 	$lang['raid_note_time']	= 'raid note of the raids per hour';
 	$lang['raid_note_time_0'] = '20:00-21:00, 21:00-22:00, etc.';
 	$lang['raid_note_time_1'] = '1.Hour, 2.Hour, etc.';

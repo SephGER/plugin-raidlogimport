@@ -32,7 +32,7 @@ class RLI_Settings extends page_generic {
 			'yes_no'	=> array(
 				'general'		=> array('rli_upd_check', 'deactivate_adj', 'itempool_save', 'no_del_warn'),
 				'difficulty' 	=> array('dep_match'),
-				'att'		 	=> array('attendence_raid'),
+				'att'		 	=> array('attendance_raid'),
 				#'am'			=> array('auto_minus', 'am_value_raids', 'am_allxraids'),
 				'standby'		=> array('standby_absolute', 'standby_att')
 			),
@@ -40,7 +40,7 @@ class RLI_Settings extends page_generic {
 				'general'		=> array('timedkp_handle', 'bz_parse', 'loottime', 'ignore_dissed'),
 				'member'		=> array('member_miss_time', 'member_raid'), #'member_start'),
 				#'am'			=> array('am_raidnum', 'am_value'),
-				'att'			=> array('attendence_begin', 'attendence_end', 'attendence_time', 'att_note_begin', 'att_note_end'),
+				'att'			=> array('attendance_begin', 'attendance_end', 'attendance_time', 'att_note_begin', 'att_note_end'),
 				'difficulty'	=> array('diff_1', 'diff_2', 'diff_3', 'diff_4'),
 				'standby'		=> array('standby_value', 'standby_raidnote')
 			),
@@ -71,7 +71,7 @@ class RLI_Settings extends page_generic {
 	public function update() {
 		$messages = array();
 		$bytes = array('s_member_rank', 'use_dkp', 'event_boss', 'standby_dkptype', 'autocomplete');
-		$floats = array('member_start', 'attendence_begin', 'attendence_end', 'am_value');
+		$floats = array('member_start', 'attandence_begin', 'attandence_end', 'am_value');
 		$copy_config = $this->rli->config();
 		foreach($copy_config as $old_name => $old_value) {
 			if(in_array($old_name, $bytes)) {

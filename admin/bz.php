@@ -342,6 +342,7 @@ class rli_Bz extends page_generic {
 			'ZID'		=> $zone_id,
 			'ZSTRING'	=> ($zone_id) ? $this->pdh->geth('rli_zone', 'string', array($zone_id)) : $this->user->lang('bz_boss_oz'),
 			'ZTIMEBONUS'=> ($zone_id) ? $this->pdh->geth('rli_zone', 'timebonus', array($zone_id)) : '',
+			'ZVAL'		=> ($zone_id && $this->config->get('use_dkp', 'raidlogimport') & 4) ? $this->pdh->geth('event', 'value', array($this->pdh->get('rli_zone', 'event', array($zone_id)))) : '&nbsp;',
 			'ZNOTE'		=> ($zone_id) ? $this->pdh->geth('rli_zone', 'event', array($zone_id)) : '')
 		);
 		foreach($sorting['boss'] as $boss_id => $bsort) {
