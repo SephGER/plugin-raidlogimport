@@ -86,7 +86,8 @@ class rli_import extends page_generic {
 
 		$this->tpl->assign_vars(array(
 			'USE_TIMEDKP' => ($this->rli->config('use_dkp') & 2),
-			'USE_BOSSDKP' => ($this->rli->config('use_dkp') & 1))
+			'USE_BOSSDKP' => ($this->rli->config('use_dkp') & 1),
+			'USE_EVENTDKP' => ($this->rli->config('use_dkp') & 4))
 		);
 		//language
 		lang2tpl();

@@ -164,7 +164,7 @@ if(!class_exists('rli_member')) {
         	$lasttime = false;
 			foreach($times as $time => $type) {
 				if($type == $lasttype) {
-					if($this->config('del_dbl_times')) {
+					// if($this->config('del_dbl_times')) {
 						if($type == 'join') {
 							if($time > $lasttime) {
 								unset($times[$time]);
@@ -180,9 +180,9 @@ if(!class_exists('rli_member')) {
 								continue;
 							}
 						}
-					} else {
-						$error .= '<br />Wrong Member: '.$this->members[$key]['name'].', '.$type.'-times: '.date('H:i:s', $time).' and '.date('H:i:s', $lasttime);
-					}
+					// } else {
+						// $error .= '<br />Wrong Member: '.$this->members[$key]['name'].', '.$type.'-times: '.date('H:i:s', $time).' and '.date('H:i:s', $lasttime);
+					// }
 				} elseif($type == 'join' AND $lasttype == 'join_standby') {
 					$new_time = $time-1;
 					$times[$new_time] = 'leave_standby';

@@ -85,7 +85,9 @@
 	$lang['rli_no_mem_create'] = " konnte nicht erzeugt werden. Bitte manuell erstellen";
 	$lang['rli_mem_auto'] = " wurde automatische erzeugt";
 	$lang['rli_raid_to'] = 'Raid auf %1$s am %2$s';
+	$lang['rli_raid_value'] = 'Raidwert';
 	$lang['rli_t_points'] = 'Zeit-Punkte';
+	$lang['rli_e_points'] = 'Ereignis-Punkte';
 	$lang['rli_b_dkp'] = 'Boss-Punkte';
 	$lang['rli_looter'] = 'Looter';
 	$lang['xml_error'] = 'XML-Error. Bitte überprüf das Log!';
@@ -170,15 +172,15 @@
 	$lang['wrong_settings_2'] = $lang['wrong_settings'].' '.$lang['raidcount_2'].' kann nicht mit keinen Boss-Punkten kombiniert werden.';
 	$lang['wrong_settings_3'] = $lang['wrong_settings'].' '.$lang['raidcount_3'].' kann nicht mit keinen Boss- und/oder Zeit-Punkten kombiniert werden.';
 	//move end
-	$lang['attendence_begin'] = 'Bonus für Anwesenheit am Raidbeginn';
-	$lang['attendence_end'] = 'Bonus für Anwesenheit am Raidende';
+	$lang['attendance_begin'] = 'Bonus für Anwesenheit am Raidbeginn';
+	$lang['attendance_end'] = 'Bonus für Anwesenheit am Raidende';
 	$lang['config_success'] = 'Konfigurations Erfolg';
 	$lang['event_boss'] = 'Existiert für jeden Boss ein Event?';
 	$lang['event_boss_1'] = 'Ja';
 	$lang['event_boss_2'] = 'Als Notiz den Namen des Bosses benutzen';
-	$lang['attendence_raid'] = 'Soll für die Anwesenheit ein extra Raid angelegt werden?';
+	$lang['attendance_raid'] = 'Soll für die Anwesenheit ein extra Raid angelegt werden?';
 	$lang['loottime'] = 'Zeit in Sekunden, die der Loot noch zum Boss davor gehört';
-	$lang['attendence_time'] = 'Zeit in Sekunden, die der Invite dauert, bzw. das Raid-Ende dauert';
+	$lang['attendance_time'] = 'Zeit in Sekunden, die der Invite dauert, bzw. das Raid-Ende dauert';
 	$lang['rli_inst_version'] = 'Installierte Version';
 	$lang['bz_parse'] = 'Trennzeichen zwischen den Strings die zu einem "Event" gehören';
 	$lang['parser'] = 'Welches XML-Format hat der String?';

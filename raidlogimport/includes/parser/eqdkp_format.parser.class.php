@@ -137,7 +137,8 @@ class eqdkp_format extends rli_parser {
 		foreach($xml->Loot->children() as $loot) {
 			$player = (trim($loot->Player));
 			$cost = (array_key_exists('Costs', $loot)) ? (int) $loot->Costs : (int) $loot->Note;
-			$data['items'][] = array(trim($loot->ItemName), $player, $cost, substr(trim($loot->ItemID), 0, 5), strtotime($loot->Time));
+			$itemid = explode(':', trim($loot->itemID));
+			$data['items'][] = array(trim($loot->ItemName), $player, $cost, $itemid[0], strtotime($loot->Time));
 		}
 		foreach($xml->PlayerInfos->children() as $xmember) {
 			$data['members'][] = array(trim($xmember->name), trim($xmember->class), trim($xmember->race), trim($xmember->level), trim($xmember->note));

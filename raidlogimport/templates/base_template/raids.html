@@ -30,8 +30,9 @@
 			  <tr>
 				<td>{L_rli_end}: {raids.END_DATE}</td>
 				<td>
-					{L_value}: <input type="text" name="raids[{raids.COUNT}][value]" value="{raids.VALUE}" class="input" size="6" />
+					{L_rli_raid_value}:  {raids.VALUE}
 					<!-- IF USE_TIMEDKP -->&nbsp;&nbsp;&nbsp;&nbsp; {L_rli_t_points}: <input type="text" name="raids[{raids.COUNT}][timebonus]" value="{raids.TIMEBONUS}" class="input" size="6" /><!-- ENDIF -->
+					<!-- IF USE_EVENTDKP -->&nbsp;&nbsp;&nbsp;&nbsp; {L_rli_e_points}: <input type="text" name="raids[{raids.COUNT}][eventval]" value="{raids.EVENTVAL}" class="input" size="6" /><!-- ENDIF -->
 				</td>
 			  </tr>
 			  <tr>
