@@ -37,6 +37,7 @@ class rli_raid extends gen_class {
 
 	public function __construct() {
 		$this->raids = $this->rli->get_cache_data('raid');
+		pd($this->raids);
 		if($this->in->exists('raids')) $this->load_raids();
 		$this->data = $this->rli->get_cache_data('data_raid');
 	}
@@ -63,36 +64,37 @@ class rli_raid extends gen_class {
 	}
 
 	public function load_raids() {
-		$this->raids = array();
 		foreach($_POST['raids'] as $key => $raid) {
-			if(!isset($raid['delete'])) {
-				$this->raids[$key]['begin'] = $this->time->fromformat($this->in->get('raids:'.$key.':start_date'), 1);
-				$this->raids[$key]['end'] = $this->time->fromformat($this->in->get('raids:'.$key.':end_date'), 1);
-				$this->raids[$key]['note'] = $this->in->get('raids:'.$key.':note');
-				$this->raids[$key]['eventval'] = runden($this->in->get('raids:'.$key.':eventval', 0.0));
-				$this->raids[$key]['timebonus'] = runden($this->in->get('raids:'.$key.':timebonus', 0.0));
-				$this->raids[$key]['event'] = $this->in->get('raids:'.$key.':event');
-				$this->raids[$key]['bosskill_add'] = $this->in->get('raids:'.$key.':bosskill_add', 0);
-				$this->raids[$key]['diff'] = $this->in->get('raids:'.$key.':diff', 0);
-				$bosskills = array();
-				if(is_array($raid['bosskills'])) {
-					foreach($raid['bosskills'] as $u => $bk) {
-						if(!isset($bk['delete'])) {
-							$bosskills[$u]['time'] = $this->time->fromformat($this->in->get('raids:'.$key.':bosskills:'.$u.':date'), 1);
-							$bosskills[$u]['bonus'] = runden($this->in->get('raids:'.$key.':bosskills:'.$u.':bonus', 0.0));
-							$bosskills[$u]['timebonus'] = runden($this->in->get('raids:'.$key.':bosskills:'.$u.':timebonus', 0.0));
-							$bosskills[$u]['id'] = $this->in->get('raids:'.$key.':bosskills:'.$u.':id');
-							$bosskills[$u]['diff'] = $this->in->get('raids:'.$key.':bosskills:'.$u.':diff');
-							if(!is_numeric($bosskills[$u]['id'])) {
-								$id = $this->pdh->get('rli_boss', 'id_string', array($bosskills[$u]['id'], $bosskills[$u]['diff']));
-								if($id) $bosskills[$u]['id'] = $id;
-							}
+			if(isset($raid['delete'])) {
+				unset($this->raids[$key]);
+				continue;
+			}
+			$this->raids[$key]['begin'] = $this->time->fromformat($this->in->get('raids:'.$key.':start_date'), 1);
+			$this->raids[$key]['end'] = $this->time->fromformat($this->in->get('raids:'.$key.':end_date'), 1);
+			$this->raids[$key]['note'] = $this->in->get('raids:'.$key.':note');
+			$this->raids[$key]['eventval'] = runden($this->in->get('raids:'.$key.':eventval', 0.0));
+			$this->raids[$key]['timebonus'] = runden($this->in->get('raids:'.$key.':timebonus', 0.0));
+			$this->raids[$key]['event'] = $this->in->get('raids:'.$key.':event');
+			$this->raids[$key]['bosskill_add'] = $this->in->get('raids:'.$key.':bosskill_add', 0);
+			$this->raids[$key]['diff'] = $this->in->get('raids:'.$key.':diff', 0);
+			$bosskills = array();
+			if(is_array($raid['bosskills'])) {
+				foreach($raid['bosskills'] as $u => $bk) {
+					if(!isset($bk['delete'])) {
+						$bosskills[$u]['time'] = $this->time->fromformat($this->in->get('raids:'.$key.':bosskills:'.$u.':date'), 1);
+						$bosskills[$u]['bonus'] = runden($this->in->get('raids:'.$key.':bosskills:'.$u.':bonus', 0.0));
+						$bosskills[$u]['timebonus'] = runden($this->in->get('raids:'.$key.':bosskills:'.$u.':timebonus', 0.0));
+						$bosskills[$u]['id'] = $this->in->get('raids:'.$key.':bosskills:'.$u.':id');
+						$bosskills[$u]['diff'] = $this->in->get('raids:'.$key.':bosskills:'.$u.':diff');
+						if(!is_numeric($bosskills[$u]['id'])) {
+							$id = $this->pdh->get('rli_boss', 'id_string', array($bosskills[$u]['id'], $bosskills[$u]['diff']));
+							if($id) $bosskills[$u]['id'] = $id;
 						}
 					}
 				}
-				$this->raids[$key]['bosskills'] = $bosskills;
-				$this->raids[$key]['timebonus'] = $this->in->get('raids:'.$key.':timebonus', 0.0);
 			}
+			$this->raids[$key]['bosskills'] = $bosskills;
+			$this->raids[$key]['timebonus'] = $this->in->get('raids:'.$key.':timebonus', 0.0);
 		}
 		if(empty($this->raids)) {
 			$this->rli->error('process_raids', $this->user->lang('rli_error_no_raid'));
