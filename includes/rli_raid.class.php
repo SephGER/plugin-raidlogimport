@@ -37,7 +37,6 @@ class rli_raid extends gen_class {
 
 	public function __construct() {
 		$this->raids = $this->rli->get_cache_data('raid');
-		pd($this->raids);
 		if($this->in->exists('raids')) $this->load_raids();
 		$this->data = $this->rli->get_cache_data('data_raid');
 	}
@@ -95,6 +94,8 @@ class rli_raid extends gen_class {
 			}
 			$this->raids[$key]['bosskills'] = $bosskills;
 			$this->raids[$key]['timebonus'] = $this->in->get('raids:'.$key.':timebonus', 0.0);
+			// recalc the total value
+			$this->raids[$key]['value'] = runden($this->get_value($key, false));
 		}
 		if(empty($this->raids)) {
 			$this->rli->error('process_raids', $this->user->lang('rli_error_no_raid'));
@@ -194,7 +195,6 @@ class rli_raid extends gen_class {
 					$this->raids[$key]['event'] = $this->get_event($key);
 				}
 				$this->raids[$key]['note'] = (isset($this->data['add']) && $key == $this->data['add']['standby_raid']) ? $this->config('standby_raidnote') : $this->get_note($key);
-				$this->raids[$key]['value'] = runden($this->get_value($key, false));
 			}
 		}
 	}

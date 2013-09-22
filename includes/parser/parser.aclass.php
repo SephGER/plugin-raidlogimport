@@ -48,7 +48,7 @@ abstract class rli_parser {
 	 *							'items' => array(name, member, cost, (ingameid), (time))
 	 *						)
 	 */
-	public abstract static function parse($input);
+	public static function parse($input) { return null; }
 
 	/*	check if string is in correct format/contains readable data/return error information
 	 *	@input	(string)	string to fetch information from		
@@ -57,7 +57,7 @@ abstract class rli_parser {
 	 *								2 => node_list (in case of fail array with missing nodes)
 	 *						)
 	 */
-	public abstract static function check($input);
+	public static function check($input) { return null; }
 	
 	/**
 	 *	predefined function to check for correct xml

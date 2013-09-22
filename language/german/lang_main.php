@@ -104,7 +104,7 @@
 	$lang['rli_back2mem'] = 'Zurück zu Membern';
 	$lang['rli_back2item'] = 'Zurück zu Items';
 	$lang['rli_checkadj'] = 'Korrekturen überprüfen';
-    $lang['rli_calc_note_value'] = 'Raidwert und Raidnotiz neu berechnen';
+    $lang['rli_calc_note_value'] = 'Raidnotiz neu erstellen';
 	$lang['rli_insert'] = 'Raid(s) Einfügen';
 	$lang['rli_adjs'] = 'Korrekturen';
 	$lang['rli_partial_raid'] = 'Teilweise Raidteilnahme';

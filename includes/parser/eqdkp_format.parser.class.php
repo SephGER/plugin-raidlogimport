@@ -149,6 +149,7 @@ class eqdkp_format extends rli_parser {
 		foreach ($xml->Leave->children() as $leaver) {
 			$data['times'][] = array(trim($leaver->player), strtotime($leaver->time), 'leave');
 		}
+		return $data;
 	}
 }
 }
