@@ -134,7 +134,6 @@
 	$lang['rli_missing_values'] = 'There are missing some values. Please: ';
 	$lang['rli_miss'] = 'The following nodes are missing: ';
 	$lang['rli_lgaobk'] = 'Log guild attendees on bosskill must be deactivated, before tracking. If you want to import the log anyway, you have to delete all the joins which have the same time as the bosskills.';
-	$lang['wrong_format'] = 'The parser you haven chosen (%s) and the raid-log you have posted, do not match.';
 	$lang['wrong_game'] = 'The game from which you exported the log and the game you specified in the configuration of EQdkp-Plus are not the same!';
 	$lang['rli_process'] = 'Process';
 	$lang['check_raidval'] = 'Check raid values';
@@ -147,7 +146,7 @@
 	$lang['rli_itempool_partial_save'] = 'Itempools saved only partially.';
 	$lang['rli_itempool_nosave'] = 'Not saved Items';
 	$lang['rli_help'] = 'Help?';
-	$lang['rli_help_dt_member'] = 'help text NYI';
+	$lang['rli_help_dt_member'] = 'Help (Beta): The black bar in the middle stands for the presence over the time of the raid. The skulls represent bosskills (mouseover). The background of the line is either green or red, depending wether the character gets the raid-attendance. There also exists a rightclick-menu to add/delete black bars.';
 	$lang['rli_member_refresh_for_view'] = 'Press update to show the Raidslider.';
 	$lang['rli_loading'] = 'Please wait';
 	$lang['rli_finish'] = 'Finish';
@@ -158,6 +157,8 @@
 	$lang['rli_error_no_attendant']  = 'The must be at least one member participating the raid.';
 	$lang['rli_error_no_buyer'] = 'Could not find the buyer of the Item %s in the raid or database.';
 	$lang['rli_error_item_no_raid'] = 'Item %s have not been assigned to a raid.';
+	$lang['rli_error_no_parser'] = 'A parser has not been selected.';
+	$lang['rli_error_wrong_format'] = 'The parser you haven chosen (%s) and the raid-log you have posted do not match.';
 	
 	//config
 	$lang['new_member_rank'] = 'Default rank for automatic created members.';
