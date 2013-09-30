@@ -127,7 +127,7 @@ class rli extends gen_class {
 		}
 		if($position+1 < count($ids)) {
 			$str = $position+1;
-			for($i=$position+2;$i<count($ids);$i++) {
+			for($i=$position+2;$i<=count($ids);$i++) {
 				$str .= ', '.$i;
 			}
 			$this->tpl->add_js('$("#rli_nav_tabs").tabs(\'option\', \'disabled\', ['.$str.']);', 'docready');

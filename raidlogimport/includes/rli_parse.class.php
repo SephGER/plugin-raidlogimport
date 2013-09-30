@@ -72,10 +72,10 @@ class rli_parse extends gen_class {
 				$this->raid->recalc(true);
 				$this->member->finish();
 			} else {
-				message_die(sprintf($this->user->lang('wrong_format'), $parser::$name).'<br />'.$this->user->lang('rli_miss').implode(', ', $back[2]));
+				message_die(sprintf($this->user->lang('rli_error_wrong_format'), $parser::$name).'<br />'.$this->user->lang('rli_miss').implode(', ', $back[2]));
 			}
 		} else {
-			message_die($this->user->lang('no_parser'));
+			message_die($this->user->lang('rli_error_no_parser'));
 		}
 	}
 }

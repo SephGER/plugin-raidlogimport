@@ -137,7 +137,7 @@ class eqdkp_format extends rli_parser {
 		foreach($xml->Loot->children() as $loot) {
 			$player = (trim($loot->Player));
 			$cost = (array_key_exists('Costs', $loot)) ? (int) $loot->Costs : (int) $loot->Note;
-			$itemid = explode(':', trim($loot->itemID));
+			$itemid = explode(':', trim($loot->ItemID));
 			$data['items'][] = array(trim($loot->ItemName), $player, $cost, $itemid[0], strtotime($loot->Time));
 		}
 		foreach($xml->PlayerInfos->children() as $xmember) {
@@ -149,6 +149,7 @@ class eqdkp_format extends rli_parser {
 		foreach ($xml->Leave->children() as $leaver) {
 			$data['times'][] = array(trim($leaver->player), strtotime($leaver->time), 'leave');
 		}
+		return $data;
 	}
 }
 }
