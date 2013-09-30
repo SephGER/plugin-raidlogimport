@@ -86,7 +86,7 @@
 	$lang['rli_mem_auto'] = " wurde automatische erzeugt";
 	$lang['rli_raid_to'] = 'Raid auf %1$s am %2$s';
 	$lang['rli_raid_value'] = 'Raidwert';
-	$lang['rli_t_points'] = 'Zeit-Punkte';
+	$lang['rli_t_points'] = 'Punkte pro Stunde';
 	$lang['rli_e_points'] = 'Ereignis-Punkte';
 	$lang['rli_b_dkp'] = 'Boss-Punkte';
 	$lang['rli_looter'] = 'Looter';

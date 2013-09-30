@@ -43,7 +43,7 @@ if(!class_exists('rli_adjustment')) {
 	}
 
 	public function add($reason, $member, $value, $event, $date=0, $raid=0) {
-		$this->adjs[] = array('reason' => $reason, 'member' => $member, 'value' => runden($value), 'date' => $date, 'raid' => $raid);
+		$this->adjs[] = array('reason' => $reason, 'member' => $member, 'value' => runden($value), 'date' => $date, 'raid' => $raid, 'event' => $event);
 	}
 
 	public function add_new($num) {

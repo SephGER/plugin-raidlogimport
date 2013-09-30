@@ -193,6 +193,7 @@ class rli_raid extends gen_class {
 						$this->raids[$key]['bosskills'] = $this->get_bosskills($raid['begin'], $raid['end']);
 					}
 					$this->raids[$key]['event'] = $this->get_event($key);
+					$this->raids[$key]['value'] = runden($this->get_value($key, false));
 				}
 				$this->raids[$key]['note'] = (isset($this->data['add']) && $key == $this->data['add']['standby_raid']) ? $this->config('standby_raidnote') : $this->get_note($key);
 			}
@@ -614,8 +615,8 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 				$bossdkp += $bosskill['bonus'];
 			}
 			//timed bossdkp
-			$kill_before = (isset($this->data['bosskills'][$b-1]['time'])) ? $this->data['bosskills'][$b-1]['time'] : NULL;
-			$kill_after = (isset($this->data['bosskills'][$b+1]['time'])) ? $this->data['bosskills'][$b+1]['time'] : NULL;
+			$kill_before = (isset($this->raids[$key]['bosskills'][$b-1]['time'])) ? $this->raids[$key]['bosskills'][$b-1]['time'] : NULL;
+			$kill_after = (isset($this->raids[$key]['bosskills'][$b+1]['time'])) ? $this->raids[$key]['bosskills'][$b+1]['time'] : NULL;
 			$temp = $this->get_bosskill_raidtime($this->raids[$key]['begin'], $this->raids[$key]['end'], $bosskill['time'], $kill_before, $kill_after);
 			$in_boss = format_duration($this->in_raid($temp, $times, $standby1));
 			$bossdkp += $this->calc_timebossdkp($bosskill['timebonus'], $in_boss);
