@@ -6,7 +6,7 @@
 <!-- BEGIN player -->
 <tr id="memberrow_{player.KEY}" {player.DISPLAY}>
 	<td align="right">
-		{player.NR}&nbsp;<i class="icon-trash icon-large hand" title="{L_delte}" onclick="delete_warning('memberrow_{player.KEY}');"></i>
+		{player.NR}&nbsp;<i class="fa fa-trash-o fa-lg hand" title="{L_delte}" onclick="delete_warning('memberrow_{player.KEY}');"></i>
 		<input type="hidden" id="memberrow_{player.KEY}submit" name="members[{player.KEY}][delete]" value="true" {player.DELDIS} />
 	</td>
 	<td><input type="text" name="members[{player.KEY}][name]" value="{player.MITGLIED}" class="input" /></td>

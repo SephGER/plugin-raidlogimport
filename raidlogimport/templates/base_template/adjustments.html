@@ -9,13 +9,13 @@
 			<li><a href="#finish" id="rli_nav_finish"><span>{L_rli_finish}</span></a><input type="hidden" name="insert" value="{L_update}" disabled="disabled" /></li>
 		</ul>
 		<div id="raids">
-				<span><i class="icon-refresh icon-spin icon-large"></i> {L_rli_loading} </span>
+				<span><i class="fa fa-refresh fa-spin fa-lg"></i> {L_rli_loading} </span>
 		</div>
 		<div id="members">
-				<span><i class="icon-refresh icon-spin icon-large"></i> {L_rli_loading} </span>
+				<span><i class="fa fa-refresh fa-spin fa-lg"></i> {L_rli_loading} </span>
 		</div>
 		<div id="items">
-				<span><i class="icon-refresh icon-spin icon-large"></i> {L_rli_loading} </span>
+				<span><i class="fa fa-refresh fa-spin fa-lg"></i> {L_rli_loading} </span>
 		</div>
 		<div id="adjustments">
 			<table width="100%" cellspacing="1" cellpadding="1" border="0" id="adj" class="colorswitch">
@@ -27,7 +27,7 @@
 			</tr>
 			<!-- BEGIN adjs -->
 			<tr id="adj_{adjs.KEY}" {adjs.DISPLAY}>
-				<td align="right"><i class="icon-trash icon-large" title="{L_delte}"></i><input type="checkbox" name="adjs[{adjs.KEY}][delete]" value="true" title="{L_delete}" class="rli_select_me" {adjs.DELCHK} /></td>
+				<td align="right"><i class="fa fa-trash-o fa-lg" title="{L_delte}"></i><input type="checkbox" name="adjs[{adjs.KEY}][delete]" value="true" title="{L_delete}" class="rli_select_me" {adjs.DELCHK} /></td>
 				<td>{adjs.MEMBER}</td>
 				<td>{adjs.EVENT}</td>
 				<td>{adjs.RAID}</td>
@@ -50,10 +50,10 @@
 			</table>
 		</div>
 		<div id="viewall">
-				<span><i class="icon-refresh icon-spin icon-large"></i> {L_rli_loading} </span>
+				<span><i class="fa fa-refresh fa-spin fa-lg"></i> {L_rli_loading} </span>
 		</div>
 		<div id="finish">
-				<span><i class="icon-refresh icon-spin icon-large"></i> {L_rli_loading} </span>
+				<span><i class="fa fa-refresh fa-spin fa-lg"></i> {L_rli_loading} </span>
 		</div>
 	</div>
 </form>

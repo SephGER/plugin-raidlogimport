@@ -11,10 +11,10 @@
 			<li><a href="#finish" id="rli_nav_finish"><span>{L_rli_finish}</span></a><input type="hidden" name="insert" value="{L_update}" disabled="disabled" /></li>
 		</ul>
 		<div id="raids">
-				<span><i class="icon-refresh icon-large icon-spin"></i> {L_rli_loading} </span>
+				<span><i class="fa fa-refresh fa-lg fa-spin"></i> {L_rli_loading} </span>
 		</div>
 		<div id="members">
-				<span><i class="icon-refresh icon-large icon-spin"></i> {L_rli_loading} </span>
+				<span><i class="fa fa-refresh fa-lg fa-spin"></i> {L_rli_loading} </span>
 		</div>
 		<div id="items">
 			<table width="100%" border="0" cellspacing="1" cellpadding="2" class="colorswitch">
@@ -29,7 +29,7 @@
 				<!-- BEGIN loots -->
 				<tr id="item_{loots.KEY}" {loots.DISPLAY}>
 					<td>
-						&nbsp;<i class="icon-trash icon-large del_item item_{loots.KEY}" title="{L_delte}"></i>
+						&nbsp;<i class="fa fa-trash-o fa-lg del_item item_{loots.KEY}" title="{L_delte}"></i>
 						<input type="hidden" id="item_{loots.KEY}submit" name="loots[{loots.KEY}][delete]" value="true" {loots.DELDIS} />
 					</td>
 					<td><input type="text" name="loots[{loots.KEY}][name]" class="input" value="{loots.LOOTNAME}" size="40" {loots.READONLY} /></td>
@@ -63,15 +63,15 @@
 		</div>
 		<!-- IF not S_DEACTIVATE_ADJ -->
 			<div id="adjustments">
-				<span><i class="icon-refresh icon-large icon-spin"></i> {L_rli_loading} </span>
+				<span><i class="fa fa-refresh fa-lg fa-spin"></i> {L_rli_loading} </span>
 			</div>
 		<!-- ELSE -->
 			<div id="viewall">
-				<span><i class="icon-refresh icon-large icon-spin"></i> {L_rli_loading} </span>
+				<span><i class="fa fa-refresh fa-lg fa-spin"></i> {L_rli_loading} </span>
 			</div>
 		<!-- ENDIF -->
 		<div id="finish">
-			<span><i class="icon-refresh icon-large icon-spin"></i> {L_rli_loading} </span>
+			<span><i class="fa fa-refresh fa-lg fa-spin"></i> {L_rli_loading} </span>
 		</div>
 	</div>
 </form>

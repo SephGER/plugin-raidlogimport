@@ -71,7 +71,7 @@ class raidlogimport extends plugin_generic {
 			'long_description'	=> $this->user->lang('raidlogimport_long_desc'),
 			'homepage'			=> EQDKP_PROJECT_URL,
 			'manuallink'		=> ($this->user->lang_name != 'german') ? false : $this->root_path . 'plugins/raidlogimport/language/'.$this->user->lang_name.'/Manual.pdf',
-			'icon'				=> 'icon-book',
+			'icon'				=> 'fa-book',
 			)
 		);
 
@@ -216,23 +216,23 @@ class raidlogimport extends plugin_generic {
 	
 	public function gen_admin_menu() {
 		return array(array(
-			'icon' => 'icon-book',
+			'icon' => 'fa-book',
 			'name' => $this->user->lang('raidlogimport'),
 			1 => array(
 				'link' => 'plugins/' . $this->code . '/admin/settings.php'.$this->SID,
 				'text' => $this->user->lang('settings'),
 				'check' => 'a_raidlogimport_config',
-				'icon' => 'icon-wrench'),
+				'icon' => 'fa-wrench'),
 			2 => array(
 				'link' => 'plugins/' . $this->code . '/admin/bz.php'.$this->SID,
 				'text' => $this->user->lang('raidlogimport_bz'),
 				'check' => 'a_raidlogimport_bz',
-				'icon' => 'icon-tag'),
+				'icon' => 'fa-tag'),
 			3 => array(
 				'link' => 'plugins/' . $this->code . '/admin/dkp.php'.$this->SID,
 				'text' => $this->user->lang('raidlogimport_dkp'),
 				'check' => 'a_raidlogimport_dkp',
-				'icon' => 'icon-upload-alt')
+				'icon' => 'fa-upload')
 		));
 	}
 
