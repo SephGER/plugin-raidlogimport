@@ -318,7 +318,6 @@ $('.del_mem').click(function() {
 });
 $('#add_mem_button').click(function() {
 	var mem = $('#memberrow_999').clone(true);
-	console.log(mem);
 	mem.find('#memberrow_999submit').attr('disabled', 'disabled');
 	mem.html(mem.html().replace(/999/g, rli_key));
 	mem.attr('id', 'memberrow_'+rli_key);

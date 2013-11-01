@@ -136,7 +136,6 @@ function set_left(l, nostopper) {
 
 function add_timeframe() {
 	posx = clickx1;
-	console.log('add_func');
 	//between which times did the user click?
 	var all_times = $('#times_' + member_id + ' > div');
 	var left = new Array(0, posi_null);
