@@ -250,12 +250,12 @@ class rli_raid extends gen_class {
 				'COUNT'     => $ky,
 				'START_DATE'=> ($with_form) ? $this->jquery->Calendar("raids[".$ky."][start_date]", $begin, '', array('id' => 'raids_'.$ky.'_start_date', 'timepicker' => true, 'class' => 'class="input"')) : $begin,
 				'END_DATE'	=> ($with_form) ? $this->jquery->Calendar("raids[".$ky."][end_date]", $end, '', array('id' => 'raids_'.$ky.'_end_date', 'timepicker' => true, 'class' => 'class="input"')) : $end,
-				'EVENT'		=> ($with_form) ? $this->html->DropDown('raids['.$ky.'][event]', $this->event_drop, $rai['event'], '', '', 'input', 'event_raid'.$ky) : $this->pdh->get('event', 'name', array($rai['event'])),
+				'EVENT'		=> ($with_form) ? new hdropdown('raids['.$ky.'][event]', array('options' => $this->event_drop, 'value' => $rai['event'], 'id' => 'event_raid'.$ky)) : $this->pdh->get('event', 'name', array($rai['event'])),
 				'TIMEBONUS'	=> $rai['timebonus'],
 				'EVENTVAL'	=> $rai['eventval'],
 				'VALUE'		=> $rai['value'],
 				'NOTE'		=> $rai['note'],
-				'DIFF'		=> ($with_form) ? $this->html->DropDown('raids['.$ky.'][diff]', $this->diff_drop, $rai['diff'], '', '', 'input', 'diff_raid'.$ky) : $this->user->lang('diff_'.$rai['diff']),
+				'DIFF'		=> ($with_form) ? new hdropdown('raids['.$ky.'][diff]', array('options' => $this->diff_drop, 'value' => $rai['diff'], 'id' => 'diff_raid'.$ky)), : $this->user->lang('diff_'.$rai['diff']),
 				'BOSSKILLS' => $bosskills,
 				'DELDIS'	=> 'disabled="disabled"')
 			);
@@ -277,7 +277,7 @@ class rli_raid extends gen_class {
 						$html_id = 'raid'.$ky.'_boss'.$xy;
 						$name_field = '';
 						if(is_numeric($bk['id'])) {
-							$name_field = $this->html->DropDown('raids['.$ky.'][bosskills]['.$xy.'][id]', $this->bk_list, $bk['id'], '', '', 'input', 'a'.uniqid());
+							$name_field = new hdropdown('raids['.$ky.'][bosskills]['.$xy.'][id]', array('options' => $this->bk_list, 'value' => $bk['id'], 'id' => 'a'.uniqid()));
 						} else {
 							$name_field = $bk['id'];
 							$params = "&string=' + $('#id_".$html_id."').val() + '&bonus=' + $('#bonus_".$html_id."').val() + '&timebonus=' + $('#timebonus_".$html_id."').val() + '&diff=' + $('#diff_".$html_id."').val()";
@@ -291,7 +291,7 @@ class rli_raid extends gen_class {
 							'BK_DATE'   => $this->jquery->Calendar("raids[".$ky."][bosskills][".$xy."][date]", $this->time->user_date($bk['time'], true, false, false, function_exists('date_create_from_format')), '', array('id' => 'raids_'.$ky.'_boss_'.$xy.'_date', 'timepicker' => true, 'class' => 'class="input"')),
 							'BK_BONUS'  => $bk['bonus'],
 							'BK_TIMEBONUS' => $bk['timebonus'],
-							'BK_DIFF'	=> $this->html->DropDown('raids['.$ky.'][bosskills]['.$xy.'][diff]', $this->diff_drop, $bk['diff'], '', '', 'input', 'diff_'.$html_id),
+							'BK_DIFF'	=> new hdropdown('raids['.$ky.'][bosskills]['.$xy.'][diff]', array('options' => $this->diff_drop, 'value' => $bk['diff'], 'id' => 'diff_'.$html_id)),
 							'BK_KEY'    => $xy,
 							'IMPORT'	=> ($import) ? $html_id : 0,
 							'DELDIS'	=> 'disabled="disabled"')
@@ -300,9 +300,9 @@ class rli_raid extends gen_class {
 				}
 				$this->tpl->add_js("boss_keys[".$ky."] = ".($xy+1).";", 'docready');
 				$this->tpl->assign_block_vars('raids.bosskills', array(
-					'BK_SELECT'	=> $this->html->DropDown('raids['.$ky.'][bosskills][99][id]', $this->bk_list, 0, '', '', 'input', 'a'.uniqid()),
+					'BK_SELECT'	=> new hdropdown('raids['.$ky.'][bosskills][99][id]', array('options' => $this->bk_list, 'value' => 0, 'id' => 'a'.uniqid())),
 					'BK_DATE'	=> '<input type="text" name="raids['.$ky.'][bosskills][99][date]" id="raids_'.$ky.'_boss_99_date" size="15" />',
-					'BK_DIFF'	=> $this->html->DropDown('raids['.$ky.'][bosskills][99][diff]', $this->diff_drop, 0, '', '', 'input', 'diff_raid'.$ky.'_boss99'),
+					'BK_DIFF'	=> new hdropdown('raids['.$ky.'][bosskills][99][diff]', array('options' => $this->diff_drop, 'value' => 0, 'id' => 'diff_raid'.$ky.'_boss99')),
 					'BK_KEY'	=> 99,
 					'DISPLAY'	=> 'style="display: none;"',
 					'IMPORT'	=> 0
@@ -314,14 +314,15 @@ class rli_raid extends gen_class {
 				'COUNT'     => 999,
 				'START_DATE'=> '<input type="text" name="raids[999][start_date]" id="raids_999_start_date" size="15" />',
 				'END_DATE'	=> '<input type="text" name="raids[999][end_date]" id="raids_999_end_date" size="15" />',
-				'EVENT'		=> $this->html->DropDown('raids[999][event]', $this->event_drop, 0, '', '', 'input', 'a'.uniqid()),
-				'DIFF'		=> $this->html->DropDown('raids[999][diff]', $this->diff_drop, 0, '', '', 'input', 'a'.uniqid()),
+				'EVENT'		=> new hdropdown('raids[999][event]', array('options' => $this->event_drop, 'value' => 0, 'id' => 'a'.uniqid())),
+				'DIFF'		=> new hdropdown('raids[999][diff]', array('options' => $this->diff_drop, 'value' => 0, 'id' => 'a'.uniqid())),
 				'DISPLAY'	=> 'style="display: none;"'
 			));
 			$this->tpl->assign_block_vars('raids.bosskills', array(
-				'BK_SELECT'	=> $this->html->widget(array('type' => 'dropdown', 'name' => 'raids[999][bosskills][99][id]', 'options' => $this->bk_list, 'selected' => 0, 'id' => 'a'.uniqid(), 'no_lang' => true)),
+				'BK_SELECT'	=> new hdropdown('raids[999][bosskills][99][id]', array('options' => $this->bk_list, 'value' => 0, 'id' => 'a'.uniqid(), 'tolang' => false)),
+				
 				'BK_DATE'	=> '<input type="text" name="raids[999][bosskills][99][date]" id="raids_999_boss_99_date" size="15" />',
-				'BK_DIFF'	=> $this->html->widget(array('type' => 'dropdown', 'name' => 'raids[999][bosskills][99][diff]', 'options' => $this->diff_drop, 'selected' => 0, 'id' => 'diff_raid999_boss99', 'no_lang' => true)),
+				'BK_DIFF'	=> new hdropdown('raids[999][bosskills][99][diff]', array('options' => $this->diff_drop, 'value' => 0, 'id' => 'diff_raid999_boss99', 'tolang' => false)),
 				'BK_KEY'	=> 99,
 				'DISPLAY'	=> 'style="display: none;"'
 			));
