@@ -156,9 +156,12 @@ class rli_item extends gen_class {
 				$this->tpl->assign_block_vars('loots', array(
 					'LOOTNAME'  => $item['name'],
 					'ITEMID'    => (isset($item['game_id'])) ? $item['game_id'] : '',
-					'LOOTER'    => ($with_form) ? $this->html->widget(array('type' => 'dropdown', 'name' => "loots[".$key."][member]", 'options' => $members, 'selected' => $mem_sel, 'id' => 'loots_'.$key.'_member', 'no_lang' => true)) : $item['member'],
+					'LOOTER'    => ($with_form) ? new hdropdown('loots[".$key."][member]', array('options' => $members, 'value' => $mem_sel, 'id' => 'loots_'.$key.'_member')) : $item['member'],
+					
 					'RAID'      => ($with_form) ? $raid_select."</select>" : $item['raid'],
-					'ITEMPOOL'	=> ($with_form) ? $this->html->widget(array('type' => 'dropdown', 'name' => "loots[".$key."][itempool]", 'options' => $itempools, 'selected' => $item['itempool'], 'id' => 'loots_'.$key.'_itempool', 'no_lang' => true)) : $this->pdh->get('itempool', 'name', array($item['itempool'])),
+					'ITEMPOOL'	=> ($with_form) ? new hdropdown('loots[".$key."][itempool]', array('options' => $itempools, 'value' => $item['itempool'], 'id' => 'loots_'.$key.'_itempool')) : $this->pdh->get('itempool', 'name', array($item['itempool'])),
+					
+					
 					'LOOTDKP'   => runden($item['value']),
 					'KEY'       => $key,
 					'DELDIS'	=> 'disabled="disabled"')
@@ -179,9 +182,10 @@ class rli_item extends gen_class {
 			//js addition
 			$this->tpl->assign_block_vars('loots', array(
 				'KEY'		=> 999,
-				'ITEMPOOL'	=> $this->html->widget(array('type' => 'dropdown', 'name' => 'loots[999][itempool]', 'options' => $itempools, 'selected' => 0, 'id' => 'loots_999_itempool', 'no_lang' => true)),
-				'LOOTER'	=> $this->html->widget(array('type' => 'dropdown', 'name' => 'loots[999][member]', 'options' => $members, 'selected' => 0, 'id' => 'loots_999_member', 'no_lang' => true)),
-				'RAID'		=> $this->html->widget(array('type' => 'dropdown', 'name' => 'loots[999][raid]', 'options' => $this->raid->raidlist, 'selected' => 0, 'id' => 'loots_999_raid', 'no_lang' => true)),
+				'ITEMPOOL'	=> new hdropdown('loots[999][itempool]', array('options' => $itempools, 'value' => 0, 'id' => 'loots_999_itempool')),
+				'LOOTER'	=> new hdropdown('loots[999][member]', array('options' => $members, 'value' => 0, 'id' => 'loots_999_member')),
+				'RAID'		=>new hdropdown('loots[999][raid]', array('options' => $this->raid->raidlist, 'value' => $this->pdh->get('calendars', 'type', array($id)), 'id' => 'loots_999_raid')),
+				
 				'DISPLAY'	=> 'style="display: none;"',
 				'S_IP_SAVE' => $this->config('itempool_save')
 			));

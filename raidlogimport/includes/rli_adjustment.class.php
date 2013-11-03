@@ -87,20 +87,22 @@ if(!class_exists('rli_adjustment')) {
 					continue;
 				}
 				$this->tpl->assign_block_vars('adjs', array(
-					'MEMBER'	=> $this->html->widget(array('type' => 'dropdown', 'name' => 'adjs['.$a.'][member]', 'options' => $members, 'selected' => $adj['member'], 'id' => 'adjs_'.$a.'_member', 'no_lang' => true)),
-					'EVENT'		=> $this->html->widget(array('type' => 'dropdown', 'name' => 'adjs['.$a.'][event]', 'options' => $events, 'selected' => $ev_sel, 'id' => 'adjs_'.$a.'_event', 'no_lang' => true)),
+					'MEMBER'	=> new hdropdown('adjs['.$a.'][member]', array('options' => $members, 'value' => $adj['member'], 'id' => 'adjs_'.$a.'_member')),
+					'EVENT'		=> new hdropdown('adjs['.$a.'][event]', array('options' => $events, 'value' => $ev_sel, 'id' => 'adjs_'.$a.'_event')),
+
 					'NOTE'		=> $adj['reason'],
 					'VALUE'		=> $adj['value'],
-					'RAID'		=> $this->html->widget(array('type' => 'dropdown', 'name' => 'adjs['.$a.'][raid]', 'options' => $raid_select, 'selected' => $adj['raid'], 'id' => 'adjs_'.$a.'raid', 'no_lang' => true)),
+					'RAID'		=> new hdropdown('adjs['.$a.'][raid]', array('options' => $raid_select, 'value' => $adj['raid'], 'id' => 'adjs_'.$a.'raid')),
 					'KEY'		=> $a,
 				));
 			}
 		}
 		$this->tpl->assign_block_vars('adjs', array(
 			'KEY'		=> 999,
-			'MEMBER'	=> $this->html->widget(array('type' => 'dropdown', 'name' => 'adjs[999][member]', 'options' => $members, 'selected' => 0, 'id' => 'adjs_999_member', 'no_lang' => true)),
-			'EVENT'		=> $this->html->widget(array('type' => 'dropdown', 'name' => 'adjs[999][event]', 'options' => $events, 'selected' => 0, 'id' => 'adjs_999_event', 'no_lang' => true)),
-			'RAID'		=> $this->html->widget(array('type' => 'dropdown', 'name' => 'adjs[999][raid]', 'options' => $raid_select, 'selected' => 0, 'id' => 'adjs_999_raid', 'no_lang' => true)),
+			'MEMBER'	=> new hdropdown('adjs[999][member]', array('options' => $members, 'value' => 0, 'id' => 'adjs_999_member')),
+			'EVENT'		=> new hdropdown('adjs[999][event]', array('options' => $events, 'value' => 0, 'id' => 'adjs_999_event')),
+			'RAID'		=> new hdropdown('adjs[999][raid]', array('options' => $raid_select, 'value' => 0, 'id' => 'adjs_999_raid')),
+			
 			'DISPLAY'	=> 'style="display: none;"',
 			'DELCHK'	=> 'checked="checked"',
 		));
