@@ -227,7 +227,7 @@ class RLI_Settings extends page_generic {
 					}
 				}
 				if($add != '') {
-					$add = $this->html->ToolTip($add, '<i class="fa fa-info-circle fa-lg"></i>');
+					$add = '<span class="coretip" data-coretip="'.$add'"><i class="fa fa-info-circle fa-lg"></i></span>';
 				}
 				if($this->user->lang($nava['name'].'_warn', false, false)) {
 					$warn = $this->user->lang($nava['name'].'_warn');
@@ -235,7 +235,7 @@ class RLI_Settings extends page_generic {
 					$warn = '';
 				}
 				if($warn != '') {
-					$warn = $this->html->ToolTip($warn, '<i class="fa fa-exclamation-triangle"></i>');
+					$warn = '<span class="coretip" data-coretip="'.$warn'"><i class="fa fa-exclamation-triangle"></i></span>';
 				}
 				$this->tpl->assign_block_vars('holder.config', array(
 					'NAME'	=> $this->user->lang($nava['name']).' '.$add.' '.$warn,
