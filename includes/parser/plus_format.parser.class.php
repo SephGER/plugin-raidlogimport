@@ -56,7 +56,7 @@ class plus_format extends rli_parser {
 		foreach($xml->items->children() as $xitem) {
 			$cost = (isset($xitem->cost)) ? trim($xitem->cost) : '';
 			$id = (isset($xitem->itemid)) ? trim($xitem->itemid) : '';
-			$data['items'][] = array(trim($xitem->name), trim($xitem->member), (int) $cost, (int) $id, (int) trim($xitem->time));
+			$data['items'][] = array(trim($xitem->name), trim($xitem->member), $cost, (int) $id, (int) trim($xitem->time));
 		}
 		return $data;
 	}

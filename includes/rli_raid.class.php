@@ -470,7 +470,8 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 			} elseif($this->config('standby_raid') == 2) {
 				$standby = 0;
 			}
-			if(($this->in_raid($key, $times, $standby)/$this->in_raid($key)) >= ($this->config('member_raid') / 100)) {
+			$in_raid = $this->in_raid($key);
+			if($in_raid && ($this->in_raid($key, $times, $standby)/$in_raid) >= ($this->config('member_raid') / 100)) {
 				$raid_list[] = $key;
 			}
 		}
