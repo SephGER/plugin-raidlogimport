@@ -255,7 +255,7 @@ class rli_raid extends gen_class {
 				'EVENTVAL'	=> $rai['eventval'],
 				'VALUE'		=> $rai['value'],
 				'NOTE'		=> $rai['note'],
-				'DIFF'		=> ($with_form) ? new hdropdown('raids['.$ky.'][diff]', array('options' => $this->diff_drop, 'value' => $rai['diff'], 'id' => 'diff_raid'.$ky)), : $this->user->lang('diff_'.$rai['diff']),
+				'DIFF'		=> ($with_form) ? new hdropdown('raids['.$ky.'][diff]', array('options' => $this->diff_drop, 'value' => $rai['diff'], 'id' => 'diff_raid'.$ky)) : $this->user->lang('diff_'.$rai['diff']),
 				'BOSSKILLS' => $bosskills,
 				'DELDIS'	=> 'disabled="disabled"')
 			);
