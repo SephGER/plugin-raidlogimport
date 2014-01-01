@@ -255,7 +255,7 @@ if(!class_exists('rli_member')) {
 					$raid_list = '';
 					$detail_raid_list = true;
 				} else {
-					$raid_list = '<td>'.$this->jquery->MultiSelect('members['.$key.'][raid_list]', $this->raid->raidlist(), $member['raid_list'], array('id' => 'members_'.$key.'_raidlist')).'</td>';
+					$raid_list = '<td>'.(new hmultiselect('members['.$key.'][raid_list]', array('options' => $this->raid->raidlist(), 'value' => $member['raid_list'], 'id' => 'members_'.$key.'_raidlist'))).'</td>';
 				}
 				$att_begin = ((isset($member['att_begin']) AND $member['att_begin']) OR (!isset($member['att_begin']) AND $a['begin'])) ? 'checked="checked"' : '';
 				$att_end = ((isset($member['att_end']) AND $member['att_end']) OR (!isset($member['att_end']) AND $a['end'])) ? 'checked="checked"' : '';
@@ -297,7 +297,7 @@ if(!class_exists('rli_member')) {
 				if($this->config('member_display') == 1 AND extension_loaded('gd')) {
 					$raid_list = $this->raid->get_checkraidlist(array(), 999);
 				} else {
-					$raid_list = '<td>'.$this->html->widget(array('type' => 'jq_multiselect', 'name' => 'members[999][raid_list]', 'options' => $this->raid->raidlist, 'selected' => array(), 'width' => '200', 'height' => '200', 'id' => 'members_999_raidlist', 'no_lang' => true)).'</td>';
+					$raid_list = '<td>'.(new hmultiselect('members[999][raid_list]', array('options' => $this->raid->raidlist, 'id' => 'members_999_raidlist'))).'</td>';
 				}
 			}
 			$this->tpl->assign_block_vars('player', array(
