@@ -72,25 +72,35 @@ class RLI_Settings extends page_generic {
 		$messages = array();
 		$bytes = array('s_member_rank', 'use_dkp', 'event_boss', 'standby_dkptype', 'autocomplete');
 		$floats = array('member_start', 'attandence_begin', 'attandence_end', 'am_value');
+		$configs = $bytes;
+		foreach($this->configs as $type => $cat) {
+			if($type != 'normal' && $type != 'ignore' && $type != 'special') {
+				foreach($cat as $cat_name => $fields) {
+					foreach($fields as $name) {
+						$configs[] = $name;
+					}
+				}
+			}
+		}
 		$copy_config = $this->rli->config();
-		foreach($copy_config as $old_name => $old_value) {
-			if(in_array($old_name, $bytes)) {
+		foreach($configs as $name) {
+			if(in_array($name, $bytes)) {
 				$val = 0;
-				if(is_array($this->in->getArray($old_name, 'int'))) {
-					foreach($this->in->getArray($old_name, 'int') as $pos) {
+				if(is_array($this->in->getArray($name, 'int'))) {
+					foreach($this->in->getArray($name, 'int') as $pos) {
 						$val += $pos;
 					}
 				}
-				$data[$old_name] = $val;
-			} elseif(in_array($old_name, $floats)) {
-				$data[$old_name] = number_format($this->in->get($old_name), 2, '.', '');
+				$data[$name] = $val;
+			} elseif(in_array($name, $floats)) {
+				$data[$name] = number_format($this->in->get($name), 2, '.', '');
 			} else {
-				$data[$old_name] = $this->in->get($old_name, '');
+				$data[$name] = $this->in->get($name, '');
 			}
-			if(isset($data[$old_name]) AND $data[$old_name] != $old_value) { //Update
-				$this->config->set($old_name, $data[$old_name], 'raidlogimport');
+			if(isset($data[$name]) && $data[$name] != $copy_config[$name]) { //Update
+				$this->config->set($name, $data[$name], 'raidlogimport');
 				$this->rli->reload_config();
-				$messages[] = $old_name;
+				$messages[] = $name;
 			}
 		}
 		$this->display(array(implode(', ', $messages)));

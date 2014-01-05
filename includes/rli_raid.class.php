@@ -97,6 +97,8 @@ class rli_raid extends gen_class {
 			// recalc the total value
 			$this->raids[$key]['value'] = runden($this->get_value($key, false));
 		}
+		$key = $this->create_attendance_raids($key);
+		$this->create_standby_raid($key);
 		if(empty($this->raids)) {
 			$this->rli->error('process_raids', $this->user->lang('rli_error_no_raid'));
 		}
@@ -139,6 +141,12 @@ class rli_raid extends gen_class {
 				}
 			}
 		}
+		$key = $this->create_attendance_raids($key);
+		$this->create_standby_raid($key);
+	}
+	
+	private function create_attendance_raids($key) {
+		if(isset($this->data['add']['att_begin_raid'])) return;
 		$this->data['add']['att_begin_raid'] = 1;
 		$this->data['add']['att_end_raid'] = $key-1;
 		if($this->config('attendence_raid')) {
@@ -160,6 +168,11 @@ class rli_raid extends gen_class {
 				$key++;
 			}
 		}
+		return $key;
+	}
+	
+	private function create_standby_raid($key) {
+		if(isset($this->data['add']['standby_raid'])) return;
 		$this->data['add']['standby_raid'] = -1;
 		if($this->config('standby_raid') == 1) {
 			$this->raids[$key]['begin'] = $this->raids[1]['begin'];
@@ -271,6 +284,7 @@ class rli_raid extends gen_class {
 					$this->jquery->Dialog('delete_warning', $this->user->lang('confirm_deletion'), $options, 'confirm');
 				}
 
+				$xy = 0;
 				if(is_array($rai['bosskills'])) {
 					foreach($rai['bosskills'] as $xy => $bk) {
 						$import = false;
@@ -662,18 +676,18 @@ $(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
 	private function calc_attdkp($key, $type, $times=false, $force=array(-1,-1)) {
 		$att_raids = $this->get_attendance_raids(true);
 		$begend = $this->get_start_end();
-		if($this->config('attendance_'.$type) && ($key == $att_raids[$type] || !$this->config('attendance_raid'))) {
+		if($this->config('attendance_'.$type) && (!$this->config('attendance_raid') || $key == $att_raids[$type])) {
 			if($times !== false) {
 				if($type == 'begin') {
-					$ct = $this->config('attendence_time') + $begend['begin'];
+					$ct = $this->config('attendance_time') + $begend['begin'];
 					foreach($times as $time) {
-						if($force[0] > 0 OR ($force[0] < 0 AND ($time['join'] < $ct AND (($time['standby'] AND $this->config('standby_att')) OR !$time['standby']))))
+						if($force[0] > 0 OR ($force[0] < 0 AND ($time['join'] < $ct AND (!$time['standby'] || ($time['standby'] AND $this->config('standby_att'))))))
 							return $this->config('attendance_begin');
 					}
 				} elseif($type == 'end') {
-					$ct = $begend['end'] - $this->config('attendence_time');
+					$ct = $begend['end'] - $this->config('attendance_time');
 					foreach($times as $time) {
-						if($force[1] > 0 OR ($force[1] < 0 AND ($time['leave'] > $ct AND (($time['standby'] AND $this->config('standby_att')) OR !$time['standby']))))
+						if($force[1] > 0 OR ($force[1] < 0 AND ($time['leave'] > $ct AND (!$time['standby'] || ($time['standby'] AND $this->config('standby_att'))))))
 							return $this->config('attendance_end');
 					}
 				}
