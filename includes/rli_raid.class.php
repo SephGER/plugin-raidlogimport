@@ -37,8 +37,8 @@ class rli_raid extends gen_class {
 
 	public function __construct() {
 		$this->raids = $this->rli->get_cache_data('raid');
-		if($this->in->exists('raids')) $this->load_raids();
 		$this->data = $this->rli->get_cache_data('data_raid');
+		if($this->in->exists('raids')) $this->load_raids();
 	}
 
 	public function reset() {
@@ -97,6 +97,7 @@ class rli_raid extends gen_class {
 			// recalc the total value
 			$this->raids[$key]['value'] = runden($this->get_value($key, false));
 		}
+		$key = max(array_keys($this->raids)) +1;
 		$key = $this->create_attendance_raids($key);
 		$this->create_standby_raid($key);
 		if(empty($this->raids)) {
