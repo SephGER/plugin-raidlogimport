@@ -359,7 +359,7 @@ $('#add_mem_button').click(function() {
 	}
 	
 	public function check_special($name) {
-		$special_chars = unserialize($this->cconfig->get('special_members'));
+		$special_chars = $this->cconfig->get('special_members');
 		if(in_array($name, $this->pdh->aget('member', 'name', 0, array($special_chars)))) return true;
 		$members = $this->pdh->aget('member', 'name', 0, array($this->pdh->get('member', 'id_list', array(false, false, false))));
 		if(!($id = array_search($name, $members))) {
@@ -367,7 +367,7 @@ $('#add_mem_button').click(function() {
 			$id = $this->pdh->put('member', 'addorupdate_member', array(0, $data));
 		}
 		$special_chars[] = $id;
-		$this->cconfig->set('special_members', serialize($special_chars));
+		$this->cconfig->set('special_members', $special_chars);
 		return true;
 	}
 
