@@ -74,7 +74,7 @@ class pdh_r_rli_boss extends pdh_r_generic {
 	
 	public function get_id_string($string, $diff) {
 		foreach($this->data as $id => $data) {
-			if(in_array($string, unsanitize($data['string'])) AND ($diff == 0 OR $data['diff'] == 0 OR $diff == $data['diff'])) {
+			if(in_array($string, $this->unsanitize($data['string'])) AND ($diff == 0 OR $data['diff'] == 0 OR $diff == $data['diff'])) {
 				if(!$data['active'] && $data['tozone']) {
 					$this->pdh->put('rli_zone', 'switch_inactive', array($data['tozone']));
 					$this->pdh->process_hook_queue();
@@ -138,6 +138,17 @@ class pdh_r_rli_boss extends pdh_r_generic {
 			}
 		}
 		return $bosses;
+	}
+	
+	private function unsanitize($data) {
+		if(is_array($data)) {
+			foreach($data as &$val) {
+				$val = unsanitize($val);
+			}
+			return $data;
+		} else {
+			return unsanitize($data);
+		}
 	}
 }
 }
