@@ -207,13 +207,13 @@ $('#add_item_button').click(function() {
 });", 'docready');
 		}
 		if($end && $end <= $p) {
-			$next_button = '<input type="submit" name="checkitem" value="'.$this->user->lang('rli_itempage').(($page) ? $page : 2).'" class="mainoption" />';
+			$next_button = '<button type="submit" name="checkitem" value="'.$this->user->lang('rli_itempage').(($page) ? $page : 2).'"><i class="fa fa-arrow-right"></i> '.$this->user->lang('rli_itempage').(($page) ? $page : 2).'</button>';
 		} elseif($this->config('deactivate_adj')) {
-			$next_button = '<input type="submit" name="insert" value="'.$this->user->lang('rli_go_on').' ('.$this->user->lang('rli_insert').')" class="mainoption" />';
+			$next_button = '<button type="submit" name="insert" value="'.$this->user->lang('rli_go_on').' ('.$this->user->lang('rli_insert').')"><i class="fa fa-arrow-right"></i> '.$this->user->lang('rli_go_on').' ('.$this->user->lang('rli_insert').')</button>';
 		} else {
-			$next_button = '<input type="submit" name="checkadj" value="'.$this->user->lang('rli_go_on').' ('.$this->user->lang('rli_checkadj').')" class="mainoption" />';
+			$next_button = '<button type="submit" name="checkadj" value="'.$this->user->lang('rli_go_on').' ('.$this->user->lang('rli_checkadj').')"><i class="fa fa-arrow-right"></i> '.$this->user->lang('rli_go_on').' ('.$this->user->lang('rli_checkadj').')</button>';
 		}
-		if($end >= $p && !empty($dic) && $p+$dic >= $end) $next_button .= ' <input type="submit" name="checkitem" value="'.$this->user->lang('rli_itempage').(($page) ? $page : 2).'" class="mainoption" />';
+		if($end >= $p && !empty($dic) && $p+$dic >= $end) $next_button .= ' <button type="submit" name="checkitem" value="'.$this->user->lang('rli_itempage').(($page) ? $page : 2).'"><i class="fa fa-arrow-right"></i> '.$this->user->lang('rli_itempage').(($page) ? $page : 2).'</button>';
 		$this->tpl->assign_var('NEXT_BUTTON', $next_button);
 	}
 	
