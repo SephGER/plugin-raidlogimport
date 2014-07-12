@@ -332,13 +332,13 @@ class rli_raid extends gen_class {
 "var rli_rkey = ".($last_key+1).";
 $(document).on('click', '.del_boss', function(){
 	$(this).removeClass('del_boss');
-	".($this->rli->config('no_del_warn') ? "$('#'+$(this).attr('class')).css('display', 'none');
-	$('#'+$(this).attr('class')+'submit').removeAttr('disabled');" : "delete_warning($(this).attr('class'));")."
+	".($this->rli->config('no_del_warn') ? "$('#'+$(this).data('id')).css('display', 'none');
+	$('#'+$(this).data('id').removeAttr('disabled');" : "delete_warning($(this).data('id'));")."
 });
 $(document).on('click', '.del_raid', function(){
 	$(this).removeClass('del_raid');
-	".($this->rli->config('no_del_warn') ? "$('#'+$(this).attr('class')).css('display', 'none');
-	$('#'+$(this).attr('class')+'submit').removeAttr('disabled');" : "delete_warning($(this).attr('class'));")."
+	".($this->rli->config('no_del_warn') ? "$('#'+$(this).data('id')).css('display', 'none');
+	$('#'+$(this).data('id')+'submit').removeAttr('disabled');" : "delete_warning($(this).data('id'));")."
 });
 $('#add_raid_button').click(function() {
 	var raid = $('#raid_999').clone(true);
@@ -352,7 +352,7 @@ $('#add_raid_button').click(function() {
 	boss_keys[rli_rkey] = 0;
 	rli_rkey++;
 });
-$(document).on('click', 'input[name=\"add_boss_button[]\"]', function(){
+$(document).on('click', 'button[name=\"add_boss_button[]\"]', function(){
 	var raid_key = $(this).attr('id').substr(-1);
 	var boss = $('#raid_'+raid_key+'_boss_99').clone(true);
 	boss.find('#raid_'+raid_key+'_boss_99submit').attr('disabled', 'disabled');

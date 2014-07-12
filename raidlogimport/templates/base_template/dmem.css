@@ -1,3 +1,5 @@
+#a
+
 .add_time {
 	background-color: #000000;
 }
@@ -9,37 +11,37 @@
 .raid.up {
 	margin-top: -21px;
 	z-index: 7;
-	background-image: url(./../../images/raid_bg_bright.png);
+	background-image: url(../../images/raid_bg_bright.png);
 }
 .raid.up.half {
 	margin-top: -14px;
 }
 .raid.up.active {
-	background-image: url(./../../images/araid_bg_bright.png);
+	background-image: url(../../images/araid_bg_bright.png);
 }
 .raid.middle {
 	margin-top: -7px;
 	z-index: 9;
-	background-image: url(./../../images/raid_bg.png);
+	background-image: url(../../images/raid_bg.png);
 }
 .raid.middle.active {
-	background-image: url(./../../images/araid_bg.png);
+	background-image: url(../../images/araid_bg.png);
 }
 .raid.down {
 	margin-top: 7px;
 	z-index: 8;
-	background-image: url(./../../images/raid_bg_dark.png);
+	background-image: url(../../images/raid_bg_dark.png);
 }
 .raid.down.half {
 	margin-top: 1px;
 }
 .raid.down.active {
-	background-image: url(./../../images/araid_bg_dark.png);
+	background-image: url(../../images/araid_bg_dark.png);
 }
 .rli_boss {
 	position: absolute;
 	height: 18px;
-	background-image: url(./../../images/skull.png);
+	background-image: url(../../images/skull.png);
 	background-position: top;
 	background-repeat: no-repeat;
 	width: 12px;
@@ -48,7 +50,7 @@
 }
 .time {
 	position: absolute;
-	background-image: url(./../../images/time_bg.png);
+	background-image: url(../../images/time_bg.png);
 	background-repeat: repeat-x;
 	margin-top: -4px;
 	height: 7px;
@@ -57,7 +59,7 @@
 }
 .timestandby {
 	position: absolute;
-	background-image: url(./../../images/stime_bg.png);
+	background-image: url(../../images/stime_bg.png);
 	background-repeat: repeat-x;
 	margin-top: -4px;
 	height: 7px;
@@ -117,21 +119,21 @@
 	display: none;
 }
 .rli_tooltip {
-	background-image: url(./../../images/tooltip.png);
+	background-image: url(../../images/tooltip.png);
 	background-position: top left;
 }
 .rli_tooltip_right {
-	background-image: url(./../../images/tooltip.png);
+	background-image: url(../../images/tooltip.png);
 	width: 3px;
 	background-position: top right;
 }
 .rli_tooltip_bottom {
-	background-image: url(./../../images/tooltip.png);
+	background-image: url(../../images/tooltip.png);
 	height: 3px;
 	background-position: bottom left;
 }
 .rli_tooltip_bottom_right {
-	background-image: url(./../../images/tooltip.png);
+	background-image: url(../../images/tooltip.png);
 	width: 3px;
 	height: 3px;
 	background-position: bottom right;

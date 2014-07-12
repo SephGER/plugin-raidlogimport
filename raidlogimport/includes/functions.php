@@ -77,4 +77,19 @@ function lang2tpl() {
 		'S_DEACTIVATE_ADJ' => (register('rli')->config('deactivate_adj')) ? true : false
 	));
 }
+
+function getAvailableParsers(){
+	$parser = array();
+	$parse_path = registry::get_const('root_path').'plugins/raidlogimport/includes/parser/';
+	include_once($parse_path.'parser.aclass.php');
+	$parse_ext = '.parser.class.php';
+	$parser_classes = sdir($parse_path, '*'.$parse_ext, $parse_ext);
+	$parser = array();
+	foreach($parser_classes as $parser_class) {
+		include_once($parse_path.$parser_class.$parse_ext);
+		$parser[$parser_class] = $parser_class::$name;
+	}
+	$parser['empty'] = register('user')->lang('parser_empty');
+	return $parser;
+}
 ?>

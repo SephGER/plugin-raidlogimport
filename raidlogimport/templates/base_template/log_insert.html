@@ -1,16 +1,34 @@
+<!-- IF S_NORMAL_HEADER -->
+<div class="breadcrumb-container">
+	<ul class="breamcrumb">
+		<li><a href="{EQDKP_CONTROLLER_PATH}{SID}" title="{L_home}"><i class="fa fa-home"></i></a></li>
+		<li><a href="{EQDKP_ROOT_PATH}admin/{SID}">{L_menu_admin_panel}</a>
+		<li class="current"><a>{L_raidlogimport}: {L_DATA_SOURCE}</a></li>
+	</ul>
+	<div class="clear"></div>
+</div>
+<!-- ENDIF -->
+<div class="contentHeader">
+	<h1 class="contentTitle">{L_DATA_SOURCE}</h1>
+</div>
+
+
 <form method="post" action="{ACTION}" name="post">
-	<table width="100%" border="0" cellspacing="1" cellpadding="2" class="colorswitch">
+	<table width="100%" class="colorswitch">
 	<tr>
-		<th colspan="2">{L_DATA_SOURCE}</th>
-	</tr>
-	<tr>
-		<td width="50%" align="center"><input type="button" id="show_log_form" value="{L_INSERT}" class="mainoption" /></td>
-		<td width="50%" align="center"><input type="submit" name="checkraid" value="{L_CONTINUE_OLD}" class="mainoption" {DISABLED} /></td>
+		<td width="50%" align="center"><button id="show_log_form" class="mainoption" type="button"><i class="fa fa-plus"></i> {L_INSERT}</button></td>
+		<td width="50%" align="center"><button id="show_log_form" class="mainoption" name="checkraid" type="submit" value="recalc" {DISABLED}><i class="fa fa-refresh"></i> {L_CONTINUE_OLD}</button></td>
 	</tr>
 	<tr id="log_form" style="display:none">
-		<td colspan="2" align="center">&nbsp;<br /><textarea name="log" rows="20" id="log" style="width: 99%" class="post"></textarea><br />
-		<input type="submit" name="checkraid" value="{L_SEND}" class="mainoption" /></td>
+		<td colspan="2" align="center">
+			<fieldset class="settings">
+			<dl>
+				<dt><label>{L_parser}</label></dt>
+				<dd>{PARSER_DD}</dd>
+			</dl>
+			</fieldset>
+			<textarea name="log" rows="20" id="log" style="width: 99%" class="post"></textarea><br />
+		<button type="submit" name="checkraid"><i class="fa fa-check" value="submit"></i> {L_SEND}</button>
 	</tr>
-	<tr><th colspan="2">&nbsp;</th></tr>
 	</table>
 </form>

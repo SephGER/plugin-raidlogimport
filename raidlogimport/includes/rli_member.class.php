@@ -313,8 +313,8 @@ if(!class_exists('rli_member')) {
 "var rli_key = ".(($key) ? $key+1 : $key).";
 $('.del_mem').click(function() {
 	$(this).removeClass('del_mem');
-	".($this->rli->config('no_del_warn') ? "$('#'+$(this).attr('class')).css('display', 'none');
-	$('#'+$(this).attr('class')+'submit').removeAttr('disabled');" : "delete_warning($(this).attr('class'));")."
+	".($this->rli->config('no_del_warn') ? "$('#'+$(this).data('id')).css('display', 'none');
+	$('#'+$(this).data('id')+'submit').removeAttr('disabled');" : "delete_warning($(this).data('id'));")."
 });
 $('#add_mem_button').click(function() {
 	var mem = $('#memberrow_999').clone(true);

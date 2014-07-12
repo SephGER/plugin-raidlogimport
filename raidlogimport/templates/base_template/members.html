@@ -1,3 +1,14 @@
+<!-- IF S_NORMAL_HEADER -->
+<div class="breadcrumb-container">
+	<ul class="breamcrumb">
+		<li><a href="{EQDKP_CONTROLLER_PATH}{SID}" title="{L_home}"><i class="fa fa-home"></i></a></li>
+		<li><a href="{EQDKP_ROOT_PATH}admin/{SID}">{L_menu_admin_panel}</a>
+		<li class="current"><a>{L_raidlogimport}: {L_rli_check_data}</a></li>
+	</ul>
+	<div class="clear"></div>
+</div>
+<!-- ENDIF -->
+
 <form method="post" action="{ACTION}" id="rli_import_form">
 	<div id='rli_nav_tabs'>
 		<ul>
@@ -22,7 +33,7 @@
 			<!-- ENDIF -->
 			  <tr class="row2">
 				<td colspan="2">
-					<input type="button" id="add_mem_button" value="{L_rli_add_mem}" class="mainoption bi_new" />
+					<button type="button" id="add_mem_button" value="{L_rli_add_mem}" class="mainoption bi_new"><i class="fa fa-plus"></i> {L_rli_add_mem}</button>
 				</td>
 				<td class="row2" colspan="99">&nbsp;</td>
 			  </tr>
@@ -30,8 +41,8 @@
 			<table width="100%" border="0" cellspacing="1" cellpadding="1">
 			  <tr>
 				<th align="center" colspan="8">
-				   <input type="submit" name="checkmem" value="{L_update}" class="mainoption" />
-				   <input type="submit" name="checkitem" value="{L_rli_go_on}" class="mainoption" />
+					<button type="submit" name="checkmem" value="{L_update}"><i class="fa fa-refresh"></i> {L_update}</button>
+					<button type="submit" name="checkitem" value="{L_rli_go_on}"><i class="fa fa-arrow-right"></i> {L_rli_go_on}</button>
 				</th>
 			  </tr>
 			</table>
@@ -56,7 +67,7 @@
 <div id="myrcm" class="rli_rcm" style="display: none;">
 	<ul>
 		<li id="rli_add_dmem"><i class="fa fa-plus fa-lg"></i> {L_rli_add_time}</li>
-		<li id="rli_del_dmem"><i class="fa fa-delete fa-lg"></i> {L_rli_del_time}</li>
+		<li id="rli_del_dmem"><i class="fa fa-trash-o fa-lg"></i> {L_rli_del_time}</li>
 		<li id="rli_swi_dmem"><i class="fa fa-refresh fa-lg"></i> {L_rli_standby_switch}</li>
 	</ul>
 </div>

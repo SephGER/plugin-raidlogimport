@@ -105,7 +105,7 @@ class raidlogimport extends plugin_generic {
 			'event_boss'		=> '0',  //exists an event per boss?
 			'adj_parse'			=> ': ', //string, which separates the reason and the value for a adjustment in the note of a member
 			'bz_parse'			=> ',',  //separator, which is used for separating the different strings of a boss or zone
-			'parser'			=> 'plus',  //which format has the xml-string?
+			'parser'			=> 'plus_format',  //which format has the xml-string?
 			'rli_upd_check'		=> '1',		//enable update check?
 			'use_dkp'			=> '1',		//1: bossdkp, 2:zeitdkp, 4: event-dkp
 			'deactivate_adj'	=> '0',
@@ -219,20 +219,20 @@ class raidlogimport extends plugin_generic {
 			'icon' => 'fa-book',
 			'name' => $this->user->lang('raidlogimport'),
 			1 => array(
-				'link' => 'plugins/' . $this->code . '/admin/settings.php'.$this->SID,
-				'text' => $this->user->lang('settings'),
-				'check' => 'a_raidlogimport_config',
-				'icon' => 'fa-wrench'),
+				'link' => 'plugins/' . $this->code . '/admin/dkp.php'.$this->SID,
+				'text' => $this->user->lang('raidlogimport_dkp'),
+				'check' => 'a_raidlogimport_dkp',
+				'icon' => 'fa-upload'),
 			2 => array(
 				'link' => 'plugins/' . $this->code . '/admin/bz.php'.$this->SID,
 				'text' => $this->user->lang('raidlogimport_bz'),
 				'check' => 'a_raidlogimport_bz',
 				'icon' => 'fa-tag'),
 			3 => array(
-				'link' => 'plugins/' . $this->code . '/admin/dkp.php'.$this->SID,
-				'text' => $this->user->lang('raidlogimport_dkp'),
-				'check' => 'a_raidlogimport_dkp',
-				'icon' => 'fa-upload')
+				'link' => 'plugins/' . $this->code . '/admin/settings.php'.$this->SID,
+				'text' => $this->user->lang('settings'),
+				'check' => 'a_raidlogimport_config',
+				'icon' => 'fa-wrench'),
 		));
 	}
 
@@ -240,5 +240,5 @@ class raidlogimport extends plugin_generic {
 		return $this->$varname;
 	}
 }
-if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('short_raidlogimport', raidlogimport::__shortcuts());
+
 ?>

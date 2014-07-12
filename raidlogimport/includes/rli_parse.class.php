@@ -33,8 +33,8 @@ class rli_parse extends gen_class {
 
 	private $toload = array();
 
-	public function parse_string($log) {
-		$parser = $this->rli->config('parser');
+	public function parse_string($log, $parser=false) {
+		$parser = ($parser) ? $parser : $this->rli->config('parser');
 		$path = $this->root_path.'plugins/raidlogimport/includes/parser/';
 		if(is_file($path.$parser.'.parser.class.php')) {
 			include_once($path.'parser.aclass.php');

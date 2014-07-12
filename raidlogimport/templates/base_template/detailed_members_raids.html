@@ -1,12 +1,12 @@
 <tr>
 	<th style="width:45px;">&nbsp;</th>
 	<th style="max-width:300px;">{L_name}</th>
-	<th width="{PXTIME}"><span style="float:left;">{L_raids}</span><span id="dt_help" style="float:right;">{L_rli_help}</span></th>
+	<th width="{PXTIME}"><span style="float:left;">{L_raids}</span><span id="dt_help" style="float:right;" title="{L_rli_help}"><i class="fa fa-lg fa-question-circle"></i></span></th>
 </tr>
 <!-- BEGIN player -->
 <tr id="memberrow_{player.KEY}" {player.DISPLAY}>
 	<td align="right">
-		{player.NR}&nbsp;<i class="fa fa-trash-o fa-lg hand" title="{L_delte}" onclick="delete_warning('memberrow_{player.KEY}');"></i>
+		{player.NR}&nbsp;<i class="fa fa-trash-o fa-lg hand" title="{L_delete}" onclick="delete_warning('memberrow_{player.KEY}');"></i>
 		<input type="hidden" id="memberrow_{player.KEY}submit" name="members[{player.KEY}][delete]" value="true" {player.DELDIS} />
 	</td>
 	<td><input type="text" name="members[{player.KEY}][name]" value="{player.MITGLIED}" class="input" /></td>

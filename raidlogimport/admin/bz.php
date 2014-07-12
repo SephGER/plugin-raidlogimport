@@ -314,7 +314,7 @@ class rli_Bz extends page_generic {
 		));
 		$this->jquery->Tab_header('rli_manage_bz');
 		$this->core->set_vars(array(
-			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_bz_bz'),
+			'page_title'        => $this->user->lang('rli_bz_bz'),
 			'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'bz.html',
 			'header_format'		=> $this->simple_head,
@@ -346,5 +346,5 @@ class rli_Bz extends page_generic {
 		}
 	}
 }
-if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('short_rli_Bz', rli_Bz::__shortcuts());
+
 registry::register('rli_Bz');

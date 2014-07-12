@@ -106,17 +106,7 @@ class RLI_Settings extends page_generic {
 		// select ranks
 		$new_member_rank = $this->pdh->aget('rank', 'name', 0, array($this->pdh->get('rank', 'id_list')));
 
-		// select parsers
-		$parse_path = $this->root_path.'plugins/raidlogimport/includes/parser/';
-		include_once($parse_path.'parser.aclass.php');
-		$parse_ext = '.parser.class.php';
-		$parser_classes = sdir($parse_path, '*'.$parse_ext, $parse_ext);
-		$parser = array();
-		foreach($parser_classes as $parser_class) {
-			include_once($parse_path.$parser_class.$parse_ext);
-			$parser[$parser_class] = $parser_class::$name;
-		}
-		$parser['empty'] = $this->user->lang('parser_empty');
+		$parser = getAvailableParsers();
 
 		// select raidcount
 		$raidcount = array();

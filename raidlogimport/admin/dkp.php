@@ -68,17 +68,20 @@ class rli_import extends page_generic {
 	}
 
 	public function process_raids($error_out=true) {
-		if($this->in->get('checkraid') == $this->user->lang('rli_send')) {
+
+		if($this->in->get('checkraid') == 'submit') {
+			$parser = ($this->in->exists('parser')) ? $this->in->get('parser') : $this->rli->config('parser');
 			$this->rli->flush_cache();
-			if($this->in->exists('log') && $this->rli->config('parser') != 'empty') {
+			if($this->in->exists('log') && $parser != 'empty') {
 				$log = trim(str_replace("&", "and", stripslashes(html_entity_decode($_POST['log']))));
 				$log = (is_utf8($log)) ? $log : utf8_encode($log);
-				$this->parser->parse_string($log);
+				$this->parser->parse_string($log, $parser);
 			}
 			$this->rli->add_cache_data('progress', 'members');
 		}
 		$this->raid->add_new($this->in->get('raid_add', 0));
-		if($this->in->get('checkraid') == $this->user->lang('rli_calc_note_value')) {
+
+		if($this->in->get('checkraid') == 'recalc') {
 			$this->raid->recalc();
 		}
 
@@ -97,7 +100,7 @@ class rli_import extends page_generic {
 		$this->rli->nav('raids');
 
 		$this->core->set_vars(array(
-			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_check_data'),
+			'page_title'        => $this->user->lang('rli_check_data'),
 			'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'raids.html',
 			'display'           => true)
@@ -130,7 +133,7 @@ class rli_import extends page_generic {
 		);
 
 		$this->core->set_vars(array(
-			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_check_data'),
+			'page_title'        => $this->user->lang('rli_check_data'),
 			'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'members.html',
 			'display'           => true)
@@ -156,7 +159,7 @@ class rli_import extends page_generic {
 		$this->rli->nav('items');
 		
 		$this->core->set_vars(array(
-			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_check_data'),
+			'page_title'        => $this->user->lang('rli_check_data'),
 			'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'items.html',
 			'display'           => true)
@@ -189,7 +192,7 @@ class rli_import extends page_generic {
 		$this->rli->nav('adjustments');
 		
 		$this->core->set_vars(array(
-			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_check_data'),
+			'page_title'        => $this->user->lang('rli_check_data'),
 			'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'adjustments.html',
 			'display'           => true)
@@ -211,7 +214,7 @@ class rli_import extends page_generic {
 		$this->rli->nav('viewall');
 		
 		$this->core->set_vars(array(
-			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_check_data'),
+			'page_title'        => $this->user->lang('rli_check_data'),
 			'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'viewall.html',
 			'display'           => true)
@@ -234,7 +237,7 @@ class rli_import extends page_generic {
 	
 			$this->rli->nav('finish');
 			$this->core->set_vars(array(
-				'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_imp_suc'),
+				'page_title'        => $this->user->lang('rli_imp_suc'),
 				'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
 				'template_file'     => 'finish.html',
 				'display'           => true)
@@ -254,7 +257,7 @@ class rli_import extends page_generic {
 			);
 			$this->rli->nav('finish');
 			$this->core->set_vars(array(
-				'page_title'		=> sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_imp_no_suc'),
+				'page_title'		=> $this->user->lang('rli_imp_no_suc'),
 				'template_path'		=> $this->pm->get_data('raidlogimport', 'template_path'),
 				'template_file'		=> 'check_input.html',
 				'display'			=> true,
@@ -279,13 +282,14 @@ class rli_import extends page_generic {
 			'L_INSERT'		 => $this->user->lang('rli_dkp_insert'),
 			'L_SEND'		 => $this->user->lang('rli_send'),
 			'DISABLED'		 => ($this->rli->data_available()) ? '' : 'disabled="disabled"',
+			'PARSER_DD'		 => new hdropdown('parser', array('options' => getAvailableParsers(), 'value' => $this->rli->config('parser'))),
 			'S_STEP1'        => true)
 		);
 		
 		$this->tpl->add_js("\$('#show_log_form').click(function() {\$('#log_form').show(200)});",'docready');
 
 		$this->core->set_vars(array(
-			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '."DKP String",
+			'page_title'        => $this->user->lang('rli_data_source'),
 			'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'log_insert.html',
 			'display'           => true,
