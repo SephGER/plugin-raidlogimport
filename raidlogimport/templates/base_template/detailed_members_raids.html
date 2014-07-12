@@ -5,7 +5,7 @@
 </tr>
 <!-- BEGIN player -->
 <tr id="memberrow_{player.KEY}" {player.DISPLAY}>
-	<td align="right">
+	<td align="right" class="nowrap">
 		{player.NR}&nbsp;<i class="fa fa-trash-o fa-lg hand" title="{L_delete}" onclick="delete_warning('memberrow_{player.KEY}');"></i>
 		<input type="hidden" id="memberrow_{player.KEY}submit" name="members[{player.KEY}][delete]" value="true" {player.DELDIS} />
 	</td>

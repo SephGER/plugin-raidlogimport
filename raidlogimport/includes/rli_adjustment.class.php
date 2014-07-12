@@ -108,10 +108,10 @@ if(!class_exists('rli_adjustment')) {
 		));
 		$this->tpl->add_js(
 "$('#rli_select_all').click(function() {
-	if($('.rli_select_me').prop('checked')) {
-		$('.rli_select_me').removeAttr('checked');
-	} else {
+	if($(this).prop('checked')) {
 		$('.rli_select_me').attr('checked', 'checked');
+	} else {
+		$('.rli_select_me').removeAttr('checked');
 	}
 });
 var rli_key = ".($a+1).";

@@ -30,7 +30,7 @@ class RLI_Settings extends page_generic {
 				'standby'		=> array('standby_raid')
 			),
 			'yes_no'	=> array(
-				'general'		=> array('rli_upd_check', 'deactivate_adj', 'itempool_save', 'no_del_warn'),
+				'general'		=> array('deactivate_adj', 'itempool_save', 'no_del_warn'),
 				'difficulty' 	=> array('dep_match'),
 				'att'		 	=> array('attendance_raid'),
 				#'am'			=> array('auto_minus', 'am_value_raids', 'am_allxraids'),
@@ -43,9 +43,6 @@ class RLI_Settings extends page_generic {
 				'att'			=> array('attendance_begin', 'attendance_end', 'attendance_time', 'att_note_begin', 'att_note_end'),
 				'difficulty'	=> array('diff_1', 'diff_2', 'diff_3', 'diff_4'),
 				'standby'		=> array('standby_value', 'standby_raidnote')
-			),
-			'normal' 	=> array(
-				'general'		=> array('rli_inst_version')
 			),
 			'ignore'	=> array(
 				'ignore'		=> array('rlic_data', 'rlic_lastcheck', 'rli_inst_build')
@@ -142,9 +139,6 @@ class RLI_Settings extends page_generic {
 
 						case 'yes_no':
 							$a = $k;
-							if($name == 'rli_upd_check') {
-								$k = 1;
-							}
 							$check_1 = '';
 							$check_0 = '';
 							if($this->rli->config($name)) {
@@ -216,19 +210,18 @@ class RLI_Settings extends page_generic {
 						$add = sprintf($add, $this->user->lang('no_gd_lib'));
 					}
 				}
-				if($add != '') {
-					$add = '<span class="coretip" data-coretip="'.$add.'"><i class="fa fa-info-circle fa-lg"></i></span>';
-				}
+
 				if($this->user->lang($nava['name'].'_warn', false, false)) {
 					$warn = $this->user->lang($nava['name'].'_warn');
 				} else {
 					$warn = '';
 				}
 				if($warn != '') {
-					$warn = '<span class="coretip" data-coretip="'.$warn.'"><i class="fa fa-exclamation-triangle"></i></span>';
+					$warn = '<i class="fa fa-exclamation-triangle"></i> '.$warn;
 				}
 				$this->tpl->assign_block_vars('holder.config', array(
-					'NAME'	=> $this->user->lang($nava['name']).' '.$add.' '.$warn,
+					'NAME'	=> $this->user->lang($nava['name']),
+					'HELP'	=> $add.$warn,
 					'VALUE' => $nava['value'])
 				);
 			}

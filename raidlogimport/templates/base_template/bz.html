@@ -9,6 +9,10 @@
 </div>
 <!-- ENDIF -->
 
+<div class="tableHeader floatRight">
+	<button type="submit" name="upd" value="{L_bz_update}" class="mainoption" /><i class="fa fa-plus"></i> {L_bz_update}</button>
+</div>
+<div class="clear"></div>
 <form action="{ACTION}" method="post" name="post">
 	<div id="rli_manage_bz">
 		<ul>
@@ -99,12 +103,12 @@
 	<table width="100%" border="0" cellspacing="1" cellpadding="1">
 		<tr>
 			<th colspan="5">
-				<input type="submit" name="upd" value="{L_bz_update}" class="mainoption" />
-				<input type="button" name="del" value="{L_bz_delete}" class="mainoption" onclick="delete_warning();" />
+				<button type="submit" name="upd" value="{L_bz_update}" class="mainoption" /><i class="fa fa-plus"></i> {L_bz_update}</button>
+				<button type="button" name="del" value="{L_bz_delete}" class="mainoption" onclick="delete_warning();" /><i class="fa fa-times"></i> {L_bz_delete}</button>
+				<button  type="submit" name="inactive" value="{L_bz_set_inactive}" class="mainoption" /><i class="fa fa-check-square-o"></i> {L_bz_set_inactive}</button>
 				<input type="hidden" name="del" value="1" id="mass_del_submit" disabled="disabled" />
-				<input type="submit" name="inactive" value="{L_bz_set_inactive}" class="mainoption" />
 				<!-- IF S_DIFF -->
-					<input type="submit" name="copy" value="{L_bz_copy_zone}" class="mainoption" />
+					<button  type="submit" name="copy" value="{L_bz_copy_zone}" class="mainoption" /><i class="fa fa-copy"></i> {L_bz_copy_zone}</button>
 					{DIFF_DROP}
 				<!-- ENDIF -->
 			</th>

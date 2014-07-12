@@ -193,8 +193,8 @@ class rli_item extends gen_class {
 "var rli_key = ".($key+1).";
 $('.del_item').click(function() {
 	$(this).removeClass('del_item');
-	".($this->rli->config('no_del_warn') ? "$('#'+$(this).attr('class')).css('display', 'none');
-	$('#'+$(this).attr('class')+'submit').removeAttr('disabled');" : "delete_warning($(this).attr('class'));")."
+	".($this->rli->config('no_del_warn') ? "$('#'+$(this).data('id')).css('display', 'none');
+	$('#'+$(this).data('id')+'submit').removeAttr('disabled');" : "delete_warning($(this).data('id'));")."
 });
 $('#add_item_button').click(function() {
 	var item = $('#item_999').clone(true);

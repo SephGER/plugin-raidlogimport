@@ -31,14 +31,11 @@
 		<div id="adjustments">
 			<table width="100%" cellspacing="1" cellpadding="1" border="0" id="adj" class="colorswitch">
 			<tr>
-				<th colspan="6">{L_rli_adjs}</th>
-			</tr>
-			<tr>
-				<th width="40px"><span style="float:right; cursor:pointer;" class="down_arrow_red" id="rli_select_all" /></th><th>{L_member}</th><th>{L_event}</th><th>{L_raid}</th><th>{L_note}</th><th>{L_value}</th>
+				<th width="40px"><input type="checkbox" id="rli_select_all"/></th><th>{L_member}</th><th>{L_event}</th><th>{L_raid}</th><th>{L_note}</th><th>{L_value}</th>
 			</tr>
 			<!-- BEGIN adjs -->
 			<tr id="adj_{adjs.KEY}" {adjs.DISPLAY}>
-				<td align="right"><i class="fa fa-trash-o fa-lg" title="{L_delte}"></i><input type="checkbox" name="adjs[{adjs.KEY}][delete]" value="true" title="{L_delete}" class="rli_select_me" {adjs.DELCHK} /></td>
+				<td align="right"><input type="checkbox" name="adjs[{adjs.KEY}][delete]" value="true" title="{L_delete}" class="rli_select_me" {adjs.DELCHK} /></td>
 				<td>{adjs.MEMBER}</td>
 				<td>{adjs.EVENT}</td>
 				<td>{adjs.RAID}</td>
@@ -48,14 +45,15 @@
 			<!-- END adjs -->
 			<tr>
 				<td colspan="3">
-					<input type="button" value="{L_rli_add_adj}" id="add_adj_button" class="mainoption bi_new" />
+					<button type="button" value="{L_rli_add_adj}" id="add_adj_button" class="mainoption bi_new"><i class="fa fa-plus"></i> {L_rli_add_adj}</button>
 				</td>
 				<td colspan="3">&nbsp;</td>
 			</tr>
 			<tr>
 				<th colspan="6">
-					<input type="submit" name="checkadj" value="{L_update}" class="mainoption" />
-					<input type="submit" name="insert" value="{L_rli_go_on}" class="mainoption" />
+					<button type="submit" name="checkadj" value="{L_update}" class="mainoption"><i class="fa fa-refresh"></i> {L_update}</button>
+					<button type="submit" name="checkadj" value="{L_update}" class="mainoption"><i class="fa fa-trash-o"></i> {L_delete_selected_adjs}</button>
+					<button type="submit" name="insert" value="{L_rli_go_on}" class="mainoption"><i class="fa fa-arrow-right"></i> {L_rli_go_on}</button>
 				</th>
 			</tr>
 			</table>

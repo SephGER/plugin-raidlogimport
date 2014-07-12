@@ -106,7 +106,6 @@ class raidlogimport extends plugin_generic {
 			'adj_parse'			=> ': ', //string, which separates the reason and the value for a adjustment in the note of a member
 			'bz_parse'			=> ',',  //separator, which is used for separating the different strings of a boss or zone
 			'parser'			=> 'plus_format',  //which format has the xml-string?
-			'rli_upd_check'		=> '1',		//enable update check?
 			'use_dkp'			=> '1',		//1: bossdkp, 2:zeitdkp, 4: event-dkp
 			'deactivate_adj'	=> '0',
 			'ignore_dissed'		=> '',		//ignore disenchanted and bank loot?

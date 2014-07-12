@@ -40,7 +40,7 @@
 				<!-- BEGIN loots -->
 				<tr id="item_{loots.KEY}" {loots.DISPLAY}>
 					<td>
-						&nbsp;<i class="fa fa-trash-o fa-lg del_item item_{loots.KEY}" title="{L_delte}"></i>
+						&nbsp;<i class="fa fa-trash-o fa-lg del_item hand" title="{L_delte}" data-id="item_{loots.KEY}"></i>
 						<input type="hidden" id="item_{loots.KEY}submit" name="loots[{loots.KEY}][delete]" value="true" {loots.DELDIS} />
 					</td>
 					<td><input type="text" name="loots[{loots.KEY}][name]" class="input" value="{loots.LOOTNAME}" size="40" {loots.READONLY} /></td>

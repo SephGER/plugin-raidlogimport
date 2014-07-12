@@ -187,7 +187,6 @@
 	$lang['parser'] = 'In which XML-Format is the string?';
 	$lang['parser_empty'] = 'Empty String';
 	$lang['rli_man_db_up'] = 'Force DB-Update';
-	$lang['rli_upd_check'] = 'Enable Update Check?';
 	$lang['use_dkp'] = 'Which DKP shall be used?';
 	$lang['use_dkp_1'] = 'Boss-DKP';
 	$lang['use_dkp_2'] = 'Time-DKP';

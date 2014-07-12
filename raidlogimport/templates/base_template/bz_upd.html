@@ -1,8 +1,20 @@
+<!-- IF S_NORMAL_HEADER -->
+<div class="breadcrumb-container">
+	<ul class="breamcrumb">
+		<li><a href="{EQDKP_CONTROLLER_PATH}{SID}" title="{L_home}"><i class="fa fa-home"></i></a></li>
+		<li><a href="{EQDKP_ROOT_PATH}admin/{SID}">{L_menu_admin_panel}</a>
+		<li><a href="{EQDKP_ROOT_PATH}plugins/raidlogimport/admin/bz.php{SID}">{L_raidlogimport}: {L_rli_bz_bz}</a>
+		<li class="current"><a>{L_bz_upd}</a></li>
+	</ul>
+	<div class="clear"></div>
+</div>
+<!-- ENDIF -->
+	<div class="contentHeader">
+		<h1 class="contentTitle">{L_bz_upd}</h1>
+	</div>
+
 <form method="post" action="{ACTION}" id="form_rli_bz">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="colorswitch">
-      <tr>
-      	<th align="center" width="100%" colspan="8">{L_bz_upd}</th>
-      </tr>
       <tr>
       	<th>{L_bz_type}</th><th>{L_bz_string}</th><th>{L_bz_note_event}</th><th>{L_bz_timebonus}</th><th>{L_bz_bonus}</th><!-- IF S_DIFF --><th>{L_difficulty}</th><!-- ENDIF --><th>{L_bz_tozone}</th><th>{L_bz_sort}</th>
       </tr>
@@ -36,9 +48,10 @@
       	<td align="center"><input type="text" name="sort[{upd_list.ID}]" value="{upd_list.SORT}" size="5" /></td>
       </tr>
       <!-- END upd_list -->
-      <tr>
-      	<th colspan="8"><input type="submit" name="save" value="{L_save}" class="mainoption" /></th>
-      </tr>
     </table>
+    
+    <div class="contentFooter">
+		<button class="mainoption" type="submit" name="save" value="{L_save}" class="mainoption"><i class="fa fa-check"></i> {L_save}</button>
+	</div>
 {CSRF_TOKEN}
 </form>

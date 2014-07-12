@@ -29,7 +29,7 @@
 	
 	//messages
 	$lang['rli_no_save'] = 'Daten nicht gespeichert!';
-	$lang['rli_save_suc'] = 'Daten erfolgereich gespeichert.';
+	$lang['rli_save_suc'] = 'Daten erfolgreich gespeichert.';
 	$lang['rli_no_del'] = 'Daten nicht gelöscht!';
 	$lang['rli_del_suc'] = 'Daten erfolgreich gelöscht.';
 
@@ -187,7 +187,6 @@
 	$lang['parser'] = 'Welches XML-Format hat der String?';
 	$lang['parser_empty'] = 'Leerer String';
 	$lang['rli_man_db_up'] = 'DB-Update erzwingen';
-	$lang['rli_upd_check'] = 'Update-Check aktivieren?';
 	$lang['use_dkp'] = 'Welche Punkte sollen verwendet werden?';
 	$lang['use_dkp_1'] = 'Boss-Punkte';
 	$lang['use_dkp_2'] = 'Zeit-Punkte';
