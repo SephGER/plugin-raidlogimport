@@ -277,7 +277,7 @@ class rli_raid extends gen_class {
 						$html_id = 'raid'.$ky.'_boss'.$xy;
 						$name_field = '';
 						if(is_numeric($bk['id'])) {
-							$name_field = new hdropdown('raids['.$ky.'][bosskills]['.$xy.'][id]', array('options' => $this->bk_list, 'value' => $bk['id'], 'id' => 'a'.uniqid()));
+							$name_field = new hdropdown('raids['.$ky.'][bosskills]['.$xy.'][id]', array('options' => $this->bk_list, 'value' => $bk['id'], 'id' => 'a'.unique_id()));
 						} else {
 							$name_field = $bk['id'];
 							$params = "&string=' + $('#id_".$html_id."').val() + '&bonus=' + $('#bonus_".$html_id."').val() + '&timebonus=' + $('#timebonus_".$html_id."').val() + '&diff=' + $('#diff_".$html_id."').val()";
@@ -300,7 +300,7 @@ class rli_raid extends gen_class {
 				}
 				$this->tpl->add_js("boss_keys[".$ky."] = ".($xy+1).";", 'docready');
 				$this->tpl->assign_block_vars('raids.bosskills', array(
-					'BK_SELECT'	=> new hdropdown('raids['.$ky.'][bosskills][99][id]', array('options' => $this->bk_list, 'value' => 0, 'id' => 'a'.uniqid())),
+					'BK_SELECT'	=> new hdropdown('raids['.$ky.'][bosskills][99][id]', array('options' => $this->bk_list, 'value' => 0, 'id' => 'a'.unique_id())),
 					'BK_DATE'	=> '<input type="text" name="raids['.$ky.'][bosskills][99][date]" id="raids_'.$ky.'_boss_99_date" size="15" />',
 					'BK_DIFF'	=> new hdropdown('raids['.$ky.'][bosskills][99][diff]', array('options' => $this->diff_drop, 'value' => 0, 'id' => 'diff_raid'.$ky.'_boss99')),
 					'BK_KEY'	=> 99,
@@ -314,12 +314,12 @@ class rli_raid extends gen_class {
 				'COUNT'     => 999,
 				'START_DATE'=> '<input type="text" name="raids[999][start_date]" id="raids_999_start_date" size="15" />',
 				'END_DATE'	=> '<input type="text" name="raids[999][end_date]" id="raids_999_end_date" size="15" />',
-				'EVENT'		=> new hdropdown('raids[999][event]', array('options' => $this->event_drop, 'value' => 0, 'id' => 'a'.uniqid())),
-				'DIFF'		=> new hdropdown('raids[999][diff]', array('options' => $this->diff_drop, 'value' => 0, 'id' => 'a'.uniqid())),
+				'EVENT'		=> new hdropdown('raids[999][event]', array('options' => $this->event_drop, 'value' => 0, 'id' => 'a'.unique_id())),
+				'DIFF'		=> new hdropdown('raids[999][diff]', array('options' => $this->diff_drop, 'value' => 0, 'id' => 'a'.unique_id())),
 				'DISPLAY'	=> 'style="display: none;"'
 			));
 			$this->tpl->assign_block_vars('raids.bosskills', array(
-				'BK_SELECT'	=> new hdropdown('raids[999][bosskills][99][id]', array('options' => $this->bk_list, 'value' => 0, 'id' => 'a'.uniqid(), 'tolang' => false)),
+				'BK_SELECT'	=> new hdropdown('raids[999][bosskills][99][id]', array('options' => $this->bk_list, 'value' => 0, 'id' => 'a'.unique_id(), 'tolang' => false)),
 				
 				'BK_DATE'	=> '<input type="text" name="raids[999][bosskills][99][date]" id="raids_999_boss_99_date" size="15" />',
 				'BK_DIFF'	=> new hdropdown('raids[999][bosskills][99][diff]', array('options' => $this->diff_drop, 'value' => 0, 'id' => 'diff_raid999_boss99', 'tolang' => false)),
