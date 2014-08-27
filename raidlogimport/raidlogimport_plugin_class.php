@@ -29,6 +29,8 @@ class raidlogimport extends plugin_generic {
 	public $vstatus = 'Beta';
 	public $version = '0.7.0.0';
 	
+	protected static $apiLevel = 20;
+	
 	public function pre_install() {
 		//initialize config
 		$this->config->set($this->create_default_configs(), '', $this->get_data('code'));
