@@ -142,5 +142,5 @@ class pdh_r_rli_boss extends pdh_r_generic {
 	}
 }
 }
-if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('short_pdh_r_rli_boss', pdh_r_rli_boss::__shortcuts());
+
 ?>

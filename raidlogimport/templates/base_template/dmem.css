@@ -6,7 +6,7 @@
 
 .raid {
 	position: absolute;
-	height: 13px;
+	height: 20px;
 }
 .raid.up {
 	margin-top: -21px;
@@ -22,10 +22,10 @@
 .raid.middle {
 	margin-top: -7px;
 	z-index: 9;
-	background-image: url(../../images/raid_bg.png);
+	background-color: #ff6d6d;
 }
 .raid.middle.active {
-	background-image: url(../../images/araid_bg.png);
+	background-color: #a6f38f;
 }
 .raid.down {
 	margin-top: 7px;
@@ -50,21 +50,24 @@
 }
 .time {
 	position: absolute;
-	background-image: url(../../images/time_bg.png);
-	background-repeat: repeat-x;
+	background-color: #00a400;
 	margin-top: -4px;
-	height: 7px;
+	height: 12px;
 	display: block;
 	z-index: 11;
+	border-top: 1px solid #858585;
+	border-bottom: 1px solid #858585;
 }
+
 .timestandby {
 	position: absolute;
-	background-image: url(../../images/stime_bg.png);
-	background-repeat: repeat-x;
+	background-color: #800080;
 	margin-top: -4px;
-	height: 7px;
+	height: 12px;
 	display: block;
 	z-index: 11;
+	border-top: 1px solid #858585;
+	border-bottom: 1px solid #858585;
 }
 .time_left {
 	background-color: transparent;
@@ -78,12 +81,14 @@
 	z-index: 14;
 }
 .time_left + div {
-	background-color: #bbbbbb;
-	height: 11px;
+	background-color: #aaa;
+	height: 16px;
 	width: 3px;
-	margin-top: -2px;
+	margin-top: -3px;
 	z-index: 13;
 	position: absolute;
+	border: 1px solid #858585;
+	border-radius: 1px;
 }
 .time_middle {
 	cursor: move;
@@ -106,13 +111,15 @@
 	z-index: 14;
 }
 .time_right + div {
-	background-color: #bbbbbb;
-	height: 11px;
+	background-color: #aaa;
+	height: 16px;
 	right: 0px;
 	width: 3px;
-	margin-top: -2px;
+	margin-top: -3px;
 	z-index: 13;
 	position: absolute;
+	border: 1px solid #858585;
+	border-radius: 1px;
 }
 
 .time_scale_hide {
@@ -145,7 +152,6 @@
 }
 .rli_rcm > ul {
 	list-style-type: none;
-	margin-left: -25px;
 }
 .rli_rcm li {
 	color: #000000;
@@ -156,5 +162,5 @@
 }
 .rli_rcm li:hover {
 	background-color: #ababab;
-	border: 2px solid #767676;
+	border: 1px solid #767676;
 }

@@ -504,6 +504,7 @@ $('#add_mem_button').click(function() {
         	$s = (isset($mtime['standby']) AND $mtime['standby']) ? 'standby' : '';
         	$w = ($mtime['leave']-$mtime['join'])/20;
         	$ml = ($mtime['join']-$width['begin'])/20;
+        	if ($ml < 0)  $ml = 0;
         	settype($w, 'int');
         	settype($ml, 'int');
 			$this->tpl->assign_block_vars('player.times', array(
@@ -521,22 +522,19 @@ $('#add_mem_button').click(function() {
 
     	//only do this once
     	if(!isset($this->tpl_assignments)) {
-			/*$rightc_menu = array(
-				'rli_add_dmem' => array('image' => $eqdkp_root_path.'images/global/add.png', 'name' => $user->lang('rli_add_time'), 'jscode' => 'add_timeframe();'),
-				'rli_del_dmem' => array('image' => $eqdkp_root_path.'images/global/delete.png', 'name' => $user->lang('rli_del_time'), 'jscode' => 'remove_timeframe();'),
-				'rli_swi_dmem' => array('image' => $eqdkp_root_path.'images/global/update.png', 'name' => $user->lang('rli_standby_switch'), 'jscode' => 'change_standby();')
-			);*/
+
 			$this->tpl->assign_vars(array(
-				'CONTEXT_MENU' => true,#$jquery->RightClickMenu('_rli_dmem', '.add_time', $rightc_menu),
+				'CONTEXT_MENU' => true,
 				'PXTIME' => $this->px_time,
 				'HEIGHT' => $this->height)
 			);
-			#$this->rightclick_js = $jquery->RightClickMenu('_rli_dmem', '.add_time', $rightc_menu, '170px', true);
+
     		$this->tpl->js_file($this->root_path.'plugins/raidlogimport/templates/dmem.js');
     		$this->tpl->css_file($this->root_path.'plugins/raidlogimport/templates/base_template/dmem.css');
+
     		$this->tpl->add_css(".time_scale {
 								position: absolute;
-								background-image: url(".$this->timescalefile.");
+								background-image: url(".$this->pfh->FilePath('images/time_scale.png', 'raidlogimport', false, 'serverpath').");
 								background-repeat: repeat-x;
 								width: ".$this->px_time."px;
 								height: 18px;
@@ -550,6 +548,24 @@ $('#add_mem_button').click(function() {
 							$(document).on('mouseleave', '.add_time', function(){
 								$('#time_scale_' + member_id).attr('class', 'time_scale_hide');
 							});
+    						$('.add_time').on('dblclick', function(event){
+    							target = event.target;
+    							var myclass = $(target).attr('class');
+    							if (myclass == 'time_middle'){
+    								change_standby();
+    							}
+    				
+    							if ($(target).hasClass('raid')){
+    								add_timeframe();
+    							}
+    						});
+    				
+    				$(document).keydown( function(event) {
+						if ( event.which == 46 ) {
+    						remove_timeframe();
+						}
+					});
+    				
 							$(document).on('contextmenu', '.add_time', function(e) {
 								$('<div id=\"rc_overlay\"></div>').css({left : '0px', top : '0px',position: 'absolute', width: '100%', height: '100%', zIndex: '200' }).click(function() {
 									$(this).remove();
@@ -565,8 +581,8 @@ $('#add_mem_button').click(function() {
     	}
     }
 
-	private function create_timebar($start, $end) {
-		if(!$this->timebar_created) {
+	private function create_timebar($start, $end) {		
+		if(!$this->timebar_created && $this->px_time) {
 			$px_time = ($this->px_time > 5000) ? 5000 : $this->px_time; //prevent very big images (although 5000 is quite big)
 			$im = imagecreate($px_time, 18);
 			$black = imagecolorallocate($im, 0,0,0);
@@ -615,8 +631,5 @@ $('#add_mem_button').click(function() {
 	}
   }
 }
-if(version_compare(PHP_VERSION, '5.3.0', '<')) {
-	registry::add_const('short_rli_member', rli_member::$shortcuts);
-	registry::add_const('dep_rli_member', rli_member::$dependencies);
-}
+
 ?>

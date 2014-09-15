@@ -797,8 +797,5 @@ $(document).on('click', 'button[name=\"add_boss_button[]\"]', function(){
 	}
 }
 }
-if(version_compare(PHP_VERSION, '5.3.0', '<')) {
-	registry::add_const('short_rli_raid', rli_raid::$shortcuts);
-	registry::add_const('dep_rli_raid', rli_raid::$dependencies);
-}
+
 ?>

@@ -274,8 +274,5 @@ $('#add_item_button').click(function() {
 	}
 }
 }
-if(version_compare(PHP_VERSION, '5.3.0', '<')) {
-	registry::add_const('short_rli_item', rli_item::$shortcuts);
-	registry::add_const('dep_rli_item', rli_item::$dependencies);
-}
+
 ?>

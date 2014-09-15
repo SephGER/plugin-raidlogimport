@@ -241,6 +241,6 @@ class RLI_Settings extends page_generic {
 		);
 	}
 }
-if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('short_RLI_Settings', RLI_Settings::__shortcuts());
+
 registry::register('RLI_Settings');
 ?>

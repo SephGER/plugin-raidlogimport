@@ -22,18 +22,27 @@ posi_max = 0;
 joiner = null;
 leaver = null;
 
+korrektur = 0;
+
 document.onmousemove = scale;
 document.onmousedown = set_clickx;
 document.onmouseup = stop_scale;
 
 function set_member(member_key, px_time) {
 	if(!posi_null) {
-		posi_null = $('#member_' + member_key).offset();
-		posi_null = parseInt(posi_null.left);
+		posi_null = $('#member_' + member_key).offset().left;		
+		posi_null = parseInt(posi_null);
+		console.log(posi_null);
+		padding_left = $('#member_' + member_key).css('paddingLeft');
+		padding_left = padding_left.replace("px", "");
+		padding_left = parseInt(padding_left);
+		posi_null = posi_null + padding_left;
 	}
+	
 	if(!posi_max) {
 		posi_max = posi_null + parseInt(px_time);
 	}
+	console.log('posi_max '+posi_max+' posi_null '+posi_null);
 	member_id = parseInt(member_key);
 }
 
@@ -43,10 +52,19 @@ function set_time_key(time_key) {
 
 function scale_start(type) {
 	var element_id = "times_" + member_id + "_" + time_id;
+	
+	jq_scale_obj = $('#'+element_id);
+	jq_scale_obj_offset = jq_scale_obj.offset();
+	jq_scale_obj_offset = parseInt(jq_scale_obj_offset.left);
+	
+	oldx = posx - jq_scale_obj_offset;
+
 	scale_object = document.getElementById(element_id);
 	joiner = document.getElementById(element_id + "j");
 	leaver = document.getElementById(element_id + "l");
-	oldx = posx - scale_object.offsetLeft;
+	//oldx = posx - scale_object.offsetLeft;
+	
+	console.log('scale start() posx '+posx+ ' offset '+ jq_scale_obj_offset);
 	startx = posx;
 	corner = type;
     var after = document.getElementById("times_" + member_id + "_" + (time_id+1));
@@ -62,6 +80,8 @@ function scale_start(type) {
 }
 
 function stop_scale() {
+	console.log('stop_scale()');
+	
 	scale_object = null;
 	joiner = null;
 	leaver = null;
@@ -76,6 +96,9 @@ function stop_scale() {
 function scale(ereignis) {
 	posx = document.all ? window.event.clientX : ereignis.pageX;
 	if(scale_object != null) {
+		console.log('scale() corner '+corner);
+		console.log('posx '+posx+' oldx '+oldx+' posi_null '+posi_null);
+		
 		if(corner == "left") {
 			set_left((posx - oldx - posi_null), 1);
         	if(scale_object != null) set_width((parseInt(scale_object.style.width) + (startx - posx)), true);
@@ -84,7 +107,7 @@ function scale(ereignis) {
 			set_width(parseInt(scale_object.style.width) + (posx - startx));
 		}
 		if(corner == "middle") {
-			set_left((posx - oldx - posi_null));
+			set_left((posx - oldx - posi_null + korrektur));
 		}
         startx = posx;
 	}
@@ -94,9 +117,11 @@ function set_clickx(ereignis) {
 	//record last two clicks
 	clickx1 = clickx2;
 	clickx2 = document.all ? window.event.clientX : ereignis.pageX;
+	console.log('click x2 '+clickx2);
 }
 
 function set_width(w, nostopper) {
+	console.log('set_width w'+w);
 	var stopper = false;
 	if(w > 0) {
 		if(w+posi_null+parseInt(scale_object.style.marginLeft) > max_right) {
@@ -116,6 +141,8 @@ function set_width(w, nostopper) {
 }
 
 function set_left(l, nostopper) {
+	console.log('set_left l'+l);
+	
 	var stopper = false;
 	if(l >= min_left) {
 		if(l > max_right - posi_null - parseInt(scale_object.style.width)) {
@@ -208,13 +235,15 @@ function add_timeframe() {
 }
 
 function remove_timeframe() {
-	var change_id = $('#times_' + member_id + '_' + time_id + ' ~ div');
-	$('#times_' + member_id + '_' + time_id).remove();
-	var lgth = 'times_' + member_id + '_';
-	for(var i=0; i < change_id.length; i++) {
-		if(!isNaN(parseInt(change_id[i].id.substr(lgth.length)))) {
-			change_id_of_input(change_id[i].id, (parseInt(change_id[i].id.substr(lgth.length)) -1));
-			change_id[i].id = "times_" + member_id + "_" + (parseInt(change_id[i].id.substr(lgth.length)) -1);
+	if (member_id != null && time_id != null){	
+		var change_id = $('#times_' + member_id + '_' + time_id + ' ~ div');
+		$('#times_' + member_id + '_' + time_id).remove();
+		var lgth = 'times_' + member_id + '_';
+		for(var i=0; i < change_id.length; i++) {
+			if(!isNaN(parseInt(change_id[i].id.substr(lgth.length)))) {
+				change_id_of_input(change_id[i].id, (parseInt(change_id[i].id.substr(lgth.length)) -1));
+				change_id[i].id = "times_" + member_id + "_" + (parseInt(change_id[i].id.substr(lgth.length)) -1);
+			}
 		}
 	}
 }

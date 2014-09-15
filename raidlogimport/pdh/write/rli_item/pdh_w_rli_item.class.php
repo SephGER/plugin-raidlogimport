@@ -50,5 +50,5 @@ class pdh_w_rli_item extends pdh_w_generic {
 	}
 }
 }
-if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('short_pdh_w_rli_item', pdh_w_rli_item::__shortcuts());
+
 ?>

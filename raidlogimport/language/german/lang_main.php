@@ -146,7 +146,7 @@
 	$lang['rli_itempool_partial_save'] = 'Itempools nur teilweise gespeichert.';
 	$lang['rli_itempool_nosave'] = 'Nicht gespeicherte Items';
 	$lang['rli_help'] = 'Hilfe?';
-	$lang['rli_help_dt_member'] = 'Hilfe (Beta): Der schwarze Balken in der Mitte stellt die Teilnahme des jeweiligen Mitglieds über die Zeit im Raid dar. Die Totenköpfe sind die Bosskills (Mouseover). Der Hintergrund der Zeile ist grün oder rot, je nachdem ob der Charakter die Raidteilnahme hat oder nicht. Per Rechtsklick lässt sich ein Menü aufrufen um Zeiten hinzuzufügen oder zu löschen.';
+	$lang['rli_help_dt_member'] = 'Hilfe: Ein Zeitbalken steht für die jeweilige Anwesenheit im Raid. Ein grüner Balken steht für Anwesenheit, und lila Balken für Ersatzbank. Neue Zeitbalken können durch Doppelklick auf freien Platz hinzugefügt werden. Zu löschende Balken müssen angeklickt werden und werden mit der Löschen-Taste entfernt. Der Hintergrund der Zeile (rot/grün) zeigt an, ob der Teilnehmer die Raidteilnahme hat. Die Totenköpfe sind die Bosskills (Mouseover).';
 	$lang['rli_member_refresh_for_view'] = 'Drücke Aktualisieren, um den Raidslider anzuzeigen.';
 	$lang['rli_loading'] = 'Bitte Warten';
 	$lang['rli_finish'] = 'Abschluss';
