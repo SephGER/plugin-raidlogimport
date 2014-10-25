@@ -15,13 +15,22 @@
  *
  * $Id$
  */
-$lang['hero'] = 'Suffix for Heroic Events';
-$lang['non_hero'] = 'Suffix for Non-Heroic Events';
 $lang['title_difficulty'] = 'Difficulty settings';
 $lang['difficulty'] = 'Difficulty';
-$lang['diff_1'] = '10-30 player normal';
-$lang['diff_2'] = '10-30 player heroic';
-$lang['diff_3'] = '20 player mythic';
-$lang['diff_4'] = '10-30 player LFR';
+$lang['diff_0'] = 'other';
+$lang['diff_1'] = 'normal';
+$lang['diff_2'] = 'heroic';
+$lang['diff_3'] = '10 players normal';
+$lang['diff_4'] = '25 players normal';
+$lang['diff_5'] = '10 players heroic';
+$lang['diff_6'] = '25 players heroic';
+$lang['diff_7'] = 'LFR';
+$lang['diff_8'] = 'Challenge Mode';
+$lang['diff_9'] = '40 players';
+$lang['diff_11'] = 'Heroic';
+$lang['diff_12'] = 'Normal';
+$lang['diff_14'] = 'Normal (10-30 players)';
+$lang['diff_15'] = 'Heroic (10-30 players)';
+$lang['diff_16'] = 'Mythic (20 players)';
 $lang['dep_match'] = 'Shall the suffix be applied to boss-note, too?';
 ?>
