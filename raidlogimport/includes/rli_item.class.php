@@ -128,6 +128,7 @@ class rli_item extends gen_class {
 		$itempools = $this->pdh->aget('itempool', 'name', 0, array($this->pdh->get('itempool', 'id_list')));
 		//maybe add "saving" for itempool
 		$key = -1;
+
 		foreach($this->items as $key => $item) {
 			if(($start <= $key AND $key < $end) OR !$with_form) {
 				if($with_form) {
@@ -156,10 +157,10 @@ class rli_item extends gen_class {
 				$this->tpl->assign_block_vars('loots', array(
 					'LOOTNAME'  => $item['name'],
 					'ITEMID'    => (isset($item['game_id'])) ? $item['game_id'] : '',
-					'LOOTER'    => ($with_form) ? new hdropdown('loots[".$key."][member]', array('options' => $members, 'value' => $mem_sel, 'id' => 'loots_'.$key.'_member')) : $item['member'],
+					'LOOTER'    => ($with_form) ? new hdropdown('loots['.$key.'][member]', array('options' => $members, 'value' => $mem_sel, 'id' => 'loots_'.$key.'_member')) : $item['member'],
 					
 					'RAID'      => ($with_form) ? $raid_select."</select>" : $item['raid'],
-					'ITEMPOOL'	=> ($with_form) ? new hdropdown('loots[".$key."][itempool]', array('options' => $itempools, 'value' => $item['itempool'], 'id' => 'loots_'.$key.'_itempool')) : $this->pdh->get('itempool', 'name', array($item['itempool'])),
+					'ITEMPOOL'	=> ($with_form) ? new hdropdown('loots['.$key.'][itempool]', array('options' => $itempools, 'value' => $item['itempool'], 'id' => 'loots_'.$key.'_itempool')) : $this->pdh->get('itempool', 'name', array($item['itempool'])),
 					
 					
 					'LOOTDKP'   => runden($item['value']),
@@ -255,6 +256,7 @@ $('#add_item_button').click(function() {
 	public function insert() {
 		$raid_keys = array_keys($this->raid->get_data());
 		foreach($this->items as $key => $item) {
+			
 			if(!isset($this->member->name_ids[$item['member']])) {
 				$this->rli->error('process_items', sprintf($this->user->lang('rli_error_no_buyer'), $item['name']));
 				return false;
