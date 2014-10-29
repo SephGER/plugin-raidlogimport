@@ -27,7 +27,7 @@ class raidlogimport extends plugin_generic {
 	}
 
 	public $vstatus = 'Beta';
-	public $version = '0.6.3.4';
+	public $version = '0.6.3.5';
 	
 	public function pre_install() {
 		//initialize config
@@ -130,10 +130,20 @@ class raidlogimport extends plugin_generic {
 		);
 		if(strtolower($this->config->get('default_game')) == 'wow') {
 			$config_data = array_merge($config_data, array(
-				'diff_1'	=> ' (10)',		//suffix for 10-player normal
-				'diff_2'	=> ' (25)', 	//suffix for 25-player normal
-				'diff_3'	=> ' HM (10)',	//suffix for 10-player heroic
-				'diff_4'	=> ' HM (25)',	//suffix for 25-player heroic
+				'diff_1'	=> '',		
+				'diff_2'	=> ' HM', 	
+				'diff_3'	=> ' (10)',	
+				'diff_4'	=> ' (25)',	
+				'diff_5'	=> ' HM (10)',		
+				'diff_6'	=> ' HM (25)',
+				'diff_7'	=> ' LFR',	
+				'diff_8'	=> ' CM',	
+				'diff_9'	=> ' (40)',		
+				'diff_11'	=> ' HM', 	
+				'diff_12'	=> '',	
+				'diff_14'	=> ' (10-30)',	
+				'diff_15'	=> ' HM (10-30)',
+				'diff_16'	=> ' MR (20)', 	
 				'dep_match'	=> '1'			//also append suffix to boss-note?
 			));
 		}
