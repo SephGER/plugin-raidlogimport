@@ -372,9 +372,10 @@ $('#add_mem_button').click(function() {
 	}
 
 	public function insert() {
-		$members = $this->pdh->aget('member', 'name', 0, array($this->pdh->get('member', 'id_list', array(false, false, false))));
 		foreach($this->members as $member) {
-			if(!($id = array_search($member['name'], $members))) {
+			$intMemberId = $this->pdh->get('member', 'id', array($member['name']));
+			
+			if(!$intMemberId) {
 				$data = array(
 					'name' 		=> $member['name'],
 					'lvl' 		=> $member['level'],
@@ -387,16 +388,17 @@ $('#add_mem_button').click(function() {
 					$this->rli->error('process_members', sprintf($this->user->lang('rli_error_member_create'), $member['name']));
 					return false;
 				}
+			} else {
+				$id = $intMemberId;
 			}
+			
 			$this->raid_members[$id] = $member['raid_list'];
 			$this->name_ids[$member['name']] = $id;
 		}
 		$this->pdh->process_hook_queue();
 		// add disenchanted / bank to name_ids array
-		$dis_id = array_search('disenchanted', $members);
-		if (!$dis_id) $dis_id = array_search('Disenchanted', $members);
-		$bank_id = array_search('bank', $members);
-		if (!$bank_id) $bank_id = array_search('Bank', $members);
+		$dis_id = $this->pdh->get('member', 'id', array('disenchanted'));
+		$bank_id = $this->pdh->get('member', 'id', array('bank'));
 		if($dis_id) $this->name_ids[$members[$dis_id]] = $dis_id;
 		if($bank_id) $this->name_ids[$members[$bank_id]] = $bank_id;
 
