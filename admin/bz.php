@@ -190,7 +190,23 @@ class rli_Bz extends page_generic {
 	}
 
 	private function prepare_diff_drop() {
-		if(!isset($this->diff_drop)) $this->diff_drop = array($this->user->lang('diff_0'), $this->user->lang('diff_1'), $this->user->lang('diff_2'), $this->user->lang('diff_3'), $this->user->lang('diff_4'));
+		if(!isset($this->diff_drop)) $this->diff_drop = array(
+				$this->user->lang('diff_0'), 
+				$this->user->lang('diff_1'), 
+				$this->user->lang('diff_2'), 
+				$this->user->lang('diff_3'), 
+				$this->user->lang('diff_4'),
+				$this->user->lang('diff_5'),
+				$this->user->lang('diff_6'),
+				$this->user->lang('diff_7'),
+				$this->user->lang('diff_8'),
+				$this->user->lang('diff_9'),
+				$this->user->lang('diff_11'),
+				$this->user->lang('diff_12'),
+				$this->user->lang('diff_14'),
+				$this->user->lang('diff_15'),
+				$this->user->lang('diff_16'),
+		);
 	}
 
 	public function update() {
