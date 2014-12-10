@@ -222,22 +222,22 @@ class rli_raid extends gen_class {
 			$this->event_drop = $this->pdh->aget('event', 'name', 0, array($this->pdh->get('event', 'id_list')));
 			asort($this->event_drop);
 		}
-		if(!isset($this->diff_drop)) $this->diff_drop = array(	
-				$this->user->lang('diff_0'), 
-				$this->user->lang('diff_1'), 
-				$this->user->lang('diff_2'), 
-				$this->user->lang('diff_3'), 
-				$this->user->lang('diff_4'),
-				$this->user->lang('diff_5'),
-				$this->user->lang('diff_6'),
-				$this->user->lang('diff_7'),
-				$this->user->lang('diff_8'),
-				$this->user->lang('diff_9'),
-				$this->user->lang('diff_11'),
-				$this->user->lang('diff_12'),
-				$this->user->lang('diff_14'),
-				$this->user->lang('diff_15'),
-				$this->user->lang('diff_16'),
+		if(!isset($this->diff_drop)) $this->diff_drop = array(
+				0 => $this->user->lang('diff_0'), 
+				1 => $this->user->lang('diff_1'), 
+				2 => $this->user->lang('diff_2'), 
+				3 => $this->user->lang('diff_3'), 
+				4 => $this->user->lang('diff_4'),
+				5 => $this->user->lang('diff_5'),
+				6 => $this->user->lang('diff_6'),
+				7 => $this->user->lang('diff_7'),
+				8 => $this->user->lang('diff_8'),
+				9 => $this->user->lang('diff_9'),
+				11 => $this->user->lang('diff_11'),
+				12 => $this->user->lang('diff_12'),
+				14 => $this->user->lang('diff_14'),
+				15 => $this->user->lang('diff_15'),
+				16 => $this->user->lang('diff_16'),
 				);
 		
 		
