@@ -1,19 +1,22 @@
 <?php
- /*
- * Project:     EQdkp-Plus Raidlogimport
- * License:     Creative Commons - Attribution-Noncommercial-Share Alike 3.0 Unported
- * Link:		http://creativecommons.org/licenses/by-nc-sa/3.0/
- * -----------------------------------------------------------------------
- * Began:       2008
- * Date:        $Date$
- * -----------------------------------------------------------------------
- * @author      $Author$
- * @copyright   2008-2009 hoofy_leon
- * @link        http://eqdkp-plus.com
- * @package     raidlogimport
- * @version     $Rev$
+/*	Project:	EQdkp-Plus
+ *	Package:	RaidLogImport Plugin
+ *	Link:		http://eqdkp-plus.eu
  *
- * $Id$
+ *	Copyright (C) 2006-2015 EQdkp-Plus Developer Team
+ *
+ *	This program is free software: you can redistribute it and/or modify
+ *	it under the terms of the GNU Affero General Public License as published
+ *	by the Free Software Foundation, either version 3 of the License, or
+ *	(at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU Affero General Public License for more details.
+ *
+ *	You should have received a copy of the GNU Affero General Public License
+ *	along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 if(!defined('EQDKP_INC')) {
@@ -28,35 +31,34 @@ if(!function_exists('stripslashes_array')) {
 }
 
 function format_duration($seconds) {
-    $periods = array(
-        'hours' => 3600,
-        'minutes' => 60,
-        'seconds' => 1
-    );
+	$periods = array(
+		'hours' => 3600,
+		'minutes' => 60,
+		'seconds' => 1
+	);
 
-    $durations = array();
-    $durations['hours'] = 0;
-    $durations['minutes'] = 0;
+	$durations = array();
+	$durations['hours'] = 0;
+	$durations['minutes'] = 0;
 
-    foreach ($periods as $period => $seconds_in_period) {
-        if ($seconds >= $seconds_in_period) {
-            $durations[$period] = floor($seconds / $seconds_in_period);
-            $seconds -= $durations[$period] * $seconds_in_period;
-        }
-    }
-    return $durations;
-
+	foreach ($periods as $period => $seconds_in_period) {
+		if ($seconds >= $seconds_in_period) {
+			$durations[$period] = floor($seconds / $seconds_in_period);
+			$seconds -= $durations[$period] * $seconds_in_period;
+		}
+	}
+	return $durations;
 }
 
 function fktMultiArraySearch($arrInArray,$varSearchValue) {
-    foreach ($arrInArray as $key => $row){
-        $ergebnis = array_search($varSearchValue, $row);
-        if ($ergebnis) {
-            $arrReturnValue[0] = $key;
-            $arrReturnValue[1] = $ergebnis;
-            return $arrReturnValue;
-        }
-    }
+	foreach ($arrInArray as $key => $row){
+		$ergebnis = array_search($varSearchValue, $row);
+		if ($ergebnis) {
+			$arrReturnValue[0] = $key;
+			$arrReturnValue[1] = $ergebnis;
+			return $arrReturnValue;
+		}
+	}
 }
 
 function deep_in_array($search, $array) {
@@ -73,8 +75,8 @@ function deep_in_array($search, $array) {
 function lang2tpl() {
 	return;
 	register('tpl')->assign_vars(array(
-        'L_DIFFICULTY' 	=> (register('config')->get('default_game') == 'wow') ? register('user')->lang('difficulty') : false,
-		'S_DEACTIVATE_ADJ' => (register('rli')->config('deactivate_adj')) ? true : false
+		'L_DIFFICULTY'		=> (register('config')->get('default_game') == 'wow') ? register('user')->lang('difficulty') : false,
+		'S_DEACTIVATE_ADJ'	=> (register('rli')->config('deactivate_adj')) ? true : false
 	));
 }
 

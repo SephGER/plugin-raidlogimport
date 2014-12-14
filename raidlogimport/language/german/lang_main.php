@@ -1,20 +1,24 @@
 <?php
- /*
- * Project:     EQdkp-Plus Raidlogimport
- * License:     Creative Commons - Attribution-Noncommercial-Share Alike 3.0 Unported
- * Link:		http://creativecommons.org/licenses/by-nc-sa/3.0/
- * -----------------------------------------------------------------------
- * Began:       2008
- * Date:        $Date$
- * -----------------------------------------------------------------------
- * @author      $Author$
- * @copyright   2008-2009 hoofy_leon
- * @link        http://eqdkp-plus.com
- * @package     raidlogimport
- * @version     $Rev$
+/*	Project:	EQdkp-Plus
+ *	Package:	RaidLogImport Plugin
+ *	Link:		http://eqdkp-plus.eu
  *
- * $Id$
+ *	Copyright (C) 2006-2015 EQdkp-Plus Developer Team
+ *
+ *	This program is free software: you can redistribute it and/or modify
+ *	it under the terms of the GNU Affero General Public License as published
+ *	by the Free Software Foundation, either version 3 of the License, or
+ *	(at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU Affero General Public License for more details.
+ *
+ *	You should have received a copy of the GNU Affero General Public License
+ *	along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 	$lang['raidlogimport'] = 'Raid-Log-Import';
 	$lang['action_raidlogimport_bz_upd'] = 'Boss / Zone bearbeitet';
 	$lang['action_raidlogimport_bz_add'] = 'Boss / Zone hinzugefügt';
@@ -104,7 +108,7 @@
 	$lang['rli_back2mem'] = 'Zurück zu Membern';
 	$lang['rli_back2item'] = 'Zurück zu Items';
 	$lang['rli_checkadj'] = 'Korrekturen überprüfen';
-    $lang['rli_calc_note_value'] = 'Raidnotiz neu erstellen';
+	$lang['rli_calc_note_value'] = 'Raidnotiz neu erstellen';
 	$lang['rli_insert'] = 'Raid(s) Einfügen';
 	$lang['rli_adjs'] = 'Korrekturen';
 	$lang['rli_partial_raid'] = 'Teilweise Raidteilnahme';
@@ -236,15 +240,15 @@
 	$lang['member_display_0'] = 'Multi-Select';
 	$lang['member_display_1'] = 'Mehrere Checkboxen';
 	$lang['member_display_2'] = 'Detaillierte Join/Leave Infos';
-    $lang['member_display_help'] = "Um die Ansicht '".$lang['member_display_1']."' oder '".$lang['member_display_2']."' zu verwenden, muss die GD-Lib vorhanden sein (PHP-Extension). Folgende GD-Lib wurde gefunden:<br />%s";
-    $lang['no_gd_lib'] = "<span class='negative'>keine GD-Lib gefunden</span>";
-    $lang['title_standby'] = 'Ersatzbank-Einstellungen';
-    $lang['standby_raid'] = 'Sollen Ersatzbank-Mitglieder einem Raid zugeordnet werden?';
-    $lang['standby_raid_0'] = 'Nein, keinem.';
-    $lang['standby_raid_1'] = 'Ja, einen Extra-Raid anlegen.';
-    $lang['standby_raid_2'] = 'Ja, dem (den) normalem/n Raid(s).';
-    $lang['standby_absolute'] = 'Absolute Punkte für die Ersatzbank vergeben?';
-    $lang['standby_value'] = 'Wie viel Prozent der Punkte, bzw. wie viele Punkte absolut, sollen Ersatzbankspieler bekommen?';
+	$lang['member_display_help'] = "Um die Ansicht '".$lang['member_display_1']."' oder '".$lang['member_display_2']."' zu verwenden, muss die GD-Lib vorhanden sein (PHP-Extension). Folgende GD-Lib wurde gefunden:<br />%s";
+	$lang['no_gd_lib'] = "<span class='negative'>keine GD-Lib gefunden</span>";
+	$lang['title_standby'] = 'Ersatzbank-Einstellungen';
+	$lang['standby_raid'] = 'Sollen Ersatzbank-Mitglieder einem Raid zugeordnet werden?';
+	$lang['standby_raid_0'] = 'Nein, keinem.';
+	$lang['standby_raid_1'] = 'Ja, einen Extra-Raid anlegen.';
+	$lang['standby_raid_2'] = 'Ja, dem (den) normalem/n Raid(s).';
+	$lang['standby_absolute'] = 'Absolute Punkte für die Ersatzbank vergeben?';
+	$lang['standby_value'] = 'Wie viel Prozent der Punkte, bzw. wie viele Punkte absolut, sollen Ersatzbankspieler bekommen?';
 	$lang['standby_att'] = 'Sollen Ersatzbankspieler Einlade/Ende-Punkte bekommen?';
 	$lang['standby_att_1'] = 'Einlade-Punkte';
 	$lang['standby_att_2'] = 'Ende-Punkte';
@@ -262,7 +266,7 @@
 	$lang['autocomplete_2'] = 'Itemname';
 	$lang['no_del_warn'] = 'Keine Warnung beim Löschen anzeigen';
 
-    //portal
-    $lang['p_rli_zone_display'] = 'Welche Zonen sollen angezeigt werden?';
-    $lang['dkpvals'] = 'Punkte-Werte';
+	//portal
+	$lang['p_rli_zone_display'] = 'Welche Zonen sollen angezeigt werden?';
+	$lang['dkpvals'] = 'Punkte-Werte';
 ?>

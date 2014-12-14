@@ -1,27 +1,31 @@
 <?php
- /*
- * Project:     EQdkp-Plus Raidlogimport
- * License:     Creative Commons - Attribution-Noncommercial-Share Alike 3.0 Unported
- * Link:		http://creativecommons.org/licenses/by-nc-sa/3.0/
- * -----------------------------------------------------------------------
- * Began:       2008
- * Date:        $Date$
- * -----------------------------------------------------------------------
- * @author      $Author$
- * @copyright   2008-2009 hoofy_leon
- * @link        http://eqdkp-plus.com
- * @package     raidlogimport
- * @version     $Rev$
+/*	Project:	EQdkp-Plus
+ *	Package:	RaidLogImport Plugin
+ *	Link:		http://eqdkp-plus.eu
  *
- * $Id$
+ *	Copyright (C) 2006-2015 EQdkp-Plus Developer Team
+ *
+ *	This program is free software: you can redistribute it and/or modify
+ *	it under the terms of the GNU Affero General Public License as published
+ *	by the Free Software Foundation, either version 3 of the License, or
+ *	(at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU Affero General Public License for more details.
+ *
+ *	You should have received a copy of the GNU Affero General Public License
+ *	along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 	$lang['raidlogimport'] = 'Raid-Log-Import';
 	$lang['action_raidlogimport_bz_upd'] = 'Boss / Zone edited';
 	$lang['action_raidlogimport_bz_add'] = 'Boss / Zone added';
 	$lang['action_raidlogimport_bz_del'] = 'Boss / Zone deleted';
 	$lang['raidlogimport_long_desc'] = 'The plugin enables you to import most types of data in formatted text strings and create a raid from it. You can award points per boss and per hour.';
 	$lang['raidlogimport_short_desc'] = 'Imports DKP-Strings';
-    $lang['links'] = 'Links';
+	$lang['links'] = 'Links';
 
 	//permissions
 	$lang['raidlogimport_bz'] = 'Boss/Zone Management';
@@ -103,8 +107,8 @@
 	$lang['rli_itempage'] = 'Itempage ';
 	$lang['rli_back2mem'] = 'Back to members';
 	$lang['rli_back2item'] = 'Back to items';
-    $lang['rli_checkadj'] = 'Check Adjustments';
-    $lang['rli_calc_note_value'] = 'Update raidnote';
+	$lang['rli_checkadj'] = 'Check Adjustments';
+	$lang['rli_calc_note_value'] = 'Update raidnote';
 	$lang['rli_insert'] = 'Insert DKP';
 	$lang['rli_adjs'] = 'Adjustments';
 	$lang['rli_partial_raid'] = 'Partial Raidattendance';
@@ -235,15 +239,15 @@
 	$lang['member_display_1'] = 'Multiple Checkboxes';
 	$lang['member_display_0'] = 'Multi-Select';
 	$lang['member_display_2'] = 'Detailed Join/Leave Information';
-    $lang['member_display_add'] = "If you want to use '".$lang['member_display_1']."' or '".$lang['member_display_2']."' you must have the GD-lib (PHP-Extension). You are running the following GD-lib version: %s";
+	$lang['member_display_add'] = "If you want to use '".$lang['member_display_1']."' or '".$lang['member_display_2']."' you must have the GD-lib (PHP-Extension). You are running the following GD-lib version: %s";
 	$lang['no_gd_lib'] = '<span class="negative">no GD-lib found</span>';
-    $lang['title_standby'] = 'Standby-Settings';
-    $lang['standby_raid'] = 'Shall the standby-members be assigned to a raid?';
-    $lang['standby_raid_0'] = 'No.';
-    $lang['standby_raid_1'] = 'Yes, create an extra raid.';
-    $lang['standby_raid_2'] = 'Yes, assign them to the normal raid(s).';
-    $lang['standby_absolute'] = 'Shall the standby DKP be absolute?';
-    $lang['standby_value'] = 'How much percent of the DKP or rather how many DKP absolute, shall the standby-members get?';
+	$lang['title_standby'] = 'Standby-Settings';
+	$lang['standby_raid'] = 'Shall the standby-members be assigned to a raid?';
+	$lang['standby_raid_0'] = 'No.';
+	$lang['standby_raid_1'] = 'Yes, create an extra raid.';
+	$lang['standby_raid_2'] = 'Yes, assign them to the normal raid(s).';
+	$lang['standby_absolute'] = 'Shall the standby DKP be absolute?';
+	$lang['standby_value'] = 'How much percent of the DKP or rather how many DKP absolute, shall the standby-members get?';
 	$lang['standby_att'] = 'Shall standby-members gain start/end-DKP?';
 	$lang['standby_att_1'] = 'Start-DKP';
 	$lang['standby_att_2'] = 'End-DKP';
@@ -261,7 +265,7 @@
 	$lang['autocomplete_2'] = 'Itemname';
 	$lang['no_del_warn'] = 'Dont show warnings on deletion?';
 
-    //portal
-    $lang['p_rli_zone_display'] = 'Which zones shall be displayed?';
-    $lang['dkpvals'] = 'DKP-Values';
+	//portal
+	$lang['p_rli_zone_display'] = 'Which zones shall be displayed?';
+	$lang['dkpvals'] = 'DKP-Values';
 ?>

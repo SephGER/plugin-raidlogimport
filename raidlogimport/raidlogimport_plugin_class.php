@@ -1,20 +1,23 @@
 <?php
-/*
-* Project:     EQdkp-Plus Raidlogimport
-* License:     Creative Commons - Attribution-Noncommercial-Share Alike 3.0 Unported
-* Link:		http://creativecommons.org/licenses/by-nc-sa/3.0/
-* -----------------------------------------------------------------------
-* Began:       2008
-* Date:        $Date$
-* -----------------------------------------------------------------------
-* @author      $Author$
-* @copyright   2008-2009 hoofy_leon
-* @link        http://eqdkp-plus.com
-* @package     raidlogimport
-* @version     $Rev$
-*
-* $Id$
-*/
+/*	Project:	EQdkp-Plus
+ *	Package:	RaidLogImport Plugin
+ *	Link:		http://eqdkp-plus.eu
+ *
+ *	Copyright (C) 2006-2015 EQdkp-Plus Developer Team
+ *
+ *	This program is free software: you can redistribute it and/or modify
+ *	it under the terms of the GNU Affero General Public License as published
+ *	by the Free Software Foundation, either version 3 of the License, or
+ *	(at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU Affero General Public License for more details.
+ *
+ *	You should have received a copy of the GNU Affero General Public License
+ *	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 if ( !defined('EQDKP_INC') ) {
 	die('You cannot access this file directly.');
@@ -131,20 +134,20 @@ class raidlogimport extends plugin_generic {
 		);
 		if(strtolower($this->config->get('default_game')) == 'wow') {
 			$config_data = array_merge($config_data, array(
-				'diff_1'	=> '',		
-				'diff_2'	=> ' HM', 	
-				'diff_3'	=> ' (10)',	
-				'diff_4'	=> ' (25)',	
-				'diff_5'	=> ' HM (10)',		
+				'diff_1'	=> '',
+				'diff_2'	=> ' HM',
+				'diff_3'	=> ' (10)',
+				'diff_4'	=> ' (25)',
+				'diff_5'	=> ' HM (10)',
 				'diff_6'	=> ' HM (25)',
-				'diff_7'	=> ' LFR',	
-				'diff_8'	=> ' CM',	
-				'diff_9'	=> ' (40)',		
-				'diff_11'	=> ' HM', 	
-				'diff_12'	=> '',	
-				'diff_14'	=> ' (10-30)',	
+				'diff_7'	=> ' LFR',
+				'diff_8'	=> ' CM',
+				'diff_9'	=> ' (40)',
+				'diff_11'	=> ' HM',
+				'diff_12'	=> '',
+				'diff_14'	=> ' (10-30)',
 				'diff_15'	=> ' HM (10-30)',
-				'diff_16'	=> ' MR (20)', 	
+				'diff_16'	=> ' MR (20)',
 				'dep_match'	=> '1'			//also append suffix to boss-note?
 			));
 		}
