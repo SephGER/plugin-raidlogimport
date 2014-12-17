@@ -1,6 +1,6 @@
 <?php
 /*	Project:	EQdkp-Plus
- *	Package:	RaidLogImport Plugin
+ *	Package:	EQdkp-Plus Language File
  *	Link:		http://eqdkp-plus.eu
  *
  *	Copyright (C) 2006-2015 EQdkp-Plus Developer Team
@@ -19,22 +19,36 @@
  *	along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-$lang['title_difficulty'] = 'Difficulty settings';
-$lang['difficulty'] = 'Difficulty';
-$lang['diff_0'] = 'other';
-$lang['diff_1'] = 'normal';
-$lang['diff_2'] = 'heroic';
-$lang['diff_3'] = '10 players normal';
-$lang['diff_4'] = '25 players normal';
-$lang['diff_5'] = '10 players heroic';
-$lang['diff_6'] = '25 players heroic';
-$lang['diff_7'] = 'LFR';
-$lang['diff_8'] = 'Challenge Mode';
-$lang['diff_9'] = '40 players';
-$lang['diff_11'] = 'Heroic';
-$lang['diff_12'] = 'Normal';
-$lang['diff_14'] = 'Normal (10-30 players)';
-$lang['diff_15'] = 'Heroic (10-30 players)';
-$lang['diff_16'] = 'Mythic (20 players)';
-$lang['dep_match'] = 'Shall the suffix be applied to boss-note, too?';
+ 
+if (!defined('EQDKP_INC')) {
+	die('You cannot access this file directly.');
+}
+
+//Language: English	
+//Created by EQdkp Plus Translation Tool on  2014-12-17 21:28
+//File: plugins/raidlogimport/language/english/wow_lang.php
+//Source-Language: german
+
+$lang = array( 
+	"difficulty" => 'Difficulty',
+	"title_difficulty" => 'Difficulty settings',
+	"diff_0" => 'other',
+	"diff_1" => '10 player normal',
+	"diff_2" => '25 player normal',
+	"diff_3" => '10 player heroic',
+	"diff_4" => '25 player heroic',
+	"diff_5" => '10 players heroic',
+	"diff_6" => '25 players heroic',
+	"diff_7" => 'LFR',
+	"diff_8" => 'Challenge Mode',
+	"diff_9" => '40 players',
+	"diff_11" => 'Heroic',
+	"diff_12" => 'Normal',
+	"diff_14" => 'Normal (10-30 players)',
+	"diff_15" => 'Heroic (10-30 players)',
+	"diff_16" => 'Mythic (20 players)',
+	"dep_match" => 'Shall the suffix be applied to boss-note, too?',
+	
+);
+
 ?>
