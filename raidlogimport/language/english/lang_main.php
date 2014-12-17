@@ -25,7 +25,7 @@ if (!defined('EQDKP_INC')) {
 }
 
 //Language: English	
-//Created by EQdkp Plus Translation Tool on  2014-12-17 21:28
+//Created by EQdkp Plus Translation Tool on  2014-12-17 23:17
 //File: plugins/raidlogimport/language/english/lang_main.php
 //Source-Language: german
 
@@ -153,7 +153,7 @@ $lang = array(
 	"rli_itempool_partial_save" => 'Itempools saved only partially.',
 	"rli_itempool_nosave" => 'Not saved Items',
 	"rli_help" => 'Help?',
-	"rli_help_dt_member" => 'Help (Beta): The black bar in the middle stands for the presence over the time of the raid. The skulls represent bosskills (mouseover). The background of the line is either green or red, depending wether the character gets the raid-attendance. There also exists a rightclick-menu to add/delete black bars.',
+	"rli_help_dt_member" => 'Help:  A time bar stands for the raid presence of an attendee. A green bar means he was present, a purple one means he was backup. New time bars can be created by doubleclick on free space of the time table. To delete bars, click on it and press your delete key. The skulls represent bosskills (mouseover). The background of the line is either green or red, depending on whether the character gets the raid-attendance.',
 	"rli_member_refresh_for_view" => 'Press update to show the Raidslider.',
 	"rli_loading" => 'Please wait',
 	"rli_finish" => 'Finish',

@@ -25,7 +25,7 @@ if (!defined('EQDKP_INC')) {
 }
 
 //Language: English	
-//Created by EQdkp Plus Translation Tool on  2014-12-17 21:28
+//Created by EQdkp Plus Translation Tool on  2014-12-17 23:17
 //File: plugins/raidlogimport/language/english/wow_lang.php
 //Source-Language: german
 
@@ -33,10 +33,10 @@ $lang = array(
 	"difficulty" => 'Difficulty',
 	"title_difficulty" => 'Difficulty settings',
 	"diff_0" => 'other',
-	"diff_1" => '10 player normal',
-	"diff_2" => '25 player normal',
-	"diff_3" => '10 player heroic',
-	"diff_4" => '25 player heroic',
+	"diff_1" => 'normal',
+	"diff_2" => 'heroic',
+	"diff_3" => '10 players normal',
+	"diff_4" => '25 players normal',
 	"diff_5" => '10 players heroic',
 	"diff_6" => '25 players heroic',
 	"diff_7" => 'LFR',
