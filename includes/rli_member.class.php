@@ -386,8 +386,19 @@ $('#add_mem_button').click(function() {
 
 	public function insert() {
 		$members = $this->pdh->aget('member', 'name', 0, array($this->pdh->get('member', 'id_list', array(false, false, false))));
+		// add special-characters to name-ids array
+		$special_ids = ($this->cconfig->get('special_members') && unserialize($this->cconfig->get('special_members'))) ? unserialize($this->cconfig->get('special_members')) : array();
+		foreach($special_ids as $id) {
+			$this->name_ids[$members[$id]] = $id;
+		}
+		$realms = $this->pdh->aget('member', 'profile_field', 0, array($this->pdh->get('member', 'id_list', array(false, false, false)), 'servername'));
+		// add a possibility to track wow's "super cool" cross-realm naming idea
+		$members = array_flip($members);
+		foreach($members as $name => $id) {
+			if(!empty($realms[$id])) $members[$name.'-'.$realms[$id]] = $id;
+		}
 		foreach($this->members as $member) {
-			if(!($id = array_search($member['name'], $members))) {
+			if(!isset($members[$member['name']])) {
 				$data = array(
 					'name' 		=> $member['name'],
 					'lvl' 		=> $member['level'],
@@ -405,13 +416,6 @@ $('#add_mem_button').click(function() {
 			$this->name_ids[$member['name']] = $id;
 		}
 		$this->pdh->process_hook_queue();
-		// add disenchanted / bank to name_ids array
-		$dis_id = array_search('disenchanted', $members);
-		if (!$dis_id) $dis_id = array_search('Disenchanted', $members);
-		$bank_id = array_search('bank', $members);
-		if (!$bank_id) $bank_id = array_search('Bank', $members);
-		if($dis_id) $this->name_ids[$members[$dis_id]] = $dis_id;
-		if($bank_id) $this->name_ids[$members[$bank_id]] = $bank_id;
 
 		return true;
 	}

@@ -49,15 +49,15 @@ class rli_Bz extends page_generic {
 			$data = array(
 				$this->in->get('string:'.$id, ''),
 				$this->in->get('event:'.$id, 0),
-				runden($this->in->get('timebonus:'.$id, 0.0)),
+				$this->in->get('timebonus:'.$id, 0.0),
 				$this->in->get('diff:'.$id, 0),
 				$this->in->get('sort:'.$id, 0));
 		} else {
 			$data = array(
 				$this->in->get('string:'.$id, '', 'string'),
 				(($this->config->get('event_boss', 'raidlogimport') & 1) ? $this->in->get('event:'.$id, 0) : $this->in->get('note:'.$id, '')),
-				runden($this->in->get('bonus:'.$id, 0.0)),
-				runden($this->in->get('timebonus:'.$id, 0.0)),
+				$this->in->get('bonus:'.$id, 0.0),
+				$this->in->get('timebonus:'.$id, 0.0),
 				$this->in->get('diff:'.$id, 0),
 				$this->in->get('tozone:'.$id, 0),
 				$this->in->get('sort:'.$id, 0));
