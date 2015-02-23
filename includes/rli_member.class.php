@@ -374,7 +374,13 @@ if(!class_exists('rli_member')) {
 
 		public function insert() {
 			foreach($this->members as $member) {
-				$intMemberId = $this->pdh->get('member', 'id', array($member['name']));
+				if(register('config')->get('default_game') === "wow" && strpos($member, '-')){
+					//add a possibility to track wow's "super cool" cross-realm naming idea
+					list($membername, $servername) = explode('-', $member['name']);
+					$intMemberId = $this->pdh->get('member', 'id', array($membername, array('servername' => $servername)));
+				} else {
+					$intMemberId = $this->pdh->get('member', 'id', array($member['name']));
+				}
 			
 				if(!$intMemberId) {
 					$data = array(

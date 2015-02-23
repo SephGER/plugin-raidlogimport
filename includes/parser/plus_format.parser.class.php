@@ -32,10 +32,6 @@ class plus_format extends rli_parser {
 	public static $name = 'EQdkpPlus XML Format';
 	
 	public static function parse($input) {
-		if(	(trim($input->head->gameinfo->game) == 'Runes of Magic' AND register('config')->get('default_game') != 'rom') OR
-			(trim($input->head->gameinfo->game) == 'World of Warcraft' AND register('config')->get('default_game') != 'wow')) {
-				message_die(register('user')->lang('wrong_game'));
-		}
 		$lang = trim($input->head->gameinfo->language);
 		#$this->rli->add_data['log_lang'] = substr($lang, 0, 2);
 		$xml = $input->raiddata;
