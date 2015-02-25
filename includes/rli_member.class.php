@@ -406,8 +406,14 @@ if(!class_exists('rli_member')) {
 			// add disenchanted / bank to name_ids array
 			$dis_id = $this->pdh->get('member', 'id', array('disenchanted'));
 			$bank_id = $this->pdh->get('member', 'id', array('bank'));
-			if($dis_id) $this->name_ids[$members[$dis_id]] = $dis_id;
-			if($bank_id) $this->name_ids[$members[$bank_id]] = $bank_id;
+			if($dis_id) {
+				$this->name_ids['Disenchanted'] = $dis_id;
+				$this->name_ids['disenchanted'] = $dis_id;
+			}
+			if($bank_id) {
+				$this->name_ids['bank'] = $bank_id;
+				$this->name_ids['Bank'] = $bank_id;
+			}
 
 			return true;
 		}
