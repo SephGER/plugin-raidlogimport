@@ -248,9 +248,11 @@ if(!class_exists('rli_raid')) {
 				$this->bk_list = $this->pdh->aget('rli_boss', 'html_note', 0, array($this->pdh->get('rli_boss', 'id_list'), false));
 				asort($this->bk_list);
 			}
+			
 			$last_key = 0;
 			ksort($this->raids);
 			$this->tpl->add_js("var boss_keys = new Array();", 'docready');
+
 			foreach($this->raids as $ky => $rai) {
 				if(isset($this->data['add']) && $ky == $this->data['add']['standby_raid'] && $this->config('standby_raid') == 0) {
 					continue;
@@ -300,12 +302,29 @@ if(!class_exists('rli_raid')) {
 							if(is_numeric($bk['id'])) {
 								$name_field = new hdropdown('raids['.$ky.'][bosskills]['.$xy.'][id]', array('options' => $this->bk_list, 'value' => $bk['id'], 'id' => 'a'.unique_id()));
 							} else {
-								$name_field = $bk['id'];
-								$params = "&string=' + $('#id_".$html_id."').val() + '&bonus=' + $('#bonus_".$html_id."').val() + '&timebonus=' + $('#timebonus_".$html_id."').val() + '&diff=' + $('#diff_".$html_id."').val()";
-								$params .= " + '&note=' + $('#id_".$html_id."').val()";
-								$onclosejs = "$('#onclose_submit').removeAttr('disabled'); $('#form_rli_bz').submit();";
-								$this->jquery->Dialog($html_id, $this->user->lang('bz_import_boss'), array('url' => "bz.php".$this->SID."&simple_head=simple&upd=true".$params." + '&", 'width' => 1200, 'onclosejs' => $onclosejs));
-								$import = true;
+								$intBossID = $this->pdh->get('rli_boss', 'id_string', array($bk['id'], $bk['diff']));
+								if(!$intBossID && (int)$this->config('autocreate_bosses')){
+									//Auto generate Boss
+									$zoneID = $this->pdh->get('rli_zone', 'id_string', array($rai['zone'], $rai['diff']));
+									
+									if($zoneID){
+										$intBossID = $this->pdh->put('rli_boss', 'add', array($bk['id'], $bk['id'], $bk['bonus'], $bk['timebonus'], $bk['diff'], $zoneID));
+										$this->pdh->process_hook_queue();
+										
+										$this->bk_list = $this->pdh->aget('rli_boss', 'html_note', 0, array($this->pdh->get('rli_boss', 'id_list'), false));
+										asort($this->bk_list);
+									}
+								}
+								if($intBossID){
+									$name_field = new hdropdown('raids['.$ky.'][bosskills]['.$xy.'][id]', array('options' => $this->bk_list, 'value' => $intBossID, 'id' => 'a'.unique_id()));
+								} else {		
+									$name_field = $bk['id'];
+									$params = "&string=' + $('#id_".$html_id."').val() + '&bonus=' + $('#bonus_".$html_id."').val() + '&timebonus=' + $('#timebonus_".$html_id."').val() + '&diff=' + $('#diff_".$html_id."').val()";
+									$params .= " + '&note=' + $('#id_".$html_id."').val()";
+									$onclosejs = "$('#onclose_submit').removeAttr('disabled'); $('#form_rli_bz').submit();";
+									$this->jquery->Dialog($html_id, $this->user->lang('bz_import_boss'), array('url' => "bz.php".$this->SID."&simple_head=simple&upd=true".$params." + '&", 'width' => 1200, 'onclosejs' => $onclosejs));
+									$import = true;
+								}
 							}
 							$this->tpl->assign_block_vars('raids.bosskills', array(
 								'BK_SELECT' => $name_field,
@@ -722,7 +741,7 @@ if(!class_exists('rli_raid')) {
 						$bosskills[$b]['id'] = $id;
 						$bosskills[$b]['bonus'] = $this->pdh->get('rli_boss', 'bonus', array($id));
 						$bosskills[$b]['timebonus'] = $this->pdh->get('rli_boss', 'timebonus', array($id));
-					} else {
+					} else {						
 						$bosskills[$b]['id'] = $bosskill['name'];
 						$bosskills[$b]['bonus'] = 0;
 						$bosskills[$b]['timebonus'] = 0;
@@ -760,6 +779,7 @@ if(!class_exists('rli_raid')) {
 		}
 
 		private function get_event($key) {
+
 			if($this->config('event_boss') & 1 AND count($this->raids[$key]['bosskills']) == 1 AND $this->config('raidcount') & 2) {
 				$id = 0;
 				$bosskill = $this->raids[$key]['bosskills'][0];
@@ -768,7 +788,35 @@ if(!class_exists('rli_raid')) {
 					$bosskills[$b]['diff'] = $this->diff;
 				}
 				if(!$id) $id = $this->pdh->get('rli_boss', 'id_string', array($bosskill['name'], $bosskill['diff']));
+								
 				$event = $this->pdh->get('rli_boss', 'note', array($id));
+				if(!is_numeric($event)){
+					//Try to get event
+					$events = $this->pdh->aget('event', 'name', 0, array($this->pdh->get('event', 'id_list')));
+					$eventID = 0;
+					foreach($events as $zid => $zone) {
+						if($zone === $event) {
+							$eventID = $zid;
+							break;
+						}
+					}
+					//Auto create Event
+					if(!$eventID && (int)$this->config('autocreate_bosses')){
+						$eventID = $this->pdh->put('event', 'add_event', array($bosskill['name'], 0, ''));
+						$event = $eventID;
+					}
+					$event = $eventID;
+					//Auto create Boss
+					$zoneid = $this->pdh->get('rli_zone', 'id_string', array(trim($this->raids[$key]['zone']), $this->raids[$key]['diff']));
+					//Auto create Zone
+					if(!$zoneid && (int)$this->config('autocreate_zones')){
+						$zoneid = $this->pdh->put('rli_zone', 'add', array(trim($this->raids[$key]['zone']), 1, 0.0, $this->raids[$key]['diff']));
+					}
+					if($zoneid){
+						$this->pdh->put('rli_boss', 'add', array($bosskill['name'], $event, 0.0, 0.0, $bosskill['diff'], $zoneid));
+						$this->pdh->process_hook_queue();
+					}
+				}
 				$this->raids[$key]['eventval'] = $this->pdh->get('event', 'value', array($event));
 				if($this->config('raidcount') & 1) {
 					$this->raids[$key]['timebonus'] = 0;
@@ -777,6 +825,25 @@ if(!class_exists('rli_raid')) {
 				}
 			} else {
 				$id = $this->pdh->get('rli_zone', 'id_string', array(trim($this->raids[$key]['zone']), $this->raids[$key]['diff']));
+				//Auto create Zone
+				if(!$id && (int)$this->config('autocreate_zones')){
+					//Try to get event
+					$zones = $this->pdh->aget('event', 'name', 0, array($this->pdh->get('event', 'id_list')));
+					$eventID = 0;
+					foreach($zones as $zid => $zone) {
+						if(strpos($zone, trim($this->raids[$key]['zone'])) !== false) {
+							$eventID = $zid;
+							break;
+						}
+					}
+					//Create new Event for this Zone
+					if(!$eventID) $eventID = $this->pdh->put('event', 'add_event', array(trim($this->raids[$key]['zone']), 0, ''));
+					if($eventID){
+						$id = $this->pdh->put('rli_zone', 'add', array(trim($this->raids[$key]['zone']), $eventID, 0.0, $this->raids[$key]['diff']));
+						$this->pdh->process_hook_queue();
+					}
+				}
+				
 				if(($this->config('raidcount') & 1 AND $this->config('raidcount') & 2 AND count($this->raids[$key]['bosskills']) == 1) OR !$id) {
 					$this->raids[$key]['timebonus'] = 0;
 				} else {
@@ -786,6 +853,7 @@ if(!class_exists('rli_raid')) {
 				$event = $this->pdh->get('rli_zone', 'event', array($id));
 				$this->raids[$key]['eventval'] = $this->pdh->get('event', 'value', array($event));
 			}
+
 			return $event;
 		}
 

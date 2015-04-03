@@ -265,6 +265,8 @@
 	$lang['autocomplete_1'] = 'Mitgliedsname';
 	$lang['autocomplete_2'] = 'Itemname';
 	$lang['no_del_warn'] = 'Keine Warnung beim Löschen anzeigen';
+	$lang['autocreate_zones'] = 'Zonen automatisch Erstellen, sofern noch nicht vorhanden';
+	$lang['autocreate_bosses'] = 'Bosse automatisch Erstellen, sofern noch nicht vorhanden';
 
 	//portal
 	$lang['p_rli_zone_display'] = 'Welche Zonen sollen angezeigt werden?';

@@ -30,7 +30,7 @@ class raidlogimport extends plugin_generic {
 	}
 
 	public $vstatus = 'Beta';
-	public $version = '0.7.0.2';
+	public $version = '0.7.0.3';
 	
 	protected static $apiLevel = 20;
 	
@@ -131,6 +131,8 @@ class raidlogimport extends plugin_generic {
 			'itempool_save'		=> '1',		//save itempool per item & event
 			'del_dbl_times'		=> '0',		//delete double leave/joins
 			'autocomplete'		=> '0',		//auto-complete fields (1 member, 2 items)
+			'autocreate_zones'	=> 0,
+			'autocreate_bosses'	=> 0,
 		);
 		if(strtolower($this->config->get('default_game')) == 'wow') {
 			$config_data = array_merge($config_data, array(

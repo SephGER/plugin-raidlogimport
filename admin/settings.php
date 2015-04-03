@@ -34,7 +34,7 @@ class RLI_Settings extends page_generic {
 				'standby'		=> array('standby_raid')
 			),
 			'yes_no'	=> array(
-				'general'		=> array('deactivate_adj', 'itempool_save', 'no_del_warn'),
+				'general'		=> array('deactivate_adj', 'itempool_save', 'no_del_warn', 'autocreate_zones', 'autocreate_bosses'),
 				'difficulty' 	=> array('dep_match'),
 				'att'		 	=> array('attendance_raid'),
 				#'am'			=> array('auto_minus', 'am_value_raids', 'am_allxraids'),
@@ -88,6 +88,7 @@ class RLI_Settings extends page_generic {
 			} else {
 				$data[$old_name] = $this->in->get($old_name, '');
 			}
+
 			if(isset($data[$old_name]) AND $data[$old_name] != $old_value) { //Update
 				$this->config->set($old_name, $data[$old_name], 'raidlogimport');
 				$this->rli->reload_config();

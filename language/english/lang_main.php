@@ -264,7 +264,8 @@ $lang = array(
 	"no_del_warn" => 'Dont show warnings on deletion?',
 	"p_rli_zone_display" => 'Which zones shall be displayed?',
 	"dkpvals" => 'DKP-Values',
-	
+	'autocreate_zones' => 'Create zones automatically, if they don\'t exist',
+	'autocreate_bosses' =>'Create bosses automatically, if they don\'t exist',
 );
 
 ?>
