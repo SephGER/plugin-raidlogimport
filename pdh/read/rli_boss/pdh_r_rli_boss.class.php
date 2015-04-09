@@ -102,7 +102,7 @@ class pdh_r_rli_boss extends pdh_r_generic {
 	}
 	
 	public function get_html_note($id, $with_icon=true) {
-		if(($this->config->get('event_boss', 'raidlogimport') & 1) AND is_numeric($id)) {
+		if(($this->config->get('event_boss', 'raidlogimport') & 1) AND is_numeric($this->get_note($id))) {
 			$icon = ($with_icon) ? $this->game->decorate('events', array($this->get_note($id))) : '';
 			return $icon.$this->pdh->get('event', 'name', array($this->get_note($id)));
 		}

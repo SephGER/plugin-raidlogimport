@@ -839,7 +839,7 @@ if(!class_exists('rli_raid')) {
 					//Create new Event for this Zone
 					if(!$eventID) $eventID = $this->pdh->put('event', 'add_event', array(trim($this->raids[$key]['zone']), 0, ''));
 					if($eventID){
-						$id = $this->pdh->put('rli_zone', 'add', array(trim($this->raids[$key]['zone']), $eventID, 0.0, $this->raids[$key]['diff']));
+						$id = $this->pdh->put('rli_zone', 'add', array(trim($this->raids[$key]['zone']), $eventID, 0.0, (isset($this->raids[$key]['diff']) ? intval($this->raids[$key]['diff']) : 0)));
 						$this->pdh->process_hook_queue();
 					}
 				}
