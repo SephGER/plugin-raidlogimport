@@ -57,7 +57,7 @@ class raidlogimport extends plugin_generic {
 		$lang_file = $this->root_path.'plugins/raidlogimport/language/'.$this->user->lang_name.'/'.$this->config->get('default_game').'_lang.php';
 		if(file_exists($lang_file)) {
 			include($lang_file);
-			$this->user->add_lang($this->user->lang_name, $lang);
+			$this->user->objLanguage->add_lang($this->user->lang_name, $lang);
 		}
 
 		$this->add_dependency(array(
