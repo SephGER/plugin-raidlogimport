@@ -374,7 +374,11 @@ if(!class_exists('rli_member')) {
 
 		public function insert() {
 			foreach($this->members as $member) {
-				if(register('config')->get('default_game') === "wow" && strpos($member, '-')){
+				$intMemberId = false;
+				$servername = false;
+				$membername = $member['name'];
+				
+				if(register('config')->get('default_game') === "wow" && strpos($member['name'], '-')){
 					//add a possibility to track wow's "super cool" cross-realm naming idea
 					list($membername, $servername) = explode('-', $member['name']);
 					$intMemberId = $this->pdh->get('member', 'id', array($membername, array('servername' => $servername)));
@@ -384,13 +388,18 @@ if(!class_exists('rli_member')) {
 			
 				if(!$intMemberId) {
 					$data = array(
-						'name' 		=> $member['name'],
+						'name' 		=> $membername,
 						'lvl' 		=> $member['level'],
 						'raceid'	=> $this->game->get_id('races', $member['race']),
 						'classid'	=> $this->game->get_id('classes', $member['class']),
-						'rankid'	=> $this->config('new_member_rank')
+						'rankid'	=> $this->config('new_member_rank'),
 					);
+					if($servername && $servername != ""){
+						$data['servername'] = $servername;
+					}
+
 					$id = $this->pdh->put('member', 'addorupdate_member', array(0, $data));
+
 					if(!$id) {
 						$this->rli->error('process_members', sprintf($this->user->lang('rli_error_member_create'), $member['name']));
 						return false;
