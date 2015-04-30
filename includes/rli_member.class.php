@@ -381,6 +381,12 @@ if(!class_exists('rli_member')) {
 				if(register('config')->get('default_game') === "wow" && strpos($member['name'], '-')){
 					//add a possibility to track wow's "super cool" cross-realm naming idea
 					list($membername, $servername) = explode('-', $member['name']);
+					$servername = preg_replace_callback(
+							"/([^A-Z\'\"\- ])([A-Z])/",
+							function($m) { return $m[1].' '.$m[2]; },
+							$servername
+					);
+					
 					$intMemberId = $this->pdh->get('member', 'id', array($membername, array('servername' => $servername)));
 				} else {
 					$intMemberId = $this->pdh->get('member', 'id', array($member['name']));
