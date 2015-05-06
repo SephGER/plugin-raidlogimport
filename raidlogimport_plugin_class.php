@@ -30,7 +30,7 @@ class raidlogimport extends plugin_generic {
 	}
 
 	public $vstatus = 'Beta';
-	public $version = '0.7.0.6';
+	public $version = '0.7.0.7';
 	
 	protected static $apiLevel = 20;
 	
