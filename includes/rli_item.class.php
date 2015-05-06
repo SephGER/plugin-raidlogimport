@@ -135,7 +135,7 @@ class rli_item extends gen_class {
 		foreach($this->items as $key => $item) {
 			if(($start <= $key AND $key < $end) OR !$with_form) {
 				if($with_form) {
-					$mem_sel = (isset($members[$item['member']])) ? $item['member'] : 0;
+					$mem_sel = (isset($members[sanitize($item['member'])])) ? sanitize($item['member']) : 0;
 					$raid_select = "<select size='1' name='loots[".$key."][raid]'>";
 					$att_raids = $this->raid->get_attendance_raids();
 					$this->raid->raidlist(true);
