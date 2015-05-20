@@ -395,9 +395,9 @@ if(!class_exists('rli_member')) {
 				if(!$intMemberId) {
 					$data = array(
 						'name' 		=> $membername,
-						'lvl' 		=> $member['level'],
-						'raceid'	=> $this->game->get_id('races', $member['race']),
-						'classid'	=> $this->game->get_id('classes', $member['class']),
+						'level' 	=> $member['level'],
+						'race'		=> $this->game->get_id('races', $member['race']),
+						'class'		=> $this->game->get_id('classes', $member['class']),
 						'rankid'	=> $this->config('new_member_rank'),
 					);
 					if($servername && $servername != ""){
