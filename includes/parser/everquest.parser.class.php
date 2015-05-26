@@ -45,7 +45,7 @@ class everquest extends rli_parser {
 			$lvl = (isset($match['lvl'])) ? trim($match['lvl']) : 0;
 			$class = (isset($match['class'])) ? trim($match['class']) : '';
 			$data['members'][] = array(trim($match['name']), $class, '', $lvl);
-			$data['times'][] = array(trim($match['name']), 0, 'join');
+			$data['times'][] = array(trim($match['name']), time() - (2*3600), 'join');
 			$data['times'][] = array(trim($match['name']), time(), 'leave');
 		}
 		return $data;
