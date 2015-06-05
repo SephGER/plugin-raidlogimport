@@ -208,13 +208,13 @@ class raidlogimport extends plugin_generic {
 					$install_sqls[] = 	"INSERT INTO __raidlogimport_zone
 											(zone_string, zone_event, zone_timebonus, zone_diff, zone_sort)
 										VALUES
-											(".$this->db->escapeString($bz[0]).", '".$id."', '".$bz[2]."', '".$bz[3]."', '".$bz[4]."');";
+											(".$this->db->escapeString(sanitize($bz[0])).", '".$id."', '".$bz[2]."', '".$bz[3]."', '".$bz[4]."');";
 				}
 				foreach($data['boss'] as $bz) {
 					$install_sqls[] = 	"INSERT INTO __raidlogimport_boss
 											(boss_string, boss_note, boss_bonus, boss_timebonus, boss_diff, boss_tozone, boss_sort)
 										VALUES
-											(".$this->db->escapeString($bz[0]).", ".$this->db->escapeString($bz[1]).", '".$bz[2]."', '".$bz[3]."', '".$bz[4]."', '".$bz[5]."', '".$bz[6]."');";
+											(".$this->db->escapeString(sanitize($bz[0])).", ".$this->db->escapeString(sanitize($bz[1])).", '".$bz[2]."', '".$bz[3]."', '".$bz[4]."', '".$bz[5]."', '".$bz[6]."');";
 				}
 			}
 		}

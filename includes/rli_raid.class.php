@@ -71,6 +71,7 @@ if(!class_exists('rli_raid')) {
 					unset($this->raids[$key]);
 					continue;
 				}
+				
 				$this->raids[$key]['begin'] = $this->time->fromformat($this->in->get('raids:'.$key.':start_date'), 1);
 				$this->raids[$key]['end'] = $this->time->fromformat($this->in->get('raids:'.$key.':end_date'), 1);
 				$this->raids[$key]['note'] = $this->in->get('raids:'.$key.':note');
@@ -220,7 +221,7 @@ if(!class_exists('rli_raid')) {
 			return $dkp;
 		}
 
-		public function display($with_form=false) {
+		public function display($with_form=false) {		
 			if(!isset($this->event_drop)) {
 				$this->event_drop = $this->pdh->aget('event', 'name', 0, array($this->pdh->get('event', 'id_list')));
 				asort($this->event_drop);
@@ -302,13 +303,13 @@ if(!class_exists('rli_raid')) {
 							if(is_numeric($bk['id'])) {
 								$name_field = new hdropdown('raids['.$ky.'][bosskills]['.$xy.'][id]', array('options' => $this->bk_list, 'value' => $bk['id'], 'id' => 'a'.unique_id()));
 							} else {
-								$intBossID = $this->pdh->get('rli_boss', 'id_string', array($bk['id'], $bk['diff']));
+								$intBossID = $this->pdh->get('rli_boss', 'id_string', array(sanitize($bk['id']), $bk['diff']));
 								if(!$intBossID && (int)$this->config('autocreate_bosses')){
 									//Auto generate Boss
 									$zoneID = $this->pdh->get('rli_zone', 'id_string', array($rai['zone'], $rai['diff']));
 									
 									if($zoneID){
-										$intBossID = $this->pdh->put('rli_boss', 'add', array($bk['id'], $bk['id'], $bk['bonus'], $bk['timebonus'], $bk['diff'], $zoneID));
+										$intBossID = $this->pdh->put('rli_boss', 'add', array(sanitize($bk['id']), sanitize($bk['id']), $bk['bonus'], $bk['timebonus'], $bk['diff'], $zoneID));
 										$this->pdh->process_hook_queue();
 										
 										$this->bk_list = $this->pdh->aget('rli_boss', 'html_note', 0, array($this->pdh->get('rli_boss', 'id_list'), false));
@@ -733,10 +734,10 @@ if(!class_exists('rli_raid')) {
 					$bosskills[$b]['name'] = $bosskill['name'];
 					$id = 0;
 					if($this->diff && !$bosskill['diff']) {
-						$id = $this->pdh->get('rli_boss', 'id_string', array($bosskill['name'], $this->diff));
+						$id = $this->pdh->get('rli_boss', 'id_string', array(sanitize($bosskill['name']), $this->diff));
 						$bosskills[$b]['diff'] = $this->diff;
 					}
-					if(!$id) $id = $this->pdh->get('rli_boss', 'id_string', array($bosskill['name'], $bosskill['diff']));
+					if(!$id) $id = $this->pdh->get('rli_boss', 'id_string', array(sanitize($bosskill['name']), $bosskill['diff']));
 					if($id) {
 						$bosskills[$b]['id'] = $id;
 						$bosskills[$b]['bonus'] = $this->pdh->get('rli_boss', 'bonus', array($id));
@@ -783,11 +784,12 @@ if(!class_exists('rli_raid')) {
 			if($this->config('event_boss') & 1 AND count($this->raids[$key]['bosskills']) == 1 AND $this->config('raidcount') & 2) {
 				$id = 0;
 				$bosskill = $this->raids[$key]['bosskills'][0];
+
 				if($this->diff && !$bosskill['diff']) {
-					$id = $this->pdh->get('rli_boss', 'id_string', array($bosskill['name'], $this->diff));
+					$id = $this->pdh->get('rli_boss', 'id_string', array(sanitize($bosskill['name']), $this->diff));
 					$bosskills[$b]['diff'] = $this->diff;
 				}
-				if(!$id) $id = $this->pdh->get('rli_boss', 'id_string', array($bosskill['name'], $bosskill['diff']));
+				if(!$id) $id = $this->pdh->get('rli_boss', 'id_string', array(sanitize($bosskill['name']), $bosskill['diff']));
 								
 				$event = $this->pdh->get('rli_boss', 'note', array($id));
 				if(!is_numeric($event)){
@@ -802,7 +804,7 @@ if(!class_exists('rli_raid')) {
 					}
 					//Auto create Event
 					if(!$eventID && (int)$this->config('autocreate_bosses')){
-						$eventID = $this->pdh->put('event', 'add_event', array($bosskill['name'], 0, ''));
+						$eventID = $this->pdh->put('event', 'add_event', array(sanitize($bosskill['name']), 0, ''));
 						$event = $eventID;
 					}
 					$event = $eventID;
@@ -812,8 +814,8 @@ if(!class_exists('rli_raid')) {
 					if(!$zoneid && (int)$this->config('autocreate_zones')){
 						$zoneid = $this->pdh->put('rli_zone', 'add', array(trim($this->raids[$key]['zone']), 1, 0.0, $this->raids[$key]['diff']));
 					}
-					if($zoneid){
-						$this->pdh->put('rli_boss', 'add', array($bosskill['name'], $event, 0.0, 0.0, $bosskill['diff'], $zoneid));
+					if($zoneid && (int)$this->config('autocreate_bosses')){
+						$this->pdh->put('rli_boss', 'add', array(sanitize($bosskill['name']), $event, 0.0, 0.0, $bosskill['diff'], $zoneid));
 						$this->pdh->process_hook_queue();
 					}
 				}
@@ -857,7 +859,7 @@ if(!class_exists('rli_raid')) {
 			return $event;
 		}
 
-		private function get_note($key) {
+		private function get_note($key) {		
 			if($this->config('event_boss') == 1 OR count($this->raids[$key]['bosskills']) == 0) {
 				if(count($this->raids[$key]['bosskills']) == 1 OR !$this->config('raid_note_time')) {
 					return date('H:i', $this->raids[$key]['begin']).' - '.date('H:i', $this->raids[$key]['end']);
@@ -868,7 +870,7 @@ if(!class_exists('rli_raid')) {
 			} else {
 				foreach ($this->raids[$key]['bosskills'] as $bosskill) {
 					if(!is_numeric($bosskill['id'])) {
-						$bosss[] = $this->rli->suffix($bosskill['id'], $this->config('dep_match'), $bosskill['diff']);
+						$bosss[] = $this->rli->suffix(sanitize($bosskill['id']), $this->config('dep_match'), $bosskill['diff']);
 					} else {
 						$name = $this->pdh->get('rli_boss', 'note', array($bosskill['id']));
 						if($this->config('event_boss') & 2) $name = $bosskill['name'];
