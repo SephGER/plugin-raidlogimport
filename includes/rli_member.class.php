@@ -382,9 +382,9 @@ if(!class_exists('rli_member')) {
 					//add a possibility to track wow's "super cool" cross-realm naming idea
 					list($membername, $servername) = explode('-', $member['name']);
 					$servername = preg_replace_callback(
-						"/([^A-Z\'\"\- ])([A-Z])/",
-						function($m) { return $m[1].' '.$m[2]; },
-						$servername
+							"/([^A-Z\'\"\-; ])([A-Z])/",
+							function($m) { return $m[1].' '.$m[2]; },
+							$servername
 					);
 					
 					$intMemberId = $this->pdh->get('member', 'id', array($membername, array('servername' => $servername)));
@@ -395,9 +395,9 @@ if(!class_exists('rli_member')) {
 				if(!$intMemberId) {
 					$data = array(
 						'name' 		=> $membername,
-						'lvl' 		=> $member['level'],
-						'raceid'	=> $this->game->get_id('races', $member['race']),
-						'classid'	=> $this->game->get_id('classes', $member['class']),
+						'level' 	=> $member['level'],
+						'race'		=> $this->game->get_id('races', $member['race']),
+						'class'		=> $this->game->get_id('classes', $member['class']),
 						'rankid'	=> $this->config('new_member_rank'),
 					);
 					if($servername && $servername != ""){
