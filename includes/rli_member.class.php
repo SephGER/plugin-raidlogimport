@@ -291,6 +291,7 @@ if(!class_exists('rli_member')) {
 					'DELDIS'	=> 'disabled="disabled"',
 				));
 				if(isset($detail_raid_list)) $this->detailed_times_list($key, $member['raid_list']);
+				$key++;
 			}//foreach members
 			//a member to copy from for js-addition
 			if($with_form) {
@@ -311,7 +312,7 @@ if(!class_exists('rli_member')) {
 				unset($this->members[999]);
 				$this->jquery->qtip('#dt_help', $this->user->lang('rli_help_dt_member'), array('my' => 'center right', 'at' => 'left center'));
 				$this->tpl->add_js(
-	"var rli_key = ".(($key) ? $key+1 : $key).";
+	"var rli_key = ".(($key) ? $key : 1).";
 	$('.del_mem').click(function() {
 		$(this).removeClass('del_mem');
 		".($this->rli->config('no_del_warn') ? "$('#'+$(this).data('id')).css('display', 'none');
