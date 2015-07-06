@@ -103,10 +103,10 @@ class raidlogimport extends plugin_generic {
 			'new_member_rank' 	=> '1',
 			'raidcount'			=> '0', //0 = one raid, 1 = raid per hour, 2 = raid per boss, 3 = raid per hour and per boss
 			'loottime'			=> '600', //time after bosskill to assign loot to boss (in seconds)
-			'attendence_begin' 	=> '0',
-			'attendence_end'	=> '0',
-			'attendence_raid'	=> '0', //create extra raid for attendence?
-			'attendence_time'	=> '900', //time of inv (in seconds)
+			'attendance_begin' 	=> '0',
+			'attendance_end'	=> '0',
+			'attendance_raid'	=> '0', //create extra raid for attendence?
+			'attendance_time'	=> '900', //time of inv (in seconds)
 			'event_boss'		=> '0',  //exists an event per boss?
 			'adj_parse'			=> ': ', //string, which separates the reason and the value for a adjustment in the note of a member
 			'bz_parse'			=> ',',  //separator, which is used for separating the different strings of a boss or zone
@@ -116,7 +116,7 @@ class raidlogimport extends plugin_generic {
 			'ignore_dissed'		=> '',		//ignore disenchanted and bank loot?
 			'member_miss_time' 	=> '300',	//time in secs member can miss without it being tracked
 			's_member_rank'		=> '0',		//show member_rank? (0: no, 1: memberpage, 2: lootpage, 4: adjustmentpage, 3:member+lootpage, 5:adjustments+memberpage, 6: loot+adjustmentpage, 7: overall)
-			'att_note_begin'	=> $this->user->lang('rli_att').' '.$this->user->lang('rli_start'),	//note for attendence_start-raid
+			'att_note_begin'	=> $this->user->lang('rli_att').' '.$this->user->lang('rli_start'),	//note for attendance_start-raid
 			'att_note_end'		=> $this->user->lang('rli_att').' '.$this->user->lang('rli_end'),	//  "	"		"	 _end-raid
 			'raid_note_time'	=> '0', 	//0: exact time (20:03:43-21:03:43); 1: hour (1. hour, 2. hour)
 			'timedkp_handle'	=> '0',		//should timedkp be given exactly(0) or fully after x minutes

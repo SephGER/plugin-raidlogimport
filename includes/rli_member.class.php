@@ -127,7 +127,7 @@ if(!class_exists('rli_member')) {
 						if($member['raid_list']) {
 							foreach($member['raid_list'] as $raid_id) {
 								$one_attendant = true;
-								if(!$this->config('attendence_raid') OR ($raid_id != $globalattraids['begin'] AND $raid_id != $globalattraids['end'])) {
+								if(!$this->config('attendance_raid') OR ($raid_id != $globalattraids['begin'] AND $raid_id != $globalattraids['end'])) {
 									$dkp = $this->raid->get_value($raid_id, $member['times'], array($member['att_begin'], $member['att_end']));
 									$dkp = runden($dkp);
 									$raid = $this->raid->get($raid_id);

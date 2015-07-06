@@ -140,7 +140,7 @@ class rli_item extends gen_class {
 					$att_raids = $this->raid->get_attendance_raids();
 					$this->raid->raidlist(true);
 					foreach($this->raid->raidlist as $i => $note) {
-						if(!(in_array($i, $att_raids) AND $this->config('attendence_raid'))) {
+						if(!(in_array($i, $att_raids) AND $this->config('attendance_raid'))) {
 							$raid_select .= "<option value='".$i."'";
 							if((!$item['raid'] && $this->raid->item_in_raid($i, $item['time'])) || ($item['raid'] && $item['raid'] == $i)) {
 								$raid_select .= ' selected="selected"';
