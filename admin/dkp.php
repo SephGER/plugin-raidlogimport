@@ -127,8 +127,8 @@ class rli_import extends page_generic {
 		$this->rli->nav('members');
 
 		$this->tpl->assign_vars(array(
-			'S_ATT_BEGIN'	 => ($this->rli->config('attendence_begin') > 0 AND !$this->rli->config('attendence_raid')) ? TRUE : FALSE,
-			'S_ATT_END'		 => ($this->rli->config('attendence_end') > 0 AND !$this->rli->config('attendence_raid')) ? TRUE : FALSE,
+			'S_ATT_BEGIN'	 => ($this->rli->config('attendance_begin') > 0 AND !$this->rli->config('attendance_raid')) ? TRUE : FALSE,
+			'S_ATT_END'		 => ($this->rli->config('attendance_end') > 0 AND !$this->rli->config('attendance_raid')) ? TRUE : FALSE,
 			'MEMBER_DISPLAY' => ($this->rli->config('member_display') == 1) ? $this->raid->th_raidlist : false,
 			'RAIDCOUNT'		 => ($this->rli->config('member_display') == 1) ? $this->raid->count() : 1,
 			'RAIDCOUNT3'	 => ($this->rli->config('member_display') == 1) ? $this->raid->count()+2 : 3,
@@ -150,8 +150,8 @@ class rli_import extends page_generic {
 		$this->item->display(true);
 		
 		$this->tpl->assign_vars(array(
-			'S_ATT_BEGIN'	=> ($this->rli->config('attendence_begin') > 0 AND !$this->rli->config('attendence_raid')) ? true : false,
-			'S_ATT_END'		=> ($this->rli->config('attendence_end') > 0 AND !$this->rli->config('attendence_raid')) ? true : false)
+			'S_ATT_BEGIN'	=> ($this->rli->config('attendance_begin') > 0 AND !$this->rli->config('attendance_raid')) ? true : false,
+			'S_ATT_END'		=> ($this->rli->config('attendance_end') > 0 AND !$this->rli->config('attendance_raid')) ? true : false)
 		);
 
 		//language
@@ -183,8 +183,8 @@ class rli_import extends page_generic {
 		$this->adj->display(true);
 
 		$this->tpl->assign_vars(array(
-			'S_ATT_BEGIN'	=> ($this->rli->config('attendence_begin') > 0 AND !$this->rli->config('attendence_raid')) ? true : false,
-			'S_ATT_END'		=> ($this->rli->config('attendence_end') > 0 AND !$this->rli->config('attendence_raid')) ? true : false)
+			'S_ATT_BEGIN'	=> ($this->rli->config('attendance_begin') > 0 AND !$this->rli->config('attendance_raid')) ? true : false,
+			'S_ATT_END'		=> ($this->rli->config('attendance_end') > 0 AND !$this->rli->config('attendance_raid')) ? true : false)
 		);
 
 		//language

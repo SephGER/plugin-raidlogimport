@@ -72,8 +72,9 @@ class RLI_Settings extends page_generic {
 	public function update() {
 		$messages = array();
 		$bytes = array('s_member_rank', 'use_dkp', 'event_boss', 'standby_dkptype', 'autocomplete');
-		$floats = array('member_start', 'attandence_begin', 'attandence_end', 'am_value');
+		$floats = array('member_start', 'attendance_begin', 'attendance_end', 'am_value');
 		$copy_config = $this->rli->config();
+
 		foreach($copy_config as $old_name => $old_value) {
 			if(in_array($old_name, $bytes)) {
 				$val = 0;
@@ -84,7 +85,7 @@ class RLI_Settings extends page_generic {
 				}
 				$data[$old_name] = $val;
 			} elseif(in_array($old_name, $floats)) {
-				$data[$old_name] = number_format($this->in->get($old_name), 2, '.', '');
+				$data[$old_name] = $this->in->get($old_name, 0.0);
 			} else {
 				$data[$old_name] = $this->in->get($old_name, '');
 			}

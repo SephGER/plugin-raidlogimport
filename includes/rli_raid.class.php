@@ -145,21 +145,21 @@ if(!class_exists('rli_raid')) {
 			}
 			$this->data['add']['att_begin_raid'] = 1;
 			$this->data['add']['att_end_raid'] = $key-1;
-			if($this->config('attendence_raid')) {
-				if($this->config('attendence_begin') > 0) {
+			if($this->config('attendance_raid')) {
+				if($this->config('attendance_begin') > 0) {
 					$this->raids[0]['begin'] = $this->raids[1]['begin'];
-					$this->raids[0]['end'] = $this->raids[1]['begin'] + $this->config('attendence_time');
+					$this->raids[0]['end'] = $this->raids[1]['begin'] + $this->config('attendance_time');
 					$this->raids[0]['event'] = $this->pdh->get('rli_zone', 'eventbystring', array($this->raids[1]['zone']));
 					$this->raids[0]['note'] = $this->config('att_note_begin');
-					$this->raids[0]['value'] = $this->config('attendence_begin');
+					$this->raids[0]['value'] = $this->config('attendance_begin');
 					$this->data['add']['att_begin_raid'] = 0;
 				}
-				if($this->config('attendence_end') > 0) {
-					$this->raids[$key]['begin'] = $this->raids[$key-1]['end'] - $this->config('attendence_time');
+				if($this->config('attendance_end') > 0) {
+					$this->raids[$key]['begin'] = $this->raids[$key-1]['end'] - $this->config('attendance_time');
 					$this->raids[$key]['end'] = $this->raids[$key-1]['end'];
 					$this->raids[$key]['event'] = $this->pdh->get('rli_zone', 'eventbystring', array($this->raids[$key-1]['zone']));
 					$this->raids[$key]['note'] = $this->config('att_note_end');
-					$this->raids[$key]['value'] = $this->config('attendence_end');
+					$this->raids[$key]['value'] = $this->config('attendance_end');
 					$this->data['add']['att_end_raid'] = $key;
 					$key++;
 				}
@@ -706,13 +706,13 @@ if(!class_exists('rli_raid')) {
 			if($this->config('attendance_'.$type) && ($key == $att_raids[$type] || !$this->config('attendance_raid'))) {
 				if($times !== false) {
 					if($type == 'begin') {
-						$ct = $this->config('attendence_time') + $begend['begin'];
+						$ct = $this->config('attendance_time') + $begend['begin'];
 						foreach($times as $time) {
 							if($force[0] > 0 OR ($force[0] < 0 AND ($time['join'] < $ct AND (($time['standby'] AND $this->config('standby_att')) OR !$time['standby']))))
 								return $this->config('attendance_begin');
 						}
 					} elseif($type == 'end') {
-						$ct = $begend['end'] - $this->config('attendence_time');
+						$ct = $begend['end'] - $this->config('attendance_time');
 						foreach($times as $time) {
 							if($force[1] > 0 OR ($force[1] < 0 AND ($time['leave'] > $ct AND (($time['standby'] AND $this->config('standby_att')) OR !$time['standby']))))
 								return $this->config('attendance_end');
