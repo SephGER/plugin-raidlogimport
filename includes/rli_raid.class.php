@@ -40,8 +40,8 @@ if(!class_exists('rli_raid')) {
 
 		public function __construct() {
 			$this->raids = $this->rli->get_cache_data('raid');
-			if($this->in->exists('raids')) $this->load_raids();
 			$this->data = $this->rli->get_cache_data('data_raid');
+			if($this->in->exists('raids')) $this->load_raids();
 		}
 
 		public function reset() {
@@ -212,6 +212,13 @@ if(!class_exists('rli_raid')) {
 			if($this->config('standby_absolute') && isset($this->data['add']) && $key == $this->data['add']['standby_raid']) {
 				return $this->config('standby_value');
 			}
+			if($this->config('attendance_raid') && isset($this->data['add']) && $key == $this->data['add']['att_begin_raid']) {
+				return $this->config('attendance_begin');
+			}
+			if($this->config('attendance_raid') && isset($this->data['add']) && $key == $this->data['add']['att_end_raid']) {
+				return $this->config('attendance_end');
+			}
+			
 			$timedkp = $this->get_timedkp($key, $times);
 			$bossdkp = $this->get_bossdkp($key, $times);
 			$eventdkp = $this->get_eventdkp($key, $times);
