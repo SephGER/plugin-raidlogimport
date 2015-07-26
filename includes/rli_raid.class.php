@@ -531,22 +531,18 @@ if(!class_exists('rli_raid')) {
 			if(!$this->th_raidlist) {
 				$this->pfh->CheckCreateFolder('', 'raidlogimport');
 				foreach($this->raids as $rkey => $raid) {
-					$imagefile = $this->pfh->FileLink('image'.$rkey.'.png', 'raidlogimport', 'relative');
-					if(!$this->pfh->CheckCreateFile($imagefile, false, true)) {
-						$this->th_raidlist = '<td colspan="20">'.$this->user->lang('rli_error_imagecreate').'</td>';
-					}
-					$image = imagecreate(20, 150);
-					$weiss = imagecolorallocate($image, 0xFF, 0xFF, 0xFF);
-					$schwarz = imagecolorallocate($image, 0x00, 0x00, 0x00);
-					imagefill($image, 0, 0, $weiss);
-					imagestringup($image, 2, 2, 148, $raid['note'], $schwarz);
-					imagepng($image, $imagefile);
-					$this->th_raidlist .= '<td width="20px"><img src="'.$imagefile.'" title="'.$raid['note'].'" alt="'.$rkey.'" /></td>';
-					imagedestroy($image);
+					$this->th_raidlist .= '<td width="20px" class="raidrow" style="vertical-align:bottom;"><div class="verticalText">'.$raid['note'].'</div><div><input type="checkbox" id="selall_'.$rkey.'" /></div></td>';
+					
+					$this->tpl->add_js('$("#selall_'.$rkey.'").click(function(){
+					var checked_status = this.checked;
+					$(".selall_cb_'.$rkey.'").each(function(){
+						$(this).prop(\'checked\', checked_status).trigger(\'change\');
+					});
+				});', 'docready');
 				}
 			}
 			foreach($this->raids as $rkey => $raid) {
-				$td .= '<td><input type="checkbox" name="members['.$mkey.'][raid_list][]" value="'.$rkey.'" title="'.$raid['note'].'" '.((in_array($rkey, $memberraids)) ? 'checked="checked"' : '').' /></td>';
+				$td .= '<td><input type="checkbox" class="selall_cb_'.$rkey.'" name="members['.$mkey.'][raid_list][]" value="'.$rkey.'" title="'.$raid['note'].'" '.((in_array($rkey, $memberraids)) ? 'checked="checked"' : '').' /></td>';
 			}
 			return $td;
 		}

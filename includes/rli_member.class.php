@@ -328,6 +328,20 @@ if(!class_exists('rli_member')) {
 		$('#memberrow_999').before(mem);
 		rli_key++;
 	});", 'docready');
+				
+		if($this->config('member_display') == 1){
+			$this->tpl->add_js("
+				var header_height = 0;
+			    $('.verticalText').each(function() {
+					console.log($(this).outerWidth());
+					console.log($(this).width());
+			        if ($(this).outerWidth() > header_height) header_height = $(this).outerWidth();
+			    });
+			    $('tr td.raidrow').height(header_height+25);
+			    $('.verticalText').width(20);
+			", 'docready');
+		}		
+				
 			}
 		}
 
