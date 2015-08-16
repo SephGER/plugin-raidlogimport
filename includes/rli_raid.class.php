@@ -281,7 +281,7 @@ if(!class_exists('rli_raid')) {
 					'COUNT'     => $ky,
 					'START_DATE'=> ($with_form) ? $this->jquery->Calendar("raids[".$ky."][start_date]", $begin, '', array('id' => 'raids_'.$ky.'_start_date', 'timepicker' => true, 'class' => 'class="input"')) : $begin,
 					'END_DATE'	=> ($with_form) ? $this->jquery->Calendar("raids[".$ky."][end_date]", $end, '', array('id' => 'raids_'.$ky.'_end_date', 'timepicker' => true, 'class' => 'class="input"')) : $end,
-					'EVENT'		=> ($with_form) ? new hdropdown('raids['.$ky.'][event]', array('options' => $this->event_drop, 'value' => $rai['event'], 'id' => 'event_raid'.$ky)) : $this->pdh->get('event', 'name', array($rai['event'])),
+					'EVENT'		=> ($with_form) ? new hdropdown('raids['.$ky.'][event]', array('options' => $this->event_drop, 'value' => $rai['event'], 'id' => 'event_raid'.$ky, 'js' => 'onchange="loadEventValue($(this).val(),'.$ky.')"')) : $this->pdh->get('event', 'name', array($rai['event'])),
 					'TIMEBONUS'	=> $rai['timebonus'],
 					'EVENTVAL'	=> $rai['eventval'],
 					'VALUE'		=> $rai['value'],
@@ -362,7 +362,7 @@ if(!class_exists('rli_raid')) {
 					'COUNT'     => 999,
 					'START_DATE'=> '<input type="text" name="raids[999][start_date]" id="raids_999_start_date" size="15" />',
 					'END_DATE'	=> '<input type="text" name="raids[999][end_date]" id="raids_999_end_date" size="15" />',
-					'EVENT'		=> new hdropdown('raids[999][event]', array('options' => $this->event_drop, 'value' => 0, 'id' => 'a'.unique_id())),
+					'EVENT'		=> new hdropdown('raids[999][event]', array('options' => $this->event_drop, 'value' => 0, 'id' => 'a'.unique_id(), 'js' => 'onchange="loadEventValue($(this).val(),999)"')),
 					'DIFF'		=> new hdropdown('raids[999][diff]', array('options' => $this->diff_drop, 'value' => 0, 'id' => 'a'.unique_id())),
 					'DISPLAY'	=> 'style="display: none;"'
 				));

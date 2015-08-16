@@ -95,6 +95,8 @@ class raidlogimport extends plugin_generic {
 
 		//menu
 		$this->add_menu('admin', $this->gen_admin_menu());
+		
+		$this->add_hook('calendarevent_raid_menu', 'rli_calendarevent_raid_menu_hook', 'calendarevent_raid_menu');
 	}
 	
 	private function create_default_configs() {
