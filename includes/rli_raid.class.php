@@ -396,7 +396,7 @@ if(!class_exists('rli_raid')) {
 		raid.removeAttr('style');
 		$('#raid_999').before(raid);
 		$('#raids_'+rli_rkey+'_end_date').".$this->jquery->Calendar('n', 0, '', array('timepicker' => true, 'return_function' => true, 'class' => 'end_date', 'onclose' => '$( "#raids_"+rli_rkey+"_start_date" ).datepicker( "option", "maxDate", selectedDate );')).";
-		$('#raids_'+rli_rkey+'_start_date').".$this->jquery->Calendar('n', 0, '', array('timepicker' => true, 'return_function' => true, 'class' => 'start_date', 'onclose' => 'var end = $(this).parent().parent().parent().find(\'.end_date\'); console.log(end); var endid = end.attr(\'id\'); $( "#"+endid ).datepicker( "option", "minDate", selectedDate ); if(end.val() == "") {  var date2 = $(this).datepicker(\'getDate\'); date2.setHours(date2.getHours()+1); $("#"+endid).datetimepicker(\'setDate\', date2); }')).";
+		$('#raids_'+rli_rkey+'_start_date').".$this->jquery->Calendar('n', 0, '', array('timepicker' => true, 'return_function' => true, 'class' => 'start_date', 'onclose' => 'var end = $(this).parent().parent().parent().find(\'.end_date\'); console.log(end); var endid = end.attr(\'id\'); $( "#"+endid ).datepicker( "option", "minDate", selectedDate ); if(end.val() == "") {  var date2 = $(this).datepicker(\'getDate\'); var newDateObj = new Date(date2.getTime() + 60*60000); $("#"+endid).datetimepicker(\'setDate\', newDateObj); }')).";
 		boss_keys[rli_rkey] = 0;
 		rli_rkey++;
 	});
@@ -424,12 +424,12 @@ if(!class_exists('rli_raid')) {
 		$('#raids_'+raid_key+'_boss_'+boss_keys[raid_key]+'_date').".$functioncall.";
 						
 		if(last_bk_date == 0 && start_date != 0){
-			start_date.setMinutes(start_date.getMinutes()+1); 
-			$('#raids_'+raid_key+'_boss_'+boss_keys[raid_key]+'_date').datetimepicker('setDate', start_date);
+			var newDateObj = new Date(start_date.getTime() + 1*60000);			
+			$('#raids_'+raid_key+'_boss_'+boss_keys[raid_key]+'_date').datetimepicker('setDate', newDateObj);
 		}
 		if(last_bk_date != 0){
-			last_bk_date.setMinutes(last_bk_date.getMinutes()+1);
-			$('#raids_'+raid_key+'_boss_'+boss_keys[raid_key]+'_date').datetimepicker('setDate', last_bk_date);
+			var newDateObj = new Date(last_bk_date.getTime() + 1*60000);
+			$('#raids_'+raid_key+'_boss_'+boss_keys[raid_key]+'_date').datetimepicker('setDate', newDateObj);
 		}
 						
 		boss_keys[raid_key]++;
