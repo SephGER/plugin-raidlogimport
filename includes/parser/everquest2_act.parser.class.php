@@ -52,6 +52,19 @@ class everquest2_act extends rli_parser {
 			$data['members'][] = array(trim($arrRow[0]), '', '', 0);
 			$data['times'][] = array(trim($arrRow[0]), strtotime($arrRow[4]), 'join');
 			$data['times'][] = array(trim($arrRow[0]), strtotime($arrRow[6]), 'leave');
+			
+			//Loot, 9
+			$strLootLine = $arrRow[9];
+			if($strLootLine != ""){
+				$arrLootArray = array();
+				$intMatches = preg_match_all("/(.*)\(([0-9]*)\)/U", $strLootLine, $arrLootArray);
+				
+				if($intMatches > 0){
+					foreach($arrLootArray[0] as $key => $val){
+						$data['items'][] = array(trim($arrLootArray[1][$key]), trim($arrRow[0]), 0, trim($arrLootArray[2][$key]), strtotime($arrRow[4])+100);
+					}
+				}
+			}
 		}
 		
 		if($arrFirstUser){
