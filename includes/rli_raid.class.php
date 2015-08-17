@@ -279,8 +279,8 @@ if(!class_exists('rli_raid')) {
 				$end = $this->time->user_date($rai['end'], true, false, false, function_exists('date_create_from_format'));
 				$this->tpl->assign_block_vars('raids', array(
 					'COUNT'     => $ky,
-					'START_DATE'=> ($with_form) ? $this->jquery->Calendar("raids[".$ky."][start_date]", $begin, '', array('id' => 'raids_'.$ky.'_start_date', 'timepicker' => true, 'class' => 'class="input"')) : $begin,
-					'END_DATE'	=> ($with_form) ? $this->jquery->Calendar("raids[".$ky."][end_date]", $end, '', array('id' => 'raids_'.$ky.'_end_date', 'timepicker' => true, 'class' => 'class="input"')) : $end,
+					'START_DATE'=> ($with_form) ? $this->jquery->Calendar("raids[".$ky."][start_date]", $begin, '', array('id' => 'raids_'.$ky.'_start_date', 'class' => 'start_date', 'timepicker' => true, 'class' => 'class="input"', 'onclose' => ' $( "#raids['.$ky.'][start_date]" ).datepicker( "option", "minDate", selectedDate );')) : $begin,
+					'END_DATE'	=> ($with_form) ? $this->jquery->Calendar("raids[".$ky."][end_date]", $end, '', array('id' => 'raids_'.$ky.'_end_date', 'class' => 'end_date', 'timepicker' => true, 'class' => 'class="input"')) : $end,
 					'EVENT'		=> ($with_form) ? new hdropdown('raids['.$ky.'][event]', array('options' => $this->event_drop, 'value' => $rai['event'], 'id' => 'event_raid'.$ky, 'js' => 'onchange="loadEventValue($(this).val(),'.$ky.')"')) : $this->pdh->get('event', 'name', array($rai['event'])),
 					'TIMEBONUS'	=> $rai['timebonus'],
 					'EVENTVAL'	=> $rai['eventval'],
@@ -336,7 +336,7 @@ if(!class_exists('rli_raid')) {
 							}
 							$this->tpl->assign_block_vars('raids.bosskills', array(
 								'BK_SELECT' => $name_field,
-								'BK_DATE'   => $this->jquery->Calendar("raids[".$ky."][bosskills][".$xy."][date]", $this->time->user_date($bk['time'], true, false, false, function_exists('date_create_from_format')), '', array('id' => 'raids_'.$ky.'_boss_'.$xy.'_date', 'timepicker' => true, 'class' => 'class="input"')),
+								'BK_DATE'   => $this->jquery->Calendar("raids[".$ky."][bosskills][".$xy."][date]", $this->time->user_date($bk['time'], true, false, false, function_exists('date_create_from_format')), '', array('id' => 'raids_'.$ky.'_boss_'.$xy.'_date', 'timepicker' => true, 'class' => 'input bk_date')),
 								'BK_BONUS'  => $bk['bonus'],
 								'BK_TIMEBONUS' => $bk['timebonus'],
 								'BK_DIFF'	=> new hdropdown('raids['.$ky.'][bosskills]['.$xy.'][diff]', array('options' => $this->diff_drop, 'value' => $bk['diff'], 'id' => 'diff_'.$html_id)),
@@ -349,7 +349,7 @@ if(!class_exists('rli_raid')) {
 					$this->tpl->add_js("boss_keys[".$ky."] = ".($xy+1).";", 'docready');
 					$this->tpl->assign_block_vars('raids.bosskills', array(
 						'BK_SELECT'	=> new hdropdown('raids['.$ky.'][bosskills][99][id]', array('options' => $this->bk_list, 'value' => 0, 'id' => 'a'.unique_id())),
-						'BK_DATE'	=> '<input type="text" name="raids['.$ky.'][bosskills][99][date]" id="raids_'.$ky.'_boss_99_date" size="15" />',
+						'BK_DATE'	=> '<input type="text" name="raids['.$ky.'][bosskills][99][date]" id="raids_'.$ky.'_boss_99_date" size="15" class="bk_date" />',
 						'BK_DIFF'	=> new hdropdown('raids['.$ky.'][bosskills][99][diff]', array('options' => $this->diff_drop, 'value' => 0, 'id' => 'diff_raid'.$ky.'_boss99')),
 						'BK_KEY'	=> 99,
 						'DISPLAY'	=> 'style="display: none;"',
@@ -360,8 +360,8 @@ if(!class_exists('rli_raid')) {
 			if($with_form) {
 				$this->tpl->assign_block_vars('raids', array(
 					'COUNT'     => 999,
-					'START_DATE'=> '<input type="text" name="raids[999][start_date]" id="raids_999_start_date" size="15" />',
-					'END_DATE'	=> '<input type="text" name="raids[999][end_date]" id="raids_999_end_date" size="15" />',
+					'START_DATE'=> '<input type="text" name="raids[999][start_date]" id="raids_999_start_date" size="15" class="start_date" />',
+					'END_DATE'	=> '<input type="text" name="raids[999][end_date]" id="raids_999_end_date" size="15" class="end_date" />',
 					'EVENT'		=> new hdropdown('raids[999][event]', array('options' => $this->event_drop, 'value' => 0, 'id' => 'a'.unique_id(), 'js' => 'onchange="loadEventValue($(this).val(),999)"')),
 					'DIFF'		=> new hdropdown('raids[999][diff]', array('options' => $this->diff_drop, 'value' => 0, 'id' => 'a'.unique_id())),
 					'DISPLAY'	=> 'style="display: none;"'
@@ -369,7 +369,7 @@ if(!class_exists('rli_raid')) {
 				$this->tpl->assign_block_vars('raids.bosskills', array(
 					'BK_SELECT'	=> new hdropdown('raids[999][bosskills][99][id]', array('options' => $this->bk_list, 'value' => 0, 'id' => 'a'.unique_id(), 'tolang' => false)),
 				
-					'BK_DATE'	=> '<input type="text" name="raids[999][bosskills][99][date]" id="raids_999_boss_99_date" size="15" />',
+					'BK_DATE'	=> '<input type="text" name="raids[999][bosskills][99][date]" id="raids_999_boss_99_date" size="15" class="bk_date" />',
 					'BK_DIFF'	=> new hdropdown('raids[999][bosskills][99][diff]', array('options' => $this->diff_drop, 'value' => 0, 'id' => 'diff_raid999_boss99', 'tolang' => false)),
 					'BK_KEY'	=> 99,
 					'DISPLAY'	=> 'style="display: none;"'
@@ -395,8 +395,8 @@ if(!class_exists('rli_raid')) {
 		raid.attr('id', 'raid_'+rli_rkey);
 		raid.removeAttr('style');
 		$('#raid_999').before(raid);
-		$('#raids_'+rli_rkey+'_end_date').".$functioncall.";
-		$('#raids_'+rli_rkey+'_start_date').".$functioncall.";
+		$('#raids_'+rli_rkey+'_end_date').".$this->jquery->Calendar('n', 0, '', array('timepicker' => true, 'return_function' => true, 'class' => 'end_date', 'onclose' => '$( "#raids_"+rli_rkey+"_start_date" ).datepicker( "option", "maxDate", selectedDate );')).";
+		$('#raids_'+rli_rkey+'_start_date').".$this->jquery->Calendar('n', 0, '', array('timepicker' => true, 'return_function' => true, 'class' => 'start_date', 'onclose' => 'var end = $(this).parent().parent().parent().find(\'.end_date\'); console.log(end); var endid = end.attr(\'id\'); $( "#"+endid ).datepicker( "option", "minDate", selectedDate ); if(end.val() == "") {  var date2 = $(this).datepicker(\'getDate\'); date2.setHours(date2.getHours()+1); $("#"+endid).datetimepicker(\'setDate\', date2); }')).";
 		boss_keys[rli_rkey] = 0;
 		rli_rkey++;
 	});
@@ -407,8 +407,31 @@ if(!class_exists('rli_raid')) {
 		boss.html(boss.html().replace(/99/g, boss_keys[raid_key]));
 		boss.attr('id', 'raid_'+raid_key+'_boss_'+boss_keys[raid_key]);
 		boss.removeAttr('style');
+		
+		var start_date = $('#raids_'+raid_key+'_start_date').datepicker('getDate');
+		if(start_date == null || start_date == undefined) start_date = 0;
+		var last_bk_datepicker = $('#raid_'+raid_key+'_boss_99').prev().find('.bk_date');
+		var last_bk_id = $(last_bk_datepicker).attr('id');
+		if(last_bk_id != undefined){
+			last_bk_date = $('#'+last_bk_id).datepicker('getDate');
+			if(last_bk_date == null) last_bk_date == 0;
+		} else {
+			last_bk_date = 0;
+		}
+
+						
 		$('#raid_'+raid_key+'_boss_99').before(boss);
 		$('#raids_'+raid_key+'_boss_'+boss_keys[raid_key]+'_date').".$functioncall.";
+						
+		if(last_bk_date == 0 && start_date != 0){
+			start_date.setMinutes(start_date.getMinutes()+1); 
+			$('#raids_'+raid_key+'_boss_'+boss_keys[raid_key]+'_date').datetimepicker('setDate', start_date);
+		}
+		if(last_bk_date != 0){
+			last_bk_date.setMinutes(last_bk_date.getMinutes()+1);
+			$('#raids_'+raid_key+'_boss_'+boss_keys[raid_key]+'_date').datetimepicker('setDate', last_bk_date);
+		}
+						
 		boss_keys[raid_key]++;
 	});", 'docready');
 			}
