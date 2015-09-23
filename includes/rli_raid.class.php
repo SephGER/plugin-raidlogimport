@@ -381,7 +381,7 @@ if(!class_exists('rli_raid')) {
 	$(document).on('click', '.del_boss', function(){
 		$(this).removeClass('del_boss');
 		".($this->rli->config('no_del_warn') ? "$('#'+$(this).data('id')).css('display', 'none');
-		$('#'+$(this).data('id').removeAttr('disabled');" : "delete_warning($(this).data('id'));")."
+		$('#'+$(this).data('id')).removeAttr('disabled');" : "delete_warning($(this).data('id'));")."
 	});
 	$(document).on('click', '.del_raid', function(){
 		$(this).removeClass('del_raid');

@@ -30,7 +30,7 @@ class raidlogimport extends plugin_generic {
 	}
 
 	public $vstatus = 'Beta';
-	public $version = '0.7.1.1';
+	public $version = '0.7.1.2';
 	
 	protected static $apiLevel = 23;
 	
@@ -135,6 +135,7 @@ class raidlogimport extends plugin_generic {
 			'autocomplete'		=> '0',		//auto-complete fields (1 member, 2 items)
 			'autocreate_zones'	=> 0,
 			'autocreate_bosses'	=> 0,
+			'no_del_warn'		=> 0,
 		);
 		if(strtolower($this->config->get('default_game')) == 'wow') {
 			$config_data = array_merge($config_data, array(
