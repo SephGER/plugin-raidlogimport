@@ -75,7 +75,7 @@ class rli_import extends page_generic {
 				$this->core->messages($error['messages']);
 			}
 			if(!empty($error['process']) && $error['process'] != $main_process) {
-				$this->$error['process'](false);
+				$this->{$error['process']}(false);
 			}
 		}
 	}
