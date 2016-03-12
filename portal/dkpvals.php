@@ -44,7 +44,7 @@ if(!class_exists('rli_portal')){
 	require_once($eqdkp_root_path.'plugins/raidlogimport/includes/rli.class.php');
 
 	class rli_portal extends rli {
-		function rli_portal() {
+		function __construct() {
 			parent::__construct();
 			$this->get_bonus();
 		}
