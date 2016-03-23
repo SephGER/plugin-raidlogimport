@@ -26,10 +26,10 @@ if(!defined('EQDKP_INC'))
 	exit;
 }
 
-if(!class_exists('everquest2_act')) {
-class everquest2_act extends rli_parser {
+if(!class_exists('everquest_loot')) {
+class everquest_loot extends rli_parser {
 
-	public static $name = 'Everquest2 ACT';
+	public static $name = 'Everquest Loot';
 	public static $xml = false;
 
 	public static function check($text) {
@@ -39,39 +39,34 @@ class everquest2_act extends rli_parser {
 	}
 	
 	public static function parse($text) {
-		$Data = str_getcsv($text, "\n"); //parse the rows
-		$arrFirstUser = false;
+		$regex = '/\[(.*)\] --(.*) has looted a (.*).--/';
 		
-		foreach ($Data as $row){
-			$arrRow = str_getcsv($row);
-			
-			if($arrRow[0] === 'Player') continue;
-			
-			if(!$arrFirstUser) $arrFirstUser = $arrRow;
-			
-			$data['members'][] = array(trim($arrRow[0]), '', '', 0);
-			$data['times'][] = array(trim($arrRow[0]), strtotime($arrRow[4]), 'join');
-			$data['times'][] = array(trim($arrRow[0]), strtotime($arrRow[6]), 'leave');
-			
-			//Loot, 9
-			$strLootLine = $arrRow[9];
-			if($strLootLine != ""){
-				$arrLootArray = array();
-				$intMatches = preg_match_all("/(.*)\(([0-9]*)\)/U", $strLootLine, $arrLootArray);
+		preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
+		$timestart = $timeend = false;
+		$arrMembersDone = array();
+		
+		foreach($matches as $match) {
+			if(!$timestart) $timestart = strtotime($match[1]);
+			$timeend = strtotime($match[1]);
+		}
+		
+		foreach($matches as $match) {
+			$lvl = 0;
+			$class = '';
+
+			if(!in_array(trim($match[2]), $arrMembersDone)){
+				$data['members'][] = array(trim($match[2]), $class, '', $lvl);
+				$data['times'][] = array(trim($match[2]), $timestart - (1*3600), 'join');
+				$data['times'][] = array(trim($match[2]), $timeend+(500), 'leave');
 				
-				if($intMatches > 0){
-					foreach($arrLootArray[0] as $key => $val){
-						$data['items'][] = array(trim($arrLootArray[1][$key]), trim($arrRow[0]), 0, trim($arrLootArray[2][$key]), strtotime($arrRow[4])+100);
-					}
-				}
+				$arrMembersDone[] = trim($match[2]);
 			}
+			
+			$data['items'][] = array(trim($match[3]), $match[2], 0, '', strtotime($match[1]));
 		}
 		
-		if($arrFirstUser){
-			$data['zones'][] = array(
-				$arrFirstUser[5], strtotime($arrRow[4]), strtotime($arrRow[6])
-			);
-		}
+		$data['zones'][] = array('unknown zone',  $timestart - (1*3600), $timeend+(500));
+		$data['bosses'][] = array('unknown boss', $timestart, 0);
 
 		return $data;
 	}
