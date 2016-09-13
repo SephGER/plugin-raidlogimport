@@ -29,8 +29,8 @@ class raidlogimport extends plugin_generic {
 		return array_merge(parent::$shortcuts, $shortcuts);
 	}
 
-	public $vstatus = 'Beta';
-	public $version = '0.7.1.4';
+	public $vstatus = 'Stable';
+	public $version = '0.7.2.0'; //Version for EQdkp Plus 2.3
 	
 	protected static $apiLevel = 23;
 	

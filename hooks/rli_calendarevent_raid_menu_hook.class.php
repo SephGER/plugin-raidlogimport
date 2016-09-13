@@ -42,7 +42,7 @@ if (!class_exists('rli_calendarevent_raid_menu_hook')){
 			
 			return array(
 				0 => array(
-					'name'	=> $this->user->lang('raidevent_raid_transform').' (RLI)',
+					'text'	=> $this->user->lang('raidevent_raid_transform').' (RLI)',
 					'link'	=> $this->server_path.'plugins/raidlogimport/admin/dkp.php'.$this->SID.'&checkraid=submit&parser=eqdkp_raid&log='.$intCalendareventID,
 					'icon'	=> 'fa-exchange',
 					'perm'	=> $this->user->check_auth('a_raidlogimport_dkp', false),
