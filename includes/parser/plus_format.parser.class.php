@@ -35,6 +35,7 @@ class plus_format extends rli_parser {
 		$lang = trim($input->head->gameinfo->language);
 		#$this->rli->add_data['log_lang'] = substr($lang, 0, 2);
 		$xml = $input->raiddata;
+		$arrLastLeaves = $arrLastLeavesKey = array();
 		$data = array();
 		foreach($xml->zones->children() as $zone) {
 			$data['zones'][] = array(trim($zone->name), (int) trim($zone->enter), (int) trim($zone->leave), (int) trim($zone->difficulty));
@@ -42,6 +43,7 @@ class plus_format extends rli_parser {
 		foreach($xml->bosskills->children() as $bosskill) {
 			$data['bosses'][] = array(trim($bosskill->name), (int) trim($bosskill->time), (int) trim($bosskill->difficulty));
 		}
+		$intKey=0;
 		foreach($xml->members->children() as $xmember) {
 			$name = trim($xmember->name);
 			$note = (isset($xmember->note)) ? trim($xmember->note) : '';
@@ -50,7 +52,20 @@ class plus_format extends rli_parser {
 				$attrs = $time->attributes();
 				$type = (string) $attrs['type'];
 				$extra = isset($attrs['extra']) ? (string) $attrs['extra'] : '';
-				$data['times'][] = array($name, (int) $time, $type, $extra);
+				if($type == 'join'){
+					if(isset($arrLastLeaves[$name]) && $arrLastLeaves[$name] > (int)$time){
+						$intLastLeaveKey = $arrLastLeavesKey[$name];
+						unset($data['times'][$intLastLeaveKey]);
+						continue;
+					}
+					
+				} else {
+					$arrLastLeaves[$name] = (int) $time;
+					$arrLastLeavesKey[$name] = $intKey;
+				}
+				
+				$data['times'][$intKey] = array($name, (int) $time, $type, $extra);
+				$intKey++;
 			}
 		}
 		foreach($xml->items->children() as $xitem) {
