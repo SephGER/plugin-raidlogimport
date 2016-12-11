@@ -61,7 +61,7 @@ class raidlogimport extends plugin_generic {
 		}
 
 		$this->add_dependency(array(
-			'plus_version' => '0.7')
+			'plus_version' => '2.3')
 		);
 
 		$this->add_data(array(
@@ -77,6 +77,7 @@ class raidlogimport extends plugin_generic {
 			'homepage'			=> EQDKP_PROJECT_URL,
 			'manuallink'		=> ($this->user->lang_name != 'german') ? false : $this->root_path . 'plugins/raidlogimport/language/'.$this->user->lang_name.'/Manual.pdf',
 			'icon'				=> 'fa-book',
+			'plus_version'		=> '2.3',
 			)
 		);
 
