@@ -90,21 +90,21 @@ if(!class_exists('rli_adjustment')) {
 					continue;
 				}
 				$this->tpl->assign_block_vars('adjs', array(
-					'MEMBER'	=> new hdropdown('adjs['.$a.'][member]', array('options' => $members, 'value' => $adj['member'], 'id' => 'adjs_'.$a.'_member')),
-					'EVENT'		=> new hdropdown('adjs['.$a.'][event]', array('options' => $events, 'value' => $ev_sel, 'id' => 'adjs_'.$a.'_event')),
+					'MEMBER'	=> (new hdropdown('adjs['.$a.'][member]', array('options' => $members, 'value' => $adj['member'], 'id' => 'adjs_'.$a.'_member')))->output(),
+					'EVENT'		=> (new hdropdown('adjs['.$a.'][event]', array('options' => $events, 'value' => $ev_sel, 'id' => 'adjs_'.$a.'_event')))->output(),
 
 					'NOTE'		=> $adj['reason'],
 					'VALUE'		=> $adj['value'],
-					'RAID'		=> new hdropdown('adjs['.$a.'][raid]', array('options' => $raid_select, 'value' => $adj['raid'], 'id' => 'adjs_'.$a.'raid')),
+					'RAID'		=> (new hdropdown('adjs['.$a.'][raid]', array('options' => $raid_select, 'value' => $adj['raid'], 'id' => 'adjs_'.$a.'raid')))->output(),
 					'KEY'		=> $a,
 				));
 			}
 		}
 		$this->tpl->assign_block_vars('adjs', array(
 			'KEY'		=> 999,
-			'MEMBER'	=> new hdropdown('adjs[999][member]', array('options' => $members, 'value' => 0, 'id' => 'adjs_999_member')),
-			'EVENT'		=> new hdropdown('adjs[999][event]', array('options' => $events, 'value' => 0, 'id' => 'adjs_999_event')),
-			'RAID'		=> new hdropdown('adjs[999][raid]', array('options' => $raid_select, 'value' => 0, 'id' => 'adjs_999_raid')),
+			'MEMBER'	=> (new hdropdown('adjs[999][member]', array('options' => $members, 'value' => 0, 'id' => 'adjs_999_member')))->output(),
+			'EVENT'		=> (new hdropdown('adjs[999][event]', array('options' => $events, 'value' => 0, 'id' => 'adjs_999_event')))->output(),
+			'RAID'		=> (new hdropdown('adjs[999][raid]', array('options' => $raid_select, 'value' => 0, 'id' => 'adjs_999_raid')))->output(),
 			
 			'DISPLAY'	=> 'style="display: none;"',
 			'DELCHK'	=> 'checked="checked"',

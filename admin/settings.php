@@ -139,7 +139,7 @@ class RLI_Settings extends page_generic {
 				foreach($names as $name) {
 					switch($display_type) {
 						case 'select':
-							$holder[$holde][$k]['value'] = new hdropdown($name, array('options' => $$name, 'value' => $this->rli->config($name)));
+							$holder[$holde][$k]['value'] = (new hdropdown($name, array('options' => $$name, 'value' => $this->rli->config($name))))->output();
 							$holder[$holde][$k]['name'] = $name;
 							break;
 

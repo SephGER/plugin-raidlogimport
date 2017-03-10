@@ -295,7 +295,7 @@ class rli_import extends page_generic {
 			'L_INSERT'		 => $this->user->lang('rli_dkp_insert'),
 			'L_SEND'		 => $this->user->lang('rli_send'),
 			'DISABLED'		 => ($this->rli->data_available()) ? '' : 'disabled="disabled"',
-			'PARSER_DD'		 => new hdropdown('parser', array('options' => getAvailableParsers(), 'value' => $this->rli->config('parser'))),
+			'PARSER_DD'		 => (new hdropdown('parser', array('options' => getAvailableParsers(), 'value' => $this->rli->config('parser'))))->output(),
 			'S_STEP1'        => true)
 		);
 		

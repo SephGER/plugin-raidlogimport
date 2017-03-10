@@ -281,12 +281,12 @@ if(!class_exists('rli_raid')) {
 					'COUNT'     => $ky,
 					'START_DATE'=> ($with_form) ? $this->jquery->Calendar("raids[".$ky."][start_date]", $begin, '', array('id' => 'raids_'.$ky.'_start_date', 'class' => 'start_date', 'timepicker' => true, 'class' => 'class="input"', 'onclose' => ' $( "#raids['.$ky.'][start_date]" ).datepicker( "option", "minDate", selectedDate );')) : $begin,
 					'END_DATE'	=> ($with_form) ? $this->jquery->Calendar("raids[".$ky."][end_date]", $end, '', array('id' => 'raids_'.$ky.'_end_date', 'class' => 'end_date', 'timepicker' => true, 'class' => 'class="input"')) : $end,
-					'EVENT'		=> ($with_form) ? new hdropdown('raids['.$ky.'][event]', array('options' => $this->event_drop, 'value' => $rai['event'], 'id' => 'event_raid'.$ky, 'js' => 'onchange="loadEventValue($(this).val(),'.$ky.')"')) : $this->pdh->get('event', 'name', array($rai['event'])),
+					'EVENT'		=> ($with_form) ? (new hdropdown('raids['.$ky.'][event]', array('options' => $this->event_drop, 'value' => $rai['event'], 'id' => 'event_raid'.$ky, 'js' => 'onchange="loadEventValue($(this).val(),'.$ky.')"')))->output() : $this->pdh->get('event', 'name', array($rai['event'])),
 					'TIMEBONUS'	=> $rai['timebonus'],
 					'EVENTVAL'	=> $rai['eventval'],
 					'VALUE'		=> $rai['value'],
 					'NOTE'		=> $rai['note'],
-					'DIFF'		=> ($with_form) ? new hdropdown('raids['.$ky.'][diff]', array('options' => $this->diff_drop, 'value' => $rai['diff'], 'id' => 'diff_raid'.$ky)) : $this->user->lang('diff_'.$rai['diff']),
+					'DIFF'		=> ($with_form) ? (new hdropdown('raids['.$ky.'][diff]', array('options' => $this->diff_drop, 'value' => $rai['diff'], 'id' => 'diff_raid'.$ky)))->output() : $this->user->lang('diff_'.$rai['diff']),
 					'BOSSKILLS' => $bosskills,
 					'DELDIS'	=> 'disabled="disabled"')
 				);
@@ -308,7 +308,7 @@ if(!class_exists('rli_raid')) {
 							$html_id = 'raid'.$ky.'_boss'.$xy;
 							$name_field = '';
 							if(is_numeric($bk['id'])) {
-								$name_field = new hdropdown('raids['.$ky.'][bosskills]['.$xy.'][id]', array('options' => $this->bk_list, 'value' => $bk['id'], 'id' => 'a'.unique_id()));
+								$name_field = (new hdropdown('raids['.$ky.'][bosskills]['.$xy.'][id]', array('options' => $this->bk_list, 'value' => $bk['id'], 'id' => 'a'.unique_id())))->output();
 							} else {
 								$intBossID = $this->pdh->get('rli_boss', 'id_string', array(sanitize($bk['id']), $bk['diff']));
 								if(!$intBossID && (int)$this->config('autocreate_bosses')){
@@ -324,7 +324,7 @@ if(!class_exists('rli_raid')) {
 									}
 								}
 								if($intBossID){
-									$name_field = new hdropdown('raids['.$ky.'][bosskills]['.$xy.'][id]', array('options' => $this->bk_list, 'value' => $intBossID, 'id' => 'a'.unique_id()));
+									$name_field = (new hdropdown('raids['.$ky.'][bosskills]['.$xy.'][id]', array('options' => $this->bk_list, 'value' => $intBossID, 'id' => 'a'.unique_id())))->output();
 								} else {		
 									$name_field = $bk['id'];
 									$params = "&string=' + $('#id_".$html_id."').val() + '&bonus=' + $('#bonus_".$html_id."').val() + '&timebonus=' + $('#timebonus_".$html_id."').val() + '&diff=' + $('#diff_".$html_id."').val()";
@@ -339,7 +339,7 @@ if(!class_exists('rli_raid')) {
 								'BK_DATE'   => $this->jquery->Calendar("raids[".$ky."][bosskills][".$xy."][date]", $this->time->user_date($bk['time'], true, false, false, function_exists('date_create_from_format')), '', array('id' => 'raids_'.$ky.'_boss_'.$xy.'_date', 'timepicker' => true, 'class' => 'input bk_date')),
 								'BK_BONUS'  => $bk['bonus'],
 								'BK_TIMEBONUS' => $bk['timebonus'],
-								'BK_DIFF'	=> new hdropdown('raids['.$ky.'][bosskills]['.$xy.'][diff]', array('options' => $this->diff_drop, 'value' => $bk['diff'], 'id' => 'diff_'.$html_id)),
+								'BK_DIFF'	=> (new hdropdown('raids['.$ky.'][bosskills]['.$xy.'][diff]', array('options' => $this->diff_drop, 'value' => $bk['diff'], 'id' => 'diff_'.$html_id)))->output(),
 								'BK_KEY'    => $xy,
 								'IMPORT'	=> ($import) ? $html_id : 0,
 								'DELDIS'	=> 'disabled="disabled"')
@@ -348,9 +348,9 @@ if(!class_exists('rli_raid')) {
 					}
 					$this->tpl->add_js("boss_keys[".$ky."] = ".($xy+1).";", 'docready');
 					$this->tpl->assign_block_vars('raids.bosskills', array(
-						'BK_SELECT'	=> new hdropdown('raids['.$ky.'][bosskills][99][id]', array('options' => $this->bk_list, 'value' => 0, 'id' => 'a'.unique_id())),
+						'BK_SELECT'	=> (new hdropdown('raids['.$ky.'][bosskills][99][id]', array('options' => $this->bk_list, 'value' => 0, 'id' => 'a'.unique_id())))->output(),
 						'BK_DATE'	=> '<input type="text" name="raids['.$ky.'][bosskills][99][date]" id="raids_'.$ky.'_boss_99_date" size="15" class="bk_date" />',
-						'BK_DIFF'	=> new hdropdown('raids['.$ky.'][bosskills][99][diff]', array('options' => $this->diff_drop, 'value' => 0, 'id' => 'diff_raid'.$ky.'_boss99')),
+						'BK_DIFF'	=> (new hdropdown('raids['.$ky.'][bosskills][99][diff]', array('options' => $this->diff_drop, 'value' => 0, 'id' => 'diff_raid'.$ky.'_boss99')))->output(),
 						'BK_KEY'	=> 99,
 						'DISPLAY'	=> 'style="display: none;"',
 						'IMPORT'	=> 0
@@ -362,15 +362,15 @@ if(!class_exists('rli_raid')) {
 					'COUNT'     => 999,
 					'START_DATE'=> '<input type="text" name="raids[999][start_date]" id="raids_999_start_date" size="15" class="start_date" />',
 					'END_DATE'	=> '<input type="text" name="raids[999][end_date]" id="raids_999_end_date" size="15" class="end_date" />',
-					'EVENT'		=> new hdropdown('raids[999][event]', array('options' => $this->event_drop, 'value' => 0, 'id' => 'a'.unique_id(), 'js' => 'onchange="loadEventValue($(this).val(),999)"')),
-					'DIFF'		=> new hdropdown('raids[999][diff]', array('options' => $this->diff_drop, 'value' => 0, 'id' => 'a'.unique_id())),
+					'EVENT'		=> (new hdropdown('raids[999][event]', array('options' => $this->event_drop, 'value' => 0, 'id' => 'a'.unique_id(), 'js' => 'onchange="loadEventValue($(this).val(),999)"')))->output(),
+					'DIFF'		=> (new hdropdown('raids[999][diff]', array('options' => $this->diff_drop, 'value' => 0, 'id' => 'a'.unique_id())))->output(),
 					'DISPLAY'	=> 'style="display: none;"'
 				));
 				$this->tpl->assign_block_vars('raids.bosskills', array(
-					'BK_SELECT'	=> new hdropdown('raids[999][bosskills][99][id]', array('options' => $this->bk_list, 'value' => 0, 'id' => 'a'.unique_id(), 'tolang' => false)),
+					'BK_SELECT'	=> (new hdropdown('raids[999][bosskills][99][id]', array('options' => $this->bk_list, 'value' => 0, 'id' => 'a'.unique_id(), 'tolang' => false)))->output(),
 				
 					'BK_DATE'	=> '<input type="text" name="raids[999][bosskills][99][date]" id="raids_999_boss_99_date" size="15" class="bk_date" />',
-					'BK_DIFF'	=> new hdropdown('raids[999][bosskills][99][diff]', array('options' => $this->diff_drop, 'value' => 0, 'id' => 'diff_raid999_boss99', 'tolang' => false)),
+					'BK_DIFF'	=> (new hdropdown('raids[999][bosskills][99][diff]', array('options' => $this->diff_drop, 'value' => 0, 'id' => 'diff_raid999_boss99', 'tolang' => false)))->output(),
 					'BK_KEY'	=> 99,
 					'DISPLAY'	=> 'style="display: none;"'
 				));

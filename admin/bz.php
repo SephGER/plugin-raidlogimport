@@ -184,9 +184,9 @@ class rli_Bz extends page_generic {
 				'SORT'			=> $this->pdh->get('rli_'.$type, 'sort', array($id)),
 				'BSELECTED'		=> ($type == 'boss') ? 'selected="selected"' : '',
 				'ZSELECTED'		=> ($type == 'zone') ? 'selected="selected"' : '',
-				'DIFF_ARRAY'	=> new hdropdown("diff[".$type."_".$id."]", array('options' => $this->diff_drop, 'value' => $this->pdh->get('rli_'.$type, 'diff', array($id)))),
-				'ZONE_ARRAY'	=> new hdropdown("tozone[".$type."_".$id."]", array('options' => $this->zone_drop, 'value' => (($type == 'boss') ? $this->pdh->get('rli_boss', 'tozone', array($id)) : $id))),
-				'EVENTS'		=> new hdropdown("event[".$type."_".$id."]", array('options' => $this->event_drop, 'value' => (($type == 'zone') ? $this->pdh->get('rli_zone', 'event', array($id)) : $this->pdh->get('rli_boss', 'note', array($id)))))
+				'DIFF_ARRAY'	=> (new hdropdown("diff[".$type."_".$id."]", array('options' => $this->diff_drop, 'value' => $this->pdh->get('rli_'.$type, 'diff', array($id)))))->output(),
+				'ZONE_ARRAY'	=> (new hdropdown("tozone[".$type."_".$id."]", array('options' => $this->zone_drop, 'value' => (($type == 'boss') ? $this->pdh->get('rli_boss', 'tozone', array($id)) : $id))))->output(),
+				'EVENTS'		=> (new hdropdown("event[".$type."_".$id."]", array('options' => $this->event_drop, 'value' => (($type == 'zone') ? $this->pdh->get('rli_zone', 'event', array($id)) : $this->pdh->get('rli_boss', 'note', array($id))))))->output()
 		);
 	}
 
@@ -237,9 +237,9 @@ class rli_Bz extends page_generic {
 				'SORT'		=> '',
 				'BSELECTED'	=> 'true',
 				'ZSELECTED'	=> '',
-				'DIFF_ARRAY' => new hdropdown('diff[neu]', array('options' => $this->diff_drop, 'value' => $this->in->get('diff'))),
-				'ZONE_ARRAY' => new hdropdown('tozone[neu]', array('options' => $this->zone_drop, 'value' => $this->in->get('zone_id'))),
-				'EVENTS'	=> new hdropdown('event[neu]', array('options' => $this->event_drop))
+				'DIFF_ARRAY' => (new hdropdown('diff[neu]', array('options' => $this->diff_drop, 'value' => $this->in->get('diff'))))->output(),
+				'ZONE_ARRAY' => (new hdropdown('tozone[neu]', array('options' => $this->zone_drop, 'value' => $this->in->get('zone_id'))))->output(),
+				'EVENTS'	=> (new hdropdown('event[neu]', array('options' => $this->event_drop)))->output()
 			));
 		}
 
@@ -327,7 +327,7 @@ class rli_Bz extends page_generic {
 		$this->confirm_delete();
 		$this->tpl->assign_vars(array(
 			'S_DIFF'		=> ($this->config->get('default_game') == 'wow') ? true : false,
-			'DIFF_DROP'		=> new hdropdown('diff', array('options' => $this->diff_drop)),
+			'DIFF_DROP'		=> (new hdropdown('diff', array('options' => $this->diff_drop)))->output(),
 		));
 		$this->jquery->Tab_header('rli_manage_bz');
 		$this->core->set_vars(array(
