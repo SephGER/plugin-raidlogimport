@@ -48,6 +48,9 @@ class everquest extends rli_parser {
 			$data['times'][] = array(trim($match['name']), time() - (2*3600), 'join');
 			$data['times'][] = array(trim($match['name']), time(), 'leave');
 		}
+		
+		$data['zones'][] = array('unknown zone',  time() - (2*4000), time());
+		$data['bosses'][] = array('unknown boss', time() - (1*3600), 0);
 		return $data;
 	}
 }
