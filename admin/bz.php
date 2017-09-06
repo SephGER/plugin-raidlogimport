@@ -79,12 +79,19 @@ class rli_Bz extends page_generic {
 			foreach($data as $id => $type) {
 				$method = ($id == 'neu') ? 'add' : 'update';
 				list($old_type, $iid) = explode('_', $id);
+				
+				
 				if($old_type == $type OR $method == 'add') {
-					$save = $this->pdh->put('rli_'.$type, $method, $this->prepare_data($type, $id, $method));
+					$arrData = $this->prepare_data($type, $id, $method);
+					if(!$arrData[0]) continue;
+					
+					$save = $this->pdh->put('rli_'.$type, $method, $arrData);
 				} else {
 					//type changed: remove and add
+					$arrData = $this->prepare_data($type, $id, 'add');
+					if(!$arrData[0]) continue;
 					$save = $this->pdh->put('rli_'.$old_type, 'del', array($iid));
-					if($save) $save = $this->pdh->put('rli_'.$type, 'add', $this->prepare_data($type, $id, 'add'));
+					if($save) $save = $this->pdh->put('rli_'.$type, 'add', $arrData);
 				}
 				if($save) {
 					$message['rli_save_suc'][] = $this->in->get('string:'.$id, '');

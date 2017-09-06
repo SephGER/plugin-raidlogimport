@@ -107,7 +107,9 @@ class pdh_r_rli_boss extends pdh_r_generic {
 			return $icon.$this->pdh->get('event', 'name', array($this->get_note($id)));
 		}
 		$suffix = ($this->get_diff($id) AND $this->config->get('dep_match', 'raidlogimport') AND $this->game->get_game() == 'wow') ? $this->config->get('diff_'.$this->get_diff($id), 'raidlogimport') : '';
-		return $this->get_note($id).$suffix;
+		$note = $this->get_note($id);
+		if(!$note || $note == "") $note = $this->get_string($id);
+		return $note.$suffix;
 	}
 	
 	public function get_bonus($id) {
