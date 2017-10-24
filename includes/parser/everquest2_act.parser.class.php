@@ -42,26 +42,47 @@ class everquest2_act extends rli_parser {
 		$Data = str_getcsv($text, "\n"); //parse the rows
 		$arrFirstUser = false;
 		
+		$blnUseHttp = false;
+		$intVersatz = 0;
+		$arrLeaveTimes = $arrJoinTimes = array();
+		
 		foreach ($Data as $row){
 			$arrRow = str_getcsv($row);
 			
+			//New Format
+			//Player,DKP Holder,DKP,Bid/Roll,Raid Duration (d.HH:MM),Join Time,Join Zone,Leave Time,Leave Zone,Gap Time,Looted (ID),Sit,Comment,
+			if($arrRow[5] == 'Join Time') $blnUseHttp = true;
+			if($blnUseHttp) $intVersatz = 1;
+			
+			//Is Headline
 			if($arrRow[0] === 'Player') continue;
 			
-			if(!$arrFirstUser) $arrFirstUser = $arrRow;
+			if(!$arrFirstUser && $arrRow[5+$intVersatz] != "Unknown") $arrFirstUser = $arrRow;
+			
+			//Format
+			//Player,DKP Holder,Bid/Roll,Raid Duration (d.HH:MM),Join Time,Join Zone,Leave Time,Leave Zone,Gap Time,Looted (ID),comment
 			
 			$data['members'][] = array(trim($arrRow[0]), '', '', 0);
-			$data['times'][] = array(trim($arrRow[0]), strtotime($arrRow[4]), 'join');
-			$data['times'][] = array(trim($arrRow[0]), strtotime($arrRow[6]), 'leave');
+			$data['times'][] = array(trim($arrRow[0]), strtotime($arrRow[4+$intVersatz]), 'join');
+			$data['times'][] = array(trim($arrRow[0]), strtotime($arrRow[6+$intVersatz]), 'leave');
+			$arrLeaveTimes[] = strtotime($arrRow[6+$intVersatz]);
+			$arrJoinTimes[] = strtotime($arrRow[4+$intVersatz]);
 			
 			//Loot, 9
-			$strLootLine = $arrRow[9];
+			$strLootLine = $arrRow[9+$intVersatz];
+
 			if($strLootLine != ""){
 				$arrLootArray = array();
-				$intMatches = preg_match_all("/(.*)\(([0-9]*)\)/U", $strLootLine, $arrLootArray);
+				$intMatches = preg_match_all("/(.*)\((http:\/\/u\.eq2wire\.com\/item\/index\/[0-9]*|[0-9]*)\)/U", $strLootLine, $arrLootArray);
 				
 				if($intMatches > 0){
 					foreach($arrLootArray[0] as $key => $val){
-						$data['items'][] = array(trim($arrLootArray[1][$key]), trim($arrRow[0]), 0, trim($arrLootArray[2][$key]), strtotime($arrRow[4])+100);
+						$strItem = $arrLootArray[2][$key];
+						//New Format containts link to eq2wire
+						if(strpos($strItem, 'http')) $strItem = str_replace('http://u.eq2wire.com/item/index/', '', $strItem);
+	
+						
+						$data['items'][] = array(trim($arrLootArray[1][$key]), trim($arrRow[0]), 0, trim($strItem), strtotime($arrRow[4])+100);
 					}
 				}
 			}
@@ -69,10 +90,10 @@ class everquest2_act extends rli_parser {
 		
 		if($arrFirstUser){
 			$data['zones'][] = array(
-				$arrFirstUser[5], strtotime($arrRow[4]), strtotime($arrRow[6])
+					$arrFirstUser[5+$intVersatz], min($arrJoinTimes), max($arrLeaveTimes)
 			);
 		}
-
+		
 		return $data;
 	}
 }
