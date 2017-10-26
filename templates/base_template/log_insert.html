@@ -13,7 +13,7 @@
 </div>
 
 
-<form method="post" action="{ACTION}" name="post">
+<form method="post" action="{ACTION}" name="post" enctype="multipart/form-data" class="mybox">
 	<table class="table fullwidth colorswitch">
 	<tr>
 		<td width="50%" align="center"><button id="show_log_form" class="mainoption" type="button"><i class="fa fa-plus"></i> {L_INSERT}</button></td>
@@ -27,8 +27,55 @@
 				<dd>{PARSER_DD}</dd>
 			</dl>
 			</fieldset>
-			<textarea name="log" rows="20" id="log" style="width: 99%" class="post"></textarea><br />
-		<button type="submit" name="checkraid" value="submit"><i class="fa fa-check"></i> {L_SEND}</button>
+			<textarea name="log" rows="20" id="log" style="width: 97%" class="post"></textarea><br />
+		<button type="submit" name="checkraid" value="submit" id="box__button"><i class="fa fa-check"></i> {L_SEND}</button>
 	</tr>
 	</table>
 </form>
+
+<script>
+//DRag & Drop
+$(function(){
+	var isAdvancedUpload = function() {
+	  var div = document.createElement('div');
+	  return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && 'FormData' in window && 'FileReader' in window;
+	}();
+		
+	var $form = $('.mybox');
+	
+	if (isAdvancedUpload) {
+	  $form.addClass('has-advanced-upload');
+	}
+	
+	$('.mybox').on('dragover', function(evt){
+	  evt.preventDefault();
+	}).on('dragover dragenter', function() {
+		$form.addClass('is-dragover');
+	  })
+	  .on('dragleave dragend drop', function() {
+		$form.removeClass('is-dragover');
+	  })
+	
+	$('.mybox').on('drop', function(evt){
+	  evt.preventDefault();
+	  var files = evt.originalEvent.dataTransfer.files;
+	  var myfile = files[0];
+	  
+	  var oFReader = new FileReader();
+		oFReader.readAsText(myfile);
+		oFReader.onload = function (oFREvent) {
+
+		$('#log').val(oFREvent.target.result);
+		$('#box__button').click();
+	};
+	  
+	});
+})
+</script>
+
+<style>
+.mybox.is-dragover textarea {
+	background: #ddd;
+	border: 2px dashed #000 !important;
+}
+</style>
