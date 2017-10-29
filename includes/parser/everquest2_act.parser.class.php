@@ -79,9 +79,7 @@ class everquest2_act extends rli_parser {
 					foreach($arrLootArray[0] as $key => $val){
 						$strItem = $arrLootArray[2][$key];
 						//New Format containts link to eq2wire
-						if(strpos($strItem, 'http')) $strItem = str_replace('http://u.eq2wire.com/item/index/', '', $strItem);
-	
-						
+						if(strpos($strItem, 'http') !== false) $strItem = str_replace('http://u.eq2wire.com/item/index/', '', $strItem);						
 						$data['items'][] = array(trim($arrLootArray[1][$key]), trim($arrRow[0]), 0, trim($strItem), strtotime($arrRow[4])+100);
 					}
 				}
@@ -92,6 +90,18 @@ class everquest2_act extends rli_parser {
 			$data['zones'][] = array(
 					$arrFirstUser[5+$intVersatz], min($arrJoinTimes), max($arrLeaveTimes)
 			);
+			
+			
+			$array_sum = array_sum($arrJoinTimes);
+			$abs_join = ($array_sum / (count($arrJoinTimes)));
+			
+			
+			$array_sum = array_sum($arrLeaveTimes);
+			$abs_leave = ($array_sum / (count($arrLeaveTimes)));
+			
+			$intBossTime = ($abs_join + $abs_leave) / 2;
+			
+			$data['bosses'][] = array($arrFirstUser[5+$intVersatz], round($intBossTime, 0));
 		}
 		
 		return $data;
