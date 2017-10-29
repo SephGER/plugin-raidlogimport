@@ -30,7 +30,7 @@ class raidlogimport extends plugin_generic {
 	}
 
 	public $vstatus = 'Stable';
-	public $version = '0.7.2.3'; //Version for EQdkp Plus 2.3
+	public $version = '0.7.2.4'; //Version for EQdkp Plus 2.3
 	
 	protected static $apiLevel = 23;
 	
