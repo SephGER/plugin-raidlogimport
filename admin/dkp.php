@@ -116,6 +116,10 @@ class rli_import extends page_generic {
 			'page_title'        => $this->user->lang('rli_check_data'),
 			'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'raids.html',
+				'page_path'			=> [
+						['title'=>$this->user->lang('menu_admin_panel'), 'url'=>$this->root_path.'admin/'.$this->SID],
+						['title'=>$this->user->lang('raidlogimport').': '.$this->user->lang('rli_check_data'), 'url'=> ' '],
+				],
 			'display'           => true)
 		);
 	}
@@ -149,6 +153,10 @@ class rli_import extends page_generic {
 			'page_title'        => $this->user->lang('rli_check_data'),
 			'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'members.html',
+				'page_path'			=> [
+						['title'=>$this->user->lang('menu_admin_panel'), 'url'=>$this->root_path.'admin/'.$this->SID],
+						['title'=>$this->user->lang('raidlogimport').': '.$this->user->lang('rli_check_data'), 'url'=> ' '],
+				],
 			'display'           => true)
 		);
 	}
@@ -175,6 +183,10 @@ class rli_import extends page_generic {
 			'page_title'        => $this->user->lang('rli_check_data'),
 			'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'items.html',
+				'page_path'			=> [
+						['title'=>$this->user->lang('menu_admin_panel'), 'url'=>$this->root_path.'admin/'.$this->SID],
+						['title'=>$this->user->lang('raidlogimport').': '.$this->user->lang('rli_check_data'), 'url'=> ' '],
+				],
 			'display'           => true)
 		);
 	}
@@ -208,6 +220,10 @@ class rli_import extends page_generic {
 			'page_title'        => $this->user->lang('rli_check_data'),
 			'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'adjustments.html',
+				'page_path'			=> [
+						['title'=>$this->user->lang('menu_admin_panel'), 'url'=>$this->root_path.'admin/'.$this->SID],
+						['title'=>$this->user->lang('raidlogimport').': '.$this->user->lang('rli_check_data'), 'url'=> ' '],
+				],
 			'display'           => true)
 		);
 	}
@@ -230,6 +246,10 @@ class rli_import extends page_generic {
 			'page_title'        => $this->user->lang('rli_check_data'),
 			'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'viewall.html',
+				'page_path'			=> [
+						['title'=>$this->user->lang('menu_admin_panel'), 'url'=>$this->root_path.'admin/'.$this->SID],
+						['title'=>$this->user->lang('raidlogimport').': '.$this->user->lang('rli_check_data'), 'url'=> ' '],
+				],
 			'display'           => true)
 		);
 	}
@@ -253,6 +273,10 @@ class rli_import extends page_generic {
 				'page_title'        => $this->user->lang('rli_imp_suc'),
 				'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
 				'template_file'     => 'finish.html',
+					'page_path'			=> [
+							['title'=>$this->user->lang('menu_admin_panel'), 'url'=>$this->root_path.'admin/'.$this->SID],
+							['title'=>$this->user->lang('raidlogimport').': '.$this->user->lang('rli_imp_suc'), 'url'=> ' '],
+					],
 				'display'           => true)
 			);
 		} else {
@@ -273,6 +297,10 @@ class rli_import extends page_generic {
 				'page_title'		=> $this->user->lang('rli_imp_no_suc'),
 				'template_path'		=> $this->pm->get_data('raidlogimport', 'template_path'),
 				'template_file'		=> 'check_input.html',
+					'page_path'			=> [
+							['title'=>$this->user->lang('menu_admin_panel'), 'url'=>$this->root_path.'admin/'.$this->SID],
+							['title'=>$this->user->lang('raidlogimport').': '.$this->user->lang('rli_imp_no_suc'), 'url'=> ' '],
+					],
 				'display'			=> true,
 				)
 			);
@@ -305,6 +333,10 @@ class rli_import extends page_generic {
 			'page_title'        => $this->user->lang('rli_data_source'),
 			'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'log_insert.html',
+				'page_path'			=> [
+						['title'=>$this->user->lang('menu_admin_panel'), 'url'=>$this->root_path.'admin/'.$this->SID],
+						['title'=>$this->user->lang('raidlogimport').': '.$this->user->lang('rli_data_source'), 'url'=> ' '],
+				],
 			'display'           => true,
 			)
 		);

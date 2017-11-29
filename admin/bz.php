@@ -286,10 +286,15 @@ class rli_Bz extends page_generic {
 				display: none;
 			}');
 		$this->core->set_vars(array(
-			'page_title'        => sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('rli_bz_bz'),
+			'page_title' 		=> $this->user->lang('raidlogimport').' - '.$this->user->lang('rli_bz_bz'),
 			'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'bz_upd.html',
 			'header_format'		=> $this->simple_head,
+				'page_path'			=> [
+						['title'=>$this->user->lang('menu_admin_panel'), 'url'=>$this->root_path.'admin/'.$this->SID],
+						['title'=>$this->user->lang('raidlogimport').': '.$this->user->lang('rli_bz_bz'), 'url'=>$this->root_path.'plugins/raidlogimport/admin/bz.php'.$this->SID],
+						['title'=>$this->user->lang('bz_upd'), 'url'=>' '],
+				],
 			'display'           => true,
 			)
 		);
@@ -342,6 +347,10 @@ class rli_Bz extends page_generic {
 			'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'bz.html',
 			'header_format'		=> $this->simple_head,
+				'page_path'			=> [
+						['title'=>$this->user->lang('menu_admin_panel'), 'url'=>$this->root_path.'admin/'.$this->SID],
+						['title'=>$this->user->lang('raidlogimport').': '.$this->user->lang('rli_bz_bz'), 'url'=>' '],
+				],
 			'display'           => true,
 			)
 		);

@@ -239,9 +239,13 @@ class RLI_Settings extends page_generic {
 		);
 
 		$this->core->set_vars(array(
-			'page_title' 		=> sprintf($this->user->lang('admin_title_prefix'), $this->config->get('guildtag'), $this->config->get('dkp_name')).': '.$this->user->lang('configuration'),
+			'page_title' 		=> $this->user->lang('raidlogimport').' - '.$this->user->lang('settings'),
 			'template_path'     => $this->pm->get_data('raidlogimport', 'template_path'),
 			'template_file'     => 'settings.html',
+				'page_path'			=> [
+						['title'=>$this->user->lang('menu_admin_panel'), 'url'=>$this->root_path.'admin/'.$this->SID],
+						['title'=>$this->user->lang('raidlogimport').': '.$this->user->lang('settings'), 'url'=>' '],
+				],
 			'display'           => true,
 			)
 		);
