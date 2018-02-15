@@ -3,7 +3,7 @@
  *	Package:	RaidLogImport Plugin
  *	Link:		http://eqdkp-plus.eu
  *
- *	Copyright (C) 2006-2015 EQdkp-Plus Developer Team
+ *	Copyright (C) 2006-2016 EQdkp-Plus Developer Team
  *
  *	This program is free software: you can redistribute it and/or modify
  *	it under the terms of the GNU Affero General Public License as published
@@ -195,7 +195,7 @@ class rli_item extends gen_class {
 			));
 			$this->tpl->add_js(
 "var rli_key = ".($key+1).";
-$('.del_item').click(function() {
+$('#items').on('click',  '.del_item', function() {
 	$(this).removeClass('del_item');
 	".($this->rli->config('no_del_warn') ? "$('#'+$(this).data('id')).css('display', 'none');
 	$('#'+$(this).data('id')+'submit').removeAttr('disabled');" : "delete_warning($(this).data('id'));")."

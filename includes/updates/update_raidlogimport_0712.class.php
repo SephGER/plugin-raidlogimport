@@ -25,11 +25,11 @@ if(!defined('EQDKP_INC')) {
 }
 
 include_once(registry::get_const('root_path').'maintenance/includes/sql_update_task.class.php');
-if (!class_exists('update_raidlogimport_0703')) {
-class update_raidlogimport_0703 extends sql_update_task {
+if (!class_exists('update_raidlogimport_0712')) {
+class update_raidlogimport_0712 extends sql_update_task {
 	public $author		= 'Hoofy';
-	public $version		= '0.7.0.3';
-	public $name		= 'Raidlogimport 0.7.0.3 Update';
+	public $version		= '0.7.1.2';
+	public $name		= 'Raidlogimport 0.7.1.2 Update';
 	public $type		= 'plugin_update';
 	public $plugin_path	= 'raidlogimport';
 	
@@ -43,20 +43,17 @@ class update_raidlogimport_0703 extends sql_update_task {
 	// init language
 	public $langs = array(
 		'english' => array(
-			'update_raidlogimport_0703' => 'Raidlogimport 0.7.0.3 Update Package',
+			'update_raidlogimport_0712' => 'Raidlogimport 0.7.1.2 Update Package',
 			'update_function' => 'Added configs',
 		),
 		'german' => array(
-			'update_raidlogimport_0703' => 'Raidlogimport 0.7.0.3 Update Package',
+			'update_raidlogimport_0712' => 'Raidlogimport 0.7.1.2 Update Package',
 			'update_function' => 'Configs hinzugefügt',
 		),
 	);
 	
 	public function update_function() {
-		$cfgs = array('autocreate_bosses', 'autocreate_zones');
-		foreach($cfgs as $cfg) {
-			$this->config->set($cfg, 1, 'raidlogimport');
-		}
+		$this->config->set("no_del_warn", 0, 'raidlogimport');
 		return true;
 	}
 }

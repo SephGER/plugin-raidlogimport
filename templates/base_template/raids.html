@@ -37,7 +37,7 @@
 				<td>{L_rli_end}: {raids.END_DATE}</td>
 				<td>{L_rli_raid_value}:  {raids.VALUE}
 					<!-- IF USE_TIMEDKP -->&nbsp;&nbsp;&nbsp;&nbsp; {L_rli_t_points}: <input type="text" name="raids[{raids.COUNT}][timebonus]" value="{raids.TIMEBONUS}" class="input" size="6" /><!-- ENDIF -->
-					<!-- IF USE_EVENTDKP -->&nbsp;&nbsp;&nbsp;&nbsp; {L_rli_e_points}: <input type="text" name="raids[{raids.COUNT}][eventval]" value="{raids.EVENTVAL}" class="input" size="6" /><!-- ENDIF -->
+					<!-- IF USE_EVENTDKP -->&nbsp;&nbsp;&nbsp;&nbsp; {L_rli_e_points}: <input type="text" name="raids[{raids.COUNT}][eventval]" value="{raids.EVENTVAL}" class="input" size="6" id="raids_{raids.COUNT}_eventval"/><!-- ENDIF -->
 				</td>
 			  </tr>
 			  <tr>
@@ -112,3 +112,12 @@
 		</div>
 	</div>
 </form>
+
+<script type="text/javascript">
+ 	function loadEventValue(event_id, key){
+ 		$.get("dkp.php{SID}", { eventvalue: "1", event: event_id }, function(data){
+			var id = "#raids_" + key + "_eventval";
+			$( id ).val(data);
+		});
+	}
+</script>

@@ -3,7 +3,7 @@
  *	Package:	RaidLogImport Plugin
  *	Link:		http://eqdkp-plus.eu
  *
- *	Copyright (C) 2006-2015 EQdkp-Plus Developer Team
+ *	Copyright (C) 2006-2016 EQdkp-Plus Developer Team
  *
  *	This program is free software: you can redistribute it and/or modify
  *	it under the terms of the GNU Affero General Public License as published
@@ -30,9 +30,9 @@ class raidlogimport extends plugin_generic {
 	}
 
 	public $vstatus = 'Beta';
-	public $version = '0.7.0.9';
+	public $version = '0.7.1.4';
 	
-	protected static $apiLevel = 20;
+	protected static $apiLevel = 23;
 	
 	public function pre_install() {
 		//initialize config
@@ -57,7 +57,7 @@ class raidlogimport extends plugin_generic {
 		$lang_file = $this->root_path.'plugins/raidlogimport/language/'.$this->user->lang_name.'/'.$this->config->get('default_game').'_lang.php';
 		if(file_exists($lang_file)) {
 			include($lang_file);
-			$this->user->add_lang($this->user->lang_name, $lang);
+			$this->user->objLanguage->add_lang($this->user->lang_name, $lang);
 		}
 
 		$this->add_dependency(array(
@@ -95,6 +95,8 @@ class raidlogimport extends plugin_generic {
 
 		//menu
 		$this->add_menu('admin', $this->gen_admin_menu());
+		
+		$this->add_hook('calendarevent_raid_menu', 'rli_calendarevent_raid_menu_hook', 'calendarevent_raid_menu');
 	}
 	
 	private function create_default_configs() {
@@ -133,6 +135,7 @@ class raidlogimport extends plugin_generic {
 			'autocomplete'		=> '0',		//auto-complete fields (1 member, 2 items)
 			'autocreate_zones'	=> 0,
 			'autocreate_bosses'	=> 0,
+			'no_del_warn'		=> 0,
 		);
 		if(strtolower($this->config->get('default_game')) == 'wow') {
 			$config_data = array_merge($config_data, array(

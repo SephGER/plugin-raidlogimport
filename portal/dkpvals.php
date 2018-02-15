@@ -3,7 +3,7 @@
  *	Package:	RaidLogImport Plugin
  *	Link:		http://eqdkp-plus.eu
  *
- *	Copyright (C) 2006-2015 EQdkp-Plus Developer Team
+ *	Copyright (C) 2006-2016 EQdkp-Plus Developer Team
  *
  *	This program is free software: you can redistribute it and/or modify
  *	it under the terms of the GNU Affero General Public License as published
@@ -44,7 +44,7 @@ if(!class_exists('rli_portal')){
 	require_once($eqdkp_root_path.'plugins/raidlogimport/includes/rli.class.php');
 
 	class rli_portal extends rli {
-		function rli_portal() {
+		function __construct() {
 			parent::__construct();
 			$this->get_bonus();
 		}

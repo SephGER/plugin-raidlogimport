@@ -3,7 +3,7 @@
  *	Package:	RaidLogImport Plugin
  *	Link:		http://eqdkp-plus.eu
  *
- *	Copyright (C) 2006-2015 EQdkp-Plus Developer Team
+ *	Copyright (C) 2006-2016 EQdkp-Plus Developer Team
  *
  *	This program is free software: you can redistribute it and/or modify
  *	it under the terms of the GNU Affero General Public License as published
@@ -328,6 +328,20 @@ if(!class_exists('rli_member')) {
 		$('#memberrow_999').before(mem);
 		rli_key++;
 	});", 'docready');
+				
+		if($this->config('member_display') == 1){
+			$this->tpl->add_js("
+				var header_height = 0;
+			    $('.verticalText').each(function() {
+					console.log($(this).outerWidth());
+					console.log($(this).width());
+			        if ($(this).outerWidth() > header_height) header_height = $(this).outerWidth();
+			    });
+			    $('tr td.raidrow').height(header_height+25);
+			    $('.verticalText').width(20);
+			", 'docready');
+		}		
+				
 			}
 		}
 

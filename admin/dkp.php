@@ -3,7 +3,7 @@
  *	Package:	RaidLogImport Plugin
  *	Link:		http://eqdkp-plus.eu
  *
- *	Copyright (C) 2006-2015 EQdkp-Plus Developer Team
+ *	Copyright (C) 2006-2016 EQdkp-Plus Developer Team
  *
  *	This program is free software: you can redistribute it and/or modify
  *	it under the terms of the GNU Affero General Public License as published
@@ -47,12 +47,22 @@ class rli_import extends page_generic {
 			'save_itempools' => array('process' => 'itempool_save'),
 			'checkadj'	=> array('process' => 'process_adjustments'),
 			'viewall'	=> array('process' => 'process_views'),
-			'insert'	=> array('process' => 'insert_log')
+			'insert'	=> array('process' => 'insert_log'),
+			'eventvalue'=> array('process'	=> 'ajax_eventvalue'),
 		);
 		parent::__construct(false, $handler);
 		// save template state to return to if errors occur
 		$this->tpl->save_state('rli_start');
 		$this->process();
+	}
+	
+	public function ajax_eventvalue(){
+		header('content-type: text/html; charset=UTF-8');
+		
+		$event_id = $this->in->get('event', 0);
+		$event_value = $this->pdh->geth("event", "value", array($event_id));
+		echo runden($event_value);
+		die();
 	}
 	
 	private function process_error($main_process) {
@@ -65,7 +75,7 @@ class rli_import extends page_generic {
 				$this->core->messages($error['messages']);
 			}
 			if(!empty($error['process']) && $error['process'] != $main_process) {
-				$this->$error['process'](false);
+				$this->{$error['process']}(false);
 			}
 		}
 	}
