@@ -388,10 +388,18 @@ if(!class_exists('rli_member')) {
 		}
 
 		public function insert() {
+			$arrToignore = preg_split("/[\s,]+/", $this->config('ignore_dissed'));
+			
+			
 			foreach($this->members as $member) {
 				$intMemberId = false;
 				$servername = false;
 				$membername = $member['name'];
+				
+				foreach($arrToignore as $toignore) {
+					if(strcasecmp($toignore, $membername) === 0) continue;
+				}
+				
 				
 				if(register('config')->get('default_game') === "wow" && strpos($member['name'], '-')){
 					//add a possibility to track wow's "super cool" cross-realm naming idea
