@@ -33,10 +33,13 @@ class rli_item extends gen_class {
 	public static $dependencies = array('rli');
 
 	private $items = array();
+	private $toignore = array();
 
 	public function __construct() {
 		$this->items = $this->rli->get_cache_data('item');
 		if($this->in->exists('loots')) $this->load_items();
+		
+		if(strlen($this->config('ignore_dissed'))) $this->toignore = preg_split("/[\s,]+/", $this->config('ignore_dissed'));
 	}
 	
 	public function reset() {
@@ -52,10 +55,6 @@ class rli_item extends gen_class {
 			foreach($this->toignore as $toignore) {
 				if(strcasecmp($toignore, $member) === 0) return false;
 			}
-		} elseif(!isset($this->toignore) && strlen($this->config('ignore_dissed')) > 2) {
-			$this->toignore = explode(',', $this->config('ignore_dissed'));
-		} else {
-			$this->toignore = array();
 		}
 		$this->items[] = array('name' => $name, 'member' => $member, 'value' => $value, 'game_id' => $id, 'time' => $time, 'raid' => $raid, 'itempool' => $itempool);
 		return true;
