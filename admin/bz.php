@@ -315,7 +315,7 @@ class rli_Bz extends page_generic {
 		}
 		$bosses = $this->pdh->get('rli_boss', 'id_list', array(false));
 		$tozone = array();
-		$sorting = array();
+		$sorting = array('boss' => array(), 'zone' => array());
 		$zones = $this->pdh->get('rli_zone', 'id_list', array(false));
 		foreach($bosses as $boss_id) {
 			$sorting['boss'][$boss_id] = $this->pdh->get('rli_boss', 'sort', array($boss_id));

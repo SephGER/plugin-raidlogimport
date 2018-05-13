@@ -37,6 +37,7 @@ class pdh_r_rli_boss extends pdh_r_generic {
 		global $pdc, $db, $core;
 		$this->data = $this->pdc->get('pdh_rli_boss');
 		if(!$this->data) {
+			$this->data = array();
 			$sql = "SELECT boss_id, boss_string, boss_note, boss_bonus, boss_timebonus, boss_diff, boss_tozone, boss_sort, boss_active FROM __raidlogimport_boss;";
 			$objQuery = $this->db->query($sql);
 			if ($objQuery){
