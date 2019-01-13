@@ -51,7 +51,7 @@ if(!class_exists('everquest_extended_who')) {
 				$event = trim($match['event']);
 				$start = $end = trim($match['time']);
 					
-				if (!is_numeric($event)) $data['zones'][] = array('', $dst ? strtotime('+1 hours', strtotime($start)) : strtotime($start), $dst ? strtotime('+1 hours', strtotime($end)) : strtotime($end), 0, $event);
+				if (!is_numeric($event)) $data['zones'][] = array($event, $dst ? strtotime('+1 hours', strtotime($start)) : strtotime($start), $dst ? strtotime('+1 hours', strtotime($end)) : strtotime($end), 0, $event);
 				//if (!is_numeric($event)) $data['zones'][] = array('', strtotime($start), strtotime($end), 0, $event);
 			}
 
