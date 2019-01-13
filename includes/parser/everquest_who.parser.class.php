@@ -39,6 +39,7 @@ class everquest_who extends rli_parser {
 	}
 	
 	public static function parse($text) {
+		//[Fri Nov 02 23:00:00 2018] [52 Heretic] Zibaxia
 		$regex = '~\[(ANONYMOUS|(?<lvl>[0-9]{1,3})\h(?<class>\w*))\]\h(?<name>\w*)~';
 		preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
 		foreach($matches as $match) {
@@ -49,9 +50,22 @@ class everquest_who extends rli_parser {
 			$data['times'][] = array(trim($match['name']), time(), 'leave');
 		}
 		
-		
+		//[Fri Nov 02 23:00:00 2018] [52 Heretic (Someclass)] Zibaxia (Iksar) <The Fallen Ones>
 		$regex = '~((\[ANONYMOUS\])|((\[(?<lvl>[0-9]{1,3})\h(?<title>\w*\s?\w*)\h\((?<class>.*)\)\])))\h(?<name>\w*)\h*((\((?<race>.*)\))*\h*(<(?<guild>.*)>)*)*~';
 		preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
+		
+		foreach($matches as $match) {
+			$lvl = (isset($match['lvl']) && $match['lvl'] != "") ? trim($match['lvl']) : 0;
+			$class = (isset($match['class']) && $match['class'] != "") ? trim($match['class']) : '';
+			$data['members'][] = array(trim($match['name']), $class, '', $lvl);
+			$data['times'][] = array(trim($match['name']), time() - (2*3600), 'join');
+			$data['times'][] = array(trim($match['name']), time(), 'leave');
+		}
+		
+		//[Fri Nov 02 23:00:00 2018] [52 Heretic] Zibaxia (Iksar) <The Fallen Ones>
+		$regex = '~((\[ANONYMOUS\])|((\[(?<lvl>[0-9]{1,3})\h(?<title>\w*\s?\w*)\])))\h(?<name>\w*)\h*((\((?<race>.*)\))*\h*(<(?<guild>.*)>)*)*~';
+		preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
+		
 		foreach($matches as $match) {
 			$lvl = (isset($match['lvl']) && $match['lvl'] != "") ? trim($match['lvl']) : 0;
 			$class = (isset($match['class']) && $match['class'] != "") ? trim($match['class']) : '';
