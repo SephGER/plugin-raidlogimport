@@ -20,7 +20,7 @@
 		{player.NR}&nbsp;<i class="fa fa-trash-o fa-lg del_mem" title="{L_delete}" data-id="memberrow_{player.KEY}"></i>
 		<input type="hidden" id="memberrow_{player.KEY}submit" name="members[{player.KEY}][delete]" value="true" {player.DELDIS} />
 	</td>
-	<td width="300"><input type="text" name="members[{player.KEY}][name]" value="{player.MITGLIED}" /> {player.ALIAS} {player.RANK}</td>
+	<td width="300"><input type="text" name="members[{player.KEY}][name]" value="{player.MITGLIED}" class="autocomplete_members" /> {player.ALIAS} {player.RANK}</td>
 	{player.RAID_LIST}
 	<!-- IF S_ATT_BEGIN -->
 	<td align="right"><input type="checkbox" name="members[{player.KEY}][att_begin]" class="maininput" value="true" {player.ATT_BEGIN} size="5" /></td>

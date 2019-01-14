@@ -32,8 +32,8 @@
 						&nbsp;<i class="fa fa-trash-o fa-lg del_item hand" title="{L_delte}" data-id="item_{loots.KEY}"></i>
 						<input type="hidden" id="item_{loots.KEY}submit" name="loots[{loots.KEY}][delete]" value="true" {loots.DELDIS} />
 					</td>
-					<td><input type="text" name="loots[{loots.KEY}][name]" class="input" value="{loots.LOOTNAME}" size="40" {loots.READONLY} /></td>
-					<td><input type="text" name="loots[{loots.KEY}][game_id]" class="input" value="{loots.ITEMID}" /></td>
+					<td><input type="text" name="loots[{loots.KEY}][name]" class="input autocomplete_items" value="{loots.LOOTNAME}" size="40" {loots.READONLY} /></td>
+					<td><input type="text" name="loots[{loots.KEY}][game_id]" class="input autocomplete_itemids" value="{loots.ITEMID}" /></td>
 					<td>{loots.LOOTER}</td>
 					<td>{loots.RAID}</td>
 					<td>{loots.ITEMPOOL}</td>

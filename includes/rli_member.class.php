@@ -311,6 +311,9 @@ if(!class_exists('rli_member')) {
 				if(isset($detail_raid_list)) $this->detailed_times_list(999, array());
 				unset($this->members[999]);
 				$this->jquery->qtip('#dt_help', $this->user->lang('rli_help_dt_member'), array('my' => 'center right', 'at' => 'left center'));
+				$members = $this->pdh->aget('member', 'name', 0, array($this->pdh->sort($this->pdh->get('member', 'id_list', array(false,true,false)), 'member', 'name', 'asc')));
+				$js_array = $this->jquery->implode_wrapped('"','"', ",", $members);
+				
 				$this->tpl->add_js(
 	"var rli_key = ".(($key) ? $key : 1).";
 	$('.del_mem').click(function() {
@@ -326,8 +329,26 @@ if(!class_exists('rli_member')) {
 		mem.removeAttr('style');
 		mem.find('td:first').html((rli_key+1)+$.trim(mem.find('td:first').html()));
 		$('#memberrow_999').before(mem);
+		bindAutocomplete();
 		rli_key++;
-	});", 'docready');
+	});
+
+	var jquiac_members = [".$js_array."];
+
+	function bindAutocomplete(){
+		$('.autocomplete_members').autocomplete({
+				source: jquiac_members
+		});
+	}
+
+	bindAutocomplete();
+
+", 'docready');
+				
+				$this->returnJScache['autocomplete'][$id] = 'var jquiac_'.$id.' = ['.$js_array.'];
+						$("#'.$ids.'").autocomplete({
+							source: jquiac_'.$id.'
+						});';
 				
 		if($this->config('member_display') == 1){
 			$this->tpl->add_js("

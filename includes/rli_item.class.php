@@ -192,6 +192,12 @@ class rli_item extends gen_class {
 				'DISPLAY'	=> 'style="display: none;"',
 				'S_IP_SAVE' => $this->config('itempool_save')
 			));
+			
+			$item_names = array_unique ($this->pdh->aget('item', 'name', 0, array($this->pdh->get('item', 'id_list'))));
+			$itemids = array_unique($this->pdh->aget('item', 'name', 0, array($this->pdh->get('game_itemid', 'id_list'))));
+			$strItemNames = $this->jquery->implode_wrapped('"','"', ",", $item_names);
+			$strItemIDs = $this->jquery->implode_wrapped('"','"', ",", $itemids);
+			
 			$this->tpl->add_js(
 "var rli_key = ".($key+1).";
 $('#items').on('click',  '.del_item', function() {
@@ -207,7 +213,24 @@ $('#add_item_button').click(function() {
 	item.removeAttr('style');
 	$('#item_999').before(item);
 	rli_key++;
-});", 'docready');
+	bindAutocomplete();
+});
+
+	var jquiac_items = [".$strItemNames."];
+	var jquiac_itemids = [".$strItemIDs."];
+
+	function bindAutocomplete(){
+		$('.autocomplete_items').autocomplete({
+				source: jquiac_items
+		});
+		$('.autocomplete_itemids').autocomplete({
+				source: jquiac_itemids
+		});
+	}
+
+	bindAutocomplete();
+
+", 'docready');
 		}
 		if($end && $end <= $p) {
 			$next_button = '<button type="submit" name="checkitem" value="'.$this->user->lang('rli_itempage').(($page) ? $page : 2).'"><i class="fa fa-arrow-right"></i> '.$this->user->lang('rli_itempage').(($page) ? $page : 2).'</button>';
