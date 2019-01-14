@@ -277,6 +277,13 @@ if(!class_exists('rli_raid')) {
 				}
 				$begin = $this->time->user_date($rai['begin'], true, false, false, function_exists('date_create_from_format'));
 				$end = $this->time->user_date($rai['end'], true, false, false, function_exists('date_create_from_format'));
+				
+				//Try to find an event with the same name, if no event is set
+				if(!isset($rai['event']) || $rai['event'] == false){
+					$intKey = array_search($rai['zone'], $this->event_drop);
+					if($intKey !== false) $rai['event'] = $intKey;
+				}
+				
 				$this->tpl->assign_block_vars('raids', array(
 					'COUNT'     => $ky,
 					'START_DATE'=> ($with_form) ? $this->jquery->Calendar("raids[".$ky."][start_date]", $begin, '', array('id' => 'raids_'.$ky.'_start_date', 'class' => 'start_date', 'timepicker' => true, 'class' => 'class="input"', 'onclose' => ' $( "#raids['.$ky.'][start_date]" ).datepicker( "option", "minDate", selectedDate );')) : $begin,
@@ -831,14 +838,13 @@ if(!class_exists('rli_raid')) {
 					//Auto create Event
 					if(!$eventID && (int)$this->config('autocreate_bosses')){
 						$eventID = $this->pdh->put('event', 'add_event', array(sanitize($bosskill['name']), 0, ''));
-						$event = $eventID;
 					}
 					$event = $eventID;
 					//Auto create Boss
 					$zoneid = $this->pdh->get('rli_zone', 'id_string', array(trim($this->raids[$key]['zone']), $this->raids[$key]['diff']));
 					//Auto create Zone
 					if(!$zoneid && (int)$this->config('autocreate_zones')){
-						$zoneid = $this->pdh->put('rli_zone', 'add', array(trim($this->raids[$key]['zone']), 1, 0.0, $this->raids[$key]['diff']));
+						$zoneid = $this->pdh->put('rli_zone', 'add', array(trim($this->raids[$key]['zone']), $event, 0.0, $this->raids[$key]['diff']));
 					}
 					if($zoneid && (int)$this->config('autocreate_bosses')){
 						$this->pdh->put('rli_boss', 'add', array(sanitize($bosskill['name']), $event, 0.0, 0.0, $bosskill['diff'], $zoneid));

@@ -225,8 +225,13 @@ class rli_Bz extends page_generic {
 		}
 		if(empty($this->event_drop)) $this->event_drop = $this->pdh->aget('event', 'name', 0, array($this->pdh->get('event', 'id_list')));
 		$this->prepare_diff_drop();
-		if($this->in->exists('bz_ids')) {
-			$bz_ids = $this->in->getArray('bz_ids', 'string');
+
+		$arrBZIds = $this->in->getArray('bz_ids', 'string');
+		$arrBZId = $this->in->get('bz_id', '');
+		
+		if(count($arrBZIds) || strlen($arrBZId)) {
+			$bz_ids = (strlen($arrBZId)) ? array($arrBZId) : $arrBZIds;
+			
 			foreach($bz_ids as $id) {
 				if(strpos($id, 'b') !== false) {
 					$this->tpl->assign_block_vars('upd_list', $this->get_upd_data('boss', substr($id, 1)));

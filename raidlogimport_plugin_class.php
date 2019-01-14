@@ -30,7 +30,7 @@ class raidlogimport extends plugin_generic {
 	}
 
 	public $vstatus = 'Stable';
-	public $version = '0.7.2.7'; //Version for EQdkp Plus 2.3
+	public $version = '0.7.2.8'; //Version for EQdkp Plus 2.3
 	
 	protected static $apiLevel = 23;
 	
@@ -134,8 +134,8 @@ class raidlogimport extends plugin_generic {
 			'itempool_save'		=> '1',		//save itempool per item & event
 			'del_dbl_times'		=> '0',		//delete double leave/joins
 			'autocomplete'		=> '0',		//auto-complete fields (1 member, 2 items)
-			'autocreate_zones'	=> 0,
-			'autocreate_bosses'	=> 0,
+			'autocreate_zones'	=> 1,
+			'autocreate_bosses'	=> 1,
 			'no_del_warn'		=> 0,
 		);
 		if(strtolower($this->config->get('default_game')) == 'wow') {

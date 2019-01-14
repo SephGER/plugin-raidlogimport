@@ -20,7 +20,10 @@
 						<div id="zone_{zone_list.ZID}">
 						<table class="table fullwidth">
 							<tr>
-								<th width="9"><!-- IF zone_list.ZID --><input type="checkbox" name="bz_ids[]" value="z{zone_list.ZID}" /><!-- ENDIF --></th>
+								<th width="9"><!-- IF zone_list.ZID --><input type="checkbox" name="bz_ids[]" value="z{zone_list.ZID}" />
+								<a onclick="window.location='{SID}&bz_id=z{zone_list.ZID}&upd=1'"><i class="fa fa-pencil fa-lg pointer" title="{L_edit}"></i></a>
+								
+								<!-- ENDIF --></th>
 								<th width="34%"><div class="toggle_button"><span class="togglebutton_name">{zone_list.ZSTRING}</span></div></th>
 								<th width="35%">{zone_list.ZNOTE}</th>
 								<th width="13%">{zone_list.ZVAL}</th>
@@ -28,17 +31,13 @@
 							</tr>
 							<!-- BEGIN boss_list -->
 							<tr>
-								<td colspan="5" class="toggle_container">
-									<table class="table fullwidth colorswitch">
-										<tr>
-											<td width="20" align="center"><input type="checkbox" name="bz_ids[]" value="b{zone_list.boss_list.BID}" /></td>
-											<td width="35%">{zone_list.boss_list.BSTRING}</td>
-											<td width="35%">{zone_list.boss_list.BNOTE}</td>
-											<td width="13%">{zone_list.boss_list.BBONUS}</td>
-											<td>{zone_list.boss_list.BTIMEBONUS}</td>
-										</tr>
-									</table>
+								<td width="1%" class="nowrap" align="center"><span style="width:30px">&nbsp;</span><input type="checkbox" name="bz_ids[]" value="b{zone_list.boss_list.BID}" />
+								<a onclick="window.location='{SID}&bz_id=b{zone_list.boss_list.BID}&upd=1'"><i class="fa fa-pencil fa-lg pointer" title="{L_edit}"></i></a>
 								</td>
+								<td width="35%">{zone_list.boss_list.BSTRING}</td>
+								<td width="35%">{zone_list.boss_list.BNOTE}</td>
+								<td width="13%">{zone_list.boss_list.BBONUS}</td>
+								<td>{zone_list.boss_list.BTIMEBONUS}</td>
 							</tr>
 							<!-- END boss_list -->
 						</table>
