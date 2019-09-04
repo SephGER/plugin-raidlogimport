@@ -18,14 +18,13 @@
 				<tr class="row1">
 					<td>{L_rli_save_suc}</td>
 				</tr>
-				<tr>
-					<td>
-						<ul>
-							<li><a href="dkp.php{SID}">{L_rli_dkp_insert}</a></li>
-						</ul>
-					</td>
+								<!-- BEGIN raid_row -->
+				<tr class="row1">
+					<td>{L_raid}: {raid_row.RAID_LINK}</td>
 				</tr>
+				<!-- END raid_row -->
 			</table>
+			<button onclick="window.location='dkp.php{SID}'"><i class="fa fa-plus fa-lg"></i> {L_rli_dkp_insert}</button>
 		</div>
 	</div>
 </form>

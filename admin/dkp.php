@@ -264,9 +264,20 @@ class rli_import extends page_generic {
 			$this->item->insert();
 			if(!$this->rli->config('deactivate_adj')) $this->adj->insert();
 			$this->process_error('insert_log');
-			$this->rli->process_pdh_queue();
+			$a = $this->rli->process_pdh_queue();
 			$this->pdh->process_hook_queue();
 			$this->rli->flush_cache();
+			
+			//language
+			lang2tpl();
+			
+			if(isset($a['raids'])){
+				foreach($a['raids'] as $intRaidID){
+					$this->tpl->assign_block_vars('raid_row', array(
+							'RAID_LINK' => '<a href="'.$this->root_path.'admin/manage_raids.php'.$this->SID.'&r='.$intRaidID.'&upd=true"><i class="fa fa-lg fa-pencil"></i> '.$this->pdh->geth('raid', 'date', array($intRaidID)).', '.$this->pdh->get('raid', 'event_name', array($intRaidID)).' ('.$this->pdh->geth('raid', 'note', array($intRaidID)).')</a>',
+					));
+				}
+			}
 	
 			$this->rli->nav('finish');
 			$this->core->set_vars(array(
@@ -292,6 +303,10 @@ class rli_import extends page_generic {
 				'L_NO_IMP_SUC'	=> $this->user->lang('rli_imp_no_suc'),
 				'CHECK'			=> $check)
 			);
+			
+			//language
+			lang2tpl();
+			
 			$this->rli->nav('finish');
 			$this->core->set_vars(array(
 				'page_title'		=> $this->user->lang('rli_imp_no_suc'),
