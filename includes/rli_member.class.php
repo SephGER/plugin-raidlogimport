@@ -422,7 +422,7 @@ if(!class_exists('rli_member')) {
 				}
 				
 				
-				if(register('config')->get('default_game') === "wow" && strpos($member['name'], '-')){
+				if((register('config')->get('default_game') === "wow" || register('config')->get('default_game') === "wowclassic") && strpos($member['name'], '-')){
 					//add a possibility to track wow's "super cool" cross-realm naming idea
 					list($membername, $servername) = explode('-', $member['name']);
 					$servername = preg_replace_callback(

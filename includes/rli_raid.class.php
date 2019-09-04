@@ -382,7 +382,7 @@ if(!class_exists('rli_raid')) {
 					'DISPLAY'	=> 'style="display: none;"'
 				));
 				$functioncall = $this->jquery->Calendar('n', 0, '', array('timepicker' => true, 'return_function' => true));
-				$this->tpl->assign_var('L_DIFFICULTY', ($this->config->get('default_game') == 'wow') ? $this->user->lang('difficulty') : false);
+				$this->tpl->assign_var('L_DIFFICULTY', ($this->config->get('default_game') == 'wow' || $this->config->get('default_game') == 'wowclassic') ? $this->user->lang('difficulty') : false);
 				$this->tpl->add_js(
 	"var rli_rkey = ".($last_key+1).";
 	$(document).on('click', '.del_boss', function(){

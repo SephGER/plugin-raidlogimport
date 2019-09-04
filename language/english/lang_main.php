@@ -237,7 +237,7 @@ $lang = array(
 	"member_display_0" => 'Multi-Select',
 	"member_display_1" => 'Multiple Checkboxes',
 	"member_display_2" => 'Detailed Join/Leave Information',
-	"member_display_help" => 'You need the GD-Lib (a php extension) to use the layout "Multiple Checkboxes" or "Detailed Join/Leave Information". The following GD-Lib was found: <br />%s',
+	"member_display_help" => 'You need the GD-Lib (a php extension) to use the layout "Detailed Join/Leave Information". The following GD-Lib was found: <br />%s',
 	"no_gd_lib" => '<span class="negative">no GD-lib found</span>',
 	"title_standby" => 'Standby-Settings',
 	"standby_raid" => 'Shall the standby-members be assigned to a raid?',

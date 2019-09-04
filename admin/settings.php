@@ -198,7 +198,7 @@ class RLI_Settings extends page_generic {
 		$num = 1;
 		foreach($holder as $type => $hold) {
 			ksort($hold);
-			if($type == 'difficulty' AND $this->config->get('default_game') != 'wow') {
+			if($type == 'difficulty' AND $this->config->get('default_game') != 'wow' AND $this->config->get('default_game') != 'wowclassic') {
 				continue;
 			}
 			$this->tpl->assign_block_vars('holder', array(

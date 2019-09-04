@@ -66,7 +66,7 @@ class rli extends gen_class {
 	}
 
 	public function suffix($string, $append, $diff) {
-		if($this->game->get_game() == 'wow' AND $append) {
+		if(($this->game->get_game() == 'wow' || $this->game->get_game() == 'wowclassic') AND $append) {
 			return $string.$this->config('diff_'.$diff);
 		}
 		return $string;
@@ -155,6 +155,7 @@ class rli extends gen_class {
 	}
 	
 	public function process_pdh_queue() {
+		$out = array();
 		foreach($this->pdh_queue as $data) {
 			if($data['id_insert']) $data['params'][$data['id_insert']['param']] = ${$data['id_insert']['type']}[$data['params'][$data['id_insert']['param']]];
 			/* foreach($data['id_insert'] as $id_insert) {
@@ -166,8 +167,10 @@ class rli extends gen_class {
 					
 				}
 			} */
-			${$data['type']}[$data['key']] = $this->pdh->put($data['module'], $data['tag'], $data['params']);
+			$out[$data['type']][$data['key']] = ${$data['type']}[$data['key']] = $this->pdh->put($data['module'], $data['tag'], $data['params']);
 		}
+		
+		return $out;
 	}
 	
 	public function add_cache_data($type, $data) {

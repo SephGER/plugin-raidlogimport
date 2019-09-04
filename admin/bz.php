@@ -256,7 +256,7 @@ class rli_Bz extends page_generic {
 		}
 
 		$this->tpl->assign_vars(array(
-			'S_DIFF'		=> ($this->game->get_game() == 'wow') ? true : false,
+			'S_DIFF'		=> ($this->game->get_game() == 'wow' || $this->game->get_game() == 'wowclassic') ? true : false,
 			'S_BOSSEVENT'	=> ($this->config->get('event_boss', 'raidlogimport')  & 1) ? true : false,
 		));
 		$js = '
@@ -343,7 +343,7 @@ class rli_Bz extends page_generic {
 		$this->prepare_diff_drop();
 		$this->confirm_delete();
 		$this->tpl->assign_vars(array(
-			'S_DIFF'		=> ($this->config->get('default_game') == 'wow') ? true : false,
+			'S_DIFF'		=> ($this->config->get('default_game') == 'wow' || $this->config->get('default_game') == 'wowclassic') ? true : false,
 			'DIFF_DROP'		=> (new hdropdown('diff', array('options' => $this->diff_drop)))->output(),
 		));
 		$this->jquery->Tab_header('rli_manage_bz');
