@@ -432,6 +432,8 @@ if(!class_exists('rli_member')) {
 					);
 					
 					$intMemberId = $this->pdh->get('member', 'id', array($membername, array('servername' => $servername)));
+					//Try to find char without a servername
+					if(!$intMemberId)  $intMemberId = $this->pdh->get('member', 'id', array($membername));
 				} else {
 					$intMemberId = $this->pdh->get('member', 'id', array($member['name']));
 				}
