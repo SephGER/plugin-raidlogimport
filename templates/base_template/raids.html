@@ -54,8 +54,8 @@
 							<!-- ENDIF -->
 							<td>{L_date}: {raids.bosskills.BK_DATE}</td>
 							<!-- IF USE_BOSSDKP -->
-							<td>{L_value}: <input id="bonus_raid{raids.COUNT}_boss{raids.bosskills.BK_KEY}" type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][bonus]" value="{raids.bosskills.BK_BONUS}" size="5" class="input" /></td>
-							<td>{L_rli_t_points}: <input id="timebonus_raid{raids.COUNT}_boss{raids.bosskills.BK_KEY}" type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][timebonus]" value="{raids.bosskills.BK_TIMEBONUS}" size="5" class="input" /></td>
+							<td>{L_value}: <input id="bonus_raid{raids.COUNT}_boss{raids.bosskills.BK_KEY}" type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][bonus]" value="{raids.bosskills.BK_BONUS}" size="5" class="input bossbonus" /></td>
+							<td>{L_rli_t_points}: <input id="timebonus_raid{raids.COUNT}_boss{raids.bosskills.BK_KEY}" type="text" name="raids[{raids.COUNT}][bosskills][{raids.bosskills.BK_KEY}][timebonus]" value="{raids.bosskills.BK_TIMEBONUS}" size="5" class="input bosstimebonus" /></td>
 							<!-- ENDIF -->
 							<!-- IF L_DIFFICULTY -->
 							<td>{L_DIFFICULTY}: {raids.bosskills.BK_DIFF}</td>
@@ -107,6 +107,19 @@
  		$.get("dkp.php{SID}", { eventvalue: "1", event: event_id }, function(data){
 			var id = "#raids_" + key + "_eventval";
 			$( id ).val(data);
+		});
+	}
+ 	
+ 	function loadBossValues(obj){
+ 		var boss = $(obj).val();
+ 		
+ 		$.get("dkp.php{SID}", { bossvalues: "1", event: boss }, function(data){
+ 			data = $.trim(data);
+ 			var res = data.split("|");
+ 			
+ 			var parent = $(obj).parent().parent();
+ 			parent.find('.bosstimebonus').val(res[0]);
+ 			parent.find('.bossbonus').val(res[1]);
 		});
 	}
 </script>

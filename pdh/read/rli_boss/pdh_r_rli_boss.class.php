@@ -102,15 +102,28 @@ class pdh_r_rli_boss extends pdh_r_generic {
 		return $this->data[$id]['note'];
 	}
 	
-	public function get_html_note($id, $with_icon=true) {
+	public function get_html_note($id, $with_icon=true, $withSuffix=false) {
 		if(($this->config->get('event_boss', 'raidlogimport') & 1) AND is_numeric($this->get_note($id))) {
 			$icon = ($with_icon) ? $this->game->decorate('events', array($this->get_note($id))) : '';
 			return $icon.$this->pdh->get('event', 'name', array($this->get_note($id)));
 		}
-		$suffix = ($this->get_diff($id) AND $this->config->get('dep_match', 'raidlogimport') AND ($this->game->get_game() == 'wow' || $this->game->get_game() == 'wowclassic')) ? $this->config->get('diff_'.$this->get_diff($id), 'raidlogimport') : '';
+		
+		
+		$diffname = (strlen($this->config->get('diff_'.$this->get_diff($id), 'raidlogimport'))) ? $this->config->get('diff_'.$this->get_diff($id), 'raidlogimport') : $this->user->lang('diff_'.$this->get_diff($id));
+		$suffix = ($this->get_diff($id) AND ($this->config->get('dep_match', 'raidlogimport') || $withSuffix) AND ($this->game->get_game() == 'wow')) ? ' ('.$diffname.')' : '';
 		$note = $this->get_note($id);
-		if(!$note || $note == "") $note = $this->get_string($id);
+		if(!$note || $note == "") $note = $this->get_html_string($id);
 		return $note.$suffix;
+	}
+	
+	public function get_html_stringandnote($id, $withSuffix=false) {
+		if(($this->config->get('event_boss', 'raidlogimport') & 1) AND is_numeric($this->get_note($id))) {
+			return $this->pdh->get('event', 'name', array($this->get_note($id)));
+		}
+		
+		$note = $this->get_note($id);
+		$string = $this->get_html_string($id);
+		return $note.' ('.$string.')';
 	}
 	
 	public function get_bonus($id) {
@@ -126,7 +139,7 @@ class pdh_r_rli_boss extends pdh_r_generic {
 	}
 	
 	public function get_html_diff($id) {
-		return ($this->get_diff($id)) ? ' &nbsp; ('.$this->user->lang('diff_'.$this->get_diff($id)).')' : '';
+		return ($this->get_diff($id)) ? '&nbsp;('.$this->user->lang('diff_'.$this->get_diff($id)).')' : '';
 	}
 	
 	public function get_tozone($id) {

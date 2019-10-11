@@ -74,7 +74,7 @@ function deep_in_array($search, $array) {
 
 function lang2tpl() {
 	register('tpl')->assign_vars(array(
-		'L_DIFFICULTY'		=> (register('config')->get('default_game') == 'wow' || register('config')->get('default_game') == 'wowclassic') ? register('user')->lang('difficulty') : false,
+		'L_DIFFICULTY'		=> (register('config')->get('default_game') == 'wow') ? register('user')->lang('difficulty') : false,
 		'S_DEACTIVATE_ADJ'	=> (register('rli')->config('deactivate_adj')) ? true : false
 	));
 }

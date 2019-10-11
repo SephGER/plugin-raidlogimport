@@ -680,7 +680,7 @@ if(!class_exists('rli_member')) {
 				$counter = 1;
 				for($i=$start; $i < $end;) {
 					$x = $counter*45 - 14;
-					imagestring($im, 2, $x, 5, date('H:i', $i), $black);
+					imagestring($im, 2, $x, 5, $this->time->date('H:i', $i), $black);
 					$i += 900;
 					$counter++;
 				}

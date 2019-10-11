@@ -49,6 +49,7 @@ class rli_import extends page_generic {
 			'viewall'	=> array('process' => 'process_views'),
 			'insert'	=> array('process' => 'insert_log'),
 			'eventvalue'=> array('process'	=> 'ajax_eventvalue'),
+			'bossvalues'=> array('process'	=> 'ajax_bossvalues'),
 		);
 		parent::__construct(false, $handler);
 		// save template state to return to if errors occur
@@ -62,6 +63,23 @@ class rli_import extends page_generic {
 		$event_id = $this->in->get('event', 0);
 		$event_value = $this->pdh->geth("event", "value", array($event_id));
 		echo runden($event_value);
+		
+		die();
+	}
+	
+	public function ajax_bossvalues(){
+		header('content-type: text/html; charset=UTF-8');
+		
+		$boss_id = $this->in->get('event', 0);
+		
+		$timebonus = $this->pdh->get('rli_boss', 'timebonus', array($boss_id));
+				
+		echo runden($timebonus);
+		
+		$bonus = $this->pdh->get('rli_boss', 'bonus', array($boss_id));
+		
+		echo '|'.runden($bonus);
+		
 		die();
 	}
 	

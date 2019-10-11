@@ -108,6 +108,21 @@ class pdh_r_rli_zone extends pdh_r_generic {
 		return false;
 	}
 	
+	public function get_zonebyevent($intEventID) {
+		$strEventname = $this->pdh->get('event', 'name', array($intEventID));
+		
+		foreach($this->data as $id => $data) {
+			if(is_numeric($data['event']) && $data['event'] == $intEventID){
+				return $id;
+			} else {
+				if($data['event'] == $strEventname) {
+					return $id;
+				}
+			}
+		}
+		return false;
+	}
+	
 	public function get_timebonus($id) {
 		return $this->data[$id]['timebonus'];
 	}

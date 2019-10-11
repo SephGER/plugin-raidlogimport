@@ -66,7 +66,7 @@ class rli extends gen_class {
 	}
 
 	public function suffix($string, $append, $diff) {
-		if(($this->game->get_game() == 'wow' || $this->game->get_game() == 'wowclassic') AND $append) {
+		if(($this->game->get_game() == 'wow') AND $append) {
 			return $string.$this->config('diff_'.$diff);
 		}
 		return $string;

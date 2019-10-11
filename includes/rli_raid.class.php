@@ -253,7 +253,7 @@ if(!class_exists('rli_raid')) {
 		
 		
 			if(!isset($this->bk_list)) {
-				$this->bk_list = $this->pdh->aget('rli_boss', 'html_note', 0, array($this->pdh->get('rli_boss', 'id_list'), false));
+				$this->bk_list = $this->pdh->aget('rli_boss', 'html_stringandnote', 0, array($this->pdh->get('rli_boss', 'id_list'), true));
 				asort($this->bk_list);
 			}
 			
@@ -315,7 +315,7 @@ if(!class_exists('rli_raid')) {
 							$html_id = 'raid'.$ky.'_boss'.$xy;
 							$name_field = '';
 							if(is_numeric($bk['id'])) {
-								$name_field = (new hdropdown('raids['.$ky.'][bosskills]['.$xy.'][id]', array('options' => $this->bk_list, 'value' => $bk['id'], 'id' => 'a'.unique_id())))->output();
+								$name_field = (new hdropdown('raids['.$ky.'][bosskills]['.$xy.'][id]', array('options' => $this->bk_list, 'value' => $bk['id'], 'class' => 'input bossselect', 'js' => 'onchange="loadBossValues(this)"', 'id' => 'a'.unique_id())))->output();
 							} else {
 								$intBossID = $this->pdh->get('rli_boss', 'id_string', array(sanitize($bk['id']), $bk['diff']));
 								if(!$intBossID && (int)$this->config('autocreate_bosses')){
@@ -326,7 +326,7 @@ if(!class_exists('rli_raid')) {
 										$intBossID = $this->pdh->put('rli_boss', 'add', array(sanitize($bk['id']), sanitize($bk['id']), $bk['bonus'], $bk['timebonus'], $bk['diff'], $zoneID));
 										$this->pdh->process_hook_queue();
 										
-										$this->bk_list = $this->pdh->aget('rli_boss', 'html_note', 0, array($this->pdh->get('rli_boss', 'id_list'), false));
+										$this->bk_list = $this->pdh->aget('rli_boss', 'html_stringandnote', 0, array($this->pdh->get('rli_boss', 'id_list'), true));
 										asort($this->bk_list);
 									}
 								}
@@ -382,7 +382,7 @@ if(!class_exists('rli_raid')) {
 					'DISPLAY'	=> 'style="display: none;"'
 				));
 				$functioncall = $this->jquery->Calendar('n', 0, '', array('timepicker' => true, 'return_function' => true));
-				$this->tpl->assign_var('L_DIFFICULTY', ($this->config->get('default_game') == 'wow' || $this->config->get('default_game') == 'wowclassic') ? $this->user->lang('difficulty') : false);
+				$this->tpl->assign_var('L_DIFFICULTY', ($this->config->get('default_game') == 'wow') ? $this->user->lang('difficulty') : false);
 				$this->tpl->add_js(
 	"var rli_rkey = ".($last_key+1).";
 	$(document).on('click', '.del_boss', function(){

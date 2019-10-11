@@ -30,7 +30,7 @@ class raidlogimport extends plugin_generic {
 	}
 
 	public $vstatus = 'Stable';
-	public $version = '0.7.3.1'; //Version for EQdkp Plus 2.3
+	public $version = '0.7.3.2'; //Version for EQdkp Plus 2.3
 	
 	protected static $apiLevel = 23;
 	
@@ -138,7 +138,7 @@ class raidlogimport extends plugin_generic {
 			'autocreate_bosses'	=> 1,
 			'no_del_warn'		=> 0,
 		);
-		if(strtolower($this->config->get('default_game')) == 'wow' || strtolower($this->config->get('default_game')) == 'wowclassic') {
+		if(strtolower($this->config->get('default_game')) == 'wow') {
 			$config_data = array_merge($config_data, array(
 				'diff_1'	=> '',
 				'diff_2'	=> ' HM',
