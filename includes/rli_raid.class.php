@@ -549,6 +549,7 @@ if(!class_exists('rli_raid')) {
 				} elseif($this->config('standby_raid') == 2) {
 					$standby = 0;
 				}
+				
 				if(($this->in_raid($key, $times, $standby)/$this->in_raid($key)) >= ($this->config('member_raid') / 100)) {
 					$raid_list[] = $key;
 				}
@@ -589,6 +590,14 @@ if(!class_exists('rli_raid')) {
 
 		public function count() {
 			return count($this->raids);
+		}
+		
+		public function count_bosses($raid){
+			if(isset($this->raids[$raid]['bosskills'])){
+				return count($this->raids[$raid]['bosskills']);
+			}
+			
+			return 0;
 		}
 
 		public function get_attendance($times) {
@@ -697,6 +706,25 @@ if(!class_exists('rli_raid')) {
 				$bossdkp += $this->calc_timebossdkp($bosskill['timebonus'], $in_boss);
 			}
 			return $bossdkp;
+		}
+		
+		public function count_bossattendance($key, $times){
+			$bosscount = 0;
+			
+			foreach ($this->raids[$key]['bosskills'] as $b => $bosskill) {
+				if($times !== false) {
+					foreach ($times as $time) {
+						if($time['join'] < $bosskill['time'] AND $time['leave'] > $bosskill['time']) {
+							$bosscount += 1;
+							break;
+						}
+					}
+				} else {					
+					$bosscount += 1;
+				}
+			}
+			
+			return $bosscount;
 		}
 
 		private function get_bossdkp($key, $times) {

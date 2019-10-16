@@ -112,6 +112,7 @@
 	$lang['rli_insert'] = 'Raid(s) Einfügen';
 	$lang['rli_adjs'] = 'Korrekturen';
 	$lang['rli_partial_raid'] = 'Teilweise Raidteilnahme';
+	$lang['rli_all_bosses'] = 'Vollständige Raidteilnahme';
 	$lang['rli_add_raid'] = 'Raid hinzufügen';
 	$lang['rli_add_raids'] = 'Raids hinzufügen';
 	$lang['rli_delete_raids_warning'] = 'Soll der Raid/Boss wirklich gelöscht werden?';
@@ -179,6 +180,7 @@
 	//move end
 	$lang['attendance_begin'] = 'Bonus für Anwesenheit am Raidbeginn';
 	$lang['attendance_end'] = 'Bonus für Anwesenheit am Raidende';
+	$lang['attendance_all'] = 'Bonus für komplette Anwesenheit (alle Bosskills)';
 	$lang['config_success'] = 'Konfigurations Erfolg';
 	$lang['event_boss'] = 'Existiert für jeden Boss ein Event?';
 	$lang['event_boss_1'] = 'Ja';

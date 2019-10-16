@@ -123,12 +123,17 @@ if(!class_exists('rli_member')) {
 							$member['raid_list'] = $this->in->getArray('members:'.$key.':raid_list', 'int');
 							$member['att_begin'] = (isset($mem['att_begin'])) ? true : false;
 							$member['att_end'] = (isset($mem['att_end'])) ? true : false;
-						}
+						}					
+				
+						
 						if($member['raid_list']) {
 							foreach($member['raid_list'] as $raid_id) {
 								$one_attendant = true;
 								if(!$this->config('attendance_raid') OR ($raid_id != $globalattraids['begin'] AND $raid_id != $globalattraids['end'])) {
 									$dkp = $this->raid->get_value($raid_id, $member['times'], array($member['att_begin'], $member['att_end']));
+
+									$bosscount = $this->raid->count_bossattendance($raid_id, $member['times'], array($member['att_begin'], $member['att_end']));
+
 									$dkp = runden($dkp);
 									$raid = $this->raid->get($raid_id);
 									if($dkp <  $raid['value']) {
@@ -141,7 +146,17 @@ if(!class_exists('rli_member')) {
 											$this->adj->add($this->user->lang('rli_partial_raid'), $member['name'], $dkp, $raid['event'], $raid['begin'], $raid_id);
 										}
 									}
+									
+									if($this->config('attendance_all') && $this->raid->count_bosses($raid_id) && $this->raid->count_bosses($raid_id) === $bosscount){
+										$akey = $this->adj->check_adj_exists($member['name'], $this->user->lang('rli_all_bosses'), $raid_id);
+										if($akey !== false) {
+											$this->adj->update($akey, array('value' => (float)$this->config('attendance_all')));
+										} else {
+											$this->adj->add($this->user->lang('rli_all_bosses'), $member['name'], (float)$this->config('attendance_all'), $raid['event'], $raid['begin'], $raid_id);
+										}
+									}
 								}
+								
 							}
 						}
 					}

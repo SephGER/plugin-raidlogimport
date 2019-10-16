@@ -44,7 +44,7 @@ class RLI_Settings extends page_generic {
 				'general'		=> array('timedkp_handle', 'bz_parse', 'loottime', 'ignore_dissed'),
 				'member'		=> array('member_miss_time', 'member_raid'), #'member_start'),
 				#'am'			=> array('am_raidnum', 'am_value'),
-				'att'			=> array('attendance_begin', 'attendance_end', 'attendance_time', 'att_note_begin', 'att_note_end'),
+				'att'			=> array('attendance_begin', 'attendance_end', 'attendance_all', 'attendance_time', 'att_note_begin', 'att_note_end'),
 				'difficulty'	=> array('diff_1', 'diff_2', 'diff_3', 'diff_4', 'diff_5', 'diff_6', 'diff_7', 'diff_8', 'diff_9', 'diff_11', 'diff_12', 'diff_14', 'diff_15', 'diff_16'),
 				'standby'		=> array('standby_value', 'standby_raidnote')
 			),

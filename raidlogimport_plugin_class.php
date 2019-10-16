@@ -31,7 +31,7 @@ class raidlogimport extends plugin_generic {
 
 	public $vstatus = 'Stable';
 
-	public $version = '0.7.3.2'; //Version for EQdkp Plus 2.3
+	public $version = '0.7.3.3'; //Version for EQdkp Plus 2.3
 	
 	protected static $apiLevel = 23;
 	
@@ -109,6 +109,7 @@ class raidlogimport extends plugin_generic {
 			'loottime'			=> '600', //time after bosskill to assign loot to boss (in seconds)
 			'attendance_begin' 	=> '0',
 			'attendance_end'	=> '0',
+			'attendance_all'	=> '0',
 			'attendance_raid'	=> '0', //create extra raid for attendence?
 			'attendance_time'	=> '900', //time of inv (in seconds)
 			'event_boss'		=> '0',  //exists an event per boss?
