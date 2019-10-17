@@ -147,12 +147,22 @@ if(!class_exists('rli_member')) {
 										}
 									}
 									
-									if($this->config('attendance_all') && $this->raid->count_bosses($raid_id) && $this->raid->count_bosses($raid_id) === $bosscount){
-										$akey = $this->adj->check_adj_exists($member['name'], $this->user->lang('rli_all_bosses'), $raid_id);
-										if($akey !== false) {
-											$this->adj->update($akey, array('value' => (float)$this->config('attendance_all')));
-										} else {
-											$this->adj->add($this->user->lang('rli_all_bosses'), $member['name'], (float)$this->config('attendance_all'), $raid['event'], $raid['begin'], $raid_id);
+									if($this->config('attendance_all') && $this->raid->count_bosses($raid_id) && $this->raid->count_bosses($raid_id) !== $bosscount){										
+										//Does already an adjustment exists?
+										$a2key = $this->adj->check_adj_exists($member['name'], $this->user->lang('rli_partial_raid'), $raid_id);
+										if($a2key !== false){
+											$arrExistingAdj = $this->adj->adjs[$a2key];
+											$val = $arrExistingAdj['value'];
+											$val -= (float)$this->config('attendance_all');
+											$this->adj->update($a2key, array('value' => $val));
+											
+										} else {	
+											$akey = $this->adj->check_adj_exists($member['name'], $this->user->lang('rli_missing_bosses'), $raid_id);
+											if($akey !== false) {
+												$this->adj->update($akey, array('value' => -(float)$this->config('attendance_all')));
+											} else {
+												$this->adj->add($this->user->lang('rli_missing_bosses'), $member['name'], -(float)$this->config('attendance_all'), $raid['event'], $raid['begin'], $raid_id);
+											}
 										}
 									}
 								}

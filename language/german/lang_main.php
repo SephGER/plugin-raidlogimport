@@ -112,7 +112,7 @@
 	$lang['rli_insert'] = 'Raid(s) Einfügen';
 	$lang['rli_adjs'] = 'Korrekturen';
 	$lang['rli_partial_raid'] = 'Teilweise Raidteilnahme';
-	$lang['rli_all_bosses'] = 'Vollständige Raidteilnahme';
+	$lang['rli_missing_bosses'] = 'Unvollständige Raidteilnahme (fehlende Bosskills)';
 	$lang['rli_add_raid'] = 'Raid hinzufügen';
 	$lang['rli_add_raids'] = 'Raids hinzufügen';
 	$lang['rli_delete_raids_warning'] = 'Soll der Raid/Boss wirklich gelöscht werden?';

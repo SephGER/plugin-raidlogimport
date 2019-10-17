@@ -224,6 +224,11 @@ if(!class_exists('rli_raid')) {
 			$eventdkp = $this->get_eventdkp($key, $times);
 			#$itemdkp = $this->get_itemdkp($key, $times);
 			$attdkp = $this->get_attdkp($key, $times, $attdkp_force);
+			
+			if($this->config('attendance_all') && $this->count_bosses($key)){
+				$attdkp += (float)$this->config('attendance_all');
+			}
+			
 			$dkp = $timedkp + $bossdkp + $eventdkp + $attdkp;
 			return $dkp;
 		}
