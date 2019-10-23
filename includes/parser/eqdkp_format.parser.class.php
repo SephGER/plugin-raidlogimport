@@ -27,134 +27,142 @@ if(!defined('EQDKP_INC'))
 }
 
 if(!class_exists('eqdkp_format')) {
-class eqdkp_format extends rli_parser {
-
-	public static $name = 'MLDKP 1.1 / EQdkp Plugin';
-
-	public static function check($xml) {
-		$back[1] = true;
-		if(!isset($xml->start)) {
-			$back[1] = false;
-			$back[2][] = 'start';
-		} else {
-			if(!(stristr($xml->start, ':'))) {
+	class eqdkp_format extends rli_parser {
+		
+		public static $name = 'MLDKP 1.1 / EQdkp Plugin';
+		
+		public static function check($xml) {
+			$back[1] = true;
+			if(!isset($xml->start)) {
 				$back[1] = false;
-				$back[2][] = 'start in format: MM/DD/YY HH:MM:SS';
+				$back[2][] = 'start';
+			} else {
+				if(!is_numeric((string)$xml->start[0]) && !(stristr($xml->start, ':'))) {
+					$back[1] = false;
+					$back[2][] = 'start in format: MM/DD/YY HH:MM:SS';
+				}
 			}
-		}
-		if(!isset($xml->end)) {
-			$back[1] = false;
-			$back[2][] = 'end';
-		} else {
-			if(!(stristr($xml->start, ':'))) {
+			if(!isset($xml->end)) {
 				$back[1] = false;
-				$back[2][] = 'end in format: MM/DD/YY HH:MM:SS';
+				$back[2][] = 'end';
+			} else {
+				if(!is_numeric((string)$xml->end[0]) && !(stristr($xml->end, ':'))) {
+					$back[1] = false;
+					$back[2][] = 'end in format: MM/DD/YY HH:MM:SS';
+				}
 			}
-		}
-		if(!isset($xml->BossKills)) {
-			$back[1] = false;
-			$back[2][] = 'BossKills';
-		} else {
-			foreach($xml->BossKills->children() as $bosskill) {
-				if($bosskill) {
-					if(!isset($bosskill->name)) {
-						$back[1] = false;
-						$back[2][] = 'BossKills->name';
-					}
-					if(!isset($bosskill->time)) {
-						$back[1] = false;
-						$back[2][] = 'BossKills->time';
+			if(!isset($xml->BossKills)) {
+				$back[1] = false;
+				$back[2][] = 'BossKills';
+			} else {
+				foreach($xml->BossKills->children() as $bosskill) {
+					if($bosskill) {
+						if(!isset($bosskill->name)) {
+							$back[1] = false;
+							$back[2][] = 'BossKills->name';
+						}
+						if(!isset($bosskill->time)) {
+							$back[1] = false;
+							$back[2][] = 'BossKills->time';
+						}
 					}
 				}
 			}
+			if(!isset($xml->Loot)) {
+				$back[1] = false;
+				$back[2][] = 'Loot';
+			} else {
+				foreach($xml->Loot->children() as $loot) {
+					if($loot) {
+						if(!isset($loot->ItemName)) {
+							$back[1] = false;
+							$back[2][] = 'Loot->ItemName';
+						}
+						if(!isset($loot->Player)) {
+							$back[1] = false;
+							$back[2][] = 'Loot->Player';
+						}
+						if(!isset($loot->Time)) {
+							$back[1] = false;
+							$back[2] = 'Loot->Time';
+						}
+					}
+				}
+			}
+			if(!isset($xml->PlayerInfos)) {
+				$back[1] = false;
+				$back[2][] = 'PlayerInfos';
+			} else {
+				foreach($xml->PlayerInfos->children() as $mem) {
+					if(!isset($mem->name)) {
+						$back[1] = false;
+						$back[2][] = 'PlayerInfos->name';
+					}
+				}
+			}
+			if(!isset($xml->Join)) {
+				$back[1] = false;
+				$back[2][] = 'Join';
+			} else {
+				foreach($xml->Join->children() as $join) {
+					if(!isset($join->player)) {
+						$back[1] = false;
+						$back[2][] = 'Join->player';
+					}
+					if(!isset($join->time)) {
+						$back[1] = false;
+						$back[2][] = 'Join->time';
+					}
+				}
+			}
+			if(!isset($xml->Leave)) {
+				$back[1] = false;
+				$back[2][] = 'Leave';
+			} else {
+				foreach($xml->Leave->children() as $leave) {
+					if(!isset($leave->player)) {
+						$back[1] = false;
+						$back[2][] = 'Leave->player';
+					}
+					if(!isset($leave->time)) {
+						$back[1] = false;
+						$back[2][] = 'Leave->time';
+					}
+				}
+			}
+			return $back;
 		}
-		if(!isset($xml->Loot)) {
-			$back[1] = false;
-			$back[2][] = 'Loot';
-		} else {
+		
+		public static function parse($xml) {
+			$data = array();
+			
+			$data['zones'][] = array(trim($xml->zone), self::convertTime($xml->start), self::convertTime($xml->end), trim($xml->difficulty));
+			foreach ($xml->BossKills->children() as $bosskill) {
+				$data['bosses'][] = array(trim($bosskill->name), self::convertTime($bosskill->time));
+			}
 			foreach($xml->Loot->children() as $loot) {
-				if($loot) {
-					if(!isset($loot->ItemName)) {
-						$back[1] = false;
-						$back[2][] = 'Loot->ItemName';
-					}
-					if(!isset($loot->Player)) {
-						$back[1] = false;
-						$back[2][] = 'Loot->Player';
-					}
-					if(!isset($loot->Time)) {
-						$back[1] = false;
-						$back[2] = 'Loot->Time';
-					}
-				}
+				$player = (trim($loot->Player));
+				$cost = (array_key_exists('Costs', $loot)) ? (int) $loot->Costs : (int) $loot->Note;
+				$itemid = trim($loot->ItemID);
+				$data['items'][] = array(trim($loot->ItemName), $player, $cost, $itemid, self::convertTime($loot->Time));
 			}
-		}
-		if(!isset($xml->PlayerInfos)) {
-			$back[1] = false;
-			$back[2][] = 'PlayerInfos';
-		} else {
-			foreach($xml->PlayerInfos->children() as $mem) {
-				if(!isset($mem->name)) {
-					$back[1] = false;
-					$back[2][] = 'PlayerInfos->name';
-				}
+			foreach($xml->PlayerInfos->children() as $xmember) {
+				$data['members'][] = array(trim($xmember->name), trim($xmember->class), trim($xmember->race), trim($xmember->level), trim($xmember->note));
 			}
-		}
-		if(!isset($xml->Join)) {
-			$back[1] = false;
-			$back[2][] = 'Join';
-		} else {
-			foreach($xml->Join->children() as $join) {
-				if(!isset($join->player)) {
-					$back[1] = false;
-					$back[2][] = 'Join->player';
-				}
-				if(!isset($join->time)) {
-					$back[1] = false;
-					$back[2][] = 'Join->time';
-				}
+			foreach ($xml->Join->children() as $joiner) {
+				$data['times'][] = array(trim($joiner->player), self::convertTime($joiner->time), 'join');
 			}
-		}
-		if(!isset($xml->Leave)) {
-			$back[1] = false;
-			$back[2][] = 'Leave';
-		} else {
-			foreach($xml->Leave->children() as $leave) {
-				if(!isset($leave->player)) {
-					$back[1] = false;
-					$back[2][] = 'Leave->player';
-				}
-				if(!isset($leave->time)) {
-					$back[1] = false;
-					$back[2][] = 'Leave->time';
-				}
+			foreach ($xml->Leave->children() as $leaver) {
+				$data['times'][] = array(trim($leaver->player), self::convertTime($leaver->time), 'leave');
 			}
+			
+			return $data;
 		}
-		return $back;
+		
+		private static function convertTime($str){
+			if(stristr($str, ':'))	return strtotime($str);
+			if(is_numeric((string)$str)) return intval((string)$str);
+		}
 	}
-
-	public static function parse($xml) {
-		$data['zones'][] = array(trim($xml->zone), strtotime($xml->start), strtotime($xml->end), trim($xml->difficulty));
-		foreach ($xml->BossKills->children() as $bosskill) {
-			$data['bosses'][] = array(trim($bosskill->name), strtotime($bosskill->time));
-		}
-		foreach($xml->Loot->children() as $loot) {
-			$player = (trim($loot->Player));
-			$cost = (array_key_exists('Costs', $loot)) ? (int) $loot->Costs : (int) $loot->Note;
-			$itemid = trim($loot->ItemID);
-			$data['items'][] = array(trim($loot->ItemName), $player, $cost, $itemid, strtotime($loot->Time));
-		}
-		foreach($xml->PlayerInfos->children() as $xmember) {
-			$data['members'][] = array(trim($xmember->name), trim($xmember->class), trim($xmember->race), trim($xmember->level), trim($xmember->note));
-		}
-		foreach ($xml->Join->children() as $joiner) {
-			$data['times'][] = array(trim($joiner->player), strtotime($joiner->time), 'join');
-		}
-		foreach ($xml->Leave->children() as $leaver) {
-			$data['times'][] = array(trim($leaver->player), strtotime($leaver->time), 'leave');
-		}
-		return $data;
-	}
-}
 }
 ?>
