@@ -250,7 +250,18 @@ $('#add_item_button').click(function() {
 		foreach($to_save as $id) {
 			$event = $this->raid->raidevents[$this->in->get('loots:'.$id.':raid', 0)];
 			$game_id = $this->in->get('loots:'.$id.':game_id', 0);
-			$saves[$id] = $this->pdh->put('rli_item', 'add', array($game_id, $event, $this->in->get('loots:'.$id.':itempool', 0)));
+			
+			if($this->config->get('dkp_easymode')){
+				$itempool = $this->pdh->get('event', 'def_itempool', array($event));
+				if(!$itempool){
+					$arrItempools = $this->pdh->get('event', 'itempools', array($event));
+					$itempool = $arrItempools[0];
+				}
+			} else {
+				$itempool = $this->in->get('loots:'.$id.':itempool', 0);
+			}
+			
+			$saves[$id] = $this->pdh->put('rli_item', 'add', array($game_id, $event, $itempool));
 		}
 		if(!in_array(false, $saves, true)) {
 			$this->core->message($this->user->lang('rli_itempool_saved'), $this->user->lang('success'), 'green');
@@ -280,6 +291,7 @@ $('#add_item_button').click(function() {
 	
 	public function insert() {
 		$raid_keys = array_keys($this->raid->get_data());
+		$this->raid->raidlist(true);
 		foreach($this->items as $key => $item) {
 			
 			if(!isset($this->member->name_ids[$item['member']])) {
@@ -290,6 +302,20 @@ $('#add_item_button').click(function() {
 				$this->rli->error('process_items', sprintf($this->user->lang('rli_error_item_no_raid'), $item['name']));
 				return false;
 			}
+			
+			if($this->config->get('dkp_easymode')){
+				$event = $this->raid->raidevents[$item['raid']];
+				$itempool = $this->pdh->get('event', 'def_itempool', array($event));
+				if(!(int)$itempool){
+					$arrItempools = $this->pdh->get('event', 'itempools', array($event));
+					$itempool = $arrItempools[0];
+				}
+				
+				$item['itempool'] = $itempool;
+			}
+			
+			if(!$item['itempool']) $item['itempool'] = 1;
+			
 			$this->rli->pdh_queue('items', $key, 'item', 'add_item', array($item['name'], array($this->member->name_ids[$item['member']]), $item['raid'], $item['game_id'], $item['value'], $item['itempool'], $item['time']), array('param' => 2, 'type' => 'raids'));
 		}
 		return true;

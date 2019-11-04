@@ -23,7 +23,9 @@
 					<th>{L_rli_item_id}</th>
 					<th>{L_rli_looter}</th>
 					<th>{L_raid}</th>
+					<!-- IF not S_DKP_EASYMODE -->
 					<th>{L_itempool}</th>
+					<!-- ENDIF -->
 					<th colspan="2">{L_rli_cost}</th>
 				</tr>
 				<!-- BEGIN loots -->
@@ -36,7 +38,9 @@
 					<td><input type="text" name="loots[{loots.KEY}][game_id]" class="input autocomplete_itemids" value="{loots.ITEMID}" /></td>
 					<td>{loots.LOOTER}</td>
 					<td>{loots.RAID}</td>
+					<!-- IF not S_DKP_EASYMODE -->
 					<td>{loots.ITEMPOOL}</td>
+					<!-- ENDIF -->
 					<td><input type="text" name="loots[{loots.KEY}][value]" value="{loots.LOOTDKP}" class="maininput" size="7" /></td>
 					<!-- IF S_IP_SAVE -->
 					<td><input type="checkbox" name="itempool_save[]" value="{loots.KEY}" class="input" /></td>
