@@ -47,7 +47,8 @@ class plus_format extends rli_parser {
 		foreach($xml->members->children() as $xmember) {
 			$name = trim($xmember->name);
 			$note = (isset($xmember->note)) ? trim($xmember->note) : '';
-			$data['members'][] = array($name, trim($xmember->class), trim($xmember->race), trim($xmember->level), $note);
+			$sex = (isset($xmember->sex)) ? trim($xmember->sex) : '';
+			$data['members'][] = array($name, trim($xmember->class), trim($xmember->race), trim($xmember->level), $note, $sex);
 			foreach($xmember->times->children() as $time) {
 				$attrs = $time->attributes();
 				$type = (string) $attrs['type'];
