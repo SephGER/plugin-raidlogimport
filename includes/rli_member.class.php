@@ -474,9 +474,6 @@ if(!class_exists('rli_member')) {
 					if($servername && $servername != ""){
 						$data['servername'] = $servername;
 					}
-
-					
-					d($data);
 					
 					$id = $this->pdh->put('member', 'addorupdate_member', array(0, $data));
 
