@@ -38,12 +38,13 @@ class everquest_loot extends rli_parser {
 		return $back;
 	}
 	
-	public static function parse($text) {
+	public static function parse($text) {		
 		$regex = '/\[(.*)\] --(.*) has looted a (.*).--/';
+		$matches = array();
 		
 		preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
 		$timestart = $timeend = false;
-		$arrMembersDone = array();
+		$arrMembersDone = $data = array();
 		
 		foreach($matches as $match) {
 			if(!$timestart) $timestart = strtotime($match[1]);
@@ -67,7 +68,45 @@ class everquest_loot extends rli_parser {
 		
 		$data['zones'][] = array('unknown zone',  $timestart - (1*3600), $timeend+(500));
 		$data['bosses'][] = array('unknown boss', $timestart, 0);
+		
+		//Try to find the members
+		$arrLines = explode("\r\n", $text);
+		$blnStartMembers = false;
+		foreach($arrLines as $strLine){
+			if(strpos($strLine, 'members:') !== false){
+				$blnStartMembers = true;
+				continue;
+			}
+			
+			if($blnStartMembers && strpos($strLine, '--') !== false){
+				$blnStartMembers = false;
+				continue;
+			}
+			
+			if($blnStartMembers){
+				$strMembers = preg_replace('/\[(.*)\] /', '', $strLine);
+				if($strMembers && strlen($strMembers)){
+					$arrMembers = explode(', ', $strMembers);
+					
+					foreach($arrMembers as $strMember){
+						if(!in_array($strMember, $arrMembersDone)){
+							$lvl = 0;
+							$class = '';
+							
+							if(!in_array(trim($strMember), $arrMembersDone)){
+								$data['members'][] = array(trim($strMember), $class, '', $lvl);
+								$data['times'][] = array(trim($strMember), $timestart - (1*3600), 'join');
+								$data['times'][] = array(trim($strMember), $timeend+(500), 'leave');
+								
+								$arrMembersDone[] = trim($strMember);
+							}
+						}
+					}
 
+				}
+			}
+		}
+		
 		return $data;
 	}
 }
