@@ -56,21 +56,46 @@ if(!class_exists('rli_member')) {
 		}
 
 		public function add($name, $class=0, $race=0, $lvl=0, $note='') {
-			if($race == 'Scourge' || $race == 'SCOURGE') {
-				$race = 'Undead';
+			if (register('config')->get('default_game') === "wow" || register('config')->get('default_game') === "wowclassic") {
+				if(strtolower($race) == 'scourge'){
+					$race = "Undead";
+				}
+				if(strtolower($race) == 'nightelf'){
+					$race = "Night Elf";
+				}
+				if(strtolower($race) == strtolower('BloodElf')){
+					$race = "Blood Elf";
+				}
+				if(strtolower($race) == strtolower('VoidElf')){
+					$race = "Void Elf";
+				}
+				if(strtolower($race) == strtolower('LightforgedDraenei')){
+					$race = "Lightforged Draenei";
+				}
+				if(strtolower($race) == strtolower('DarkIronDwarf')){
+					$race = "Dark Iron Dwarf";
+				}
+				if(strtolower($race) == strtolower('HighmountainTauren')){
+					$race = "Highmountain Tauren";
+				}
+				if(strtolower($race) == strtolower('MagharOrc')){
+					$race = "Mag'har Orc";
+				}
+				if(strtolower($race) == strtolower('KulTiran')){
+					$race = "Kul Tiran";
+				}
+				if(strtolower($race) == strtolower('ZandalariTroll')){
+					$race = "Zandalari Troll";
+				}
+				
+				if(strtolower($class) == strtolower('DEATHKNIGHT')){
+					$class = "Death Knight";
+				}			
+				if(strtolower($class) == strtolower('DEMONHUNTER')){
+					$class = "Demon Hunter";
+				}
 			}
-			if($race == 'BloodElf' || $race == 'BLOODELF') {
-				$race = 'Blood Elf';
-			}
-			if($race == 'NightElf' || $race == 'NIGHTELF') {
-				$race = 'Night Elf';
-			}
-			if($class == 'DEATHKNIGHT' || $class == 'DeathKnight') {
-				$class = 'Death Knight';
-			}
-			if($class == 'DRUID') {
-				$class = 'Druid';
-			}
+			
 			if(!deep_in_array($name, $this->members)) $this->members[] = array('name' => $name, 'class' => $class, 'race' => $race, 'level' => $lvl, 'note' => $note);
 		}
 
