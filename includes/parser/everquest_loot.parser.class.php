@@ -65,16 +65,22 @@ class everquest_loot extends rli_parser {
 			
 			$data['items'][] = array(trim($match[3]), $match[2], 0, '', strtotime($match[1]));
 		}
-		
-		$data['zones'][] = array('unknown zone',  $timestart - (1*3600), $timeend+(500));
-		$data['bosses'][] = array('unknown boss', $timestart, 0);
-		
+				
 		//Try to find the members
 		$arrLines = explode("\r\n", $text);
 		$blnStartMembers = false;
 		foreach($arrLines as $strLine){
 			if(strpos($strLine, 'members:') !== false){
 				$blnStartMembers = true;
+				
+				if(!$timestart){
+					$regex = '/\[(.*)\](.*)/';
+					$matches = array();
+					preg_match($regex, $strLine, $matches);
+					if(isset($matches[1])){
+						$timestart = $timeend = strtotime($matches[1]);
+					}
+				}
 				continue;
 			}
 			
@@ -84,6 +90,8 @@ class everquest_loot extends rli_parser {
 			}
 			
 			if($blnStartMembers){
+
+				
 				$strMembers = preg_replace('/\[(.*)\] /', '', $strLine);
 				if($strMembers && strlen($strMembers)){
 					$arrMembers = explode(', ', $strMembers);
@@ -107,6 +115,9 @@ class everquest_loot extends rli_parser {
 			}
 		}
 		
+		$data['zones'][] = array('unknown zone',  $timestart - (1*3600), $timeend+(500));
+		$data['bosses'][] = array('unknown boss', $timestart, 0);
+				
 		return $data;
 	}
 }
