@@ -88,12 +88,37 @@ if(!class_exists('rli_member')) {
 					$race = "Zandalari Troll";
 				}
 				
-				if(strtolower($class) == strtolower('DEATHKNIGHT')){
+				if(strtolower($class) == strtolower('DEATHKNIGHT') || strtolower($class) == strtolower('Todesritterin')){
 					$class = "Death Knight";
 				}			
-				if(strtolower($class) == strtolower('DEMONHUNTER')){
+				if(strtolower($class) == strtolower('DEMONHUNTER') || utf8_strtolower($class) == utf8_strtolower('Dämonenjägerin')){
 					$class = "Demon Hunter";
 				}
+				if(strtolower($class) == strtolower('MAGIERIN')){
+					$class = "Mage";
+				}
+				if(strtolower($class) == strtolower('SCHAMANIN')){
+					$class = "Shaman";
+				}
+				if(strtolower($class) == strtolower('PRIESTERIN')){
+					$class = "Priest";
+				}
+				if(strtolower($class) == strtolower('HEXENMEISTERIN')){
+					$class = "Warlock";
+				}
+				if(strtolower($class) == strtolower('Kriegerin')){
+					$class = "Warrior";
+				}
+				if(strtolower($class) == strtolower('Schurkin')){
+					$class = "Rogue";
+				}
+				if(utf8_strtolower($class) == utf8_strtolower('Jägerin')){
+					$class = "Hunter";
+				}
+				if(strtolower($class) == strtolower('Druidin')){
+					$class = "Druid";
+				}
+				
 			}
 			
 			if(!deep_in_array($name, $this->members)) $this->members[] = array('name' => $name, 'class' => $class, 'race' => $race, 'level' => $lvl, 'note' => $note);
