@@ -65,6 +65,39 @@ class everquest_loot extends rli_parser {
 			
 			$data['items'][] = array(trim($match[3]), $match[2], 0, '', strtotime($match[1]));
 		}
+		
+		
+		$regex = '/\[(.*)\].*\'(.*)-(.*)@(.*)\'/';
+		$matches = array();
+		
+		preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
+		$timestart = $timeend = false;
+		$arrMembersDone = $data = array();
+		
+		foreach($matches as $match) {
+			if(!$timestart) $timestart = strtotime($match[1]);
+			$timeend = strtotime($match[1]);
+		}
+		
+		foreach($matches as $match) {
+			$lvl = 0;
+			$class = '';
+			
+			$strMembername = trim($match[3]);
+			$floatItemvalue = (float)trim($match[4]);
+			$strItemname = trim($match[2]);
+			
+			if(!in_array(trim($match[2]), $arrMembersDone)){
+				$data['members'][] = array($strMembername, $class, '', $lvl);
+				$data['times'][] = array($strMembername, $timestart - (1*3600), 'join');
+				$data['times'][] = array($strMembername, $timeend+(500), 'leave');
+				
+				$arrMembersDone[] = trim($match[2]);
+			}
+			
+			$data['items'][] = array($strItemname, $strMembername, $floatItemvalue, '', strtotime($match[1]));
+		}
+	
 				
 		//Try to find the members
 		$arrLines = explode("\r\n", $text);
