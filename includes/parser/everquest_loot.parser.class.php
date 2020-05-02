@@ -38,7 +38,8 @@ class everquest_loot extends rli_parser {
 		return $back;
 	}
 	
-	public static function parse($text) {		
+	public static function parse($text) {
+		//[Thu Feb 18 19:12:49 2016] --Raneen has looted a Whitened Treant Fists.--
 		$regex = '/\[(.*)\] --(.*) has looted a (.*).--/';
 		$matches = array();
 		
@@ -67,16 +68,16 @@ class everquest_loot extends rli_parser {
 		}
 		
 		
+		
+		//[Thu Apr 09 08:00:25 2020] You tell btdkp:1, 'Halo of the Enlightened-Duskin@100'
 		$regex = '/\[(.*)\].*\'(.*)-(.*)@(.*)\'/';
 		$matches = array();
 		
 		preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
-		$timestart = $timeend = false;
-		$arrMembersDone = $data = array();
 		
 		foreach($matches as $match) {
 			if(!$timestart) $timestart = strtotime($match[1]);
-			$timeend = strtotime($match[1]);
+			if(!$timeend) $timeend = strtotime($match[1]);
 		}
 		
 		foreach($matches as $match) {
@@ -100,6 +101,8 @@ class everquest_loot extends rli_parser {
 	
 				
 		//Try to find the members
+		//[Mon Nov 11 19:27:29 2019] Channel Cranberry(47) members:
+		//[Mon Nov 11 19:27:29 2019] Izzn, Efton, Adruger, Wanluan, Eenelil, Arlyana, Valadan, Toastie, Rowansbane, *Xslia
 		$arrLines = explode("\r\n", $text);
 		$blnStartMembers = false;
 		foreach($arrLines as $strLine){
@@ -150,7 +153,7 @@ class everquest_loot extends rli_parser {
 		
 		$data['zones'][] = array('unknown zone',  $timestart - (1*3600), $timeend+(500));
 		$data['bosses'][] = array('unknown boss', $timestart, 0);
-				
+		
 		return $data;
 	}
 }
