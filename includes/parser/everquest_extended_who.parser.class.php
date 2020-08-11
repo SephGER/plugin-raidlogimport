@@ -45,6 +45,7 @@ if(!class_exists('everquest_extended_who')) {
 			//$dst = $this->time->date("I");
 
 			// Determine the event and raid times
+			$matches = array();
 			$regex = '~\[(?<time>.*)\].*\((?<event>.*)\).*~';
 			preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
 			foreach($matches as $match) {
@@ -56,7 +57,8 @@ if(!class_exists('everquest_extended_who')) {
 			}
 
 			// Determine the members attending the raid
-			$regex = '~((\[ANONYMOUS\])|((\[(?<lvl>[0-9]{1,3})\h(?<title>\w*\s?\w*)\h\((?<class>.*)\)\])))\h(?<name>\w*)\h*((\((?<race>.*)\))*\h*(<(?<guild>.*)>)*)*~';
+			$matches = array();
+			$regex = '~((\[ANONYMOUS\])|((\[(?<lvl>[0-9]{1,3})\s(?<title>\w*\s?\w*)(\s\((?<class>.*)\))?\])))\s(?<name>\w*)((\s\((?<race>.*)\))*(\s<(?<guild>.*)>)*)*~';
 			preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
 			foreach($matches as $match) {
 				$name = trim($match['name']);
@@ -71,6 +73,7 @@ if(!class_exists('everquest_extended_who')) {
 			}
 
 			// Add the bench to the raid
+			$matches = array();
 			$regex = '~\(\w*\).*:\R(\[.*\]\h(?<mbrlist>.*))*~';
 			preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
 			foreach($matches as $match) {
