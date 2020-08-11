@@ -49,8 +49,15 @@ if(!class_exists('everquest_extended_who')) {
 			$regex = '~\[(?<time>.*)\].*\((?<event>.*)\).*~';
 			preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
 			foreach($matches as $match) {
+				$eventLine = $match[0];
+				$regex = '~((\[ANONYMOUS\])|((\[(?<lvl>[0-9]{1,3})\s(?<title>\w*\s?\w*)(\s\((?<class>.*)\))?\])))\s(?<name>\w*)((\s\((?<race>.*)\))*(\s<(?<guild>.*)>)*)*~';
+				$a = preg_match_all($regex, $eventLine, $b, PREG_SET_ORDER);
+				
 				$event = trim($match['event']);
 				$start = $end = trim($match['time']);
+				
+				//Continue if the matched line is a character line
+				if($a > 0) continue;
 					
 				if (!is_numeric($event)) $data['zones'][] = array($event, $dst ? strtotime('+1 hours', strtotime($start)) : strtotime($start), $dst ? strtotime('+1 hours', strtotime($end)) : strtotime($end), 0, $event);
 				//if (!is_numeric($event)) $data['zones'][] = array('', strtotime($start), strtotime($end), 0, $event);
@@ -102,6 +109,10 @@ if(!class_exists('everquest_extended_who')) {
 					
 				$data['items'][] = array($item, $name, $cost, '', '');
 			}
+			
+			//Create one zone and one boss if there are none
+			if(count($data['zones']) === 0) $data['zones'][] = array('unknown zone',  time() - (2*4000), time()+(500));
+			$data['bosses'][] = array('unknown boss', time() - (2*3600), 0);
 
 			return $data;
 		}
