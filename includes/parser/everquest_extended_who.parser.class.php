@@ -50,7 +50,7 @@ if(!class_exists('everquest_extended_who')) {
 			preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
 			foreach($matches as $match) {
 				$eventLine = $match[0];
-				$regex = '~((\[ANONYMOUS\])|((\[(?<lvl>[0-9]{1,3})\s(?<title>\w*\s?\w*)(\s\((?<class>.*)\))?\])))\s(?<name>\w*)((\s\((?<race>.*)\))*(\s<(?<guild>.*)>)*)*~';
+				$regex = '~((\[ANONYMOUS\])|((\[(?<lvl>[0-9]{1,3})\s(?<class>\w*\s?\w*)(\s\((?<title>.*)\))?\])))\s(?<name>\w*)((\s\((?<race>.*)\))*(\s<(?<guild>.*)>)*)*~';
 				$a = preg_match_all($regex, $eventLine, $b, PREG_SET_ORDER);
 				
 				$event = trim($match['event']);
@@ -65,7 +65,7 @@ if(!class_exists('everquest_extended_who')) {
 
 			// Determine the members attending the raid
 			$matches = array();
-			$regex = '~((\[ANONYMOUS\])|((\[(?<lvl>[0-9]{1,3})\s(?<title>\w*\s?\w*)(\s\((?<class>.*)\))?\])))\s(?<name>\w*)((\s\((?<race>.*)\))*(\s<(?<guild>.*)>)*)*~';
+			$regex = '~((\[ANONYMOUS\])|((\[(?<lvl>[0-9]{1,3})\s(?<class>\w*\s?\w*)(\s\((?<title>.*)\))?\])))\s(?<name>\w*)((\s\((?<race>.*)\))*(\s<(?<guild>.*)>)*)*~';
 			preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
 			foreach($matches as $match) {
 				$name = trim($match['name']);
