@@ -112,7 +112,6 @@ if(!class_exists('everquest_extended_who')) {
 			
 			//Create one zone and one boss if there are none
 			if(count($data['zones']) === 0) $data['zones'][] = array('unknown zone',  time() - (2*4000), time()+(500));
-			$data['bosses'][] = array('unknown boss', time() - (2*3600), 0);
 
 			return $data;
 		}

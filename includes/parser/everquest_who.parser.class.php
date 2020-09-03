@@ -75,7 +75,6 @@ class everquest_who extends rli_parser {
 		}
 		
 		$data['zones'][] = array('unknown zone',  time() - (2*4000), time());
-		$data['bosses'][] = array('unknown boss', time() - (1*3600), 0);
 		
 		return $data;
 	}
