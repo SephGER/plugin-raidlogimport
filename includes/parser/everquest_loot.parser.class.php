@@ -152,6 +152,7 @@ class everquest_loot extends rli_parser {
 		}
 		
 		$data['zones'][] = array('unknown zone',  $timestart - (1*3600), $timeend+(500));
+		$data['bosses'][] = array('unknown boss', $timestart, 0);
 	
 		return $data;
 	}
