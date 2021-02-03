@@ -40,6 +40,7 @@ if(!class_exists('rli_raid')) {
 
 		public function __construct() {
 			$this->raids = $this->rli->get_cache_data('raid');
+			if(!is_array($this->raids)) $this->raids = array();
 			$this->data = $this->rli->get_cache_data('data_raid');
 			if($this->in->exists('raids')) $this->load_raids();
 		}

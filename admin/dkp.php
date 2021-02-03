@@ -246,7 +246,7 @@ class rli_import extends page_generic {
 		);
 	}
 	
-	public function process_views() {
+	public function process_views($error_out) {
 			
 		$this->member->display();
 		$this->raid->display();

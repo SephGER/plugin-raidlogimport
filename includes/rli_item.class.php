@@ -194,7 +194,8 @@ class rli_item extends gen_class {
 			));
 			
 			$item_names = array_unique ($this->pdh->aget('item', 'name', 0, array($this->pdh->get('item', 'id_list'))));
-			$itemids = array_unique($this->pdh->aget('item', 'name', 0, array($this->pdh->get('game_itemid', 'id_list'))));
+			$itemids = $this->pdh->aget('item', 'name', 0, array($this->pdh->get('game_itemid', 'id_list')));
+			$itemids = (is_array($itemids)) ? array_unique($itemids) : array();
 			$strItemNames = $this->jquery->implode_wrapped('"','"', ",", $item_names);
 			$strItemIDs = $this->jquery->implode_wrapped('"','"', ",", $itemids);
 			
